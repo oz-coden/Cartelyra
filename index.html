@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="大学講義室 3D案内・経路探索システム Uniview。プロシージャル3D幾何生成とA*アルゴリズムによるリアルタイムルート案内。" />
+    <title>Uniview | 大学講義室 3D案内・経路探索システム</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="theme-light">
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container" class="canvas-container"></div>
+
+    <!-- Main UI Overlay -->
+    <div id="ui-overlay" class="ui-overlay">
+      <!-- Top Navigation Bar -->
+      <header class="top-bar">
+        <div class="brand-group">
+          <div class="brand-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 class="app-title">Uniview</h1>
+            <span class="app-subtitle">Campus 3D Navigator</span>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <button id="btn-theme-toggle" class="btn-icon" aria-label="テーマ切り替え" title="ライト/ダークモード切替">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <button id="btn-reset-camera" class="btn-icon" aria-label="視点リセット" title="全体視点にリセット">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Sidebar: Route & Search Panel -->
+      <aside id="sidebar-panel" class="sidebar-panel">
+        <div class="panel-section">
+          <div class="panel-header">
+            <h2 class="panel-title">ルート案内</h2>
+            <button id="btn-toggle-sidebar" class="btn-text-small" aria-label="パネル折りたたみ">折りたたむ</button>
+          </div>
+
+          <!-- Location Inputs -->
+          <div class="route-inputs">
+            <!-- Start Point -->
+            <div class="input-wrapper start-wrapper">
+              <div class="input-indicator start-dot" title="出発地"></div>
+              <div class="input-box">
+                <label for="input-start" class="visually-hidden">出発地</label>
+                <input type="text" id="input-start" placeholder="出発地 (例: 正門, 1-101...)" autocomplete="off" />
+                <button id="btn-clear-start" class="btn-clear hidden" aria-label="出発地クリア">×</button>
+              </div>
+              <button id="btn-pick-start" class="btn-pick" title="3D上で直接クリックして指定">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </button>
+              <!-- Suggestion dropdown -->
+              <div id="suggestions-start" class="suggestions-list hidden"></div>
+            </div>
+
+            <!-- Swap button -->
+            <div class="swap-divider">
+              <div class="route-line-connector"></div>
+              <button id="btn-swap-points" class="btn-swap" aria-label="出発地と目的地を入れ替え" title="入れ替え">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Destination Point -->
+            <div class="input-wrapper dest-wrapper">
+              <div class="input-indicator dest-dot" title="目的地"></div>
+              <div class="input-box">
+                <label for="input-dest" class="visually-hidden">目的地</label>
+                <input type="text" id="input-dest" placeholder="目的地 (例: 302講義室, 購買部...)" autocomplete="off" />
+                <button id="btn-clear-dest" class="btn-clear hidden" aria-label="目的地クリア">×</button>
+              </div>
+              <button id="btn-pick-dest" class="btn-pick" title="3D上で直接クリックして指定">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </button>
+              <!-- Suggestion dropdown -->
+              <div id="suggestions-dest" class="suggestions-list hidden"></div>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="quick-presets">
+            <span class="preset-label">クイック選択:</span>
+            <div class="preset-chips">
+              <button class="preset-chip" data-node="node_main_gate">正門</button>
+              <button class="preset-chip" data-node="node_bldg1_entrance">1号館入口</button>
+              <button class="preset-chip" data-node="node_bldg2_entrance">2号館入口</button>
+              <button class="preset-chip" data-node="node_cafeteria">学生食堂</button>
+              <button class="preset-chip" data-node="node_library">図書館</button>
+            </div>
+          </div>
+
+          <!-- Route Condition Filters -->
+          <div class="route-filters">
+            <span class="filter-label">移動条件:</span>
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="shortest" title="移動距離が最短のルート">
+                <span class="filter-icon">⚡</span>
+                <span class="filter-text">最短</span>
+              </button>
+              <button class="filter-btn" data-filter="accessible" title="階段を使わずエレベーターのみを使用">
+                <span class="filter-icon">♿</span>
+                <span class="filter-text">バリアフリー</span>
+              </button>
+              <button class="filter-btn" data-filter="indoor" title="雨に濡れない屋内・渡り廊下を優先">
+                <span class="filter-icon">☂️</span>
+                <span class="filter-text">雨天・屋内優先</span>
+              </button>
+              <button class="filter-btn" data-filter="stairs" title="エレベーター待ちを回避し階段を優先">
+                <span class="filter-icon">🪜</span>
+                <span class="filter-text">階段優先</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Route Summary Info -->
+          <div id="route-summary-panel" class="route-summary hidden">
+            <div class="summary-metric">
+              <span class="metric-label">総移動距離</span>
+              <span id="summary-distance" class="metric-value">0 m</span>
+            </div>
+            <div class="summary-metric">
+              <span class="metric-label">概算徒歩時間</span>
+              <span id="summary-time" class="metric-value">0 分</span>
+            </div>
+            <div class="summary-metric">
+              <span class="metric-label">階移動</span>
+              <span id="summary-vertical" class="metric-value">同フロア</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Floor Explode / Focus Controls (Right Floating Bar) -->
+      <div id="floor-control" class="floor-control">
+        <div class="control-card">
+          <div class="control-header">
+            <span class="control-title">フロア展開</span>
+            <span id="explode-level-badge" class="badge">All</span>
+          </div>
+
+          <!-- Floor Quick Selector -->
+          <div id="floor-buttons" class="floor-buttons">
+            <button class="floor-btn active" data-floor="all">全階</button>
+            <button class="floor-btn" data-floor="1">1F</button>
+            <button class="floor-btn" data-floor="2">2F</button>
+            <button class="floor-btn" data-floor="3">3F</button>
+            <button class="floor-btn" data-floor="4">4F</button>
+          </div>
+
+          <!-- Continuous Explode Slider -->
+          <div class="slider-wrapper">
+            <label for="explode-slider" class="slider-label">展開ギャップ</label>
+            <input type="range" id="explode-slider" min="0" max="100" value="0" step="1" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Step Navigation Guide (Drawer/Card) -->
+      <section id="step-guide" class="step-guide hidden" aria-label="道順案内">
+        <div class="step-guide-header">
+          <div class="guide-title-group">
+            <h3 class="guide-title">ステップ別道順</h3>
+            <span id="guide-step-count" class="step-counter">全 3 ステップ</span>
+          </div>
+          <button id="btn-close-guide" class="btn-close-guide" aria-label="道順案内を閉じる">×</button>
+        </div>
+        <div id="step-guide-list" class="step-list">
+          <!-- Dynamically populated step cards -->
+        </div>
+      </section>
+
+      <!-- Selection & Hover Tooltip -->
+      <div id="room-tooltip" class="room-tooltip hidden">
+        <div id="tooltip-title" class="tooltip-title">302講義室</div>
+        <div id="tooltip-desc" class="tooltip-desc">3号館 3F (定員80名)</div>
+        <div class="tooltip-actions">
+          <button id="btn-tooltip-set-start" class="btn-micro">ここから出発</button>
+          <button id="btn-tooltip-set-dest" class="btn-micro primary">ここへ行く</button>
+        </div>
+      </div>
+
+      <!-- Toast Notification -->
+      <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <!-- Script Entry Point -->
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
