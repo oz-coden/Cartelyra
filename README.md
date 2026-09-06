@@ -12,7 +12,6 @@ Japanese section is [available](#目次) below this section.
 6. [Requirements & Dependencies](#requirements--dependencies)
 7. [Installation & Local Dev](#installation--local-dev)
 8. [LICENSE](#license)
-9. [CREDIT](#credit)
 
 ---
 
@@ -70,9 +69,6 @@ npm run build
 ## LICENSE
 This project is released under the MIT License.  
 
-## CREDIT
-Developed with 💖 by Google Antigravity Advanced Agentic Coding.
-
 ---
 
 # Uniview (日本語)
@@ -87,7 +83,6 @@ Developed with 💖 by Google Antigravity Advanced Agentic Coding.
 6. [前提・依存](#前提依存)
 7. [導入・起動方法](#導入起動方法)
 8. [ライセンス](#ライセンス)
-9. [クレジット](#クレジット)
 
 ---
 
@@ -155,6 +150,3 @@ npm run build
 
 ## ライセンス
 本プロジェクトは [MIT License](LICENSE) のもとで公開されています。
-
-## クレジット
-Developed with 💖 by Google Antigravity Advanced Agentic Coding.
