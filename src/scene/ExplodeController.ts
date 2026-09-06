@@ -78,5 +78,44 @@ export class ExplodeController {
       // @ts-expect-error tween tracking
       this.tweens.push(tw);
     }
+
+    // Also explode Sky-Bridge along with 2F (bridge connects on 2F)
+    const bridgeGroup = this.buildingRenderer.skyBridgeGroup;
+    if (bridgeGroup) {
+      const bridgeBaseElev = (bridgeGroup.userData.baseElevation as number) || 4.5;
+      const bridgeLevel = 2;
+      let bridgeTargetY = bridgeBaseElev;
+
+      if (isAllMode) {
+        const extraOffsetPerFloor = 9.0 * this.currentGapRatio;
+        bridgeTargetY = bridgeBaseElev + (bridgeLevel - 1) * extraOffsetPerFloor;
+      } else {
+        if (bridgeLevel < focusLevel) {
+          bridgeTargetY = bridgeBaseElev;
+        } else if (bridgeLevel === focusLevel) {
+          bridgeTargetY = bridgeBaseElev + 2.0;
+        } else {
+          const extraLift = 16.0 + (bridgeLevel - focusLevel - 1) * 6.0;
+          bridgeTargetY = bridgeBaseElev + extraLift;
+        }
+      }
+
+      const startPos = { y: bridgeGroup.position.y };
+      const endPos = { y: bridgeTargetY };
+
+      const tw = new TWEEN.Tween(startPos)
+        .to(endPos, duration)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onUpdate(() => {
+          bridgeGroup.position.y = startPos.y;
+          if (this.onUpdateCallback) {
+            this.onUpdateCallback();
+          }
+        });
+
+      tw.start();
+      // @ts-expect-error tween tracking
+      this.tweens.push(tw);
+    }
   }
 }

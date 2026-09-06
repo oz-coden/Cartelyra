@@ -125,18 +125,33 @@ export class AStarPathfinder {
           continue;
         }
 
-        // Calculate custom edge cost based on filter
+        // Calculate custom edge cost based on filter and human physical burden
         let edgeCost = neighbor.weight;
 
+        // 1. Vertical Circulation Burden:
+        // Stairs and Elevators require significant human effort / wait time compared to flat walking.
+        // A single floor change (~4.5m height) corresponds to roughly 18-22m of flat walking effort.
+        // This naturally prioritizes horizontal plane movement (such as 2F Sky-Bridge)
+        // and prevents wasteful down-and-up detour routes!
+        if (edge.type === 'stairs') {
+          edgeCost += 20.0;
+        } else if (edge.type === 'elevator') {
+          edgeCost += 24.0;
+        } else if (edge.type === 'outdoor') {
+          // Slight penalty for outdoor weather exposure, preferring indoor connections
+          edgeCost += 6.0;
+        }
+
+        // 2. Filter-specific adjustments
         if (filter === 'indoor' && !edge.isIndoor) {
           // Heavy penalty for outdoor edges when raining/indoor prioritized
-          edgeCost *= 4.0;
+          edgeCost *= 4.5;
         } else if (filter === 'stairs' && edge.type === 'elevator') {
           // Penalty for elevator wait time when stairs prioritized
-          edgeCost += 25.0;
+          edgeCost += 35.0;
         } else if (filter === 'accessible' && edge.type === 'elevator') {
-          // Slight bonus for elevator in accessible mode
-          edgeCost *= 0.9;
+          // Bonus for elevator in accessible mode
+          edgeCost *= 0.8;
         }
 
         const tentativeG = (gScore.get(currentId) ?? Infinity) + edgeCost;

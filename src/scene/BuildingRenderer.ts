@@ -14,6 +14,7 @@ export class BuildingRenderer {
   public rootGroup: THREE.Group;
   public floorGroups: Map<string, THREE.Group> = new Map(); // key: `${bldgId}_f${level}`
   public roomMeshRecords: Map<string, RoomMeshRecord> = new Map(); // key: room.id
+  public skyBridgeGroup: THREE.Group | null = null;
   private isDarkTheme: boolean = false;
   private selectedRoomId: string | null = null;
 
@@ -196,13 +197,18 @@ export class BuildingRenderer {
       });
 
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.position.set(x, y + h / 2, z);
       mesh.receiveShadow = true;
       if (isBridge) mesh.castShadow = true;
-      group.add(mesh);
 
-      // Edges for bridge
       if (isBridge) {
+        // Group is positioned at base height (y = 4.5m) so it can explode with 2F
+        group.position.set(0, y, 0);
+        group.userData = { type: 'bridge', level: 2, baseElevation: y };
+        this.skyBridgeGroup = group;
+
+        mesh.position.set(x, h / 2, z);
+        group.add(mesh);
+
         const edgeGeo = new THREE.EdgesGeometry(geo);
         const edgeMat = new THREE.LineBasicMaterial({
           color: this.isDarkTheme ? 0x38bdf8 : 0x0284c7
@@ -213,8 +219,11 @@ export class BuildingRenderer {
 
         // Label on bridge
         const label = this.createTextLabelSprite('2F 連絡スカイブリッジ', '#0284c7');
-        label.position.set(x, y + h + 0.8, z);
+        label.position.set(x, h + 0.8, z);
         group.add(label);
+      } else {
+        mesh.position.set(x, y + h / 2, z);
+        group.add(mesh);
       }
 
       this.rootGroup.add(group);
@@ -399,6 +408,10 @@ export class BuildingRenderer {
         const dy = floorGroup.position.y - baseElev;
         pos.y += dy;
       }
+    } else if (node.floor === 2 && this.skyBridgeGroup) {
+      const baseElev = (this.skyBridgeGroup.userData.baseElevation as number) || 4.5;
+      const dy = this.skyBridgeGroup.position.y - baseElev;
+      pos.y += dy;
     }
     return pos;
   }
