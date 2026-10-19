@@ -9,6 +9,7 @@ export class RouteRenderer {
   private goalMarker: THREE.Group | null = null;
   private pulseTexture: THREE.CanvasTexture | null = null;
   private animationId: number | null = null;
+  private active = true;
 
   private currentPathNodes: NavNode[] = [];
   private getNodePosFn: ((node: NavNode) => THREE.Vector3) | null = null;
@@ -93,8 +94,9 @@ export class RouteRenderer {
       return new THREE.Vector3(node.position[0], node.position[1] + 0.5, node.position[2]);
     });
 
-    // Create smooth CatmullRom curve
-    const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal', 0.2);
+    // Keep corridor corners. Smoothing can cut across rooms and atrium voids.
+    const curve = new THREE.CurvePath<THREE.Vector3>();
+    for (let i = 1; i < points.length; i++) curve.add(new THREE.LineCurve3(points[i - 1], points[i]));
 
     // Tube radius and glow parameters
     const tubeRadius = 0.45;
@@ -218,6 +220,7 @@ export class RouteRenderer {
 
   private startAnimation() {
     const loop = () => {
+      if (!this.active) return;
       this.animationId = requestAnimationFrame(loop);
       if (this.pulseTexture) {
         // Move pulse along path
@@ -231,6 +234,13 @@ export class RouteRenderer {
       }
     };
     loop();
+  }
+
+  public setActive(active: boolean) {
+    if (this.active === active) return;
+    this.active = active;
+    if (active) this.startAnimation();
+    else if (this.animationId !== null) cancelAnimationFrame(this.animationId);
   }
 
   public dispose() {

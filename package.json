@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "npm run validate:data && tsc && vite build",
+    "preview": "vite preview",
+    "validate:data": "tsc -p tsconfig.tools.json && node scripts/validate-data.mjs",
+    "test": "tsc -p tsconfig.tools.json && node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^23.1.3",

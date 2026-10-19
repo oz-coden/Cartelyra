@@ -1,296 +1,138 @@
 import './style.css';
-import * as THREE from 'three';
-import campusDataJson from './data/campus.json';
-import { CampusData, Room, RouteFilterType, RouteStep } from './types/campus';
-
-import { SceneManager } from './scene/SceneManager';
-import { BuildingRenderer } from './scene/BuildingRenderer';
-import { ExplodeController } from './scene/ExplodeController';
-import { RouteRenderer } from './scene/RouteRenderer';
-import { RaycastPicker } from './scene/RaycastPicker';
+import { campusData } from './data/load';
+import overviewJson from './data/overview.json';
+import type { CampusOverview } from './data/schema';
+import type { Room, RouteFilterType, RouteResult } from './types/campus';
 import { AStarPathfinder } from './pathfinding/AStar';
-
 import { ThemeManager } from './ui/ThemeManager';
 import { SearchPanel } from './ui/SearchPanel';
 import { FloorControl } from './ui/FloorControl';
 import { StepGuide } from './ui/StepGuide';
+import { FloorMap } from './ui/FloorMap';
+import type { ThreeView } from './scene/ThreeView';
 
+type View = 'campus' | 'floor' | '3d';
 class UniviewApp {
-  private campusData: CampusData = campusDataJson as CampusData;
-
-  // Scene & Renderers
-  private sceneManager: SceneManager;
-  private buildingRenderer: BuildingRenderer;
-  private explodeController: ExplodeController;
-  private routeRenderer: RouteRenderer;
-  private raycastPicker: RaycastPicker;
-  private pathfinder: AStarPathfinder;
-
-  // UI Components
-  private themeManager: ThemeManager;
-  private searchPanel: SearchPanel;
-  private floorControl: FloorControl;
-  private stepGuide: StepGuide;
-
-  // DOM Elements
-  private tooltip = document.getElementById('room-tooltip') as HTMLElement;
-  private tooltipTitle = document.getElementById('tooltip-title') as HTMLElement;
-  private tooltipDesc = document.getElementById('tooltip-desc') as HTMLElement;
-  private btnTooltipStart = document.getElementById('btn-tooltip-set-start') as HTMLElement;
-  private btnTooltipDest = document.getElementById('btn-tooltip-set-dest') as HTMLElement;
-  private toast = document.getElementById('toast') as HTMLElement;
-  private btnResetCamera = document.getElementById('btn-reset-camera') as HTMLElement;
-
-  private currentTooltipRoom: Room | null = null;
-  private toastTimeout: number | null = null;
+  private three?: ThreeView;
+  private loading3D?: Promise<ThreeView>;
+  private viewRequest = 0;
+  private theme = new ThemeManager();
+  private search = new SearchPanel(campusData);
+  private floors = new FloorControl(null, campusData);
+  private guide = new StepGuide();
+  private pathfinder = new AStarPathfinder(campusData);
+  private map = new FloorMap(document.getElementById('map-canvas')!, campusData, overviewJson as CampusOverview);
+  private view: View = 'floor';
+  private pickMode: 'normal' | 'pick_start' | 'pick_dest' = 'normal';
+  private selectedRoom: Room | null = null;
+  private result: RouteResult | null = null;
+  private toastTimer?: number;
 
   constructor() {
-    const canvasContainer = document.getElementById('canvas-container') as HTMLElement;
-
-    // 1. Initialize 3D Scene
-    this.sceneManager = new SceneManager(canvasContainer);
-
-    // 2. Build Procedural Architecture
-    this.buildingRenderer = new BuildingRenderer(this.campusData);
-    this.sceneManager.scene.add(this.buildingRenderer.rootGroup);
-
-    // 3. Explode Controller
-    this.explodeController = new ExplodeController(this.buildingRenderer);
-
-    // 4. Route Renderer
-    this.routeRenderer = new RouteRenderer(this.sceneManager.scene);
-
-    // 5. Pathfinder
-    this.pathfinder = new AStarPathfinder(this.campusData);
-
-    // 6. Raycast Picker
-    this.raycastPicker = new RaycastPicker(
-      this.sceneManager.camera,
-      this.sceneManager.renderer.domElement,
-      this.buildingRenderer
-    );
-
-    // 7. UI Modules
-    this.themeManager = new ThemeManager();
-    this.searchPanel = new SearchPanel(this.campusData);
-    this.floorControl = new FloorControl(this.explodeController);
-    this.stepGuide = new StepGuide();
-
-    // 8. Bind System Interactivity
-    this.setupInteractions();
-  }
-
-  private setupInteractions() {
-    // Theme switching
-    this.themeManager.onThemeChange((isDark) => {
-      this.sceneManager.setDarkTheme(isDark);
-      this.buildingRenderer.setDarkTheme(isDark);
-      this.routeRenderer.setDarkTheme(isDark);
-    });
-
-    // Real-time route & pin marker position update during floor explode animation
-    this.explodeController.onUpdateCallback = () => {
-      this.routeRenderer.updatePositions();
+    this.theme.onThemeChange(dark => { this.three?.setTheme(dark); });
+    this.floors.onFloorChange = floor => { this.hideTooltip(); if (floor !== 'all') this.map.setFloor(floor); };
+    this.map.onRoomSelect = (room, x, y) => this.selectRoom(room, x, y);
+    this.map.onBackgroundClick = () => this.hideTooltip();
+    this.map.onBuildingSelect = () => this.setView('floor');
+    this.search.onRouteSearch = (start, end, filter, inferred) => this.searchRoute(start, end, filter, inferred);
+    this.search.onRouteClear = () => { this.result = null; this.map.setRoute(null); this.three?.renderRoute(null); this.guide.hide(); };
+    this.search.onRoomFocus = id => {
+      const room = campusData.buildings.flatMap(b => b.floors.flatMap(f => f.rooms)).find(r => r.id === id);
+      if (room) this.focusRoom(room);
     };
-
-    // Reset camera button
-    if (this.btnResetCamera) {
-      this.btnResetCamera.addEventListener('click', () => {
-        this.sceneManager.resetCamera();
-        this.floorControl.selectFloor('all');
-        this.buildingRenderer.highlightRoom(null);
-        this.hideTooltip();
-      });
-    }
-
-    // 3D Pick mode toggles from search panel
-    this.searchPanel.onPickModeToggle = (mode) => {
-      if (mode === 'start') {
-        this.raycastPicker.currentMode = 'pick_start';
-        this.showToast('3D空間上の教室をクリックして【出発地】に設定してください');
-      } else if (mode === 'dest') {
-        this.raycastPicker.currentMode = 'pick_dest';
-        this.showToast('3D空間上の教室をクリックして【目的地】に設定してください');
-      } else {
-        this.raycastPicker.currentMode = 'normal';
-        this.hideToast();
-      }
+    this.search.onPickModeToggle = mode => {
+      this.pickMode = mode === 'start' ? 'pick_start' : mode === 'dest' ? 'pick_dest' : 'normal';
+      if (this.three) this.three.picker.currentMode = this.pickMode;
+      if (this.view === 'campus' && mode !== 'none') this.setView('floor');
+      if (mode !== 'none') this.toast(`地図の部屋を選んで${mode === 'start' ? '出発地' : '目的地'}に設定してください`);
     };
-
-    // 3D Room click event
-    this.raycastPicker.onRoomSelect = (room, mode, clientX, clientY) => {
-      if (mode === 'pick_start') {
-        this.searchPanel.setStart(room.entranceNodeId, room.name);
-        this.raycastPicker.currentMode = 'normal';
-        this.showToast(`出発地に「${room.name}」を設定しました`);
-        this.focusOnRoom(room);
-        return;
-      }
-
-      if (mode === 'pick_dest') {
-        this.searchPanel.setDest(room.entranceNodeId, room.name);
-        this.raycastPicker.currentMode = 'normal';
-        this.showToast(`目的地に「${room.name}」を設定しました`);
-        this.focusOnRoom(room);
-        return;
-      }
-
-      // Normal mode -> Show tooltip popup
-      this.currentTooltipRoom = room;
-      this.showTooltip(room, clientX, clientY);
-      this.buildingRenderer.highlightRoom(room.id);
-    };
-
-    this.raycastPicker.onBackgroundClick = () => {
+    for (const view of ['campus', 'floor', '3d'] as View[]) document.getElementById(`btn-view-${view}`)!.addEventListener('click', () => this.setView(view));
+    document.getElementById('btn-reset-camera')!.addEventListener('click', () => { this.three?.reset(); this.map.resetView(); this.hideTooltip(); });
+    for (const target of ['start', 'dest'] as const) document.getElementById(`btn-tooltip-set-${target}`)!.addEventListener('click', () => {
+      const room = this.selectedRoom;
+      if (!room?.entranceNodeId) return;
+      if (target === 'start') this.search.setStart(room.entranceNodeId, room.name); else this.search.setDest(room.entranceNodeId, room.name);
       this.hideTooltip();
-    };
-
-    // Tooltip action buttons
-    this.btnTooltipStart.addEventListener('click', () => {
-      if (this.currentTooltipRoom) {
-        this.searchPanel.setStart(this.currentTooltipRoom.entranceNodeId, this.currentTooltipRoom.name);
-        this.hideTooltip();
-        this.showToast(`出発地に「${this.currentTooltipRoom.name}」を設定しました`);
-      }
     });
-
-    this.btnTooltipDest.addEventListener('click', () => {
-      if (this.currentTooltipRoom) {
-        this.searchPanel.setDest(this.currentTooltipRoom.entranceNodeId, this.currentTooltipRoom.name);
-        this.hideTooltip();
-        this.showToast(`目的地に「${this.currentTooltipRoom.name}」を設定しました`);
-      }
-    });
-
-    // Search room focus
-    this.searchPanel.onRoomFocus = (roomId) => {
-      const record = this.buildingRenderer.roomMeshRecords.get(roomId);
-      if (record) {
-        this.focusOnRoom(record.room);
-      }
+    this.guide.onStepClick = step => {
+      this.floors.selectFloor(step.floor);
+      if (this.view === '3d') this.three?.focusStep(step);
     };
-
-    // Route search request
-    this.searchPanel.onRouteSearch = (startId, destId, filter) => {
-      this.executeRouteSearch(startId, destId, filter);
-    };
-
-    // Step guide item click
-    this.stepGuide.onStepClick = (step: RouteStep) => {
-      const stepPos = new THREE.Vector3(...step.position);
-      const camOffset = new THREE.Vector3(18, 16, 22);
-      this.sceneManager.flyTo(stepPos, stepPos.clone().add(camOffset), 700);
-
-      // Expand to this step's floor if it's in a building
-      if (step.floor) {
-        this.floorControl.selectFloor(step.floor);
-      }
-    };
+    this.setView('floor');
   }
 
-  private executeRouteSearch(startId: string, destId: string, filter: RouteFilterType) {
-    const result = this.pathfinder.findPath(startId, destId, filter);
+  private initialize3D(): Promise<ThreeView> {
+    if (this.three) return Promise.resolve(this.three);
+    if (!this.loading3D) this.loading3D = import('./scene/ThreeView').then(({ ThreeView }) => {
+      const view = new ThreeView(campusData, document.getElementById('canvas-container')!);
+      this.three = view;
+      view.picker.onRoomSelect = (room, _mode, x, y) => this.selectRoom(room, x, y);
+      view.picker.onBackgroundClick = () => this.hideTooltip();
+      this.floors.setController(view.explode);
+      view.setTheme(this.theme.getIsDark()); view.renderRoute(this.result);
+      return view;
+    }).catch(error => { this.loading3D = undefined; throw error; });
+    return this.loading3D;
+  }
 
-    if (!result || result.pathNodes.length < 2) {
-      this.showToast('ルートが見つかりませんでした。条件を変更してお試しください。');
-      this.routeRenderer.clearRoute();
-      this.searchPanel.hideSummary();
-      this.stepGuide.hide();
-      return;
+  private async setView(view: View) {
+    const request = ++this.viewRequest;
+    if (view === '3d') {
+      try { await this.initialize3D(); }
+      catch { this.toast('この環境では3D表示を開始できませんでした。平面図を利用できます。'); return; }
     }
+    if (request !== this.viewRequest) { this.three?.setActive(this.view === '3d'); return; }
+    this.view = view; this.hideTooltip();
+    this.three?.setActive(view === '3d');
+    document.body.dataset.view = view;
+    document.getElementById('map-panel')!.classList.toggle('hidden', view === '3d');
+    document.getElementById('canvas-container')!.classList.toggle('hidden', view !== '3d');
+    document.getElementById('floor-control')!.classList.toggle('hidden', view === 'campus');
+    for (const key of ['campus', 'floor', '3d']) document.getElementById(`btn-view-${key}`)!.setAttribute('aria-pressed', String(key === view));
+    if (view !== '3d') this.map.showOverview(view === 'campus');
+    if (view === 'floor' && this.floors.getActiveFloor() === 'all') this.floors.selectFloor(1);
+  }
 
-    // 1. Draw 3D pulse route with dynamic floor explode position resolver
-    this.routeRenderer.renderRoute(result.pathNodes, (node) => {
-      return this.buildingRenderer.getNodeWorldPosition(node);
-    });
-
-    // 2. Update summary metrics in UI
-    this.searchPanel.updateSummary(result);
-
-    // 3. Show step-by-step guidance cards
-    this.stepGuide.showSteps(result.steps);
-
-    // 4. Calculate bounding center of route and adjust camera
-    const box = new THREE.Box3();
-    result.pathNodes.forEach(node => {
-      box.expandByPoint(new THREE.Vector3(...node.position));
-    });
-    const center = new THREE.Vector3();
-    box.getCenter(center);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-
-    const maxDim = Math.max(size.x, size.z, 25);
-    const camOffset = new THREE.Vector3(maxDim * 0.9, maxDim * 1.0, maxDim * 1.1);
-
-    this.sceneManager.flyTo(center, center.clone().add(camOffset), 1100);
-
-    // Highlight destination room if exists
-    const destNode = this.pathfinder.getNode(destId);
-    if (destNode) {
-      // Find matching room
-      for (const record of this.buildingRenderer.roomMeshRecords.values()) {
-        if (record.room.entranceNodeId === destId) {
-          this.buildingRenderer.highlightRoom(record.room.id);
-          break;
-        }
-      }
+  private searchRoute(start: string, end: string, filter: RouteFilterType, allowInferred: boolean) {
+    const result = this.pathfinder.findPath(start, end, filter, allowInferred);
+    this.result = result; this.map.setRoute(result);
+    if (!result) {
+      this.three?.renderRoute(null); this.search.hideSummary(); this.guide.hide();
+      this.toast(allowInferred ? 'この条件の経路は未登録です。' : '現地確認済みの接続だけでは経路がつながっていません。参考ルートを有効にすると推定経路を確認できます。', 6500); return;
     }
+    this.search.updateSummary(result); this.guide.showSteps(result.steps);
+    this.three?.renderRoute(result);
+    if (this.view === 'campus') this.setView('floor');
+    this.floors.selectFloor(result.pathNodes[0].floor);
   }
 
-  private focusOnRoom(room: Room) {
-    const roomPos = this.buildingRenderer.getRoomPosition(room.id);
-    if (!roomPos) return;
-
-    // Highlight room
-    this.buildingRenderer.highlightRoom(room.id);
-
-    // Open target floor explode view
-    this.floorControl.selectFloor(room.floorLevel);
-
-    // Smooth fly to room
-    const camOffset = new THREE.Vector3(16, 14, 20);
-    this.sceneManager.flyTo(roomPos, roomPos.clone().add(camOffset), 900);
+  private focusRoom(room: Room) {
+    if (this.view === 'campus') this.setView('floor');
+    this.floors.selectFloor(room.floorLevel); this.map.selectRoom(room.id);
+    if (this.view === '3d') this.three?.focusRoom(room);
   }
 
-  private showTooltip(room: Room, clientX: number, clientY: number) {
-    this.tooltipTitle.textContent = room.name;
-    const bldg = this.campusData.buildings.find(b => b.id === room.buildingId);
-    const bldgName = bldg ? bldg.name : '';
-    const cap = room.capacity ? ` (定員 ${room.capacity}名)` : '';
-    this.tooltipDesc.textContent = `${bldgName} ${room.floorLevel}F${cap} - ${room.description || ''}`;
-
-    this.tooltip.style.left = `${clientX}px`;
-    this.tooltip.style.top = `${clientY}px`;
-    this.tooltip.classList.remove('hidden');
-  }
-
-  private hideTooltip() {
-    this.tooltip.classList.add('hidden');
-    this.currentTooltipRoom = null;
-  }
-
-  private showToast(message: string, duration: number = 3200) {
-    this.toast.textContent = message;
-    this.toast.classList.remove('hidden');
-
-    if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
+  private selectRoom(room: Room, x: number, y: number) {
+    this.focusRoom(room);
+    if (this.pickMode !== 'normal') {
+      if (!room.entranceNodeId) { this.toast('この部屋は入口の接続先が未確認です。'); return; }
+      if (this.pickMode === 'pick_start') this.search.setStart(room.entranceNodeId, room.name); else this.search.setDest(room.entranceNodeId, room.name);
+      this.pickMode = 'normal'; if (this.three) this.three.picker.currentMode = 'normal'; return;
     }
-    this.toastTimeout = window.setTimeout(() => {
-      this.toast.classList.add('hidden');
-    }, duration);
+    this.selectedRoom = room;
+    document.getElementById('tooltip-title')!.textContent = room.name;
+    const floor = campusData.buildings[0].floors.find(f => f.level === room.floorLevel)!;
+    document.getElementById('tooltip-desc')!.textContent = `3号館 ${floor.label} / ${room.description ?? (room.entranceNodeId ? '入口は推定位置・利用条件未確認' : '入口の接続先が未確認のため経路未登録')}`;
+    for (const id of ['btn-tooltip-set-start', 'btn-tooltip-set-dest']) (document.getElementById(id) as HTMLButtonElement).disabled = !room.entranceNodeId;
+    const tooltip = document.getElementById('room-tooltip')!;
+    tooltip.style.left = `${Math.max(150, Math.min(window.innerWidth - 150, x))}px`;
+    tooltip.style.top = `${Math.max(220, Math.min(window.innerHeight - 20, y))}px`;
+    tooltip.classList.remove('hidden');
   }
-
-  private hideToast() {
-    this.toast.classList.add('hidden');
-    if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
-    }
+  private hideTooltip() { document.getElementById('room-tooltip')!.classList.add('hidden'); this.selectedRoom = null; }
+  private toast(message: string, duration = 4500) {
+    const toast = document.getElementById('toast')!; toast.textContent = message; toast.classList.remove('hidden');
+    window.clearTimeout(this.toastTimer); this.toastTimer = window.setTimeout(() => toast.classList.add('hidden'), duration);
   }
 }
-
-// Bootstrap application on DOM ready
-window.addEventListener('DOMContentLoaded', () => {
-  new UniviewApp();
-});
+window.addEventListener('DOMContentLoaded', () => new UniviewApp());

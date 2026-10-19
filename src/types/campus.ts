@@ -1,4 +1,12 @@
-export type RoomCategory = 'lecture' | 'lab' | 'office' | 'facility' | 'lounge' | 'restroom';
+export type RoomCategory = 'lecture' | 'lab' | 'office' | 'facility' | 'lounge' | 'restroom' | 'unknown';
+export type Point2 = [number, number];
+export type Verification = 'diagram' | 'inferred' | 'verified';
+export interface FloorFeature {
+  id: string;
+  label: string;
+  type: 'stairs' | 'elevator' | 'restroom' | 'aed' | 'service' | 'pit';
+  polygon: Point2[];
+}
 
 export interface RoomBox {
   x: number;      // Center or origin X
@@ -15,7 +23,9 @@ export interface Room {
   category: RoomCategory;
   capacity?: number;
   box: RoomBox;
-  entranceNodeId: string;
+  entranceNodeId?: string;
+  polygon?: Point2[];
+  verification?: Verification;
   floorLevel: number;
   buildingId: string;
   color?: string;
@@ -35,6 +45,12 @@ export interface Floor {
   elevation: number;   // Base Y height in meters (e.g., 0, 4.2, 8.4, 12.6)
   slab: FloorSlab;     // Floor boundary
   rooms: Room[];
+  outline?: Point2[];
+  voids?: Point2[][];
+  features?: FloorFeature[];
+  sourceId?: string;
+  notes?: string[];
+  stackIndex?: number;
 }
 
 export interface Building {
@@ -44,6 +60,7 @@ export interface Building {
   color: string;
   origin: [number, number, number]; // [x, y, z] in world coordinates
   floors: Floor[];
+  rotation?: number; // Radians around Y; local X/Z -> world X/Z.
 }
 
 export type NavNodeType = 'room_entrance' | 'corridor' | 'stairs' | 'elevator' | 'outdoor' | 'preset';
@@ -68,10 +85,15 @@ export interface NavEdge {
   isIndoor: boolean;
   isAccessible: boolean;  // True for flat walk/elevator/ramp; False for stairs
   instruction?: string;   // Guide message when traversing this edge
+  reverseInstruction?: string;
+  verification?: Verification;
+  bidirectional?: boolean;
+  blocked?: boolean;
 }
 
 export interface CampusData {
   campusName: string;
+  coordinateUnit?: 'meters' | 'schematic';
   buildings: Building[];
   outdoorStructures?: Array<{
     id: string;
@@ -104,4 +126,6 @@ export interface RouteResult {
   estimatedMinutes: number;
   floorChanges: number;
   steps: RouteStep[];
+  distanceUnit: 'meters' | 'schematic';
+  inferredConnections: number;
 }

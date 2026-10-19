@@ -1,57 +1,39 @@
-import { ExplodeController } from '../scene/ExplodeController';
+import type { CampusData } from '../types/campus';
+import type { ExplodeController } from '../scene/ExplodeController';
 
 export class FloorControl {
-  private badge = document.getElementById('explode-level-badge') as HTMLElement;
+  private badge = document.getElementById('explode-level-badge')!;
   private slider = document.getElementById('explode-slider') as HTMLInputElement;
-  private floorButtons: NodeListOf<HTMLButtonElement>;
-
+  private buttons: HTMLButtonElement[] = [];
+  private labels = new Map<number, string>();
+  private active: number | 'all' = 1;
   public onFloorChange: ((floor: number | 'all') => void) | null = null;
 
-  constructor(private explodeController: ExplodeController) {
-    this.floorButtons = document.querySelectorAll<HTMLButtonElement>('.floor-btn');
-    this.setupEvents();
-  }
-
-  private setupEvents() {
-    this.floorButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const floorVal = btn.dataset.floor;
-        this.floorButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        if (floorVal === 'all') {
-          this.explodeController.setFocusedFloor('all');
-          this.badge.textContent = 'All';
-          if (this.onFloorChange) this.onFloorChange('all');
-        } else {
-          const num = parseInt(floorVal || '1', 10);
-          this.explodeController.setFocusedFloor(num);
-          this.badge.textContent = `${num}F フォーカス`;
-          if (this.onFloorChange) this.onFloorChange(num);
-        }
-      });
-    });
-
-    this.slider.addEventListener('input', () => {
-      const val = parseInt(this.slider.value, 10) / 100;
-      this.explodeController.setExplodeRatio(val);
-
-      // Reset to 'all' button if slider is adjusted
-      const allBtn = Array.from(this.floorButtons).find(b => b.dataset.floor === 'all');
-      if (allBtn && !allBtn.classList.contains('active')) {
-        this.floorButtons.forEach(b => b.classList.remove('active'));
-        allBtn.classList.add('active');
-        this.explodeController.setFocusedFloor('all');
-      }
-      this.badge.textContent = `All (${Math.round(val * 100)}%)`;
-    });
-  }
-
-  public selectFloor(level: number | 'all') {
-    const targetVal = level.toString();
-    const btn = Array.from(this.floorButtons).find(b => b.dataset.floor === targetVal);
-    if (btn) {
-      btn.click();
+  constructor(private controller: ExplodeController | null, campus: CampusData) {
+    const container = document.getElementById('floor-buttons')!;
+    container.replaceChildren();
+    for (const floor of campus.buildings.flatMap(b => b.floors).sort((a, b) => a.elevation - b.elevation)) this.labels.set(floor.level, floor.label);
+    for (const [value, label] of [['all', '全階'], ...[...this.labels].map(([level, label]) => [String(level), label])]) {
+      const button = document.createElement('button'); button.className = 'floor-btn';
+      button.dataset.floor = value; button.textContent = label;
+      button.addEventListener('click', () => this.selectFloor(value === 'all' ? 'all' : Number(value)));
+      container.append(button); this.buttons.push(button);
     }
+    this.slider.addEventListener('input', () => {
+      this.selectFloor('all'); this.controller?.setExplodeRatio(Number(this.slider.value) / 100);
+    });
+    this.selectFloor(1);
+  }
+
+  public setController(controller: ExplodeController) { this.controller = controller; this.selectFloor(this.active); }
+  public getActiveFloor() { return this.active; }
+  public selectFloor(level: number | 'all') {
+    if (level !== 'all' && !this.labels.has(level)) return;
+    this.active = level;
+    for (const button of this.buttons) {
+      const active = button.dataset.floor === String(level); button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+    }
+    this.badge.textContent = level === 'all' ? '全階' : this.labels.get(level)!;
+    this.controller?.setFocusedFloor(level); this.onFloorChange?.(level);
   }
 }

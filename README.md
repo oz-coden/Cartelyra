@@ -1,152 +1,87 @@
 # Uniview
 
-Japanese section is [available](#目次) below this section.
+A static, browser-side campus map and reference route planner for Kanagawa University’s Yokohama Campus. [日本語はこちら](#日本語).
 
-## Table of Contents
+This prototype transcribes user-supplied campus and Building 3 floor-plan photographs. It is **unofficial and not field verified**. Floor plans are schematic; dimensions, heights, entrances, facility availability and access restrictions have not been surveyed.
 
-1. [Summary](#summary)
-2. [Background of Development](#background-of-development)
-3. [Features](#features)
-4. [Usage](#usage)
-5. [Data Architecture](#data-architecture)
-6. [Requirements & Dependencies](#requirements--dependencies)
-7. [Installation & Local Dev](#installation--local-dev)
-8. [LICENSE](#license)
+- Campus overview: approximate building locations; outdoor routes are not registered.
+- Building 3: B2, B1, 1F, 2F, 3F and 4F; 35 main rooms, 34 with provisional route connections. Room `3-B202` is display-only because its entrance connection is unclear.
+- SVG floor maps with room picking, keyboard selection, pan/zoom, room search and floor-by-floor route steps.
+- Optional Three.js view generated from the same polygons, including atrium holes. The 3D bundle loads only when selected and pauses while hidden; the default SVG view works without WebGL.
+- Shortest schematic route, stair avoidance, indoor preference and stairs preference. Stair avoidance does **not** certify wheelchair accessibility.
+- Distances and walking times display “未測定” (not measured). Inferred connections can be excluded; no field-verified route network exists yet.
 
----
+## Develop and check
 
-## Summary
-**Uniview** is a serverless, client-side 3D campus navigation and route-finding system. Built entirely on coordinates and procedural geometry generation (without external 3D DCC models like Blender/GLTF), it dynamically constructs campus buildings, floor slabs, rooms, stairwells, and elevator shafts directly in the browser.
+Use Node.js 20 or newer and npm. Node.js is a development/build dependency, not a production application server.
 
-## Background of Development
-Traditional 3D indoor navigation systems rely heavily on heavy 3D CAD/BIM or DCC models (GLTF/OBJ), making maintenance tedious whenever room assignments or layouts change. Uniview eliminates this burden through a **pure data-driven procedural architecture**, enabling instant updates via JSON/CSV and lightweight zero-latency deployment on static hosts like GitHub Pages or Cloudflare Pages.
-
-## Features
-- **Procedural 3D Architecture**: Generates buildings, rooms, stairs, and sky bridges dynamically from coordinate data.
-- **Accordion / Exploded View**: Explode floors vertically or focus on a specific floor with real-time pin and path synchronization.
-- **A\* Pathfinding Engine**: Calculates optimal routes across multi-floor buildings with customized constraints:
-  - ⚡ **Shortest Path**
-  - ♿ **Accessible (Barrier-Free)** (stairs excluded, elevator prioritized)
-  - ☂️ **Rainy / Indoor Priority** (indoor sky-bridge prioritized)
-  - 🪜 **Stairs Priority** (avoids elevator wait times)
-- **High-Contrast Dark & Light Modes**: Seamless visual switching between clean architectural isometric and glowing neon cyber views.
-- **Incremental Fuzzy Search**: Search classrooms, lecture halls, and facilities by name, aliases, or code.
-- **Interactive 3D Picking**: Click directly on any room in 3D to inspect details and set Start or Destination points.
-- **Step-by-Step Guidance**: Visual turn-by-turn cards with camera focus tracking.
-
-## Usage
-1. Open the web application.
-2. Select or search an origin (e.g. "大学正門") and destination (e.g. "302情報ネットワーク講義室").
-3. Choose routing condition (Shortest, Accessible, Indoor, Stairs).
-4. Watch the animated 3D pulse route and click bottom guidance steps to inspect navigation turns.
-5. Use the right panel to expand floors (e.g. focus on 3F).
-
-## Data Architecture
-Campus structures and navigation graphs are stored in `src/data/campus.json`. Customizing a university layout requires only editing JSON coordinates.
-
-## Requirements & Dependencies
-- Node.js >= 18.0.0
-- Three.js
-- @tweenjs/tween.js
-- Vite & TypeScript
-
-## Installation & Local Dev
 ```bash
-# Clone repository
 git clone https://github.com/oz-coden/Uniview.git
 cd Uniview
-
-# Install dependencies
-npm install
-
-# Start local dev server
+npm ci
 npm run dev
-
-# Build production static bundle
-npm run build
 ```
 
-## LICENSE
-This project is released under the MIT License.  
-
----
-
-# Uniview (日本語)
-
-## 目次
-
-1. [概要](#概要)
-2. [開発背景](#開発背景)
-3. [機能](#機能)
-4. [使い方](#使い方)
-5. [データ構造](#データ構造)
-6. [前提・依存](#前提依存)
-7. [導入・起動方法](#導入起動方法)
-8. [ライセンス](#ライセンス)
-
----
-
-## 概要
-**Uniview** は、Webブラウザ上で完結して大学構内の教室案内および任意の2点間ルート案内を提供する3Dキャンパスナビゲーションシステムです。
-Blender等のDCCツールによる重い3Dモデリングデータを用いず、**座標データに基づくプロシージャル幾何生成**と**数学的A*探索グラフ**によって空間描画・垂直スライス展開・経路計算をすべてクライアントサイド（サーバーレス）で実行します。
-
-## 開発背景
-従来の3D屋内マップはCADやBlenderで制作した巨大な3Dモデル（GLTF等）を配信する必要があり、部屋の用途変更やフロア改修のたびにモデルを再編集・再書き出しする多大なコストがかかっていました。Univiewは**「完全データ駆動アプローチ」**を採用し、JSONで部屋の直方体バウンディングとノード接続を定義するだけで、即座に3Dキャンパス空間と高精度な経路探索網を自動構築します。
-
-## 機能
-- **プロシージャル3D幾何自動生成**:
-  - 直方体（Box）の組み合わせで校舎・フロア・教室・階段シャフト・エレベーター・渡り廊下・中央広場・正門を自動生成。
-  - 教室名や「🪜 階段」「🛗 EV」の3Dビルボードラベルを自動配置。
-- **階層フォーカス型垂直エクスプロード（スライス展開）**:
-  - 通常の全階展開スライダーに加え、指定した階（例: 3F）の上下の間隔が大きく開き、重なりを解消してその階が見渡せるアコーディオン展開を搭載。
-  - **展開追従システム**: フロアがアニメーションで動いた際、出発地・目的地の3Dピンマーカーおよびルートスプライン曲線がリアルタイムに追従。
-- **多条件A*経路探索エンジン**:
-  - ⚡ **最短ルート**: 純粋な移動距離優先。
-  - ♿ **バリアフリー**: 階段を完全除外、各棟のエレベーターや渡り廊下のみを利用。
-  - ☂️ **雨天・屋内優先**: 屋外広場を避け、2F連絡スカイブリッジ（渡り廊下）を経由。
-  - 🪜 **階段優先**: エレベーター待ち時間を回避し、階段ルートを優先。
-- **ライト＆ダークモード両対応**:
-  - ☀️ **ライトモード**: 清潔感のある建築アイソメトリック模型調（フロストガラス＆ソフトシャドウ）。
-  - 🌙 **ダークモード**: サイバー調のダークスレート背景＋鮮烈なエレクトリック・シアン発光ルート＋ネオングリッド。
-- **インクリメンタル検索 & 表記揺れ吸収**:
-  - 教室名、号館番号（例: 「3-302」「3302」）、通称エイリアス（「学食」「図書館」「PC室」など）を即座にサジェスト。
-- **3D直接タップ指定**:
-  - 3D空間上の教室をクリックして詳細ツールチップを表示し、「ここから出発」「ここへ行く」を設定可能。
-- **ステップ別道順テキストガイド**:
-  - 「1. 正門から中央広場へ直進」→「2. 1号館エントランスから入館」→「3. 階段で3階へ上がる」といったカードを画面下部に提示。ステップをクリックするとカメラがその地点へスムーズにズーム＆パン移動。
-
-## 使い方
-1. ブラウザでアプリを開きます（`http://localhost:5173/`）。
-2. 左パネルで出発地（例: 「大学正門」）と目的地（例: 「302情報ネットワーク講義室」）を選択または入力します。
-3. 移動条件（「最短」「バリアフリー」「雨天・屋内」「階段優先」）を切り替えて最適なルートを確認します。
-4. 右のフロアコントロールパネルで「3F」などをクリックすると、目的の階がアコーディオン展開されます。
-5. 画面下部のステップカードをクリックすると、曲がり角や階段・EVの地点へカメラがフォーカスします。
-
-## データ構造
-キャンパスの幾何形状および接続関係は `src/data/campus.json` にすべて集約されています。
-新しい教室や建物を追加・変更する際は、このJSONを編集するだけで即座に3D空間と経路探索に反映されます。
-
-## 前提・依存
-- Node.js >= 18.0.0
-- Three.js
-- @tweenjs/tween.js
-- Vite & TypeScript
-
-## 導入・起動方法
 ```bash
-# リポジトリのクローン
-git clone https://github.com/oz-coden/Uniview.git
-cd Uniview
-
-# 依存パッケージのインストール
-npm install
-
-# 開発サーバーの起動
-npm run dev
-
-# 本番用静的ファイルのビルド (dist/ が出力されます)
-npm run build
+npm run validate:data  # source references, IDs, connectivity and geometric checks
+npm test               # regression tests and all-room-pair route optimality checks
+npm run build          # validation, TypeScript and static build
+npm run preview        # serve the built output locally
 ```
+
+Deploy the contents of `dist/` to a static host such as GitHub Pages. Vite uses relative asset paths. The included deployment workflow requires GitHub Pages to be configured to use GitHub Actions; this change does not modify the repository’s hosting settings.
+
+## Data maintenance
+
+Data lives under `src/data/`, split into a campus manifest, overview, building records and per-floor JSON files. Shared compiler code transforms building-local geometry and navigation nodes into world coordinates for 3D rendering and route search. Files are discovered at build time; no database, API key or runtime backend is required.
+
+See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. A graphical map editor and complete campus routing are future work.
+
+## License
+
+[MIT](LICENSE). Source photographs are not included; `src/data/sources.json` identifies the supplied reference images.
+
+---
+
+# 日本語
+
+**Uniview** は、神奈川大学 横浜キャンパスの建物配置・フロア図と、参考経路を表示する静的Webアプリです。表示・検索・経路計算はブラウザー内で行います。
+
+現在は、提供された校舎配置図と3号館の案内図を転記した**非公式の試作版**です。実寸・出入口・階段／EVの接続・利用制限などは現地未確認です。
+
+## 登録範囲と操作
+
+| 対象 | 現在の状態 |
+| --- | --- |
+| キャンパス全体 | 建物の概略配置。屋外経路は未登録 |
+| 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
+| 主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
+| 3-B202 | 入口の接続先が不明のため、表示のみ |
+| 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
+| 実距離・徒歩時間 | 未測定 |
+
+1. 上部の「キャンパス」「平面図」「3D」で表示を切り替えます。キャンパス図の3号館を選ぶとフロア図を開きます。
+2. 右側の階ボタンで表示階を選びます。平面図はドラッグで移動、ホイールまたは＋／−で拡大縮小できます。
+3. 出発地・目的地を入力し、検索候補を選びます。部屋をタップして「ここから出発」「ここへ行く」でも指定できます。
+4. 道順カードを選ぶと、その階へ切り替わります。
+5. 「未確認の接続を含む参考ルートを表示」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
+
+「最短」は登録座標上の距離を最小化します。階段や屋外への隠れた加算はありません。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」は階段接続を除外する機能で、車椅子での通行可否を保証しません。
+
+3Dは必要時に読み込みます。WebGLが利用できない環境でも平面図を利用できます。
+
+## 開発・公開
+
+Node.js 20以上とnpmで、上記のコマンドを実行してください。`npm run build` はデータ検証・型検査・静的ファイル生成を行い、`dist/` を出力します。公開後のアプリケーションサーバーやデータベースは不要です。
+
+GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages → Build and deployment → Source → GitHub Actions** を設定します。今回の変更では公開設定の変更・本番デプロイは行っていません。
+
+## データの追加・修正
+
+各階のJSONを編集すると、平面図・3D・経路検索に共通して反映されます。座標、出典、確認状態の扱いと具体例は [データ編集ガイド](docs/data-authoring.md) を参照してください。
+
+次の段階では、現地との照合、入口・階段・EVの確認、実寸の校正、屋外経路・他棟の登録、図面を下敷きにした編集ツールを進める想定です。
 
 ## ライセンス
-本プロジェクトは [MIT License](LICENSE) のもとで公開されています。
+
+[MIT License](LICENSE)。写真原本は同梱せず、参照した写真を `src/data/sources.json` に記録しています。
