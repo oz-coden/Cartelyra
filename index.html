@@ -3,16 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="大学講義室 3D案内・経路探索システム Uniview。プロシージャル3D幾何生成とA*アルゴリズムによるリアルタイムルート案内。" />
-    <title>Uniview | 大学講義室 3D案内・経路探索システム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="神奈川大学 横浜キャンパスの非公式キャンパスマップ。3号館のフロア図と参考ルートを静的サイトで表示します。" />
+    <title>Uniview | 横浜キャンパス・3号館マップ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="theme-light">
+  <body class="theme-light" data-view="floor">
     <!-- 3D Canvas Container -->
     <div id="canvas-container" class="canvas-container"></div>
+
+    <main id="map-panel" class="map-panel" aria-label="キャンパスマップ">
+      <div class="map-header"><div><h2 id="map-heading">3号館 / 1F</h2><p>掲示図から作成した模式図</p></div>
+        <div class="map-zoom"><button id="map-zoom-out" aria-label="地図を縮小">−</button><button id="map-zoom-in" aria-label="地図を拡大">＋</button></div>
+      </div>
+      <div id="map-canvas" class="map-canvas"></div>
+      <p class="map-legend">青：部屋　灰：設備等　白：廊下　点線：吹き抜け　紫：参考ルート</p>
+      <p id="map-caption" class="map-caption"></p>
+    </main>
 
     <!-- Main UI Overlay -->
     <div id="ui-overlay" class="ui-overlay">
@@ -27,10 +36,15 @@
           </div>
           <div class="brand-text">
             <h1 class="app-title">Uniview</h1>
-            <span class="app-subtitle">Campus 3D Navigator</span>
+            <span class="app-subtitle">横浜キャンパス / 非公式・試作版</span>
           </div>
         </div>
 
+        <div class="view-switch" aria-label="表示切り替え">
+          <button id="btn-view-campus" aria-pressed="false">キャンパス</button>
+          <button id="btn-view-floor" aria-pressed="true">平面図</button>
+          <button id="btn-view-3d" aria-pressed="false">3D</button>
+        </div>
         <div class="top-actions">
           <button id="btn-theme-toggle" class="btn-icon" aria-label="テーマ切り替え" title="ライト/ダークモード切替">
             <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -73,10 +87,10 @@
               <div class="input-indicator start-dot" title="出発地"></div>
               <div class="input-box">
                 <label for="input-start" class="visually-hidden">出発地</label>
-                <input type="text" id="input-start" placeholder="出発地 (例: 正門, 1-101...)" autocomplete="off" />
+                <input type="text" id="input-start" placeholder="出発地（例: 3-103、階段2）" autocomplete="off" />
                 <button id="btn-clear-start" class="btn-clear hidden" aria-label="出発地クリア">×</button>
               </div>
-              <button id="btn-pick-start" class="btn-pick" title="3D上で直接クリックして指定">
+              <button id="btn-pick-start" class="btn-pick" title="地図上の部屋を選んで指定">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
@@ -101,10 +115,10 @@
               <div class="input-indicator dest-dot" title="目的地"></div>
               <div class="input-box">
                 <label for="input-dest" class="visually-hidden">目的地</label>
-                <input type="text" id="input-dest" placeholder="目的地 (例: 302講義室, 購買部...)" autocomplete="off" />
+                <input type="text" id="input-dest" placeholder="目的地（例: 3-201）" autocomplete="off" />
                 <button id="btn-clear-dest" class="btn-clear hidden" aria-label="目的地クリア">×</button>
               </div>
-              <button id="btn-pick-dest" class="btn-pick" title="3D上で直接クリックして指定">
+              <button id="btn-pick-dest" class="btn-pick" title="地図上の部屋を選んで指定">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
                   <circle cx="12" cy="10" r="3"></circle>
@@ -119,11 +133,6 @@
           <div class="quick-presets">
             <span class="preset-label">クイック選択:</span>
             <div class="preset-chips">
-              <button class="preset-chip" data-node="node_main_gate">正門</button>
-              <button class="preset-chip" data-node="node_bldg1_entrance">1号館入口</button>
-              <button class="preset-chip" data-node="node_bldg2_entrance">2号館入口</button>
-              <button class="preset-chip" data-node="node_cafeteria">学生食堂</button>
-              <button class="preset-chip" data-node="node_library">図書館</button>
             </div>
           </div>
 
@@ -131,13 +140,13 @@
           <div class="route-filters">
             <span class="filter-label">移動条件:</span>
             <div class="filter-buttons">
-              <button class="filter-btn active" data-filter="shortest" title="移動距離が最短のルート">
+              <button class="filter-btn active" data-filter="shortest" title="登録された座標上で最短のルート（実距離未測定）">
                 <span class="filter-icon">⚡</span>
                 <span class="filter-text">最短</span>
               </button>
-              <button class="filter-btn" data-filter="accessible" title="階段を使わずエレベーターのみを使用">
+              <button class="filter-btn" data-filter="accessible" title="登録データで階段を避ける参考経路。車椅子での通行可否は未確認">
                 <span class="filter-icon">♿</span>
-                <span class="filter-text">バリアフリー</span>
+                <span class="filter-text">階段を避ける</span>
               </button>
               <button class="filter-btn" data-filter="indoor" title="雨に濡れない屋内・渡り廊下を優先">
                 <span class="filter-icon">☂️</span>
@@ -150,8 +159,15 @@
             </div>
           </div>
 
+          <div class="data-notice">
+            <strong>参考マップ・現地未確認</strong>
+            <p>出入口・階段／EVの接続と利用条件は未確認です。縮尺・階高は表示用のため、距離と所要時間は未測定です。</p>
+            <label class="route-preview-option"><input type="checkbox" id="allow-inferred" checked /> 未確認の接続を含む参考ルートを表示</label>
+            <p>登録範囲：3号館 B2〜4F。キャンパス全体は建物配置のみ。</p>
+          </div>
           <!-- Route Summary Info -->
-          <div id="route-summary-panel" class="route-summary hidden">
+          <div id="route-summary-panel" class="route-summary hidden" aria-live="polite">
+            <p id="route-confidence" class="route-confidence"></p>
             <div class="summary-metric">
               <span class="metric-label">総移動距離</span>
               <span id="summary-distance" class="metric-value">0 m</span>
@@ -172,7 +188,7 @@
       <div id="floor-control" class="floor-control">
         <div class="control-card">
           <div class="control-header">
-            <span class="control-title">フロア展開</span>
+            <span class="control-title">フロア</span>
             <span id="explode-level-badge" class="badge">All</span>
           </div>
 
@@ -186,7 +202,7 @@
           </div>
 
           <!-- Continuous Explode Slider -->
-          <div class="slider-wrapper">
+          <div class="slider-wrapper three-only">
             <label for="explode-slider" class="slider-label">展開ギャップ</label>
             <input type="range" id="explode-slider" min="0" max="100" value="0" step="1" />
           </div>
@@ -218,8 +234,10 @@
       </div>
 
       <!-- Toast Notification -->
-      <div id="toast" class="toast hidden"></div>
+      <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
     </div>
+
+    <noscript>このマップの表示と経路検索にはJavaScriptが必要です。</noscript>
 
     <!-- Script Entry Point -->
     <script type="module" src="./src/main.ts"></script>

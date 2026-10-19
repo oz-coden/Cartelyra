@@ -1,0 +1,237 @@
+{
+  "buildingId": "b3",
+  "id": "b2",
+  "level": -2,
+  "label": "B2",
+  "stackIndex": 0,
+  "elevation": 0,
+  "sourceId": "b3-f2-b2",
+  "notes": [
+    "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
+    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
+    "3-B202は入口不明のため経路検索の対象外。機械室・設備区画・ピットも経路対象外。"
+  ],
+  "outline": [[0, 0], [100, 0], [100, 96], [20, 96], [20, 25], [0, 25]],
+  "voids": [],
+  "rooms": [
+    {
+      "id": "3-B201",
+      "name": "3-B201 資料整理修復室",
+      "aliases": [
+        "B201",
+        "3B201"
+      ],
+      "category": "facility",
+      "polygon": [[34, 3], [64, 3], [64, 29], [34, 29]],
+      "description": "図面表記：日本常民文化研究所。入口位置・利用条件未確認。",
+      "entrance": "room-B201"
+    },
+    {
+      "id": "3-B202",
+      "name": "3-B202 歴史資料収蔵室",
+      "aliases": [
+        "B202",
+        "3B202"
+      ],
+      "category": "facility",
+      "polygon": [[64, 3], [82, 3], [82, 29], [64, 29]],
+      "description": "入口の接続先が読み取れないため、表示のみ。日本常民文化研究所。"
+    },
+    {
+      "id": "3-B203",
+      "name": "3-B203 民俗資料収蔵室",
+      "aliases": [
+        "B203",
+        "3B203"
+      ],
+      "category": "facility",
+      "polygon": [[48, 29], [82, 29], [82, 68], [48, 68]],
+      "description": "入口位置・利用条件未確認。",
+      "entrance": "room-B203"
+    }
+  ],
+  "features": [
+    {
+      "id": "machine",
+      "label": "機械室等（利用条件未確認）",
+      "type": "service",
+      "polygon": [[0, 0], [25, 0], [25, 25], [0, 25]]
+    },
+    {
+      "id": "ev",
+      "label": "EV",
+      "type": "elevator",
+      "polygon": [[27, 14], [34, 14], [34, 21], [27, 21]]
+    },
+    {
+      "id": "stairs2",
+      "label": "階段2",
+      "type": "stairs",
+      "polygon": [[20, 73], [27, 73], [27, 88], [20, 88]]
+    },
+    {
+      "id": "wc-m",
+      "label": "男性用トイレ",
+      "type": "restroom",
+      "polygon": [[35, 35], [41, 35], [41, 41], [35, 41]]
+    },
+    {
+      "id": "wc-w",
+      "label": "女性用トイレ",
+      "type": "restroom",
+      "polygon": [[35, 41], [41, 41], [41, 47], [35, 47]]
+    },
+    {
+      "id": "pit",
+      "label": "ピット",
+      "type": "pit",
+      "polygon": [[82, 0], [100, 0], [100, 96], [82, 96]]
+    },
+    {
+      "id": "equipment",
+      "label": "設備区画（利用条件未確認）",
+      "type": "service",
+      "polygon": [[27, 73], [82, 73], [82, 96], [27, 96]]
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {
+        "id": "nw",
+        "name": "北側廊下 B2",
+        "position": [32, 12],
+        "type": "corridor"
+      },
+      {
+        "id": "ev-j",
+        "name": "EV前 B2",
+        "position": [32, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "west",
+        "name": "西側廊下 B2",
+        "position": [32, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "mid-n",
+        "name": "収蔵室前廊下 B2",
+        "position": [44, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "mid",
+        "name": "収蔵室前廊下 B2",
+        "position": [44, 50],
+        "type": "corridor"
+      },
+      {
+        "id": "sw",
+        "name": "階段2前廊下 B2",
+        "position": [28, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "stair2",
+        "name": "階段2 B2",
+        "position": [24, 73],
+        "type": "stairs",
+        "isPreset": true
+      },
+      {
+        "id": "elevator",
+        "name": "EV B2",
+        "position": [30, 21],
+        "type": "elevator",
+        "isPreset": true
+      },
+      {
+        "id": "room-B201",
+        "name": "3-B201 資料整理修復室 入口（推定）",
+        "position": [34, 12],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-B203",
+        "name": "3-B203 民俗資料収蔵室 入口（推定）",
+        "position": [48, 50],
+        "type": "room_entrance"
+      }
+    ],
+    "edges": [
+      {
+        "from": "nw",
+        "to": "ev-j",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "ev-j",
+        "to": "west",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west",
+        "to": "mid-n",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "mid-n",
+        "to": "mid",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west",
+        "to": "sw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "sw",
+        "to": "stair2",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "ev-j",
+        "to": "elevator",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-B201",
+        "to": "nw",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-B203",
+        "to": "mid",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      }
+    ]
+  }
+}

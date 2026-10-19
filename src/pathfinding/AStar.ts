@@ -1,269 +1,91 @@
-import { CampusData, NavNode, NavEdge, RouteFilterType, RouteResult, RouteStep } from '../types/campus';
+import type { CampusData, NavNode, NavEdge, RouteFilterType, RouteResult, RouteStep } from '../types/campus';
 
-interface GraphEdge {
-  targetId: string;
-  weight: number;
-  originalEdge: NavEdge;
-}
+interface GraphEdge { targetId: string; distance: number; edge: NavEdge; reversed: boolean }
 
+/** Exact non-negative cost search. h=0 remains valid even with explicit distances and preference costs. */
 export class AStarPathfinder {
-  private nodes: Map<string, NavNode> = new Map();
-  private adjList: Map<string, GraphEdge[]> = new Map();
+  private nodes = new Map<string, NavNode>();
+  private adjacency = new Map<string, GraphEdge[]>();
 
-  constructor(campusData: CampusData) {
-    this.buildGraph(campusData);
-  }
-
-  private buildGraph(data: CampusData) {
-    this.nodes.clear();
-    this.adjList.clear();
-
+  constructor(private data: CampusData) {
     for (const node of data.navigation.nodes) {
-      this.nodes.set(node.id, node);
-      this.adjList.set(node.id, []);
+      if (this.nodes.has(node.id)) throw new Error(`Duplicate navigation node: ${node.id}`);
+      this.nodes.set(node.id, node); this.adjacency.set(node.id, []);
     }
-
     for (const edge of data.navigation.edges) {
-      const u = this.nodes.get(edge.from);
-      const v = this.nodes.get(edge.to);
-      if (!u || !v) continue;
-
-      const physicalDistance = edge.distance ?? this.calculateDistance(u.position, v.position);
-
-      // Add bi-directional edges
-      this.adjList.get(edge.from)?.push({
-        targetId: edge.to,
-        weight: physicalDistance,
-        originalEdge: edge
-      });
-
-      this.adjList.get(edge.to)?.push({
-        targetId: edge.from,
-        weight: physicalDistance,
-        originalEdge: edge
-      });
+      const a = this.nodes.get(edge.from), b = this.nodes.get(edge.to);
+      if (!a || !b) throw new Error(`Unknown edge endpoint: ${edge.from} -> ${edge.to}`);
+      const distance = edge.distance ?? Math.hypot(...a.position.map((p, i) => p - b.position[i]));
+      if (!Number.isFinite(distance) || distance < 0) throw new Error(`Invalid edge distance: ${edge.from}`);
+      if (edge.blocked) continue;
+      this.adjacency.get(a.id)!.push({ targetId: b.id, distance, edge, reversed: false });
+      if (edge.bidirectional !== false) this.adjacency.get(b.id)!.push({ targetId: a.id, distance, edge, reversed: true });
     }
   }
 
-  private calculateDistance(p1: [number, number, number], p2: [number, number, number]): number {
-    const dx = p1[0] - p2[0];
-    const dy = p1[1] - p2[1];
-    const dz = p1[2] - p2[2];
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
-  }
+  public getNode(id: string) { return this.nodes.get(id); }
+  public getAllNodes() { return [...this.nodes.values()]; }
 
-  public getNode(id: string): NavNode | undefined {
-    return this.nodes.get(id);
-  }
-
-  public getAllNodes(): NavNode[] {
-    return Array.from(this.nodes.values());
-  }
-
-  public findPath(
-    startNodeId: string,
-    goalNodeId: string,
-    filter: RouteFilterType = 'shortest'
-  ): RouteResult | null {
-    const startNode = this.nodes.get(startNodeId);
-    const goalNode = this.nodes.get(goalNodeId);
-
-    if (!startNode || !goalNode) return null;
-    if (startNodeId === goalNodeId) {
-      return {
-        pathNodes: [startNode],
-        totalDistance: 0,
-        estimatedMinutes: 0,
-        floorChanges: 0,
-        steps: [
-          {
-            stepNumber: 1,
-            instruction: `目的地「${goalNode.name}」に到着しました`,
-            nodeId: goalNode.id,
-            position: goalNode.position,
-            floor: goalNode.floor,
-            distance: 0
-          }
-        ]
-      };
-    }
-
-    // A* algorithm
-    const openSet = new Set<string>([startNodeId]);
-    const cameFrom = new Map<string, { prevId: string; edge: NavEdge; stepDist: number }>();
-
-    const gScore = new Map<string, number>();
-    gScore.set(startNodeId, 0);
-
-    const fScore = new Map<string, number>();
-    fScore.set(startNodeId, this.calculateDistance(startNode.position, goalNode.position));
-
-    while (openSet.size > 0) {
-      // Get node in openSet with lowest fScore
-      let currentId = '';
-      let lowestF = Infinity;
-      for (const id of openSet) {
-        const score = fScore.get(id) ?? Infinity;
-        if (score < lowestF) {
-          lowestF = score;
-          currentId = id;
-        }
-      }
-
-      if (currentId === goalNodeId) {
-        return this.reconstructPath(cameFrom, currentId, startNode);
-      }
-
-      openSet.delete(currentId);
-      const neighbors = this.adjList.get(currentId) || [];
-
-      for (const neighbor of neighbors) {
-        const edge = neighbor.originalEdge;
-
-        // Filter: Accessible mode ignores non-accessible edges (stairs)
-        if (filter === 'accessible' && !edge.isAccessible) {
-          continue;
-        }
-
-        // Calculate custom edge cost based on filter and human physical burden
-        let edgeCost = neighbor.weight;
-
-        // 1. Vertical Circulation Burden:
-        // Stairs and Elevators require significant human effort / wait time compared to flat walking.
-        // A single floor change (~4.5m height) corresponds to roughly 18-22m of flat walking effort.
-        // This naturally prioritizes horizontal plane movement (such as 2F Sky-Bridge)
-        // and prevents wasteful down-and-up detour routes!
-        if (edge.type === 'stairs') {
-          edgeCost += 20.0;
-        } else if (edge.type === 'elevator') {
-          edgeCost += 24.0;
-        } else if (edge.type === 'outdoor') {
-          // Slight penalty for outdoor weather exposure, preferring indoor connections
-          edgeCost += 6.0;
-        }
-
-        // 2. Filter-specific adjustments
-        if (filter === 'indoor' && !edge.isIndoor) {
-          // Heavy penalty for outdoor edges when raining/indoor prioritized
-          edgeCost *= 4.5;
-        } else if (filter === 'stairs' && edge.type === 'elevator') {
-          // Penalty for elevator wait time when stairs prioritized
-          edgeCost += 35.0;
-        } else if (filter === 'accessible' && edge.type === 'elevator') {
-          // Bonus for elevator in accessible mode
-          edgeCost *= 0.8;
-        }
-
-        const tentativeG = (gScore.get(currentId) ?? Infinity) + edgeCost;
-        const currentNeighborG = gScore.get(neighbor.targetId) ?? Infinity;
-
-        if (tentativeG < currentNeighborG) {
-          cameFrom.set(neighbor.targetId, {
-            prevId: currentId,
-            edge: edge,
-            stepDist: neighbor.weight
-          });
-          gScore.set(neighbor.targetId, tentativeG);
-
-          const neighborNode = this.nodes.get(neighbor.targetId)!;
-          const h = this.calculateDistance(neighborNode.position, goalNode.position);
-          fScore.set(neighbor.targetId, tentativeG + h);
-
-          openSet.add(neighbor.targetId);
+  public findPath(startId: string, goalId: string, filter: RouteFilterType = 'shortest', allowInferred = true): RouteResult | null {
+    if (!this.nodes.has(startId) || !this.nodes.has(goalId)) return null;
+    const open = new Set([startId]), costs = new Map([[startId, 0]]);
+    const previous = new Map<string, { from: string; link: GraphEdge }>();
+    while (open.size) {
+      const current = [...open].reduce((a, b) => costs.get(a)! <= costs.get(b)! ? a : b);
+      open.delete(current);
+      if (current === goalId) return this.reconstruct(startId, goalId, previous);
+      for (const link of this.adjacency.get(current)!) {
+        const edge = link.edge;
+        if (!allowInferred && edge.verification !== 'verified') continue;
+        if (filter === 'accessible' && (!edge.isAccessible || edge.type === 'stairs')) continue;
+        // Pure shortest mode has no hidden stair, elevator or outdoor penalties.
+        let cost = link.distance;
+        if (filter === 'indoor' && !edge.isIndoor) cost *= 4.5;
+        if (filter === 'stairs' && edge.type === 'elevator') cost += 35;
+        const nextCost = costs.get(current)! + cost;
+        if (nextCost < (costs.get(link.targetId) ?? Infinity)) {
+          costs.set(link.targetId, nextCost); previous.set(link.targetId, { from: current, link }); open.add(link.targetId);
         }
       }
     }
-
-    return null; // Path not found
+    return null;
   }
 
-  private reconstructPath(
-    cameFrom: Map<string, { prevId: string; edge: NavEdge; stepDist: number }>,
-    currentId: string,
-    startNode: NavNode
-  ): RouteResult {
-    const pathNodes: NavNode[] = [];
-    const usedEdges: Array<{ edge: NavEdge; dist: number }> = [];
+  private floorInfo(node: NavNode) {
+    return this.data.buildings.find(b => b.id === node.buildingId)?.floors.find(f => f.level === node.floor);
+  }
 
-    let curr = currentId;
-    while (curr) {
-      const node = this.nodes.get(curr);
-      if (node) pathNodes.unshift(node);
-
-      const link = cameFrom.get(curr);
-      if (!link) break;
-      usedEdges.unshift({ edge: link.edge, dist: link.stepDist });
-      curr = link.prevId;
+  private reconstruct(start: string, goal: string, previous: Map<string, { from: string; link: GraphEdge }>): RouteResult {
+    const pathNodes = [this.nodes.get(goal)!], links: GraphEdge[] = [];
+    let id = goal;
+    while (id !== start) {
+      const p = previous.get(id)!; links.unshift(p.link); id = p.from; pathNodes.unshift(this.nodes.get(id)!);
     }
-
-    let totalPhysicalDistance = 0;
-    for (const item of usedEdges) {
-      totalPhysicalDistance += item.dist;
-    }
-
-    // Floor changes count
     let floorChanges = 0;
     for (let i = 1; i < pathNodes.length; i++) {
-      if (pathNodes[i].floor !== pathNodes[i - 1].floor) {
-        floorChanges += Math.abs(pathNodes[i].floor - pathNodes[i - 1].floor);
-      }
+      const a = this.floorInfo(pathNodes[i - 1]), b = this.floorInfo(pathNodes[i]);
+      if (a && b && pathNodes[i - 1].buildingId === pathNodes[i].buildingId) floorChanges += Math.abs((a.stackIndex ?? a.level) - (b.stackIndex ?? b.level));
     }
-
-    // 80 meters per minute average walking speed + 30s per floor change
-    const estimatedMinutes = Math.max(1, Math.round((totalPhysicalDistance / 80 + (floorChanges * 0.5)) * 10) / 10);
-
-    // Generate descriptive textual steps
-    const steps: RouteStep[] = [];
-    let stepNumber = 1;
-
-    // Initial step
-    steps.push({
-      stepNumber: stepNumber++,
-      instruction: `「${startNode.name}」から出発`,
-      nodeId: startNode.id,
-      position: startNode.position,
-      floor: startNode.floor,
-      distance: 0
-    });
-
-    for (let i = 0; i < usedEdges.length; i++) {
-      const { edge, dist } = usedEdges[i];
-      const nextNode = pathNodes[i + 1];
-      const prevNode = pathNodes[i];
-
-      let instruction = edge.instruction;
+    const totalDistance = links.reduce((sum, link) => sum + link.distance, 0);
+    const distanceUnit = this.data.coordinateUnit ?? 'meters';
+    const steps: RouteStep[] = [{ stepNumber: 1, instruction: `「${pathNodes[0].name}」から出発`, nodeId: start,
+      position: pathNodes[0].position, floor: pathNodes[0].floor, distance: 0 }];
+    links.forEach((link, i) => {
+      const to = pathNodes[i + 1];
+      const floor = this.floorInfo(to)?.label ?? String(to.floor);
+      let instruction = link.reversed ? link.edge.reverseInstruction : link.edge.instruction;
       if (!instruction) {
-        if (edge.type === 'stairs') {
-          const dir = nextNode.floor > prevNode.floor ? '上がる' : '下りる';
-          instruction = `階段で ${nextNode.floor}F へ${dir}`;
-        } else if (edge.type === 'elevator') {
-          instruction = `エレベーターで ${nextNode.floor}F へ移動`;
-        } else if (edge.type === 'bridge') {
-          instruction = `2F 連絡スカイブリッジを渡る`;
-        } else if (i === usedEdges.length - 1) {
-          instruction = `「${nextNode.name}」へ到着`;
-        } else {
-          instruction = `${nextNode.name} 方面へ進む (${Math.round(dist)}m)`;
-        }
+        if (link.edge.type === 'stairs' || link.edge.type === 'elevator') {
+          instruction = `${link.edge.type === 'stairs' ? '階段' : 'EV'}で ${floor} へ移動`;
+        } else if (i === links.length - 1) instruction = `「${to.name}」に到着`;
+        else instruction = `${to.name} へ進む`;
       }
-
-      steps.push({
-        stepNumber: stepNumber++,
-        instruction,
-        nodeId: nextNode.id,
-        position: nextNode.position,
-        floor: nextNode.floor,
-        edgeType: edge.type,
-        distance: Math.round(dist * 10) / 10
-      });
-    }
-
-    return {
-      pathNodes,
-      totalDistance: Math.round(totalPhysicalDistance * 10) / 10,
-      estimatedMinutes,
-      floorChanges,
-      steps
-    };
+      steps.push({ stepNumber: i + 2, instruction, nodeId: to.id, position: to.position, floor: to.floor,
+        edgeType: link.edge.type, distance: distanceUnit === 'meters' ? Math.round(link.distance * 10) / 10 : 0 });
+    });
+    if (!links.length) steps[0].instruction = `「${pathNodes[0].name}」に到着しています`;
+    return { pathNodes, totalDistance: Math.round(totalDistance * 10) / 10,
+      estimatedMinutes: distanceUnit === 'meters' && links.length ? Math.round((totalDistance / 80 + floorChanges * 0.5) * 10) / 10 : 0,
+      floorChanges, steps, distanceUnit, inferredConnections: links.filter(l => l.edge.verification !== 'verified').length };
   }
 }

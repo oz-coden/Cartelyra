@@ -29,13 +29,16 @@ export class SearchPanel {
   private summaryTime = document.getElementById('summary-time') as HTMLElement;
   private summaryVertical = document.getElementById('summary-vertical') as HTMLElement;
 
+  public onRouteClear: (() => void) | null = null;
+
   // Callbacks
-  public onRouteSearch: ((startNodeId: string, destNodeId: string, filter: RouteFilterType) => void) | null = null;
+  public onRouteSearch: ((startNodeId: string, destNodeId: string, filter: RouteFilterType, allowInferred: boolean) => void) | null = null;
   public onPickModeToggle: ((mode: 'start' | 'dest' | 'none') => void) | null = null;
   public onRoomFocus: ((roomId: string) => void) | null = null;
 
   constructor(private campusData: CampusData) {
     this.indexSearchTargets();
+    this.renderPresets();
     this.setupEventListeners();
   }
 
@@ -46,6 +49,7 @@ export class SearchPanel {
     for (const bldg of this.campusData.buildings) {
       for (const floor of bldg.floors) {
         for (const room of floor.rooms) {
+          if (!room.entranceNodeId) continue;
           this.searchTargets.push({
             id: room.entranceNodeId,
             name: room.name,
@@ -63,21 +67,36 @@ export class SearchPanel {
         this.searchTargets.push({
           id: node.id,
           name: node.name,
-          subText: node.buildingId ? `${node.floor}F` : '屋外エリア',
+          subText: node.buildingId ? this.campusData.buildings.find(b => b.id === node.buildingId)?.floors.find(f => f.level === node.floor)?.label ?? '' : '屋外エリア',
           aliases: [node.name]
         });
       }
     }
   }
 
+  private renderPresets() {
+    const container = document.querySelector('.preset-chips')!; container.replaceChildren();
+    const targets = this.searchTargets.filter(t => ['b3/f1/stair2', 'b3/f1/elevator', 'b3/f1/room-103', 'b3/f2/room-201'].includes(t.id));
+    for (const target of targets) {
+      const button = document.createElement('button'); button.className = 'preset-chip'; button.dataset.node = target.id;
+      button.textContent = target.name; container.append(button);
+    }
+  }
+
+  private clearRoute() { this.hideSummary(); this.onRouteClear?.(); }
+
   private setupEventListeners() {
     // Input start & suggestions
     this.inputStart.addEventListener('input', () => {
+      this.selectedStartNodeId = null;
+      this.clearRoute();
       this.handleSearchInput(this.inputStart.value, this.suggestionsStart, 'start');
       this.btnClearStart.classList.toggle('hidden', !this.inputStart.value);
     });
 
     this.inputDest.addEventListener('input', () => {
+      this.selectedDestNodeId = null;
+      this.clearRoute();
       this.handleSearchInput(this.inputDest.value, this.suggestionsDest, 'dest');
       this.btnClearDest.classList.toggle('hidden', !this.inputDest.value);
     });
@@ -151,6 +170,8 @@ export class SearchPanel {
       });
     });
 
+    document.getElementById('allow-inferred')?.addEventListener('change', () => this.checkAndTriggerSearch());
+
     // Filter toggle buttons
     const filterButtons = document.querySelectorAll<HTMLButtonElement>('.filter-btn');
     filterButtons.forEach(btn => {
@@ -185,7 +206,8 @@ export class SearchPanel {
   }
 
   private handleSearchInput(query: string, container: HTMLElement, type: 'start' | 'dest') {
-    const q = query.trim().toLowerCase();
+    const normalize = (value: string) => value.normalize('NFKC').replace(/[−–—]/g, '-').trim().toLowerCase();
+    const q = normalize(query);
     if (!q) {
       container.classList.add('hidden');
       return;
@@ -193,9 +215,9 @@ export class SearchPanel {
 
     // Filter matches
     const matches = this.searchTargets.filter(target => {
-      if (target.name.toLowerCase().includes(q)) return true;
-      if (target.subText.toLowerCase().includes(q)) return true;
-      return target.aliases.some(a => a.toLowerCase().includes(q));
+      if (normalize(target.name).includes(q)) return true;
+      if (normalize(target.subText).includes(q)) return true;
+      return target.aliases.some(a => normalize(a).includes(q));
     }).slice(0, 6);
 
     container.innerHTML = '';
@@ -203,12 +225,12 @@ export class SearchPanel {
       container.innerHTML = '<div class="suggestion-item"><span class="suggestion-name">該当する場所が見つかりません</span></div>';
     } else {
       for (const item of matches) {
-        const row = document.createElement('div');
+        const row = document.createElement('button');
+        row.type = 'button';
         row.className = 'suggestion-item';
-        row.innerHTML = `
-          <span class="suggestion-name">${item.name}</span>
-          <span class="suggestion-sub">${item.subText}</span>
-        `;
+        const name = document.createElement('span'), sub = document.createElement('span');
+        name.className = 'suggestion-name'; name.textContent = item.name;
+        sub.className = 'suggestion-sub'; sub.textContent = item.subText; row.append(name, sub);
         row.addEventListener('click', () => {
           if (type === 'start') {
             this.setStart(item.id, item.name);
@@ -245,17 +267,18 @@ export class SearchPanel {
   public checkAndTriggerSearch() {
     if (this.selectedStartNodeId && this.selectedDestNodeId) {
       if (this.onRouteSearch) {
-        this.onRouteSearch(this.selectedStartNodeId, this.selectedDestNodeId, this.currentFilter);
+        this.onRouteSearch(this.selectedStartNodeId, this.selectedDestNodeId, this.currentFilter, (document.getElementById('allow-inferred') as HTMLInputElement).checked);
       }
     } else {
-      this.hideSummary();
+      this.clearRoute();
     }
   }
 
   public updateSummary(result: RouteResult) {
-    this.summaryDist.textContent = `${result.totalDistance} m`;
-    this.summaryTime.textContent = `約 ${result.estimatedMinutes} 分`;
+    this.summaryDist.textContent = result.distanceUnit === 'meters' ? `${result.totalDistance} m` : '未測定';
+    this.summaryTime.textContent = result.distanceUnit === 'meters' ? `約 ${result.estimatedMinutes} 分` : '未測定';
     this.summaryVertical.textContent = result.floorChanges === 0 ? '同フロア' : `${result.floorChanges} フロア移動`;
+    document.getElementById('route-confidence')!.textContent = result.pathNodes.length === 1 ? '出発地と目的地は同じ場所です' : result.inferredConnections ? '参考ルート（現地未確認の接続を含みます）' : '現地確認済みの接続';
     this.summaryPanel.classList.remove('hidden');
   }
 

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { CampusData, Building, Floor, Room, NavNode } from '../types/campus';
+import { CampusData, Building, Floor, Room, NavNode, Point2, FloorFeature } from '../types/campus';
+import { bounds, worldToLocal } from '../data/geometry';
 
 export interface RoomMeshRecord {
   mesh: THREE.Mesh;
@@ -36,6 +37,7 @@ export class BuildingRenderer {
   private buildBuilding(bldg: Building) {
     const bldgGroup = new THREE.Group();
     bldgGroup.position.set(...bldg.origin);
+    bldgGroup.rotation.y = bldg.rotation ?? 0;
     bldgGroup.userData = { type: 'building', id: bldg.id, name: bldg.name };
 
     for (const floor of bldg.floors) {
@@ -46,7 +48,8 @@ export class BuildingRenderer {
         type: 'floor',
         buildingId: bldg.id,
         level: floor.level,
-        baseElevation: floor.elevation
+        baseElevation: floor.elevation,
+        stackIndex: floor.stackIndex ?? floor.level - 1
       };
 
       // Floor Slab
@@ -60,10 +63,11 @@ export class BuildingRenderer {
       }
 
       // Vertical Facilities: Stairs & Elevators
+      if (floor.features) for (const feature of floor.features) floorGroup.add(this.createFeature(feature));
       const vertNodes = this.campusData.navigation.nodes.filter(
         n => n.buildingId === bldg.id && n.floor === floor.level && (n.type === 'stairs' || n.type === 'elevator')
       );
-      for (const node of vertNodes) {
+      for (const node of floor.features ? [] : vertNodes) {
         const marker = this.createVerticalFacilityMarker(node, bldg);
         floorGroup.add(marker);
       }
@@ -80,7 +84,7 @@ export class BuildingRenderer {
     const { w, d, x, z } = floor.slab;
     const slabHeight = 0.35;
 
-    const slabGeo = new THREE.BoxGeometry(w, slabHeight, d);
+    const slabGeo = floor.outline ? this.polygonGeometry(floor.outline, slabHeight, floor.voids) : new THREE.BoxGeometry(w, slabHeight, d);
     const slabMat = new THREE.MeshStandardMaterial({
       color: this.isDarkTheme ? 0x1e293b : 0xe2e8f0,
       roughness: 0.5,
@@ -90,7 +94,7 @@ export class BuildingRenderer {
     });
 
     const slabMesh = new THREE.Mesh(slabGeo, slabMat);
-    slabMesh.position.set(x, -slabHeight / 2, z);
+    slabMesh.position.set(floor.outline ? 0 : x, floor.outline ? -slabHeight : -slabHeight / 2, floor.outline ? 0 : z);
     slabMesh.receiveShadow = true;
     slabMesh.castShadow = true;
     slabGroup.add(slabMesh);
@@ -118,9 +122,9 @@ export class BuildingRenderer {
     const { x, z, w, d } = room.box;
     const h = room.box.h || 3.4;
 
-    const boxGeo = new THREE.BoxGeometry(w, h, d);
+    const boxGeo = room.polygon ? this.polygonGeometry(room.polygon.map(p => [p[0] - x, p[1] - z]), h) : new THREE.BoxGeometry(w, h, d);
 
-    const baseColor = room.color || (bldg.id === 'bldg1' ? '#3b82f6' : '#10b981');
+    const baseColor = room.color || bldg.color;
     const roomMat = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(baseColor),
       roughness: 0.25,
@@ -134,7 +138,7 @@ export class BuildingRenderer {
     });
 
     const roomMesh = new THREE.Mesh(boxGeo, roomMat);
-    roomMesh.position.set(x, h / 2, z);
+    roomMesh.position.set(x, room.polygon ? 0 : h / 2, z);
     roomMesh.castShadow = true;
     roomMesh.receiveShadow = true;
     roomMesh.userData = {
@@ -159,8 +163,9 @@ export class BuildingRenderer {
     roomGroup.add(edgeLine);
 
     // Floating text label sprite
-    const labelSprite = this.createTextLabelSprite(room.name, baseColor);
+    const labelSprite = this.createTextLabelSprite(room.id, baseColor);
     labelSprite.position.set(x, h + 0.8, z);
+    labelSprite.scale.set(10, 2.5, 1);
     roomGroup.add(labelSprite);
 
     // Save record for fast interaction & highlighting
@@ -174,6 +179,27 @@ export class BuildingRenderer {
     });
 
     return roomGroup;
+  }
+
+  private polygonGeometry(polygon: Point2[], depth: number, holes: Point2[][] = []): THREE.ExtrudeGeometry {
+    const shape = new THREE.Shape(polygon.map(([x, z]) => new THREE.Vector2(x, -z)));
+    for (const hole of holes) shape.holes.push(new THREE.Path(hole.map(([x, z]) => new THREE.Vector2(x, -z))));
+    const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
+    geometry.rotateX(-Math.PI / 2);
+    return geometry;
+  }
+
+  private createFeature(feature: FloorFeature): THREE.Group {
+    const group = new THREE.Group();
+    const color = feature.type === 'stairs' ? '#c58d31' : feature.type === 'elevator' ? '#218c9e' : feature.type === 'aed' ? '#cf4563' : '#8793a5';
+    const geometry = this.polygonGeometry(feature.polygon, 1.5);
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.7 }));
+    group.add(mesh);
+    const box = bounds(feature.polygon);
+    const label = this.createTextLabelSprite(feature.label, color);
+    label.position.set(box.x, 3, box.z);
+    label.scale.set(9, 2.25, 1); group.add(label);
+    return group;
   }
 
   private buildOutdoorStructures() {
@@ -361,8 +387,7 @@ export class BuildingRenderer {
 
   private createVerticalFacilityMarker(node: NavNode, bldg: Building): THREE.Group {
     const group = new THREE.Group();
-    const localX = node.position[0] - bldg.origin[0];
-    const localZ = node.position[2] - bldg.origin[2];
+    const [localX, localZ] = worldToLocal(bldg, node.position);
     const isStairs = node.type === 'stairs';
     const colorHex = isStairs ? (this.isDarkTheme ? 0xf59e0b : 0xd97706) : (this.isDarkTheme ? 0x06b6d4 : 0x0284c7);
 

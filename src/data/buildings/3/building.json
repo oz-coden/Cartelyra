@@ -1,0 +1,130 @@
+{
+  "id": "b3",
+  "name": "3号館",
+  "code": "3",
+  "color": "#4258aa",
+  "origin": [-55, 0, -48],
+  "rotation": 0,
+  "floorIds": [
+    "b2",
+    "b1",
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+  ],
+  "connections": [
+    {
+      "from": "b3/b1/stair1",
+      "to": "b3/f1/stair1",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f1/stair1",
+      "to": "b3/f2/stair1",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f2/stair1",
+      "to": "b3/f3/stair1",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f3/stair1",
+      "to": "b3/f4/stair1",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/b2/stair2",
+      "to": "b3/b1/stair2",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/b1/stair2",
+      "to": "b3/f1/stair2",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f1/stair2",
+      "to": "b3/f2/stair2",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f2/stair2",
+      "to": "b3/f3/stair2",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/f3/stair2",
+      "to": "b3/f4/stair2",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b3/b2/elevator",
+      "to": "b3/b1/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b3/b1/elevator",
+      "to": "b3/f1/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b3/f1/elevator",
+      "to": "b3/f2/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b3/f2/elevator",
+      "to": "b3/f3/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b3/f3/elevator",
+      "to": "b3/f4/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    }
+  ]
+}

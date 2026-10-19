@@ -36,14 +36,15 @@ export class ExplodeController {
 
     for (const floorGroup of this.buildingRenderer.floorGroups.values()) {
       const baseElev = (floorGroup.userData.baseElevation as number) || 0;
-      const level = (floorGroup.userData.level as number) || 1;
+      const level = floorGroup.userData.level as number;
+      const stackIndex = floorGroup.userData.stackIndex as number;
 
       let targetY = baseElev;
 
       if (isAllMode) {
         // Uniform expansion based on slider ratio
         const extraOffsetPerFloor = 9.0 * this.currentGapRatio;
-        targetY = baseElev + (level - 1) * extraOffsetPerFloor;
+        targetY = baseElev + stackIndex * extraOffsetPerFloor;
       } else {
         // Specific floor focused mode:
         // Floors below focus stay at base

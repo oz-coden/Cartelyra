@@ -1,0 +1,494 @@
+{
+  "buildingId": "b3",
+  "id": "f3",
+  "level": 3,
+  "label": "3F",
+  "stackIndex": 4,
+  "elevation": 48,
+  "sourceId": "b3-f3-b1",
+  "notes": [
+    "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
+    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。"
+  ],
+  "outline": [[0, 0], [100, 0], [100, 60], [110, 60], [110, 70], [100, 70], [100, 96], [20, 96], [20, 25], [0, 25]],
+  "voids": [[[44, 28], [59, 28], [59, 40], [44, 40]], [[44, 49], [59, 49], [59, 63], [44, 63]]],
+  "rooms": [
+    {
+      "id": "3-301",
+      "name": "3-301",
+      "aliases": [
+        "301",
+        "3301"
+      ],
+      "category": "unknown",
+      "polygon": [[42, 0], [58, 0], [58, 20], [42, 20]],
+      "entrance": "room-301"
+    },
+    {
+      "id": "3-302",
+      "name": "3-302",
+      "aliases": [
+        "302",
+        "3302"
+      ],
+      "category": "unknown",
+      "polygon": [[58, 0], [69, 0], [69, 20], [58, 20]],
+      "entrance": "room-302"
+    },
+    {
+      "id": "3-303",
+      "name": "3-303",
+      "aliases": [
+        "303",
+        "3303"
+      ],
+      "category": "unknown",
+      "polygon": [[69, 0], [80, 0], [80, 20], [69, 20]],
+      "entrance": "room-303"
+    },
+    {
+      "id": "3-304",
+      "name": "3-304",
+      "aliases": [
+        "304",
+        "3304"
+      ],
+      "category": "unknown",
+      "polygon": [[80, 0], [90, 0], [90, 20], [80, 20]],
+      "entrance": "room-304"
+    },
+    {
+      "id": "3-305",
+      "name": "3-305",
+      "aliases": [
+        "305",
+        "3305"
+      ],
+      "category": "unknown",
+      "polygon": [[59, 28], [95, 28], [95, 63], [59, 63]],
+      "entrance": "room-305"
+    },
+    {
+      "id": "3-308",
+      "name": "3-308",
+      "aliases": [
+        "308",
+        "3308"
+      ],
+      "category": "unknown",
+      "polygon": [[27, 70], [44, 70], [44, 96], [27, 96]],
+      "entrance": "room-308"
+    },
+    {
+      "id": "3-307",
+      "name": "3-307",
+      "aliases": [
+        "307",
+        "3307"
+      ],
+      "category": "unknown",
+      "polygon": [[44, 70], [64, 70], [64, 96], [44, 96]],
+      "entrance": "room-307"
+    },
+    {
+      "id": "3-306",
+      "name": "3-306",
+      "aliases": [
+        "306",
+        "3306"
+      ],
+      "category": "unknown",
+      "polygon": [[74, 70], [100, 70], [100, 96], [74, 96]],
+      "entrance": "room-306"
+    }
+  ],
+  "features": [
+    {
+      "id": "wc-w",
+      "label": "女性用トイレ",
+      "type": "restroom",
+      "polygon": [[0, 3], [12, 3], [12, 20], [0, 20]]
+    },
+    {
+      "id": "wc-m",
+      "label": "男性用トイレ",
+      "type": "restroom",
+      "polygon": [[12, 3], [26, 3], [26, 20], [12, 20]]
+    },
+    {
+      "id": "wc-a",
+      "label": "多目的トイレ",
+      "type": "restroom",
+      "polygon": [[21, 14], [26, 14], [26, 20], [21, 20]]
+    },
+    {
+      "id": "ev",
+      "label": "EV",
+      "type": "elevator",
+      "polygon": [[27, 12], [34, 12], [34, 21], [27, 21]]
+    },
+    {
+      "id": "stairs1",
+      "label": "階段1",
+      "type": "stairs",
+      "polygon": [[90, 2], [100, 2], [100, 20], [90, 20]]
+    },
+    {
+      "id": "stairs2",
+      "label": "階段2",
+      "type": "stairs",
+      "polygon": [[20, 73], [27, 73], [27, 88], [20, 88]]
+    },
+    {
+      "id": "stairs3",
+      "label": "階段3（接続未確認）",
+      "type": "stairs",
+      "polygon": [[100, 60], [110, 60], [110, 70], [100, 70]]
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {
+        "id": "nw",
+        "name": "3F 北西廊下",
+        "position": [24, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "n42",
+        "name": "3F 北側廊下",
+        "position": [42, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "n50",
+        "name": "3F 北側廊下",
+        "position": [50, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "n64",
+        "name": "3F 北側廊下",
+        "position": [64, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "n75",
+        "name": "3F 北側廊下",
+        "position": [75, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "ne",
+        "name": "3F 北東廊下",
+        "position": [97, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "sw",
+        "name": "3F 南西廊下",
+        "position": [24, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "s36",
+        "name": "3F 南側廊下",
+        "position": [36, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "s54",
+        "name": "3F 南側廊下",
+        "position": [54, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "s69",
+        "name": "3F 南側廊下",
+        "position": [69, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "s86",
+        "name": "3F 南側廊下",
+        "position": [86, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "se",
+        "name": "3F 南東廊下",
+        "position": [97, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "west",
+        "name": "西側廊下",
+        "position": [24, 46],
+        "type": "corridor"
+      },
+      {
+        "id": "stair1",
+        "name": "階段1 3F",
+        "position": [95, 20],
+        "type": "stairs",
+        "isPreset": true
+      },
+      {
+        "id": "stair2",
+        "name": "階段2 3F",
+        "position": [24, 73],
+        "type": "stairs",
+        "isPreset": true
+      },
+      {
+        "id": "elevator",
+        "name": "EV 3F",
+        "position": [30, 21],
+        "type": "elevator",
+        "isPreset": true
+      },
+      {
+        "id": "room-301",
+        "name": "3-301 入口（推定）",
+        "position": [50.0, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-302",
+        "name": "3-302 入口（推定）",
+        "position": [63.5, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-303",
+        "name": "3-303 入口（推定）",
+        "position": [74.5, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-304",
+        "name": "3-304 入口（推定）",
+        "position": [85.0, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-305",
+        "name": "3-305 入口（推定）",
+        "position": [75, 28],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-308",
+        "name": "3-308 入口（推定）",
+        "position": [36, 70],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-307",
+        "name": "3-307 入口（推定）",
+        "position": [54, 70],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-306",
+        "name": "3-306 入口（推定）",
+        "position": [86, 70],
+        "type": "room_entrance"
+      }
+    ],
+    "edges": [
+      {
+        "from": "nw",
+        "to": "n42",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "n42",
+        "to": "n50",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "n50",
+        "to": "n64",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "n64",
+        "to": "n75",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "n75",
+        "to": "ne",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "sw",
+        "to": "s36",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "s36",
+        "to": "s54",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "s54",
+        "to": "s69",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "s69",
+        "to": "s86",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "s86",
+        "to": "se",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "nw",
+        "to": "west",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west",
+        "to": "sw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "ne",
+        "to": "se",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "stair1",
+        "to": "ne",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "stair2",
+        "to": "sw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "elevator",
+        "to": "nw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-301",
+        "to": "n50",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-302",
+        "to": "n64",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-303",
+        "to": "n75",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-304",
+        "to": "ne",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-305",
+        "to": "n75",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-308",
+        "to": "s36",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-307",
+        "to": "s54",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "room-306",
+        "to": "s86",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      }
+    ]
+  }
+}

@@ -40,21 +40,23 @@ export class SceneManager {
   private dirLight: THREE.DirectionalLight;
   private hemiLight: THREE.HemisphereLight;
   private isDark: boolean = false;
+  private active = true;
+  private animationId: number | null = null;
 
-  private defaultCameraPos = new THREE.Vector3(35, 45, 60);
-  private defaultTarget = new THREE.Vector3(0, 5, 0);
+  private defaultCameraPos = new THREE.Vector3(120, 155, 160);
+  private defaultTarget = new THREE.Vector3(0, 24, 0);
 
   constructor(container: HTMLElement) {
     // 1. Scene
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(LIGHT_THEME.fog, 0.008);
+    this.scene.fog = new THREE.FogExp2(LIGHT_THEME.fog, 0.002);
 
     // 2. Camera
     this.camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.5,
-      500
+      1500
     );
     this.camera.position.copy(this.defaultCameraPos);
 
@@ -78,7 +80,7 @@ export class SceneManager {
     this.controls.dampingFactor = 0.06;
     this.controls.maxPolarAngle = Math.PI / 2 - 0.05; // Don't go below ground
     this.controls.minDistance = 5;
-    this.controls.maxDistance = 180;
+    this.controls.maxDistance = 450;
     this.controls.target.copy(this.defaultTarget);
 
     // 5. Lights
@@ -111,18 +113,18 @@ export class SceneManager {
 
     // 8. Start Loop
     this.animate = this.animate.bind(this);
-    requestAnimationFrame(this.animate);
+    this.animationId = requestAnimationFrame(this.animate);
   }
 
   private setupGround() {
     // Infinite grid helper
     if (this.gridHelper) this.scene.remove(this.gridHelper);
-    this.gridHelper = new THREE.GridHelper(180, 60, LIGHT_THEME.gridLine, LIGHT_THEME.gridSub);
+    this.gridHelper = new THREE.GridHelper(300, 60, LIGHT_THEME.gridLine, LIGHT_THEME.gridSub);
     this.gridHelper.position.y = -0.05;
     this.scene.add(this.gridHelper);
 
     // Subtle ground plane to catch shadows
-    const groundGeo = new THREE.PlaneGeometry(300, 300);
+    const groundGeo = new THREE.PlaneGeometry(600, 600);
     const groundMat = new THREE.ShadowMaterial({ opacity: 0.15 });
     const ground = new THREE.Mesh(groundGeo, groundMat);
     ground.rotation.x = -Math.PI / 2;
@@ -150,7 +152,7 @@ export class SceneManager {
 
     if (this.gridHelper) {
       this.scene.remove(this.gridHelper);
-      this.gridHelper = new THREE.GridHelper(180, 60, theme.gridLine, theme.gridSub);
+      this.gridHelper = new THREE.GridHelper(300, 60, theme.gridLine, theme.gridSub);
       this.gridHelper.position.y = -0.05;
       this.scene.add(this.gridHelper);
     }
@@ -193,6 +195,13 @@ export class SceneManager {
     this.flyTo(this.defaultTarget, this.defaultCameraPos, duration);
   }
 
+  public setActive(active: boolean) {
+    if (this.active === active) return;
+    this.active = active;
+    if (active) this.animationId = requestAnimationFrame(this.animate);
+    else if (this.animationId !== null) cancelAnimationFrame(this.animationId);
+  }
+
   private onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
@@ -200,7 +209,8 @@ export class SceneManager {
   }
 
   private animate(time: number) {
-    requestAnimationFrame(this.animate);
+    if (!this.active) return;
+    this.animationId = requestAnimationFrame(this.animate);
     TWEEN.update(time);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
