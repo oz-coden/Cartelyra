@@ -5,12 +5,16 @@ Uniview is a static Vite/TypeScript application. Campus JSON is compiled at buil
 ## Shared data and state
 
 - `data/compile.ts` qualifies navigation IDs and transforms building-local geometry into world coordinates. Optional campus connections join explicitly authored building entrances.
-- `data/places.ts` indexes rooms, WCs, elevators, stairs, AEDs and remaining preset locations. One place record supplies names, aliases, building/floor context and an optional routing node to every interface.
+- `data/places.ts` indexes rooms, WCs, elevators, stairs, AEDs, remaining preset locations and campus gates. One place record supplies names, aliases, building/floor context and an optional routing node to every interface.
 - `ui/LocationState.ts` keeps building and floor together, remembers each building's last floor and handles missing data without substituting another building's map.
-- `ui/FloorMap.ts`, `ui/SearchPanel.ts` and `scene/ThreeView.ts` render and select those shared places. Route endpoints are available only when an explicit navigation connection exists.
+- `ui/FloorMap.ts`, `ui/SearchPanel.ts` and `scene/ThreeView.ts` render and select those shared places. Route endpoint names can be selected independently of connectivity; only explicit navigation nodes can produce routes.
 - `pathfinding/AStar.ts` uses Dijkstra search (zero heuristic). Preference costs and explicit edge distances therefore preserve optimality. Each guide step carries its building ID and floor.
 
 Building metadata and per-floor JSON are discovered automatically. No building-specific condition is needed in search, the floor controls, map selection or the 3D view. The campus overview can include buildings whose floors have not yet been registered.
+
+`ui/SelectionState.ts` stores the selected place and pending endpoint target. `ui/ThreeDisplayState.ts` stores the 3D display mode and gap independently. Selecting a place or calculating a route does not change the camera or collapse an expanded view. The shared action card belongs to the map workspace. Room and facility meshes share one emissive-material registry. `SceneHost` separates rendering from ThreeView interaction so the complete selection/route flow can be tested without a GPU.
+
+See [requirements and interaction rules](requirements.md) for the product scope and state-transition rules.
 
 ## Review findings and resolutions
 
@@ -19,25 +23,28 @@ Building metadata and per-floor JSON are discovered automatically. No building-s
 | Building selection | UI labels and floor lookups assumed Building 3 or the first building | A catalog merges overview and authored buildings; 30 overview buildings are selectable and missing floors show an explicit empty state |
 | Floor identity | Equal floor numbers from different buildings could share controls or route markers | Building ID and floor are selected together; marker rendering filters both |
 | Facilities | WCs were decorative polygons and absent from route selection | WCs, AEDs, elevators and stairs share the place index, map interaction, search and floor facility list |
-| Provisional entrances | Facility centers could be mistaken for route endpoints | Only explicit entrance/approach node references enable route selection; WC and AED connections remain inferred |
+| Provisional entrances | Facility centers could be mistaken for route endpoints | Only explicit entrance/approach node references enable route computation; WC and AED connections remain inferred |
 | WC geometry | The male-WC polygon overlapped the multipurpose-WC area on upper floors | The male-WC outline follows a notch around the multipurpose area |
 | Guide navigation | Steps retained floor numbers without building context | Steps preserve building ID and can switch the displayed building and floor |
 | Temporary closures | Blocking an edge could cause the authoring validator to reject a disconnected network | Structural connectivity includes registered blocked edges; route search still excludes them |
 | Keyboard and text rendering | Guide cards were clickable divs and inserted instruction text as HTML | Guide cards are native buttons and instructions use text nodes; SVG places/buildings and search support keyboard choice |
-| Pick mode | Input and map selection could leave pick state out of sync | SearchPanel owns the pick state and clears it after endpoint selection or cancellation |
+| Pick mode | Input and map selection could leave pick state out of sync | A shared SelectionState owns the selected place and pick target; SearchPanel clears the target after endpoint selection or cancellation |
 | Browser storage | Theme initialization could fail when local storage was unavailable | Storage failures are tolerated and theme switching works for the current visit |
 | Responsive layout | Fixed overlays made map, guide and details compete for space | Grid/flex sections place building/floor controls, map, routing, details and facilities in explicit desktop/mobile layouts |
+| Gate selection | Gates were non-interactive labels | Gate IDs and campus-scoped places support search, keyboard/map selection and named endpoints without fabricating routes |
+| 3D gap controls | Slider appeared enabled in single-floor mode but had no visible effect | Slider changes select all-floor mode and retain the chosen gap independently of place selection |
+| 3D feedback/actions | Only rooms had emissive highlights, and actions were below the sidebar list | All selectable meshes share highlighting and the action card stays in the map workspace; selection does not move the camera |
 | 3D selection | Hidden floors or buildings could still be raycast targets; facilities were not selectable | Picker checks ancestor visibility and includes facility meshes; focused display shows the selected building/floor |
 | 3D coordinates/resources | Level zero was treated as absent; camera assumed one building; route materials were not fully disposed | Level zero is valid, view fitting uses selected geometry, and discarded route resources and theme grids are disposed |
 | Dependencies | The lockfile included an affected build-time `source-map-js` version | Lockfile resolves `source-map-js` 1.2.2; `npm audit` reports no known vulnerabilities at review time |
 
 ## Coverage and verification
 
-The authored floor data covers Building 3 only: six floors, 35 main rooms (34 route-linked), 17 WCs and one AED. EV/stair approach nodes are shared with facility places. External stairs and unclear entrances remain searchable details without route endpoints. Other buildings currently have overview geometry only. No outdoor or inter-building route is fabricated from the overview.
+The authored floor data covers Building 3 only: six floors, 35 main rooms (34 route-linked), 17 WCs and one AED. EV/stair approach nodes are shared with facility places. External stairs and unclear entrances can be selected as named endpoints but have no route connections. Other buildings currently have overview geometry only. No outdoor or inter-building route is fabricated from the overview.
 
-Automated checks cover source references and corridor geometry, every pair of routable rooms in four modes against an independent Floyd–Warshall result, facility reachability, provisional-only exclusions, synthetic additional buildings, cross-building connections, missing floors, level zero, SVG selection and marker isolation, keyboard search, endpoint editing, pick-state reset and safe text rendering. A DOM integration test loads the actual Vite entry point and exercises room-to-WC routing. CPU-side Three.js tests exercise WC mesh picking, visibility and level-zero position handling.
+Automated checks cover source references and corridor geometry, every pair of routable rooms in four modes against an independent Floyd–Warshall result, facility reachability, provisional-only exclusions, synthetic additional buildings, cross-building connections, missing floors, level zero, SVG selection and marker isolation, keyboard search, endpoint editing, pick-state reset and safe text rendering. A DOM integration test loads the actual Vite entry point and exercises room-to-WC routing. CPU-side Three.js tests exercise WC mesh picking, visibility and level-zero position handling. An interaction test uses the actual app, ThreeView, picker and room/facility meshes with a headless SceneHost to verify 3D endpoint selection, shared actions, emissive highlighting, gap transforms and camera stability together.
 
-These checks do not validate browser layout, WebGL rendering, mobile touch behavior or screen-reader announcements. A browser could not reach the local development environment during review, so the revised layout and WebGL output still need real-browser/device verification. The optional Three.js chunk remains approximately 570 kB before compression; it is not loaded for the default SVG map.
+These checks do not validate browser layout, WebGL rendering, mobile touch behavior or screen-reader announcements. The browser used for review has WebGL disabled, so real WebGL output still needs browser/device verification. The optional Three.js chunk remains approximately 570 kB before compression; it is not loaded for the default SVG map.
 
 ## Remaining map work
 

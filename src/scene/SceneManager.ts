@@ -29,6 +29,22 @@ export const DARK_THEME: ThemeColors = {
   gridSub: 0x1e293b,
 };
 
+/** Rendering boundary: state and picking can be tested without a GPU. */
+export interface SceneHost {
+  scene: THREE.Scene;
+  camera: THREE.PerspectiveCamera;
+  renderer: { domElement: HTMLElement };
+  controls: { maxDistance: number };
+  setActive(active: boolean): void;
+  setDarkTheme(dark: boolean): void;
+  resize(): void;
+  flyTo(
+    target: THREE.Vector3,
+    position?: THREE.Vector3,
+    duration?: number,
+  ): void;
+}
+
 export class SceneManager {
   public scene: THREE.Scene;
   public camera: THREE.PerspectiveCamera;

@@ -1,11 +1,6 @@
 import * as THREE from "three";
-import type {
-  CampusData,
-  Place,
-  RouteResult,
-  RouteStep,
-} from "../types/campus";
-import { localToWorld } from "../data/geometry";
+import type { CampusData, RouteResult, RouteStep } from "../types/campus";
+import type { SceneHost } from "./SceneManager";
 import { SceneManager } from "./SceneManager";
 import { BuildingRenderer } from "./BuildingRenderer";
 import { ExplodeController } from "./ExplodeController";
@@ -14,7 +9,7 @@ import { RaycastPicker } from "./RaycastPicker";
 
 /** Loaded only when selected; the default SVG map never needs WebGL. */
 export class ThreeView {
-  private scene: SceneManager;
+  private scene: SceneHost;
   private buildings: BuildingRenderer;
   private routes: RouteRenderer[] = [];
   private result: RouteResult | null = null;
@@ -29,8 +24,9 @@ export class ThreeView {
   constructor(
     private data: CampusData,
     container: HTMLElement,
+    scene?: SceneHost,
   ) {
-    this.scene = new SceneManager(container);
+    this.scene = scene ?? new SceneManager(container);
     this.buildings = new BuildingRenderer(data);
     this.scene.scene.add(this.buildings.rootGroup);
     this.explode = new ExplodeController(this.buildings);
@@ -58,7 +54,6 @@ export class ThreeView {
     this.explode.setLocation(buildingId, floor, all);
     if (changed) {
       this.renderRoute(this.result);
-      this.reset();
     }
   }
   public setActive(active: boolean) {
@@ -99,22 +94,19 @@ export class ThreeView {
     }
     flush();
   }
-  public focusPlace(place: Place) {
-    this.buildings.highlightRoom(place.roomId ?? null);
-    const building = this.data.buildings.find((b) => b.id === place.buildingId),
-      floor = building?.floors.find((f) => f.level === place.floorLevel);
-    if (building && floor) {
-      const point = localToWorld(building, place.position, floor.elevation);
-      const group = this.buildings.floorGroups.get(
-        `${building.id}_f${floor.level}`,
-      );
-      point[1] += (group?.position.y ?? floor.elevation) - floor.elevation;
-      this.flyTo(new THREE.Vector3(...point));
-    }
+  public selectPlace(id: string | null) {
+    this.buildings.highlightPlace(id);
   }
   public focusStep(step: RouteStep) {
     const node = this.data.navigation.nodes.find((n) => n.id === step.nodeId);
-    if (node) this.flyTo(this.buildings.getNodeWorldPosition(node));
+    if (node) {
+      const point = this.buildings.getNodeWorldPosition(node);
+      this.scene.flyTo(
+        point,
+        point.clone().add(new THREE.Vector3(36, 42, 42)),
+        500,
+      );
+    }
   }
   public reset() {
     this.scene.resize();
@@ -142,13 +134,6 @@ export class ThreeView {
     this.scene.flyTo(
       center,
       center.clone().add(new THREE.Vector3(fit * 0.55, fit * 0.7, fit * 0.65)),
-      500,
-    );
-  }
-  private flyTo(point: THREE.Vector3) {
-    this.scene.flyTo(
-      point,
-      point.clone().add(new THREE.Vector3(36, 42, 42)),
       500,
     );
   }

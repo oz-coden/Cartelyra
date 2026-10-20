@@ -1,104 +1,85 @@
 import * as THREE from "three";
-import { BuildingRenderer } from "./BuildingRenderer";
+import type { BuildingRenderer } from "./BuildingRenderer";
 
-export type PickMode = "normal" | "pick_start" | "pick_dest";
-
+/** A click is one primary pointer without a drag or multi-touch gesture. */
 export class RaycastPicker {
   private raycaster = new THREE.Raycaster();
   private mouse = new THREE.Vector2();
-  private isPointerDown = false;
-  private pointerDownPos = { x: 0, y: 0 };
-  public currentMode: PickMode = "normal";
-
+  private pointers = new Set<number>();
+  private gesture: { id: number; x: number; y: number; moved: boolean } | null =
+    null;
   public onPlaceSelect: ((id: string) => void) | null = null;
   public onBackgroundClick: (() => void) | null = null;
-
   constructor(
     private camera: THREE.Camera,
-    private domElement: HTMLElement,
-    private buildingRenderer: BuildingRenderer,
+    private element: HTMLElement,
+    private renderer: BuildingRenderer,
   ) {
-    this.setupEvents();
-  }
-
-  private setupEvents() {
-    this.domElement.addEventListener("pointerdown", (e) => {
-      this.isPointerDown = true;
-      this.pointerDownPos = { x: e.clientX, y: e.clientY };
-    });
-
-    this.domElement.addEventListener("pointercancel", () => {
-      this.isPointerDown = false;
-    });
-    this.domElement.addEventListener("pointerup", (e) => {
-      if (!this.isPointerDown) return;
-      this.isPointerDown = false;
-
-      // Ignore drag/pan movements (distance > 6px)
-      const dist = Math.hypot(
-        e.clientX - this.pointerDownPos.x,
-        e.clientY - this.pointerDownPos.y,
-      );
-      if (dist > 6) return;
-
-      this.handlePointerClick(e);
-    });
-
-    this.domElement.addEventListener("pointermove", (e) => {
-      // Calculate normalized mouse coords (-1 to +1)
-      const rect = this.domElement.getBoundingClientRect();
-      this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-      this.handleHover();
-    });
-  }
-
-  private handleHover() {
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-
-    const roomMeshes = this.buildingRenderer.placeMeshes.filter((mesh) => {
-      let parent: THREE.Object3D | null = mesh;
-      while (parent) {
-        if (!parent.visible) return false;
-        parent = parent.parent;
+    element.addEventListener("pointerdown", (event) => {
+      const id = event.pointerId ?? 0;
+      this.pointers.add(id);
+      if (this.pointers.size > 1) {
+        this.gesture = null;
+        return;
       }
+      if (event.button !== undefined && event.button !== 0) return;
+      this.gesture = { id, x: event.clientX, y: event.clientY, moved: false };
+    });
+    element.addEventListener("pointermove", (event) => {
+      if (
+        this.gesture &&
+        (event.pointerId ?? 0) === this.gesture.id &&
+        Math.hypot(
+          event.clientX - this.gesture.x,
+          event.clientY - this.gesture.y,
+        ) > 6
+      )
+        this.gesture.moved = true;
+      element.style.cursor = this.hit(event.clientX, event.clientY)
+        ? "pointer"
+        : "default";
+    });
+    element.addEventListener("pointercancel", (event) => {
+      this.pointers.delete(event.pointerId ?? 0);
+      this.gesture = null;
+    });
+    element.addEventListener("pointerup", (event) => {
+      const id = event.pointerId ?? 0,
+        gesture = this.gesture;
+      this.pointers.delete(id);
+      this.gesture = null;
+      if (
+        !gesture ||
+        gesture.id !== id ||
+        gesture.moved ||
+        this.pointers.size ||
+        Math.hypot(event.clientX - gesture.x, event.clientY - gesture.y) > 6
+      )
+        return;
+      const hit = this.hit(event.clientX, event.clientY);
+      if (hit) this.onPlaceSelect?.(hit.userData.placeId);
+      else this.onBackgroundClick?.();
+    });
+  }
+  private hit(x: number, y: number): THREE.Object3D | null {
+    const rect = this.element.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return null;
+    this.mouse.set(
+      ((x - rect.left) / rect.width) * 2 - 1,
+      (-(y - rect.top) / rect.height) * 2 + 1,
+    );
+    this.camera.updateMatrixWorld(true);
+    this.renderer.rootGroup.updateMatrixWorld(true);
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const meshes = this.renderer.placeMeshes.filter((mesh) => {
+      for (
+        let parent: THREE.Object3D | null = mesh;
+        parent;
+        parent = parent.parent
+      )
+        if (!parent.visible) return false;
       return true;
     });
-
-    const intersects = this.raycaster.intersectObjects(roomMeshes, false);
-    if (intersects.length > 0) {
-      this.domElement.style.cursor = "pointer";
-    } else {
-      this.domElement.style.cursor = "default";
-    }
-  }
-
-  private handlePointerClick(e: MouseEvent) {
-    const rect = this.domElement.getBoundingClientRect();
-    this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-
-    const roomMeshes = this.buildingRenderer.placeMeshes.filter((mesh) => {
-      let parent: THREE.Object3D | null = mesh;
-      while (parent) {
-        if (!parent.visible) return false;
-        parent = parent.parent;
-      }
-      return true;
-    });
-
-    const intersects = this.raycaster.intersectObjects(roomMeshes, false);
-    if (intersects.length > 0) {
-      const topHit = intersects[0].object;
-      if (topHit.userData.placeId)
-        this.onPlaceSelect?.(topHit.userData.placeId);
-    } else {
-      if (this.onBackgroundClick) {
-        this.onBackgroundClick();
-      }
-    }
+    return this.raycaster.intersectObjects(meshes, false)[0]?.object ?? null;
   }
 }

@@ -31,12 +31,16 @@ export function buildingCatalog(
   );
 }
 
-export function placeIndex(campus: CampusData): Place[] {
+export function placeIndex(
+  campus: CampusData,
+  overview?: CampusOverview,
+): Place[] {
   const places: Place[] = [],
     indexedNodes = new Set<string>();
   for (const building of campus.buildings)
     for (const floor of building.floors) {
       const context = {
+        scope: "building" as const,
         buildingId: building.id,
         buildingName: building.name,
         floorLevel: floor.level,
@@ -85,7 +89,7 @@ export function placeIndex(campus: CampusData): Place[] {
           id: featurePlaceId(building.id, floor.id, feature.id),
           featureId: feature.id,
           name: feature.label,
-          kind: feature.type as Place["kind"],
+          kind: feature.type as "restroom" | "elevator" | "stairs" | "aed",
           position: [box.x, box.z],
           polygon: feature.polygon,
           aliases,
@@ -114,11 +118,25 @@ export function placeIndex(campus: CampusData): Place[] {
         });
       }
     }
+  for (const gate of overview?.gates ?? [])
+    places.push({
+      id: `campus/gate/${gate.id}`,
+      name: gate.name,
+      kind: "gate",
+      scope: "campus",
+      position: gate.position,
+      aliases: [...(gate.aliases ?? []), "門", "gate"],
+      description: gate.description,
+    });
   return places;
 }
 
+export const placeContext = (place: Place) =>
+  place.scope === "campus"
+    ? "キャンパス / 門"
+    : `${place.buildingName} ${place.floorLabel}`;
 export const placeDisplayName = (place: Place) =>
-  `${place.name}（${place.buildingName} ${place.floorLabel}）`;
+  `${place.name}（${placeContext(place)}）`;
 export const normalizeSearch = (value: string) =>
   value.normalize("NFKC").replace(/[−–—]/g, "-").trim().toLowerCase();
 export function searchPlaces(

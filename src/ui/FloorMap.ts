@@ -52,7 +52,7 @@ export class FloorMap {
     private campus: CampusData,
     private overview: CampusOverview,
   ) {
-    this.places = placeIndex(campus);
+    this.places = placeIndex(campus, overview);
     container.append(this.svg);
     this.setupPanZoom();
   }
@@ -392,7 +392,39 @@ export class FloorMap {
       );
       this.svg.append(group);
     }
-    for (const gate of this.overview.gates)
-      this.label(gate.name, gate.position, "map-label map-gate");
+    for (const gate of this.places.filter((p) => p.kind === "gate")) {
+      const [x, z] = gate.position;
+      const group = element("g", {
+        class: "map-campus-gate",
+        "data-place": gate.id,
+      });
+      group.append(
+        element("rect", {
+          x: String(x - 3),
+          y: String(z - 1.7),
+          width: "6",
+          height: "3.4",
+          rx: "1",
+        }),
+      );
+      group.append(
+        element(
+          "text",
+          {
+            x: String(x),
+            y: String(z),
+            class: "map-label map-gate",
+            "text-anchor": "middle",
+            "dominant-baseline": "middle",
+          },
+          gate.name,
+        ),
+      );
+      this.interactive(group, `${gate.name}（屋外経路未登録）`, () =>
+        this.onPlaceSelect?.(gate),
+      );
+      this.svg.append(group);
+    }
+    this.selectPlace(this.selected);
   }
 }

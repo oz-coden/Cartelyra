@@ -4,10 +4,10 @@ A static, browser-side campus map and reference route planner for Kanagawa Unive
 
 The map data is transcribed from a campus layout plan and photographs of posted Building 3 floor plans. It is **unofficial and not field verified**. Floor plans are schematic; dimensions, heights, entrances, facility availability and access restrictions have not been surveyed.
 
-- Campus overview: 30 selectable building locations. Buildings without floor data show an explicit unregistered state; outdoor routes are not registered.
-- Building 3: B2, B1, 1F, 2F, 3F and 4F; 35 main rooms, 34 with provisional route connections. Room `3-B202` is display-only because its entrance connection is unclear.
-- SVG floor maps with building/floor selection, keyboard picking, pan/zoom and searchable rooms and facilities. Building 3 includes 17 WCs (male, female and multipurpose), an AED, elevators and stairs. Facility entrances and availability are provisional.
-- Shared place indexing and building-local state power search, map selection, facility lists and building-aware route steps. Additional authored buildings load from JSON without per-building UI code.
+- Campus overview: 30 selectable building locations and four searchable/selectable gates. Buildings without floor data show an explicit unregistered state; outdoor routes are not registered.
+- Building 3: B2, B1, 1F, 2F, 3F and 4F; 35 main rooms, 34 with provisional route connections. Room `3-B202` has no route connection because its entrance is unclear.
+- SVG floor maps with building/floor selection, keyboard picking, pan/zoom and searchable rooms, facilities and gates. Building 3 includes 17 WCs (male, female and multipurpose), an AED, elevators and stairs. Facility entrances and availability are provisional.
+- Shared place indexing and building-local state power search, map selection, facility lists and building-aware route steps. Additional authored buildings load from JSON without per-building UI code. Selection and route actions are shared across views; picking a place does not move the 3D camera.
 - Optional Three.js view generated from the same polygons, including atrium holes. The 3D bundle loads only when selected and pauses while hidden; the default SVG view works without WebGL.
 - Shortest schematic route, stair avoidance, indoor preference and stairs preference. Stair avoidance does **not** certify wheelchair accessibility.
 - Distances and walking times display “未測定” (not measured). Inferred connections can be excluded; no field-verified route network exists yet.
@@ -36,7 +36,7 @@ Deploy the contents of `dist/` to a static host such as GitHub Pages. Vite uses 
 
 Data lives under `src/data/`, split into a campus manifest, overview, building records and per-floor JSON files. Shared compiler code transforms building-local geometry and navigation nodes into world coordinates for 3D rendering and route search. Files are discovered at build time; no database, API key or runtime backend is required.
 
-See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. See [Architecture and review notes](docs/architecture-review.md) for the current structure, resolved review findings and verification limits. A graphical map editor and complete campus routing are future work.
+See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. See [requirements and interaction rules](docs/requirements.md) for the product scope and shared selection/3D behavior. See [Architecture and review notes](docs/architecture-review.md) for the current structure, resolved review findings and verification limits. A graphical map editor and complete campus routing are future work.
 
 ## References
 
@@ -58,22 +58,24 @@ Kanagawa University publishes the campus map and barrier-free/AED map on its [Yo
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 30棟を選択可能。建物の概略配置。屋外経路は未登録 |
+| キャンパス全体 | 30棟と4か所の門を選択可能。屋外経路は未登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
 | 主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
-| WC・設備 | WC 17か所、AED 1か所、EV・階段を検索・選択可能。接続未登録の設備は閲覧のみ |
-| 3-B202 | 入口の接続先が不明のため、表示のみ |
+| WC・設備 | WC 17か所、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
+| 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
 
 1. 建物選択またはキャンパス図で棟を選び、階ボタンで表示階を切り替えます。フロア未登録の棟には登録状況を表示します。
 2. 上部の「キャンパス」「平面図」「3D」で表示を切り替えます。平面図はドラッグで移動、ホイールまたは＋／−で拡大縮小できます。
-3. 出発地・目的地に部屋名や「WC」「トイレ」「EV」などを入力し、候補を選びます。「3号館 2F 女性」のような空白区切りの検索も可能です。候補は表示中の棟・階を優先します。
-4. 地図や「このフロアの設備」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口未登録の場所は詳細だけ確認できます。
-5. 道順カードを選ぶと、その棟・階へ切り替わります。3Dでは「全階を表示」と展開ギャップを利用できます。
+3. 出発地・目的地に部屋名や「WC」「トイレ」「EV」「正門」などを入力し、候補を選びます。「3号館 2F 女性」のような空白区切りの検索も可能です。候補は表示中の棟・階を優先します。
+4. 地図や「このフロアの場所」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口や屋外経路が未登録の場所も端点に指定できますが、その場所への経路は表示しません。
+5. 道順カードを選ぶと、その棟・階へ切り替わります。3Dでは「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
 6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
 「最短」は登録座標上の距離を最小化します。階段や屋外への隠れた加算はありません。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」は階段接続を除外する機能で、車椅子での通行可否を保証しません。
+
+部屋・設備を選んでも3Dのカメラは移動しません。選択した場所は地図側の共通カードに表示し、「ここから出発」「ここへ行く」で指定できます。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
 3Dは必要時に読み込みます。WebGLが利用できない環境でも平面図を利用できます。
 

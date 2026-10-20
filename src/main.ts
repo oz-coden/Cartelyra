@@ -2,7 +2,7 @@ import "./style.css";
 import { campusData } from "./data/load";
 import overviewJson from "./data/overview.json";
 import type { CampusOverview } from "./data/schema";
-import { buildingCatalog, placeDisplayName, placeIndex } from "./data/places";
+import { buildingCatalog, placeContext, placeIndex } from "./data/places";
 import type { Place, RouteFilterType, RouteResult } from "./types/campus";
 import { AStarPathfinder } from "./pathfinding/AStar";
 import { ThemeManager } from "./ui/ThemeManager";
@@ -11,20 +11,32 @@ import { FloorControl } from "./ui/FloorControl";
 import { LocationState } from "./ui/LocationState";
 import { StepGuide } from "./ui/StepGuide";
 import { FloorMap } from "./ui/FloorMap";
+import { SelectionState } from "./ui/SelectionState";
+import { ThreeDisplayState } from "./ui/ThreeDisplayState";
 import type { ThreeView } from "./scene/ThreeView";
 
 type View = "campus" | "floor" | "3d";
-class UniviewApp {
+type ThreeFactory = (
+  data: typeof campusData,
+  container: HTMLElement,
+) => Promise<ThreeView>;
+const createThreeView: ThreeFactory = async (data, container) => {
+  const { ThreeView } = await import("./scene/ThreeView");
+  return new ThreeView(data, container);
+};
+export class UniviewApp {
   private three?: ThreeView;
   private loading3D?: Promise<ThreeView>;
   private viewRequest = 0;
   private theme = new ThemeManager();
-  private places = placeIndex(campusData);
+  private places = placeIndex(campusData, overviewJson as CampusOverview);
+  private selection = new SelectionState();
+  private display3D = new ThreeDisplayState();
   private location = new LocationState(
     buildingCatalog(campusData, overviewJson as CampusOverview),
   );
-  private search = new SearchPanel(this.places);
-  private floors = new FloorControl();
+  private search = new SearchPanel(this.places, this.selection);
+  private floors = new FloorControl(this.display3D);
   private guide = new StepGuide();
   private pathfinder = new AStarPathfinder(campusData);
   private map = new FloorMap(
@@ -33,12 +45,10 @@ class UniviewApp {
     overviewJson as CampusOverview,
   );
   private view: View = "floor";
-  private pick: "start" | "dest" | "none" = "none";
-  private selected: Place | null = null;
   private category = "all";
   private result: RouteResult | null = null;
   private toastTimer?: number;
-  constructor() {
+  constructor(private threeFactory: ThreeFactory = createThreeView) {
     const select = document.getElementById(
       "building-select",
     ) as HTMLSelectElement;
@@ -51,15 +61,14 @@ class UniviewApp {
     select.addEventListener("change", () => {
       this.location.selectBuilding(select.value);
       this.applyLocation();
+      if (this.view === "3d") this.three?.reset();
     });
     this.theme.onThemeChange((dark) => this.three?.setTheme(dark));
     this.floors.onFloorChange = (level) => {
       this.location.selectFloor(level);
       this.applyLocation();
     };
-    this.floors.onExplodeChange = (ratio) => {
-      this.three?.explode.setExplodeRatio(ratio);
-    };
+    this.floors.onExplodeChange = () => this.sync3D();
     this.floors.onShowAllChange = () => this.sync3D();
     this.map.onPlaceSelect = (place) => this.selectPlace(place);
     this.map.onBackgroundClick = () => this.hideDetails();
@@ -78,9 +87,14 @@ class UniviewApp {
     };
     this.search.onPlaceFocus = (place) => this.focusPlace(place, true);
     this.search.onPickModeToggle = (target) => {
-      this.pick = target;
+      document
+        .getElementById("pick-banner")!
+        .classList.toggle("hidden", target === "none");
+      document.getElementById("pick-banner-text")!.textContent =
+        target === "start"
+          ? "出発地を選択中：地図の部屋・設備・門を選んでください"
+          : "目的地を選択中：地図の部屋・設備・門を選んでください";
       if (target !== "none") {
-        if (this.view === "campus") void this.setView("floor");
         this.toast(
           `地図の場所を選んで${target === "start" ? "出発地" : "目的地"}に設定してください`,
         );
@@ -100,7 +114,8 @@ class UniviewApp {
       document
         .getElementById(`btn-tooltip-set-${target}`)!
         .addEventListener("click", () => {
-          if (this.selected?.nodeId) this.setPoint(target, this.selected);
+          if (this.selection.selected)
+            this.setPoint(target, this.selection.selected);
         });
     this.guide.onStepClick = (step) => {
       if (step.buildingId) this.location.selectBuilding(step.buildingId);
@@ -109,9 +124,28 @@ class UniviewApp {
       if (this.view === "campus") void this.setView("floor");
       if (this.view === "3d") this.three?.focusStep(step);
     };
+    document
+      .getElementById("btn-close-selection")!
+      .addEventListener("click", () => this.hideDetails());
+    document
+      .getElementById("btn-cancel-pick")!
+      .addEventListener("click", () => this.search.cancelPick());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.search.cancelPick();
+        this.hideDetails();
+      }
+    });
+    for (const gate of this.places.filter((p) => p.kind === "gate")) {
+      const button = document.createElement("button");
+      button.textContent = gate.name;
+      button.addEventListener("click", () => this.selectPlace(gate));
+      document.getElementById("gate-list")!.append(button);
+    }
     const filters = document.getElementById("facility-filters")!;
     for (const [id, label] of [
       ["all", "すべて"],
+      ["room", "部屋"],
       ["restroom", "WC"],
       ["elevator", "EV"],
       ["stairs", "階段"],
@@ -161,7 +195,6 @@ class UniviewApp {
       (p) =>
         p.buildingId === this.location.buildingId &&
         p.floorLevel === this.location.floorLevel &&
-        p.kind !== "room" &&
         (this.category === "all" || p.kind === this.category),
     );
     for (const place of places) {
@@ -186,23 +219,18 @@ class UniviewApp {
     this.three.setLocation(
       this.location.buildingId,
       this.location.floorLevel,
-      (document.getElementById("show-all-floors") as HTMLInputElement).checked,
+      this.display3D.showAll,
     );
-    this.three.explode.setExplodeRatio(
-      Number(
-        (document.getElementById("explode-slider") as HTMLInputElement).value,
-      ) / 100,
-    );
+    this.three.explode.setExplodeRatio(this.display3D.gapRatio);
   }
   private initialize3D() {
     if (this.three) return Promise.resolve(this.three);
     if (!this.loading3D)
-      this.loading3D = import("./scene/ThreeView")
-        .then(({ ThreeView }) => {
-          const view = new ThreeView(
-            campusData,
-            document.getElementById("canvas-container")!,
-          );
+      this.loading3D = this.threeFactory(
+        campusData,
+        document.getElementById("canvas-container")!,
+      )
+        .then((view) => {
           this.three = view;
           view.onPlaceSelect = (id) => {
             const place = this.places.find((p) => p.id === id);
@@ -222,6 +250,7 @@ class UniviewApp {
   }
   private async setView(view: View) {
     const request = ++this.viewRequest;
+    const previous = this.view;
     if (view === "3d") {
       if (!this.location.floor) {
         this.toast("この建物の3Dフロアは未登録です。");
@@ -236,6 +265,10 @@ class UniviewApp {
     }
     if (request !== this.viewRequest) {
       this.three?.setActive(this.view === "3d");
+      return;
+    }
+    if (view === "3d" && !this.location.floor) {
+      this.three?.setActive(false);
       return;
     }
     this.view = view;
@@ -257,8 +290,9 @@ class UniviewApp {
     if (view !== "3d") this.map.showOverview(view === "campus");
     else {
       this.sync3D();
-      this.three?.reset();
+      if (previous !== "3d") this.three?.reset();
     }
+    if (this.selection.selected) this.highlightSelected();
   }
   private searchRoute(
     a: string,
@@ -266,70 +300,71 @@ class UniviewApp {
     filter: RouteFilterType,
     inferred: boolean,
   ) {
-    this.result = this.pathfinder.findPath(a, b, filter, inferred);
+    const unavailable = [a, b]
+      .map((id) => this.places.find((p) => p.id === id || p.nodeId === id))
+      .filter((p): p is Place => !!p && !p.nodeId);
+    this.result = unavailable.length
+      ? null
+      : this.pathfinder.findPath(a, b, filter, inferred);
     this.map.setRoute(this.result);
     this.three?.renderRoute(this.result);
     if (!this.result) {
       this.search.hideSummary();
       this.guide.hide();
       this.toast(
-        inferred
-          ? "この条件で接続する経路は未登録です。"
-          : "現地確認済みの接続だけでは経路がつながりません。参考ルートを有効にすると推定経路を確認できます。",
+        unavailable.length
+          ? `${unavailable.map((p) => `${p.name}の${p.scope === "campus" ? "屋外経路" : "入口・接続"}は未登録です`).join("。")}。出発地・目的地は保存しました。`
+          : inferred
+            ? "この条件で接続する経路は未登録です。"
+            : "現地確認済みの接続だけでは経路がつながりません。参考ルートを有効にすると推定経路を確認できます。",
         6500,
       );
       return;
     }
     this.search.updateSummary(this.result);
     this.guide.showSteps(this.result.steps);
-    this.location.focusNode(this.result.pathNodes[0]);
-    this.applyLocation();
-    if (this.view === "campus") void this.setView("floor");
+    // Computing a route must not change the selected place, displayed floor or camera.
   }
   private focusPlace(place: Place, details = false) {
-    if (
-      this.location.buildingId !== place.buildingId ||
-      this.location.floorLevel !== place.floorLevel
-    ) {
-      this.location.selectBuilding(place.buildingId);
-      this.location.selectFloor(place.floorLevel);
-      this.applyLocation();
+    if (place.scope === "campus") {
+      if (this.view !== "campus") void this.setView("campus");
+    } else {
+      if (
+        this.location.buildingId !== place.buildingId ||
+        this.location.floorLevel !== place.floorLevel
+      ) {
+        this.location.selectBuilding(place.buildingId);
+        this.location.selectFloor(place.floorLevel);
+        this.applyLocation();
+      }
+      if (this.view === "campus") void this.setView("floor");
     }
-    if (this.view === "campus") void this.setView("floor");
-    this.map.selectPlace(place.id);
-    if (this.view === "3d") this.three?.focusPlace(place);
     if (details) this.showDetails(place);
   }
   private selectPlace(place: Place) {
     this.focusPlace(place, true);
-    if (this.pick !== "none") {
-      if (place.nodeId) this.setPoint(this.pick, place);
-      else this.toast("この場所の入口・接続は未登録です。");
-    }
+    const target = this.selection.pickTarget;
+    if (target !== "none") this.setPoint(target, place);
   }
   private setPoint(target: "start" | "dest", place: Place) {
-    if (!place.nodeId) return;
-    if (target === "start")
-      this.search.setStart(place.nodeId, placeDisplayName(place));
-    else this.search.setDest(place.nodeId, placeDisplayName(place));
+    this.search.setPlace(target, place);
+  }
+  private highlightSelected() {
+    this.map.selectPlace(this.selection.selected?.id ?? null);
+    this.three?.selectPlace(this.selection.selected?.id ?? null);
   }
   private showDetails(place: Place) {
-    this.selected = place;
+    this.selection.selected = place;
+    this.highlightSelected();
     document.getElementById("tooltip-title")!.textContent = place.name;
     document.getElementById("tooltip-desc")!.textContent =
-      `${place.buildingName} ${place.floorLabel} / ${place.description ?? (place.nodeId ? "入口は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")}`;
-    for (const target of ["start", "dest"])
-      (
-        document.getElementById(
-          `btn-tooltip-set-${target}`,
-        ) as HTMLButtonElement
-      ).disabled = !place.nodeId;
+      `${placeContext(place)} / ${place.description ?? (place.nodeId ? "入口は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")}`;
     document.getElementById("room-tooltip")!.classList.remove("hidden");
   }
   private hideDetails() {
     document.getElementById("room-tooltip")!.classList.add("hidden");
-    this.selected = null;
-    this.map.selectPlace(null);
+    this.selection.selected = null;
+    this.highlightSelected();
   }
   private toast(message: string, duration = 4500) {
     const el = document.getElementById("toast")!;

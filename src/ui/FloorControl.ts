@@ -1,22 +1,38 @@
+import { ThreeDisplayState } from "./ThreeDisplayState.js";
 import type { Floor } from "../types/campus";
 
 export class FloorControl {
   public onFloorChange: ((floor: number) => void) | null = null;
   public onExplodeChange: ((ratio: number) => void) | null = null;
   public onShowAllChange: ((all: boolean) => void) | null = null;
-  constructor() {
+  constructor(private display: ThreeDisplayState = new ThreeDisplayState()) {
     document
       .getElementById("explode-slider")!
-      .addEventListener("input", (e) =>
-        this.onExplodeChange?.(
-          Number((e.target as HTMLInputElement).value) / 100,
-        ),
-      );
+      .addEventListener("input", (e) => {
+        this.display.setGap(Number((e.target as HTMLInputElement).value) / 100);
+        this.renderDisplay();
+        this.onExplodeChange?.(this.display.gapRatio);
+      });
     document
       .getElementById("show-all-floors")!
-      .addEventListener("change", (e) =>
-        this.onShowAllChange?.((e.target as HTMLInputElement).checked),
-      );
+      .addEventListener("change", (e) => {
+        this.display.showAll = (e.target as HTMLInputElement).checked;
+        this.renderDisplay();
+        this.onShowAllChange?.(this.display.showAll);
+      });
+    this.renderDisplay();
+  }
+  private renderDisplay() {
+    (document.getElementById("show-all-floors") as HTMLInputElement).checked =
+      this.display.showAll;
+    (document.getElementById("explode-slider") as HTMLInputElement).value =
+      String(Math.round(this.display.gapRatio * 100));
+    document.getElementById("explode-value")!.textContent =
+      `${Math.round(this.display.gapRatio * 100)}%`;
+    document.getElementById("three-display-status")!.textContent = this.display
+      .showAll
+      ? "全階表示 / スライダーで階の間隔を変更"
+      : "選択階のみ表示 / スライダーを動かすと全階表示";
   }
   public render(floors: Floor[], level: number | null) {
     const container = document.getElementById("floor-buttons")!;

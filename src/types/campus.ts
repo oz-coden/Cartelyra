@@ -15,15 +15,11 @@ export interface FloorFeature {
 }
 
 export type PlaceKind =
-  "room" | "restroom" | "elevator" | "stairs" | "aed" | "entrance";
-export interface Place {
+  "room" | "restroom" | "elevator" | "stairs" | "aed" | "entrance" | "gate";
+interface PlaceBase {
   id: string;
   name: string;
   kind: PlaceKind;
-  buildingId: string;
-  floorLevel: number;
-  floorLabel: string;
-  buildingName: string;
   position: Point2;
   polygon?: Point2[];
   aliases: string[];
@@ -33,6 +29,23 @@ export interface Place {
   description?: string;
   restroomType?: FloorFeature["restroomType"];
 }
+export interface BuildingPlace extends PlaceBase {
+  scope: "building";
+  kind: Exclude<PlaceKind, "gate">;
+  buildingId: string;
+  floorLevel: number;
+  floorLabel: string;
+  buildingName: string;
+}
+export interface CampusPlace extends PlaceBase {
+  scope: "campus";
+  kind: "gate";
+  buildingId?: undefined;
+  floorLevel?: undefined;
+  floorLabel?: undefined;
+  buildingName?: undefined;
+}
+export type Place = BuildingPlace | CampusPlace;
 
 export interface RoomBox {
   x: number; // Center or origin X

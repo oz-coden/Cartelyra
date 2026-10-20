@@ -81,5 +81,11 @@ export interface SourceDocument {
 export interface CampusOverview {
   sourceId: string;
   buildings: Array<{ id: string; name: string; polygon: Point2[] }>;
-  gates: Array<{ name: string; position: Point2 }>;
+  gates: Array<{
+    id: string;
+    name: string;
+    position: Point2;
+    aliases?: string[];
+    description?: string;
+  }>;
 }

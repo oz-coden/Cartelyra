@@ -29,7 +29,7 @@ test("application selects buildings, focuses WC details and routes from a room t
     },
   });
   const server = await createServer({
-    server: { middlewareMode: true, hmr: false },
+    server: { middlewareMode: true, hmr: false, ws: false },
     optimizeDeps: { noDiscovery: true, include: [] },
     appType: "custom",
   });
@@ -106,7 +106,7 @@ test("3D geometry selects WC meshes, hides other floors/buildings and supports l
     fillText() {},
   });
   const server = await createServer({
-    server: { middlewareMode: true, hmr: false },
+    server: { middlewareMode: true, hmr: false, ws: false },
     optimizeDeps: { noDiscovery: true, include: [] },
     appType: "custom",
   });

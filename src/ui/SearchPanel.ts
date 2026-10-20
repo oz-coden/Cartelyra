@@ -1,13 +1,17 @@
 import type { Place, RouteFilterType, RouteResult } from "../types/campus";
-import { placeDisplayName, searchPlaces } from "../data/places.js";
+import {
+  placeContext,
+  placeDisplayName,
+  searchPlaces,
+} from "../data/places.js";
 
-type Target = "start" | "dest";
+import { SelectionState } from "./SelectionState.js";
+import type { EndpointTarget as Target } from "./SelectionState.js";
 export class SearchPanel {
   private selected: Record<Target, { id: string; name: string } | null> = {
     start: null,
     dest: null,
   };
-  private pick: Target | "none" = "none";
   private filter: RouteFilterType = "shortest";
   private buildingId?: string;
   private floorLevel?: number;
@@ -22,7 +26,10 @@ export class SearchPanel {
   public onRouteClear: (() => void) | null = null;
   public onPlaceFocus: ((place: Place) => void) | null = null;
   public onPickModeToggle: ((target: Target | "none") => void) | null = null;
-  constructor(private places: Place[]) {
+  constructor(
+    private places: Place[],
+    private selection = new SelectionState(),
+  ) {
     for (const target of ["start", "dest"] as const) {
       const input = this.input(target),
         suggestions = this.suggestions(target);
@@ -86,7 +93,7 @@ export class SearchPanel {
       document
         .getElementById(`btn-pick-${target}`)!
         .addEventListener("click", () =>
-          this.setPick(this.pick === target ? "none" : target),
+          this.setPick(this.selection.pickTarget === target ? "none" : target),
         );
       document.addEventListener("click", (e) => {
         const node = e.target as Node;
@@ -165,12 +172,11 @@ export class SearchPanel {
       name.className = "suggestion-name";
       name.textContent = place.name;
       sub.className = "suggestion-sub";
-      sub.textContent = `${place.buildingName} ${place.floorLabel}${place.nodeId ? "" : " / 経路未登録"}`;
+      sub.textContent = `${placeContext(place)}${place.nodeId ? "" : " / 経路未登録"}`;
       row.append(name, sub);
       row.addEventListener("click", () => {
         this.onPlaceFocus?.(place);
-        if (place.nodeId)
-          this.setPoint(target, place.nodeId, placeDisplayName(place));
+        this.setPlace(target, place);
         container.classList.add("hidden");
         input.setAttribute("aria-expanded", "false");
         input.removeAttribute("aria-activedescendant");
@@ -181,7 +187,7 @@ export class SearchPanel {
     input.setAttribute("aria-expanded", "true");
   }
   private setPick(target: Target | "none") {
-    this.pick = target;
+    this.selection.pickTarget = target;
     for (const key of ["start", "dest"] as const) {
       const b = document.getElementById(`btn-pick-${key}`)!;
       b.classList.toggle("active", key === target);
@@ -197,6 +203,12 @@ export class SearchPanel {
     this.input(target).removeAttribute("aria-activedescendant");
     this.setPick("none");
     this.checkAndTriggerSearch();
+  }
+  public setPlace(target: Target, place: Place) {
+    this.setPoint(target, place.nodeId ?? place.id, placeDisplayName(place));
+  }
+  public cancelPick() {
+    this.setPick("none");
   }
   public setStart(id: string, name: string) {
     this.setPoint("start", id, name);

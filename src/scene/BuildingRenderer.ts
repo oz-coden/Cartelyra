@@ -27,7 +27,11 @@ export class BuildingRenderer {
   public placeMeshes: THREE.Mesh[] = [];
   public skyBridgeGroup: THREE.Group | null = null;
   private isDarkTheme: boolean = false;
-  private selectedRoomId: string | null = null;
+  private selectedPlaceId: string | null = null;
+  private placeMaterials = new Map<
+    string,
+    { mesh: THREE.Mesh; baseOpacity: number }
+  >();
 
   constructor(private campusData: CampusData) {
     this.rootGroup = new THREE.Group();
@@ -179,6 +183,10 @@ export class BuildingRenderer {
 
     roomMesh.userData.placeId = room.id;
     this.placeMeshes.push(roomMesh);
+    this.placeMaterials.set(room.id, {
+      mesh: roomMesh,
+      baseOpacity: roomMat.opacity,
+    });
     roomGroup.add(roomMesh);
 
     // Architectural edge lines
@@ -255,8 +263,13 @@ export class BuildingRenderer {
       }),
     );
     mesh.userData.placeId = featurePlaceId(building.id, floor.id, feature.id);
-    if (["restroom", "elevator", "stairs", "aed"].includes(feature.type))
+    if (["restroom", "elevator", "stairs", "aed"].includes(feature.type)) {
       this.placeMeshes.push(mesh);
+      this.placeMaterials.set(mesh.userData.placeId, {
+        mesh,
+        baseOpacity: 0.7,
+      });
+    }
     group.add(mesh);
     const box = bounds(feature.polygon);
     const label = this.createTextLabelSprite(feature.label, color);
@@ -403,31 +416,18 @@ export class BuildingRenderer {
     return sprite;
   }
 
-  public highlightRoom(roomId: string | null) {
-    // Clear previous
-    if (this.selectedRoomId) {
-      const prev = this.roomMeshRecords.get(this.selectedRoomId);
-      if (prev) {
-        const mat = prev.mesh.material as THREE.MeshPhysicalMaterial;
-        mat.emissive.setHex(0x000000);
-        mat.emissiveIntensity = 0;
-        mat.opacity = this.isDarkTheme ? 0.75 : 0.85;
-      }
+  /** All selectable meshes use the same emissive selection state. */
+  public highlightPlace(placeId: string | null) {
+    for (const [id, record] of this.placeMaterials) {
+      const material = record.mesh.material as THREE.MeshStandardMaterial;
+      const selected = id === placeId;
+      material.emissive.setHex(
+        selected ? (this.isDarkTheme ? 0x38bdf8 : 0xf59e0b) : 0,
+      );
+      material.emissiveIntensity = selected ? 0.8 : 0;
+      material.opacity = selected ? 1 : record.baseOpacity;
     }
-
-    this.selectedRoomId = roomId;
-
-    // Apply new highlight
-    if (roomId) {
-      const current = this.roomMeshRecords.get(roomId);
-      if (current) {
-        const mat = current.mesh.material as THREE.MeshPhysicalMaterial;
-        const highlightColor = this.isDarkTheme ? 0x38bdf8 : 0xf59e0b; // Amber / Cyan neon
-        mat.emissive.setHex(highlightColor);
-        mat.emissiveIntensity = 0.8;
-        mat.opacity = 1.0;
-      }
-    }
+    this.selectedPlaceId = placeId;
   }
 
   public setDarkTheme(isDark: boolean) {
@@ -438,6 +438,8 @@ export class BuildingRenderer {
       const mat = record.mesh.material as THREE.MeshPhysicalMaterial;
       mat.transmission = isDark ? 0.3 : 0.45;
       mat.opacity = isDark ? 0.75 : 0.85;
+      const place = this.placeMaterials.get(record.room.id);
+      if (place) place.baseOpacity = mat.opacity;
 
       const edgeMat = record.edgeLine.material as THREE.LineBasicMaterial;
       edgeMat.color.setHex(isDark ? 0x38bdf8 : 0x1e3a8a);
@@ -445,9 +447,7 @@ export class BuildingRenderer {
     }
 
     // Re-highlight if needed
-    if (this.selectedRoomId) {
-      this.highlightRoom(this.selectedRoomId);
-    }
+    this.highlightPlace(this.selectedPlaceId);
   }
 
   public getRoomPosition(roomId: string): THREE.Vector3 | null {

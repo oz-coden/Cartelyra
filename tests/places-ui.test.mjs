@@ -312,20 +312,23 @@ test("WC search supports keyboard choice, route results, editing and pick-mode r
   assert.equal(mode, "none");
 });
 
-test("unlinked rooms remain searchable but cannot silently replace a route endpoint", () => {
+test("unlinked rooms can be named as endpoints without inventing navigation nodes", () => {
   const { document, window } = dom(),
     panel = new SearchPanel(places);
   let focus,
     searches = 0;
   panel.onPlaceFocus = (p) => (focus = p);
-  panel.onRouteSearch = () => searches++;
+  panel.onRouteSearch = (_start, dest) => {
+    searches++;
+    assert.equal(dest, "3-B202");
+  };
   panel.setStart("b3/f1/room-103", "展示ホール");
   const input = document.getElementById("input-dest");
   input.value = "B202";
   input.dispatchEvent(new window.Event("input"));
   document.querySelector("#suggestions-dest button").click();
   assert.equal(focus.roomId, "3-B202");
-  assert.equal(searches, 0);
+  assert.equal(searches, 1);
 });
 
 test("step instructions render as text in keyboard-operable buttons; theme survives blocked storage", () => {

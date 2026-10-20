@@ -39,9 +39,13 @@
             <div id="floor-buttons" class="floor-buttons"></div>
             <div class="three-only">
               <label
-                ><input id="show-all-floors" type="checkbox" />
+                ><input id="show-all-floors" type="checkbox" checked />
                 全階を表示</label
-              ><label for="explode-slider">展開ギャップ</label
+              ><label for="explode-slider"
+                >階の間隔
+                <output id="explode-value" for="explode-slider"
+                  >0%</output
+                ></label
               ><input
                 id="explode-slider"
                 type="range"
@@ -49,8 +53,15 @@
                 max="100"
                 value="0"
               />
+              <p id="three-display-status" class="muted"></p>
             </div>
           </div>
+          <h2 class="gate-heading">門</h2>
+          <div
+            id="gate-list"
+            class="filter-buttons"
+            aria-label="キャンパスの門"
+          ></div>
         </section>
         <section class="panel-section">
           <h2>ルート案内</h2>
@@ -184,27 +195,13 @@
           </div>
         </section>
         <section class="panel-section facilities">
-          <h2>このフロアの設備</h2>
+          <h2>このフロアの場所</h2>
           <div
             id="facility-filters"
             class="filter-buttons"
-            aria-label="設備の種類"
+            aria-label="場所の種類"
           ></div>
           <div id="facility-list" class="facility-list"></div>
-        </section>
-        <section
-          id="room-tooltip"
-          class="panel-section place-details hidden"
-          aria-label="選択した場所"
-        >
-          <h2 id="tooltip-title"></h2>
-          <p id="tooltip-desc"></p>
-          <div class="tooltip-actions">
-            <button id="btn-tooltip-set-start">ここから出発</button
-            ><button id="btn-tooltip-set-dest" class="primary">
-              ここへ行く
-            </button>
-          </div>
         </section>
         <details class="panel-section data-notice">
           <summary>マップの登録状況・注意事項</summary>
@@ -227,6 +224,30 @@
         </details>
       </aside>
       <main class="map-workspace" aria-label="キャンパスマップ">
+        <div id="pick-banner" class="pick-banner hidden" role="status">
+          <span id="pick-banner-text"></span
+          ><button id="btn-cancel-pick">キャンセル</button>
+        </div>
+        <section
+          id="room-tooltip"
+          class="panel-section place-details hidden"
+          aria-label="選択した場所"
+        >
+          <div class="control-header">
+            <h2 id="tooltip-title"></h2>
+            <button id="btn-close-selection" aria-label="場所の選択を解除">
+              ×
+            </button>
+          </div>
+          <p id="tooltip-desc"></p>
+          <div class="tooltip-actions">
+            <button id="btn-tooltip-set-start">ここから出発</button
+            ><button id="btn-tooltip-set-dest" class="primary">
+              ここへ行く
+            </button>
+          </div>
+        </section>
+
         <section id="map-panel" class="map-panel">
           <div class="map-header">
             <div>

@@ -384,6 +384,17 @@ export function validateSources(
     "Duplicate overview building ID",
   );
   overview.buildings.forEach((b) => polygon(b.polygon, `overview/${b.id}`));
+  check(unique(overview.gates.map((g) => g.id)), "Duplicate gate IDs");
+  check(
+    unique([...placeIds, ...overview.gates.map((g) => `campus/gate/${g.id}`)]),
+    "Duplicate place IDs",
+  );
+  overview.gates.forEach((g) =>
+    check(
+      typeof g.id === "string" && g.id.length > 0,
+      `Invalid gate ID ${g.name}`,
+    ),
+  );
   overview.gates.forEach((g) =>
     check(finitePoint(g.position), `Invalid gate ${g.name}`),
   );

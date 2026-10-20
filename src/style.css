@@ -691,3 +691,62 @@ body[data-view="3d"] .three-only {
     font-size: 10px;
   }
 }
+
+/* Selection and route actions remain in the map workspace in every display mode. */
+.place-details {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 12px 16px;
+}
+.place-details .control-header {
+  margin-bottom: 4px;
+}
+.place-details .control-header h2 {
+  font-size: 15px;
+}
+.place-details p {
+  margin-bottom: 8px;
+}
+.place-details .tooltip-actions {
+  flex-wrap: wrap;
+}
+.pick-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--blue);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--blue);
+  font-size: 12px;
+}
+.gate-heading {
+  margin: 16px 0 8px;
+}
+.map-campus-gate {
+  cursor: pointer;
+}
+.map-campus-gate rect {
+  fill: var(--surface);
+  stroke: var(--blue);
+  stroke-width: 0.25;
+}
+.map-campus-gate.selected rect,
+.map-campus-gate:focus rect {
+  stroke: #f09419;
+  stroke-width: 0.7;
+}
+@media (max-width: 899px) {
+  .map-workspace > .place-details,
+  .map-workspace > .map-panel,
+  .map-workspace > .canvas-container,
+  .map-workspace > .step-guide {
+    order: 0;
+  }
+}
