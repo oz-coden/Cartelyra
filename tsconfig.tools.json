@@ -1,7 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2022", "module": "ESNext", "moduleResolution": "bundler",
-    "strict": true, "skipLibCheck": true, "outDir": ".checks", "rootDir": "src"
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": ".checks",
+    "rootDir": "src"
   },
-  "include": ["src/data/compile.ts", "src/data/validate.ts", "src/pathfinding/AStar.ts"]
+  "include": [
+    "src/data/compile.ts",
+    "src/data/validate.ts",
+    "src/pathfinding/AStar.ts",
+    "src/data/places.ts",
+    "src/ui/*.ts"
+  ]
 }

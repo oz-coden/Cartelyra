@@ -1,39 +1,54 @@
-import type { CampusData } from '../types/campus';
-import type { ExplodeController } from '../scene/ExplodeController';
+import type { Floor } from "../types/campus";
 
 export class FloorControl {
-  private badge = document.getElementById('explode-level-badge')!;
-  private slider = document.getElementById('explode-slider') as HTMLInputElement;
-  private buttons: HTMLButtonElement[] = [];
-  private labels = new Map<number, string>();
-  private active: number | 'all' = 1;
-  public onFloorChange: ((floor: number | 'all') => void) | null = null;
-
-  constructor(private controller: ExplodeController | null, campus: CampusData) {
-    const container = document.getElementById('floor-buttons')!;
-    container.replaceChildren();
-    for (const floor of campus.buildings.flatMap(b => b.floors).sort((a, b) => a.elevation - b.elevation)) this.labels.set(floor.level, floor.label);
-    for (const [value, label] of [['all', '全階'], ...[...this.labels].map(([level, label]) => [String(level), label])]) {
-      const button = document.createElement('button'); button.className = 'floor-btn';
-      button.dataset.floor = value; button.textContent = label;
-      button.addEventListener('click', () => this.selectFloor(value === 'all' ? 'all' : Number(value)));
-      container.append(button); this.buttons.push(button);
-    }
-    this.slider.addEventListener('input', () => {
-      this.selectFloor('all'); this.controller?.setExplodeRatio(Number(this.slider.value) / 100);
-    });
-    this.selectFloor(1);
+  public onFloorChange: ((floor: number) => void) | null = null;
+  public onExplodeChange: ((ratio: number) => void) | null = null;
+  public onShowAllChange: ((all: boolean) => void) | null = null;
+  constructor() {
+    document
+      .getElementById("explode-slider")!
+      .addEventListener("input", (e) =>
+        this.onExplodeChange?.(
+          Number((e.target as HTMLInputElement).value) / 100,
+        ),
+      );
+    document
+      .getElementById("show-all-floors")!
+      .addEventListener("change", (e) =>
+        this.onShowAllChange?.((e.target as HTMLInputElement).checked),
+      );
   }
-
-  public setController(controller: ExplodeController) { this.controller = controller; this.selectFloor(this.active); }
-  public getActiveFloor() { return this.active; }
-  public selectFloor(level: number | 'all') {
-    if (level !== 'all' && !this.labels.has(level)) return;
-    this.active = level;
-    for (const button of this.buttons) {
-      const active = button.dataset.floor === String(level); button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+  public render(floors: Floor[], level: number | null) {
+    const container = document.getElementById("floor-buttons")!;
+    for (const button of container.querySelectorAll<HTMLButtonElement>(
+      "button",
+    ))
+      if (!floors.some((f) => String(f.level) === button.dataset.floor))
+        button.remove();
+    document.getElementById("explode-level-badge")!.textContent =
+      floors.find((f) => f.level === level)?.label ?? "未登録";
+    let index = 0;
+    for (const floor of [...floors].sort(
+      (a, b) => (b.stackIndex ?? b.elevation) - (a.stackIndex ?? a.elevation),
+    )) {
+      let button = [
+        ...container.querySelectorAll<HTMLButtonElement>("button"),
+      ].find((b) => b.dataset.floor === String(floor.level));
+      if (!button) {
+        button = document.createElement("button");
+        button.type = "button";
+        button.className = "floor-btn";
+        button.dataset.floor = String(floor.level);
+        button.addEventListener("click", () =>
+          this.onFloorChange?.(floor.level),
+        );
+      }
+      button.textContent = floor.label;
+      button.classList.toggle("active", floor.level === level);
+      button.setAttribute("aria-pressed", String(floor.level === level));
+      if (container.children[index] !== button)
+        container.insertBefore(button, container.children[index] ?? null);
+      index++;
     }
-    this.badge.textContent = level === 'all' ? '全階' : this.labels.get(level)!;
-    this.controller?.setFocusedFloor(level); this.onFloorChange?.(level);
   }
 }

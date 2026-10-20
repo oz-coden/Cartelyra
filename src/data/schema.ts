@@ -1,4 +1,11 @@
-import type { FloorFeature, NavEdgeType, NavNodeType, Point2, RoomCategory, Verification } from '../types/campus';
+import type {
+  FloorFeature,
+  NavEdgeType,
+  NavNodeType,
+  Point2,
+  RoomCategory,
+  Verification,
+} from "../types/campus";
 
 export interface FloorSource {
   id: string;
@@ -22,7 +29,13 @@ export interface FloorSource {
     description?: string;
   }>;
   navigation: {
-    nodes: Array<{ id: string; name: string; position: Point2; type: NavNodeType; isPreset?: boolean }>;
+    nodes: Array<{
+      id: string;
+      name: string;
+      position: Point2;
+      type: NavNodeType;
+      isPreset?: boolean;
+    }>;
     edges: SourceEdge[];
   };
 }
@@ -37,6 +50,8 @@ export interface SourceEdge {
   bidirectional?: boolean;
   blocked?: boolean;
   distance?: number;
+  instruction?: string;
+  reverseInstruction?: string;
 }
 
 export interface BuildingSource {
@@ -53,11 +68,16 @@ export interface BuildingSource {
 export interface CampusSource {
   schemaVersion: 1;
   campusName: string;
-  coordinateUnit: 'schematic' | 'meters';
+  coordinateUnit: "schematic" | "meters";
   buildingIds: string[];
+  connections?: SourceEdge[]; // Explicit links between buildings, using qualified node IDs.
 }
 
-export interface SourceDocument { id: string; filename: string; description: string }
+export interface SourceDocument {
+  id: string;
+  filename: string;
+  description: string;
+}
 export interface CampusOverview {
   sourceId: string;
   buildings: Array<{ id: string; name: string; polygon: Point2[] }>;

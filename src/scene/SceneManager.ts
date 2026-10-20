@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as TWEEN from '@tweenjs/tween.js';
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import * as TWEEN from "@tweenjs/tween.js";
 
 export interface ThemeColors {
   background: number;
@@ -17,7 +17,7 @@ export const LIGHT_THEME: ThemeColors = {
   ambientLight: 0xffffff,
   dirLight: 0xfffaf0,
   gridLine: 0xd1d5db,
-  gridSub: 0xe5e7eb
+  gridSub: 0xe5e7eb,
 };
 
 export const DARK_THEME: ThemeColors = {
@@ -26,7 +26,7 @@ export const DARK_THEME: ThemeColors = {
   ambientLight: 0x64748b,
   dirLight: 0x93c5fd,
   gridLine: 0x334155,
-  gridSub: 0x1e293b
+  gridSub: 0x1e293b,
 };
 
 export class SceneManager {
@@ -40,13 +40,14 @@ export class SceneManager {
   private dirLight: THREE.DirectionalLight;
   private hemiLight: THREE.HemisphereLight;
   private isDark: boolean = false;
+  private cameraTweens: TWEEN.Tween<THREE.Vector3>[] = [];
   private active = true;
   private animationId: number | null = null;
 
   private defaultCameraPos = new THREE.Vector3(120, 155, 160);
   private defaultTarget = new THREE.Vector3(0, 24, 0);
 
-  constructor(container: HTMLElement) {
+  constructor(private container: HTMLElement) {
     // 1. Scene
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(LIGHT_THEME.fog, 0.002);
@@ -54,19 +55,22 @@ export class SceneManager {
     // 2. Camera
     this.camera = new THREE.PerspectiveCamera(
       45,
-      window.innerWidth / window.innerHeight,
+      Math.max(1, container.clientWidth) / Math.max(1, container.clientHeight),
       0.5,
-      1500
+      1500,
     );
     this.camera.position.copy(this.defaultCameraPos);
 
     // 3. Renderer
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
-      powerPreference: 'high-performance',
-      alpha: false
+      powerPreference: "high-performance",
+      alpha: false,
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(
+      Math.max(1, this.container.clientWidth),
+      Math.max(1, this.container.clientHeight),
+    );
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -109,7 +113,7 @@ export class SceneManager {
     this.setupGround();
 
     // 7. Event listeners
-    window.addEventListener('resize', this.onWindowResize.bind(this));
+    new ResizeObserver(() => this.onWindowResize()).observe(container);
 
     // 8. Start Loop
     this.animate = this.animate.bind(this);
@@ -119,7 +123,12 @@ export class SceneManager {
   private setupGround() {
     // Infinite grid helper
     if (this.gridHelper) this.scene.remove(this.gridHelper);
-    this.gridHelper = new THREE.GridHelper(300, 60, LIGHT_THEME.gridLine, LIGHT_THEME.gridSub);
+    this.gridHelper = new THREE.GridHelper(
+      300,
+      60,
+      LIGHT_THEME.gridLine,
+      LIGHT_THEME.gridSub,
+    );
     this.gridHelper.position.y = -0.05;
     this.scene.add(this.gridHelper);
 
@@ -152,7 +161,17 @@ export class SceneManager {
 
     if (this.gridHelper) {
       this.scene.remove(this.gridHelper);
-      this.gridHelper = new THREE.GridHelper(300, 60, theme.gridLine, theme.gridSub);
+      this.gridHelper.geometry.dispose();
+      const materials = Array.isArray(this.gridHelper.material)
+        ? this.gridHelper.material
+        : [this.gridHelper.material];
+      materials.forEach((material) => material.dispose());
+      this.gridHelper = new THREE.GridHelper(
+        300,
+        60,
+        theme.gridLine,
+        theme.gridSub,
+      );
       this.gridHelper.position.y = -0.05;
       this.scene.add(this.gridHelper);
     }
@@ -165,30 +184,36 @@ export class SceneManager {
   public flyTo(
     targetLookAt: THREE.Vector3,
     desiredCameraPos?: THREE.Vector3,
-    duration: number = 1000
+    duration: number = 1000,
   ) {
+    this.cameraTweens.forEach((tween) => tween.stop());
+    this.cameraTweens = [];
     const currentTarget = this.controls.target.clone();
     const currentPos = this.camera.position.clone();
 
-    const endPos = desiredCameraPos || currentPos.clone().add(
-      targetLookAt.clone().sub(currentTarget)
+    const endPos =
+      desiredCameraPos ||
+      currentPos.clone().add(targetLookAt.clone().sub(currentTarget));
+
+    this.cameraTweens.push(
+      new TWEEN.Tween(currentTarget)
+        .to(targetLookAt, duration)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onUpdate(() => {
+          this.controls.target.copy(currentTarget);
+        })
+        .start(),
     );
 
-    new TWEEN.Tween(currentTarget)
-      .to(targetLookAt, duration)
-      .easing(TWEEN.Easing.Cubic.Out)
-      .onUpdate(() => {
-        this.controls.target.copy(currentTarget);
-      })
-      .start();
-
-    new TWEEN.Tween(currentPos)
-      .to(endPos, duration)
-      .easing(TWEEN.Easing.Cubic.Out)
-      .onUpdate(() => {
-        this.camera.position.copy(currentPos);
-      })
-      .start();
+    this.cameraTweens.push(
+      new TWEEN.Tween(currentPos)
+        .to(endPos, duration)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .onUpdate(() => {
+          this.camera.position.copy(currentPos);
+        })
+        .start(),
+    );
   }
 
   public resetCamera(duration: number = 900) {
@@ -198,14 +223,24 @@ export class SceneManager {
   public setActive(active: boolean) {
     if (this.active === active) return;
     this.active = active;
+    if (active) this.onWindowResize();
     if (active) this.animationId = requestAnimationFrame(this.animate);
     else if (this.animationId !== null) cancelAnimationFrame(this.animationId);
   }
 
+  public resize() {
+    this.onWindowResize();
+  }
+
   private onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.aspect =
+      Math.max(1, this.container.clientWidth) /
+      Math.max(1, this.container.clientHeight);
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(
+      Math.max(1, this.container.clientWidth),
+      Math.max(1, this.container.clientHeight),
+    );
   }
 
   private animate(time: number) {

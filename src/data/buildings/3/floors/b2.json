@@ -11,41 +11,54 @@
     "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
     "3-B202は入口不明のため経路検索の対象外。機械室・設備区画・ピットも経路対象外。"
   ],
-  "outline": [[0, 0], [100, 0], [100, 96], [20, 96], [20, 25], [0, 25]],
+  "outline": [
+    [0, 0],
+    [100, 0],
+    [100, 96],
+    [20, 96],
+    [20, 25],
+    [0, 25]
+  ],
   "voids": [],
   "rooms": [
     {
       "id": "3-B201",
       "name": "3-B201 資料整理修復室",
-      "aliases": [
-        "B201",
-        "3B201"
-      ],
+      "aliases": ["B201", "3B201"],
       "category": "facility",
-      "polygon": [[34, 3], [64, 3], [64, 29], [34, 29]],
+      "polygon": [
+        [34, 3],
+        [64, 3],
+        [64, 29],
+        [34, 29]
+      ],
       "description": "図面表記：日本常民文化研究所。入口位置・利用条件未確認。",
       "entrance": "room-B201"
     },
     {
       "id": "3-B202",
       "name": "3-B202 歴史資料収蔵室",
-      "aliases": [
-        "B202",
-        "3B202"
-      ],
+      "aliases": ["B202", "3B202"],
       "category": "facility",
-      "polygon": [[64, 3], [82, 3], [82, 29], [64, 29]],
+      "polygon": [
+        [64, 3],
+        [82, 3],
+        [82, 29],
+        [64, 29]
+      ],
       "description": "入口の接続先が読み取れないため、表示のみ。日本常民文化研究所。"
     },
     {
       "id": "3-B203",
       "name": "3-B203 民俗資料収蔵室",
-      "aliases": [
-        "B203",
-        "3B203"
-      ],
+      "aliases": ["B203", "3B203"],
       "category": "facility",
-      "polygon": [[48, 29], [82, 29], [82, 68], [48, 68]],
+      "polygon": [
+        [48, 29],
+        [82, 29],
+        [82, 68],
+        [48, 68]
+      ],
       "description": "入口位置・利用条件未確認。",
       "entrance": "room-B203"
     }
@@ -55,43 +68,86 @@
       "id": "machine",
       "label": "機械室等（利用条件未確認）",
       "type": "service",
-      "polygon": [[0, 0], [25, 0], [25, 25], [0, 25]]
+      "polygon": [
+        [0, 0],
+        [25, 0],
+        [25, 25],
+        [0, 25]
+      ]
     },
     {
       "id": "ev",
       "label": "EV",
       "type": "elevator",
-      "polygon": [[27, 14], [34, 14], [34, 21], [27, 21]]
+      "polygon": [
+        [27, 14],
+        [34, 14],
+        [34, 21],
+        [27, 21]
+      ],
+      "entrance": "elevator"
     },
     {
       "id": "stairs2",
       "label": "階段2",
       "type": "stairs",
-      "polygon": [[20, 73], [27, 73], [27, 88], [20, 88]]
+      "polygon": [
+        [20, 73],
+        [27, 73],
+        [27, 88],
+        [20, 88]
+      ],
+      "entrance": "stair2"
     },
     {
       "id": "wc-m",
       "label": "男性用トイレ",
       "type": "restroom",
-      "polygon": [[35, 35], [41, 35], [41, 41], [35, 41]]
+      "polygon": [
+        [35, 35],
+        [41, 35],
+        [41, 41],
+        [35, 41]
+      ],
+      "restroomType": "male",
+      "entrance": "wc-m-entrance",
+      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
     },
     {
       "id": "wc-w",
       "label": "女性用トイレ",
       "type": "restroom",
-      "polygon": [[35, 41], [41, 41], [41, 47], [35, 47]]
+      "polygon": [
+        [35, 41],
+        [41, 41],
+        [41, 47],
+        [35, 47]
+      ],
+      "restroomType": "female",
+      "entrance": "wc-w-entrance",
+      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
     },
     {
       "id": "pit",
       "label": "ピット",
       "type": "pit",
-      "polygon": [[82, 0], [100, 0], [100, 96], [82, 96]]
+      "polygon": [
+        [82, 0],
+        [100, 0],
+        [100, 96],
+        [82, 96]
+      ]
     },
     {
       "id": "equipment",
       "label": "設備区画（利用条件未確認）",
       "type": "service",
-      "polygon": [[27, 73], [82, 73], [82, 96], [27, 96]]
+      "polygon": [
+        [27, 73],
+        [82, 73],
+        [82, 96],
+        [27, 96]
+      ]
     }
   ],
   "navigation": {
@@ -157,6 +213,30 @@
         "name": "3-B203 民俗資料収蔵室 入口（推定）",
         "position": [48, 50],
         "type": "room_entrance"
+      },
+      {
+        "id": "wc-m-entrance",
+        "name": "B2 男性用トイレ 入口（推定）",
+        "position": [41, 38],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-m-hall",
+        "name": "B2 トイレ前廊下",
+        "position": [44, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "wc-w-entrance",
+        "name": "B2 女性用トイレ 入口（推定）",
+        "position": [41, 44],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-w-hall",
+        "name": "B2 トイレ前廊下",
+        "position": [44, 44],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -179,14 +259,6 @@
       {
         "from": "west",
         "to": "mid-n",
-        "type": "walk",
-        "verification": "diagram",
-        "isIndoor": true,
-        "isAccessible": true
-      },
-      {
-        "from": "mid-n",
-        "to": "mid",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -231,6 +303,46 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true
+      },
+      {
+        "to": "wc-m-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-m-entrance"
+      },
+      {
+        "to": "wc-w-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-w-entrance"
+      },
+      {
+        "to": "wc-m-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "mid-n"
+      },
+      {
+        "to": "wc-w-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-m-hall"
+      },
+      {
+        "to": "mid",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-w-hall"
       }
     ]
   }

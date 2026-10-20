@@ -16,7 +16,11 @@
   },
   "devDependencies": {
     "@types/three": "^0.174.0",
+    "linkedom": "^0.18.13",
     "typescript": "^5.7.3",
     "vite": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
   }
 }
