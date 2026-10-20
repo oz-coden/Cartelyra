@@ -1,6 +1,15 @@
-import * as THREE from 'three';
-import { CampusData, Building, Floor, Room, NavNode, Point2, FloorFeature } from '../types/campus';
-import { bounds, worldToLocal } from '../data/geometry';
+import * as THREE from "three";
+import {
+  CampusData,
+  Building,
+  Floor,
+  Room,
+  NavNode,
+  Point2,
+  FloorFeature,
+} from "../types/campus";
+import { featurePlaceId } from "../data/places";
+import { bounds, worldToLocal } from "../data/geometry";
 
 export interface RoomMeshRecord {
   mesh: THREE.Mesh;
@@ -15,6 +24,7 @@ export class BuildingRenderer {
   public rootGroup: THREE.Group;
   public floorGroups: Map<string, THREE.Group> = new Map(); // key: `${bldgId}_f${level}`
   public roomMeshRecords: Map<string, RoomMeshRecord> = new Map(); // key: room.id
+  public placeMeshes: THREE.Mesh[] = [];
   public skyBridgeGroup: THREE.Group | null = null;
   private isDarkTheme: boolean = false;
   private selectedRoomId: string | null = null;
@@ -38,18 +48,18 @@ export class BuildingRenderer {
     const bldgGroup = new THREE.Group();
     bldgGroup.position.set(...bldg.origin);
     bldgGroup.rotation.y = bldg.rotation ?? 0;
-    bldgGroup.userData = { type: 'building', id: bldg.id, name: bldg.name };
+    bldgGroup.userData = { type: "building", id: bldg.id, name: bldg.name };
 
     for (const floor of bldg.floors) {
       const floorKey = `${bldg.id}_f${floor.level}`;
       const floorGroup = new THREE.Group();
       floorGroup.position.y = floor.elevation;
       floorGroup.userData = {
-        type: 'floor',
+        type: "floor",
         buildingId: bldg.id,
         level: floor.level,
         baseElevation: floor.elevation,
-        stackIndex: floor.stackIndex ?? floor.level - 1
+        stackIndex: floor.stackIndex ?? floor.level - 1,
       };
 
       // Floor Slab
@@ -63,9 +73,14 @@ export class BuildingRenderer {
       }
 
       // Vertical Facilities: Stairs & Elevators
-      if (floor.features) for (const feature of floor.features) floorGroup.add(this.createFeature(feature));
+      if (floor.features)
+        for (const feature of floor.features)
+          floorGroup.add(this.createFeature(feature, bldg, floor));
       const vertNodes = this.campusData.navigation.nodes.filter(
-        n => n.buildingId === bldg.id && n.floor === floor.level && (n.type === 'stairs' || n.type === 'elevator')
+        (n) =>
+          n.buildingId === bldg.id &&
+          n.floor === floor.level &&
+          (n.type === "stairs" || n.type === "elevator"),
       );
       for (const node of floor.features ? [] : vertNodes) {
         const marker = this.createVerticalFacilityMarker(node, bldg);
@@ -84,17 +99,23 @@ export class BuildingRenderer {
     const { w, d, x, z } = floor.slab;
     const slabHeight = 0.35;
 
-    const slabGeo = floor.outline ? this.polygonGeometry(floor.outline, slabHeight, floor.voids) : new THREE.BoxGeometry(w, slabHeight, d);
+    const slabGeo = floor.outline
+      ? this.polygonGeometry(floor.outline, slabHeight, floor.voids)
+      : new THREE.BoxGeometry(w, slabHeight, d);
     const slabMat = new THREE.MeshStandardMaterial({
       color: this.isDarkTheme ? 0x1e293b : 0xe2e8f0,
       roughness: 0.5,
       metalness: 0.1,
       transparent: true,
-      opacity: this.isDarkTheme ? 0.7 : 0.85
+      opacity: this.isDarkTheme ? 0.7 : 0.85,
     });
 
     const slabMesh = new THREE.Mesh(slabGeo, slabMat);
-    slabMesh.position.set(floor.outline ? 0 : x, floor.outline ? -slabHeight : -slabHeight / 2, floor.outline ? 0 : z);
+    slabMesh.position.set(
+      floor.outline ? 0 : x,
+      floor.outline ? -slabHeight : -slabHeight / 2,
+      floor.outline ? 0 : z,
+    );
     slabMesh.receiveShadow = true;
     slabMesh.castShadow = true;
     slabGroup.add(slabMesh);
@@ -103,14 +124,16 @@ export class BuildingRenderer {
     const edgeGeo = new THREE.EdgesGeometry(slabGeo);
     const edgeMat = new THREE.LineBasicMaterial({
       color: this.isDarkTheme ? 0x475569 : 0xcbd5e1,
-      linewidth: 1
+      linewidth: 1,
     });
     const edgeLine = new THREE.LineSegments(edgeGeo, edgeMat);
     edgeLine.position.copy(slabMesh.position);
     slabGroup.add(edgeLine);
 
     // Floor indicator badge sprite on slab corner
-    const badgeSprite = this.createFloorBadgeSprite(`${bldg.code}-${floor.label}`);
+    const badgeSprite = this.createFloorBadgeSprite(
+      `${bldg.code}-${floor.label}`,
+    );
     badgeSprite.position.set(x - w / 2 - 1.5, 0.4, z + d / 2 + 1.2);
     slabGroup.add(badgeSprite);
 
@@ -122,7 +145,12 @@ export class BuildingRenderer {
     const { x, z, w, d } = room.box;
     const h = room.box.h || 3.4;
 
-    const boxGeo = room.polygon ? this.polygonGeometry(room.polygon.map(p => [p[0] - x, p[1] - z]), h) : new THREE.BoxGeometry(w, h, d);
+    const boxGeo = room.polygon
+      ? this.polygonGeometry(
+          room.polygon.map((p) => [p[0] - x, p[1] - z]),
+          h,
+        )
+      : new THREE.BoxGeometry(w, h, d);
 
     const baseColor = room.color || bldg.color;
     const roomMat = new THREE.MeshPhysicalMaterial({
@@ -134,7 +162,7 @@ export class BuildingRenderer {
       opacity: this.isDarkTheme ? 0.75 : 0.85,
       clearcoat: 0.3,
       emissive: new THREE.Color(0x000000),
-      emissiveIntensity: 0
+      emissiveIntensity: 0,
     });
 
     const roomMesh = new THREE.Mesh(boxGeo, roomMat);
@@ -142,13 +170,15 @@ export class BuildingRenderer {
     roomMesh.castShadow = true;
     roomMesh.receiveShadow = true;
     roomMesh.userData = {
-      type: 'room',
+      type: "room",
       roomId: room.id,
       room,
       building: bldg,
-      floor
+      floor,
     };
 
+    roomMesh.userData.placeId = room.id;
+    this.placeMeshes.push(roomMesh);
     roomGroup.add(roomMesh);
 
     // Architectural edge lines
@@ -156,7 +186,7 @@ export class BuildingRenderer {
     const edgeMat = new THREE.LineBasicMaterial({
       color: this.isDarkTheme ? 0x38bdf8 : 0x1e3a8a,
       transparent: true,
-      opacity: this.isDarkTheme ? 0.8 : 0.6
+      opacity: this.isDarkTheme ? 0.8 : 0.6,
     });
     const edgeLine = new THREE.LineSegments(edgeGeo, edgeMat);
     edgeLine.position.copy(roomMesh.position);
@@ -175,30 +205,64 @@ export class BuildingRenderer {
       labelSprite,
       room,
       building: bldg,
-      baseColor
+      baseColor,
     });
 
     return roomGroup;
   }
 
-  private polygonGeometry(polygon: Point2[], depth: number, holes: Point2[][] = []): THREE.ExtrudeGeometry {
-    const shape = new THREE.Shape(polygon.map(([x, z]) => new THREE.Vector2(x, -z)));
-    for (const hole of holes) shape.holes.push(new THREE.Path(hole.map(([x, z]) => new THREE.Vector2(x, -z))));
-    const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
+  private polygonGeometry(
+    polygon: Point2[],
+    depth: number,
+    holes: Point2[][] = [],
+  ): THREE.ExtrudeGeometry {
+    const shape = new THREE.Shape(
+      polygon.map(([x, z]) => new THREE.Vector2(x, -z)),
+    );
+    for (const hole of holes)
+      shape.holes.push(
+        new THREE.Path(hole.map(([x, z]) => new THREE.Vector2(x, -z))),
+      );
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth,
+      bevelEnabled: false,
+    });
     geometry.rotateX(-Math.PI / 2);
     return geometry;
   }
 
-  private createFeature(feature: FloorFeature): THREE.Group {
+  private createFeature(
+    feature: FloorFeature,
+    building: Building,
+    floor: Floor,
+  ): THREE.Group {
     const group = new THREE.Group();
-    const color = feature.type === 'stairs' ? '#c58d31' : feature.type === 'elevator' ? '#218c9e' : feature.type === 'aed' ? '#cf4563' : '#8793a5';
+    const color =
+      feature.type === "stairs"
+        ? "#c58d31"
+        : feature.type === "elevator"
+          ? "#218c9e"
+          : feature.type === "aed"
+            ? "#cf4563"
+            : "#8793a5";
     const geometry = this.polygonGeometry(feature.polygon, 1.5);
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color, transparent: true, opacity: 0.7 }));
+    const mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({
+        color,
+        transparent: true,
+        opacity: 0.7,
+      }),
+    );
+    mesh.userData.placeId = featurePlaceId(building.id, floor.id, feature.id);
+    if (["restroom", "elevator", "stairs", "aed"].includes(feature.type))
+      this.placeMeshes.push(mesh);
     group.add(mesh);
     const box = bounds(feature.polygon);
     const label = this.createTextLabelSprite(feature.label, color);
     label.position.set(box.x, 3, box.z);
-    label.scale.set(9, 2.25, 1); group.add(label);
+    label.scale.set(9, 2.25, 1);
+    group.add(label);
     return group;
   }
 
@@ -212,14 +276,14 @@ export class BuildingRenderer {
       const y = struct.box.y || 0;
 
       const geo = new THREE.BoxGeometry(w, h, d);
-      const isBridge = struct.type === 'bridge';
+      const isBridge = struct.type === "bridge";
 
       const mat = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(struct.color || '#64748b'),
+        color: new THREE.Color(struct.color || "#64748b"),
         roughness: isBridge ? 0.2 : 0.8,
         transparent: isBridge,
         opacity: isBridge ? 0.75 : 1.0,
-        metalness: isBridge ? 0.2 : 0.05
+        metalness: isBridge ? 0.2 : 0.05,
       });
 
       const mesh = new THREE.Mesh(geo, mat);
@@ -229,7 +293,7 @@ export class BuildingRenderer {
       if (isBridge) {
         // Group is positioned at base height (y = 4.5m) so it can explode with 2F
         group.position.set(0, y, 0);
-        group.userData = { type: 'bridge', level: 2, baseElevation: y };
+        group.userData = { type: "bridge", level: 2, baseElevation: y };
         this.skyBridgeGroup = group;
 
         mesh.position.set(x, h / 2, z);
@@ -237,14 +301,17 @@ export class BuildingRenderer {
 
         const edgeGeo = new THREE.EdgesGeometry(geo);
         const edgeMat = new THREE.LineBasicMaterial({
-          color: this.isDarkTheme ? 0x38bdf8 : 0x0284c7
+          color: this.isDarkTheme ? 0x38bdf8 : 0x0284c7,
         });
         const edgeLine = new THREE.LineSegments(edgeGeo, edgeMat);
         edgeLine.position.copy(mesh.position);
         group.add(edgeLine);
 
         // Label on bridge
-        const label = this.createTextLabelSprite('2F 連絡スカイブリッジ', '#0284c7');
+        const label = this.createTextLabelSprite(
+          "2F 連絡スカイブリッジ",
+          "#0284c7",
+        );
         label.position.set(x, h + 0.8, z);
         group.add(label);
       } else {
@@ -256,14 +323,19 @@ export class BuildingRenderer {
     }
   }
 
-  private createTextLabelSprite(text: string, accentColor: string): THREE.Sprite {
-    const canvas = document.createElement('canvas');
+  private createTextLabelSprite(
+    text: string,
+    accentColor: string,
+  ): THREE.Sprite {
+    const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 128;
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext("2d")!;
 
     // Background pill
-    ctx.fillStyle = this.isDarkTheme ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.9)';
+    ctx.fillStyle = this.isDarkTheme
+      ? "rgba(15, 23, 42, 0.85)"
+      : "rgba(255, 255, 255, 0.9)";
     ctx.beginPath();
     ctx.roundRect(16, 24, 480, 80, 20);
     ctx.fill();
@@ -274,10 +346,10 @@ export class BuildingRenderer {
     ctx.stroke();
 
     // Text
-    ctx.fillStyle = this.isDarkTheme ? '#f8fafc' : '#0f172a';
+    ctx.fillStyle = this.isDarkTheme ? "#f8fafc" : "#0f172a";
     ctx.font = 'bold 36px "Noto Sans JP", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(text, 256, 64);
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -286,7 +358,7 @@ export class BuildingRenderer {
       map: texture,
       transparent: true,
       depthTest: true,
-      depthWrite: false
+      depthWrite: false,
     });
 
     const sprite = new THREE.Sprite(spriteMat);
@@ -295,24 +367,26 @@ export class BuildingRenderer {
   }
 
   private createFloorBadgeSprite(text: string): THREE.Sprite {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = 256;
     canvas.height = 128;
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext("2d")!;
 
-    ctx.fillStyle = this.isDarkTheme ? 'rgba(30, 41, 59, 0.9)' : 'rgba(241, 245, 249, 0.9)';
+    ctx.fillStyle = this.isDarkTheme
+      ? "rgba(30, 41, 59, 0.9)"
+      : "rgba(241, 245, 249, 0.9)";
     ctx.beginPath();
     ctx.roundRect(10, 20, 236, 88, 16);
     ctx.fill();
 
-    ctx.strokeStyle = this.isDarkTheme ? '#38bdf8' : '#3b82f6';
+    ctx.strokeStyle = this.isDarkTheme ? "#38bdf8" : "#3b82f6";
     ctx.lineWidth = 3;
     ctx.stroke();
 
-    ctx.fillStyle = this.isDarkTheme ? '#38bdf8' : '#1d4ed8';
+    ctx.fillStyle = this.isDarkTheme ? "#38bdf8" : "#1d4ed8";
     ctx.font = 'bold 42px "Outfit", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.fillText(text, 128, 64);
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -321,7 +395,7 @@ export class BuildingRenderer {
       map: texture,
       transparent: true,
       depthTest: true,
-      depthWrite: false
+      depthWrite: false,
     });
 
     const sprite = new THREE.Sprite(spriteMat);
@@ -385,11 +459,20 @@ export class BuildingRenderer {
     return worldPos;
   }
 
-  private createVerticalFacilityMarker(node: NavNode, bldg: Building): THREE.Group {
+  private createVerticalFacilityMarker(
+    node: NavNode,
+    bldg: Building,
+  ): THREE.Group {
     const group = new THREE.Group();
     const [localX, localZ] = worldToLocal(bldg, node.position);
-    const isStairs = node.type === 'stairs';
-    const colorHex = isStairs ? (this.isDarkTheme ? 0xf59e0b : 0xd97706) : (this.isDarkTheme ? 0x06b6d4 : 0x0284c7);
+    const isStairs = node.type === "stairs";
+    const colorHex = isStairs
+      ? this.isDarkTheme
+        ? 0xf59e0b
+        : 0xd97706
+      : this.isDarkTheme
+        ? 0x06b6d4
+        : 0x0284c7;
 
     // Shaft box
     const shaftGeo = new THREE.BoxGeometry(3.6, 3.2, 3.6);
@@ -398,7 +481,7 @@ export class BuildingRenderer {
       transparent: true,
       opacity: isStairs ? 0.45 : 0.55,
       roughness: 0.25,
-      metalness: 0.1
+      metalness: 0.1,
     });
     const shaft = new THREE.Mesh(shaftGeo, shaftMat);
     shaft.position.set(localX, 1.6, localZ);
@@ -408,14 +491,20 @@ export class BuildingRenderer {
 
     // Edges
     const edgeGeo = new THREE.EdgesGeometry(shaftGeo);
-    const edgeMat = new THREE.LineBasicMaterial({ color: colorHex, linewidth: 2 });
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: colorHex,
+      linewidth: 2,
+    });
     const edge = new THREE.LineSegments(edgeGeo, edgeMat);
     edge.position.copy(shaft.position);
     group.add(edge);
 
     // Floating text label
-    const labelText = isStairs ? '🪜 階段' : '🛗 EV';
-    const label = this.createTextLabelSprite(labelText, isStairs ? '#f59e0b' : '#06b6d4');
+    const labelText = isStairs ? "🪜 階段" : "🛗 EV";
+    const label = this.createTextLabelSprite(
+      labelText,
+      isStairs ? "#f59e0b" : "#06b6d4",
+    );
     label.position.set(localX, 3.6, localZ);
     label.scale.set(isStairs ? 4.2 : 3.6, 1.3, 1);
     group.add(label);
@@ -424,8 +513,12 @@ export class BuildingRenderer {
   }
 
   public getNodeWorldPosition(node: NavNode): THREE.Vector3 {
-    const pos = new THREE.Vector3(node.position[0], node.position[1], node.position[2]);
-    if (node.buildingId && node.floor) {
+    const pos = new THREE.Vector3(
+      node.position[0],
+      node.position[1],
+      node.position[2],
+    );
+    if (node.buildingId && node.floor !== undefined) {
       const floorKey = `${node.buildingId}_f${node.floor}`;
       const floorGroup = this.floorGroups.get(floorKey);
       if (floorGroup) {
@@ -434,7 +527,8 @@ export class BuildingRenderer {
         pos.y += dy;
       }
     } else if (node.floor === 2 && this.skyBridgeGroup) {
-      const baseElev = (this.skyBridgeGroup.userData.baseElevation as number) || 4.5;
+      const baseElev =
+        (this.skyBridgeGroup.userData.baseElevation as number) || 4.5;
       const dy = this.skyBridgeGroup.position.y - baseElev;
       pos.y += dy;
     }

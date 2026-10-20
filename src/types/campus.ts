@@ -1,19 +1,45 @@
-export type RoomCategory = 'lecture' | 'lab' | 'office' | 'facility' | 'lounge' | 'restroom' | 'unknown';
+export type RoomCategory =
+  "lecture" | "lab" | "office" | "facility" | "lounge" | "restroom" | "unknown";
 export type Point2 = [number, number];
-export type Verification = 'diagram' | 'inferred' | 'verified';
+export type Verification = "diagram" | "inferred" | "verified";
 export interface FloorFeature {
   id: string;
   label: string;
-  type: 'stairs' | 'elevator' | 'restroom' | 'aed' | 'service' | 'pit';
+  type: "stairs" | "elevator" | "restroom" | "aed" | "service" | "pit";
   polygon: Point2[];
+  aliases?: string[];
+  entrance?: string; // Floor-local navigation ID in source files.
+  entranceNodeId?: string; // Qualified navigation ID after compilation.
+  description?: string;
+  restroomType?: "male" | "female" | "multipurpose" | "all-gender";
+}
+
+export type PlaceKind =
+  "room" | "restroom" | "elevator" | "stairs" | "aed" | "entrance";
+export interface Place {
+  id: string;
+  name: string;
+  kind: PlaceKind;
+  buildingId: string;
+  floorLevel: number;
+  floorLabel: string;
+  buildingName: string;
+  position: Point2;
+  polygon?: Point2[];
+  aliases: string[];
+  nodeId?: string;
+  roomId?: string;
+  featureId?: string;
+  description?: string;
+  restroomType?: FloorFeature["restroomType"];
 }
 
 export interface RoomBox {
-  x: number;      // Center or origin X
-  z: number;      // Center or origin Z
-  w: number;      // Width (X span)
-  d: number;      // Depth (Z span)
-  h?: number;     // Height (defaults to standard floor room height ~3.2m)
+  x: number; // Center or origin X
+  z: number; // Center or origin Z
+  w: number; // Width (X span)
+  d: number; // Depth (Z span)
+  h?: number; // Height (defaults to standard floor room height ~3.2m)
 }
 
 export interface Room {
@@ -40,10 +66,11 @@ export interface FloorSlab {
 }
 
 export interface Floor {
+  id: string;
   level: number;
   label: string;
-  elevation: number;   // Base Y height in meters (e.g., 0, 4.2, 8.4, 12.6)
-  slab: FloorSlab;     // Floor boundary
+  elevation: number; // Base height in the campus coordinate unit.
+  slab: FloorSlab; // Floor boundary
   rooms: Room[];
   outline?: Point2[];
   voids?: Point2[][];
@@ -63,28 +90,35 @@ export interface Building {
   rotation?: number; // Radians around Y; local X/Z -> world X/Z.
 }
 
-export type NavNodeType = 'room_entrance' | 'corridor' | 'stairs' | 'elevator' | 'outdoor' | 'preset';
+export type NavNodeType =
+  | "room_entrance"
+  | "facility_entrance"
+  | "corridor"
+  | "stairs"
+  | "elevator"
+  | "outdoor"
+  | "preset";
 
 export interface NavNode {
   id: string;
   name: string;
-  position: [number, number, number]; // [x, y, z] in meters
+  position: [number, number, number]; // World [x, y, z] in the campus coordinate unit.
   floor: number;
   buildingId?: string;
   type: NavNodeType;
   isPreset?: boolean;
 }
 
-export type NavEdgeType = 'walk' | 'stairs' | 'elevator' | 'bridge' | 'outdoor';
+export type NavEdgeType = "walk" | "stairs" | "elevator" | "bridge" | "outdoor";
 
 export interface NavEdge {
   from: string;
   to: string;
-  distance?: number;      // If omitted, auto-calculated from Euclidean distance
+  distance?: number; // If omitted, auto-calculated from Euclidean distance
   type: NavEdgeType;
   isIndoor: boolean;
-  isAccessible: boolean;  // True for flat walk/elevator/ramp; False for stairs
-  instruction?: string;   // Guide message when traversing this edge
+  isAccessible: boolean; // True for flat walk/elevator/ramp; False for stairs
+  instruction?: string; // Guide message when traversing this edge
   reverseInstruction?: string;
   verification?: Verification;
   bidirectional?: boolean;
@@ -93,12 +127,12 @@ export interface NavEdge {
 
 export interface CampusData {
   campusName: string;
-  coordinateUnit?: 'meters' | 'schematic';
+  coordinateUnit?: "meters" | "schematic";
   buildings: Building[];
   outdoorStructures?: Array<{
     id: string;
     name: string;
-    type: 'bridge' | 'plaza' | 'gate';
+    type: "bridge" | "plaza" | "gate";
     box: RoomBox & { y?: number };
     color?: string;
   }>;
@@ -108,7 +142,7 @@ export interface CampusData {
   };
 }
 
-export type RouteFilterType = 'shortest' | 'accessible' | 'indoor' | 'stairs';
+export type RouteFilterType = "shortest" | "accessible" | "indoor" | "stairs";
 
 export interface RouteStep {
   stepNumber: number;
@@ -116,6 +150,7 @@ export interface RouteStep {
   nodeId: string;
   position: [number, number, number];
   floor: number;
+  buildingId?: string;
   edgeType?: NavEdgeType;
   distance: number;
 }
@@ -126,6 +161,6 @@ export interface RouteResult {
   estimatedMinutes: number;
   floorChanges: number;
   steps: RouteStep[];
-  distanceUnit: 'meters' | 'schematic';
+  distanceUnit: "meters" | "schematic";
   inferredConnections: number;
 }

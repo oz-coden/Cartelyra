@@ -4,16 +4,17 @@ A static, browser-side campus map and reference route planner for Kanagawa Unive
 
 The map data is transcribed from a campus layout plan and photographs of posted Building 3 floor plans. It is **unofficial and not field verified**. Floor plans are schematic; dimensions, heights, entrances, facility availability and access restrictions have not been surveyed.
 
-- Campus overview: approximate building locations; outdoor routes are not registered.
+- Campus overview: 30 selectable building locations. Buildings without floor data show an explicit unregistered state; outdoor routes are not registered.
 - Building 3: B2, B1, 1F, 2F, 3F and 4F; 35 main rooms, 34 with provisional route connections. Room `3-B202` is display-only because its entrance connection is unclear.
-- SVG floor maps with room picking, keyboard selection, pan/zoom, room search and floor-by-floor route steps.
+- SVG floor maps with building/floor selection, keyboard picking, pan/zoom and searchable rooms and facilities. Building 3 includes 17 WCs (male, female and multipurpose), an AED, elevators and stairs. Facility entrances and availability are provisional.
+- Shared place indexing and building-local state power search, map selection, facility lists and building-aware route steps. Additional authored buildings load from JSON without per-building UI code.
 - Optional Three.js view generated from the same polygons, including atrium holes. The 3D bundle loads only when selected and pauses while hidden; the default SVG view works without WebGL.
 - Shortest schematic route, stair avoidance, indoor preference and stairs preference. Stair avoidance does **not** certify wheelchair accessibility.
 - Distances and walking times display “未測定” (not measured). Inferred connections can be excluded; no field-verified route network exists yet.
 
 ## Develop and check
 
-Use Node.js 20 or newer and npm. Node.js is a development/build dependency, not a production application server.
+Use Node.js 20.19 or newer and npm. Node.js is a development/build dependency, not a production application server.
 
 ```bash
 git clone https://github.com/oz-coden/Uniview.git
@@ -24,7 +25,7 @@ npm run dev
 
 ```bash
 npm run validate:data  # source references, IDs, connectivity and geometric checks
-npm test               # regression tests and all-room-pair route optimality checks
+npm test               # DOM integration, facility routing and all-room-pair optimality checks
 npm run build          # validation, TypeScript and static build
 npm run preview        # serve the built output locally
 ```
@@ -35,7 +36,7 @@ Deploy the contents of `dist/` to a static host such as GitHub Pages. Vite uses 
 
 Data lives under `src/data/`, split into a campus manifest, overview, building records and per-floor JSON files. Shared compiler code transforms building-local geometry and navigation nodes into world coordinates for 3D rendering and route search. Files are discovered at build time; no database, API key or runtime backend is required.
 
-See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. A graphical map editor and complete campus routing are future work.
+See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. See [Architecture and review notes](docs/architecture-review.md) for the current structure, resolved review findings and verification limits. A graphical map editor and complete campus routing are future work.
 
 ## References
 
@@ -57,18 +58,20 @@ Kanagawa University publishes the campus map and barrier-free/AED map on its [Yo
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 建物の概略配置。屋外経路は未登録 |
+| キャンパス全体 | 30棟を選択可能。建物の概略配置。屋外経路は未登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
 | 主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
+| WC・設備 | WC 17か所、AED 1か所、EV・階段を検索・選択可能。接続未登録の設備は閲覧のみ |
 | 3-B202 | 入口の接続先が不明のため、表示のみ |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
 
-1. 上部の「キャンパス」「平面図」「3D」で表示を切り替えます。キャンパス図の3号館を選ぶとフロア図を開きます。
-2. 右側の階ボタンで表示階を選びます。平面図はドラッグで移動、ホイールまたは＋／−で拡大縮小できます。
-3. 出発地・目的地を入力し、検索候補を選びます。部屋をタップして「ここから出発」「ここへ行く」でも指定できます。
-4. 道順カードを選ぶと、その階へ切り替わります。
-5. 「未確認の接続を含む参考ルートを表示」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
+1. 建物選択またはキャンパス図で棟を選び、階ボタンで表示階を切り替えます。フロア未登録の棟には登録状況を表示します。
+2. 上部の「キャンパス」「平面図」「3D」で表示を切り替えます。平面図はドラッグで移動、ホイールまたは＋／−で拡大縮小できます。
+3. 出発地・目的地に部屋名や「WC」「トイレ」「EV」などを入力し、候補を選びます。「3号館 2F 女性」のような空白区切りの検索も可能です。候補は表示中の棟・階を優先します。
+4. 地図や「このフロアの設備」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口未登録の場所は詳細だけ確認できます。
+5. 道順カードを選ぶと、その棟・階へ切り替わります。3Dでは「全階を表示」と展開ギャップを利用できます。
+6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
 「最短」は登録座標上の距離を最小化します。階段や屋外への隠れた加算はありません。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」は階段接続を除外する機能で、車椅子での通行可否を保証しません。
 
@@ -76,13 +79,13 @@ Kanagawa University publishes the campus map and barrier-free/AED map on its [Yo
 
 ## 開発・公開
 
-Node.js 20以上とnpmで、上記のコマンドを実行してください。`npm run build` はデータ検証・型検査・静的ファイル生成を行い、`dist/` を出力します。公開後のアプリケーションサーバーやデータベースは不要です。
+Node.js 20.19以上とnpmで、上記のコマンドを実行してください。`npm run build` はデータ検証・型検査・静的ファイル生成を行い、`dist/` を出力します。公開後のアプリケーションサーバーやデータベースは不要です。
 
 GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages → Build and deployment → Source → GitHub Actions** を設定します。
 
 ## データの追加・修正
 
-各階のJSONを編集すると、平面図・3D・経路検索に共通して反映されます。座標、出典、確認状態の扱いと具体例は [データ編集ガイド](docs/data-authoring.md) を参照してください。
+各階のJSONを編集すると、平面図・3D・検索・設備一覧・経路計算に共通して反映されます。他棟も建物・階のJSONを追加して登録できます。座標、出典、確認状態の扱いと具体例は [データ編集ガイド](docs/data-authoring.md) を参照してください。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路・他棟の登録、図面を下敷きにした編集ツールがあります。
 

@@ -11,40 +11,68 @@
     "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
     "掲示板の「現在位置」は撮影した掲示板の位置であり、利用者の現在地ではない。"
   ],
-  "outline": [[0, 0], [125, 0], [125, 96], [20, 96], [20, 25], [0, 25]],
-  "voids": [[[43, 32], [80, 32], [80, 47], [43, 47]], [[108, 56], [125, 56], [125, 61], [108, 61]]],
+  "outline": [
+    [0, 0],
+    [125, 0],
+    [125, 96],
+    [20, 96],
+    [20, 25],
+    [0, 25]
+  ],
+  "voids": [
+    [
+      [43, 32],
+      [80, 32],
+      [80, 47],
+      [43, 47]
+    ],
+    [
+      [108, 56],
+      [125, 56],
+      [125, 61],
+      [108, 61]
+    ]
+  ],
   "rooms": [
     {
       "id": "3-101",
       "name": "3-101 講師控室",
-      "aliases": [
-        "101",
-        "3101"
-      ],
+      "aliases": ["101", "3101"],
       "category": "office",
-      "polygon": [[42, 0], [66, 0], [66, 25], [42, 25]],
+      "polygon": [
+        [42, 0],
+        [66, 0],
+        [66, 25],
+        [42, 25]
+      ],
       "entrance": "room-101"
     },
     {
       "id": "3-102",
       "name": "3-102 教育・学生支援部分室②",
-      "aliases": [
-        "102",
-        "3102"
-      ],
+      "aliases": ["102", "3102"],
       "category": "office",
-      "polygon": [[66, 0], [90, 0], [90, 25], [73, 25], [73, 19], [66, 19]],
+      "polygon": [
+        [66, 0],
+        [90, 0],
+        [90, 25],
+        [73, 25],
+        [73, 19],
+        [66, 19]
+      ],
       "entrance": "room-102"
     },
     {
       "id": "3-103",
       "name": "3-103 展示ホール",
-      "aliases": [
-        "103",
-        "3103"
-      ],
+      "aliases": ["103", "3103"],
       "category": "facility",
-      "polygon": [[27, 70], [100, 70], [100, 96], [27, 96]],
+      "polygon": [
+        [27, 70],
+        [100, 70],
+        [100, 96],
+        [27, 96]
+      ],
       "entrance": "room-103"
     }
   ],
@@ -53,61 +81,127 @@
       "id": "wc-w",
       "label": "女性用トイレ",
       "type": "restroom",
-      "polygon": [[0, 3], [12, 3], [12, 20], [0, 20]]
+      "polygon": [
+        [0, 3],
+        [12, 3],
+        [12, 20],
+        [0, 20]
+      ],
+      "restroomType": "female",
+      "entrance": "wc-w-entrance",
+      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
     },
     {
       "id": "wc-m",
       "label": "男性用トイレ",
       "type": "restroom",
-      "polygon": [[12, 3], [26, 3], [26, 20], [12, 20]]
+      "polygon": [
+        [12, 3],
+        [26, 3],
+        [26, 14],
+        [21, 14],
+        [21, 20],
+        [12, 20]
+      ],
+      "restroomType": "male",
+      "entrance": "wc-m-entrance",
+      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
     },
     {
       "id": "wc-a",
       "label": "多目的トイレ",
       "type": "restroom",
-      "polygon": [[21, 14], [26, 14], [26, 20], [21, 20]]
+      "polygon": [
+        [21, 14],
+        [26, 14],
+        [26, 20],
+        [21, 20]
+      ],
+      "restroomType": "multipurpose",
+      "entrance": "wc-a-entrance",
+      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
     },
     {
       "id": "ev",
       "label": "EV",
       "type": "elevator",
-      "polygon": [[27, 12], [34, 12], [34, 21], [27, 21]]
+      "polygon": [
+        [27, 12],
+        [34, 12],
+        [34, 21],
+        [27, 21]
+      ],
+      "entrance": "elevator"
     },
     {
       "id": "stairs1",
       "label": "階段1",
       "type": "stairs",
-      "polygon": [[90, 2], [100, 2], [100, 20], [90, 20]]
+      "polygon": [
+        [90, 2],
+        [100, 2],
+        [100, 20],
+        [90, 20]
+      ],
+      "entrance": "stair1"
     },
     {
       "id": "stairs2",
       "label": "階段2",
       "type": "stairs",
-      "polygon": [[20, 73], [27, 73], [27, 88], [20, 88]]
+      "polygon": [
+        [20, 73],
+        [27, 73],
+        [27, 88],
+        [20, 88]
+      ],
+      "entrance": "stair2"
     },
     {
       "id": "stairs3",
       "label": "階段3（接続未確認）",
       "type": "stairs",
-      "polygon": [[100, 60], [110, 60], [110, 70], [100, 70]]
+      "polygon": [
+        [100, 60],
+        [110, 60],
+        [110, 70],
+        [100, 70]
+      ]
     },
     {
       "id": "stairs4",
       "label": "階段4（接続未確認）",
       "type": "stairs",
-      "polygon": [[106, 32], [125, 32], [125, 39], [106, 39]]
+      "polygon": [
+        [106, 32],
+        [125, 32],
+        [125, 39],
+        [106, 39]
+      ]
     },
     {
       "id": "stairs5",
       "label": "階段5（接続未確認）",
       "type": "stairs",
-      "polygon": [[4, 25], [24, 25], [24, 32], [4, 32]]
+      "polygon": [
+        [4, 25],
+        [24, 25],
+        [24, 32],
+        [4, 32]
+      ]
     },
     {
       "id": "aed",
       "label": "AED",
       "type": "aed",
-      "polygon": [[94, 60], [98, 60], [98, 64], [94, 64]]
+      "polygon": [
+        [94, 60],
+        [98, 60],
+        [98, 64],
+        [94, 64]
+      ],
+      "entrance": "aed-approach",
+      "description": "掲示図のAED表示。設置状況・利用可能時間は現地未確認。"
     }
   ],
   "navigation": {
@@ -228,6 +322,48 @@
         "name": "3-103 展示ホール 入口（推定）",
         "position": [54, 70],
         "type": "room_entrance"
+      },
+      {
+        "id": "wc-w-entrance",
+        "name": "1F 女性用トイレ 入口（推定）",
+        "position": [6, 20],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-w-hall",
+        "name": "1F トイレ前廊下",
+        "position": [6, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "wc-m-entrance",
+        "name": "1F 男性用トイレ 入口（推定）",
+        "position": [16.5, 20],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-m-hall",
+        "name": "1F トイレ前廊下",
+        "position": [16.5, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "wc-a-entrance",
+        "name": "1F 多目的トイレ 入口（推定）",
+        "position": [23.5, 20],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-a-hall",
+        "name": "1F トイレ前廊下",
+        "position": [23.5, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "aed-approach",
+        "name": "1F AED前（推定）",
+        "position": [96, 62],
+        "type": "facility_entrance"
       }
     ],
     "edges": [
@@ -382,6 +518,62 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true
+      },
+      {
+        "to": "wc-w-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-w-entrance"
+      },
+      {
+        "to": "wc-m-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-m-entrance"
+      },
+      {
+        "to": "wc-a-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-a-entrance"
+      },
+      {
+        "to": "wc-m-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-w-hall"
+      },
+      {
+        "to": "wc-a-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-m-hall"
+      },
+      {
+        "to": "nw",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "wc-a-hall"
+      },
+      {
+        "to": "se",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "aed-approach"
       }
     ]
   }
