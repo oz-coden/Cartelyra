@@ -8,14 +8,21 @@
   "sourceId": "b3-f3-b1",
   "notes": [
     "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
-    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。"
+    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
+    "屋外階段・屋外の通路は館内図の案内対象外。"
   ],
   "outline": [
     [0, 0],
     [110, 0],
+    [110, 30],
+    [96, 30],
+    [96, 70],
+    [110, 70],
     [110, 96],
     [20, 96],
-    [20, 25],
+    [20, 54],
+    [27, 54],
+    [27, 25],
     [0, 25]
   ],
   "voids": [],
@@ -160,7 +167,7 @@
       {
         "id": "nw",
         "name": "B1 北西廊下",
-        "position": [24, 26],
+        "position": [35, 26],
         "type": "corridor"
       },
       {
@@ -190,7 +197,7 @@
       {
         "id": "ne",
         "name": "B1 北東廊下",
-        "position": [97, 26],
+        "position": [93, 26],
         "type": "corridor"
       },
       {
@@ -226,19 +233,19 @@
       {
         "id": "se",
         "name": "B1 南東廊下",
-        "position": [97, 67],
+        "position": [93, 67],
         "type": "corridor"
       },
       {
         "id": "west",
         "name": "西側廊下",
-        "position": [24, 46],
+        "position": [35, 46],
         "type": "corridor"
       },
       {
         "id": "stair1",
         "name": "階段1 B1",
-        "position": [86, 26],
+        "position": [86, 20],
         "type": "stairs",
         "isPreset": true
       },
@@ -315,6 +322,18 @@
         "name": "B1 トイレ前廊下",
         "position": [23.5, 23],
         "type": "corridor"
+      },
+      {
+        "id": "west-south",
+        "name": "B1 西側廊下の曲がり角",
+        "position": [35, 67],
+        "type": "corridor"
+      },
+      {
+        "id": "stair1-hall",
+        "name": "B1 階段1前廊下",
+        "position": [86, 26],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -352,7 +371,7 @@
       },
       {
         "from": "n75",
-        "to": "ne",
+        "to": "stair1-hall",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -408,7 +427,7 @@
       },
       {
         "from": "west",
-        "to": "sw",
+        "to": "west-south",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -424,7 +443,7 @@
       },
       {
         "from": "stair1",
-        "to": "ne",
+        "to": "stair1-hall",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -525,6 +544,22 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "wc-a-hall"
+      },
+      {
+        "from": "west-south",
+        "to": "sw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "stair1-hall",
+        "to": "ne",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
       }
     ]
   }

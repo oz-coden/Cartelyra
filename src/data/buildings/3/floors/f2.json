@@ -8,15 +8,17 @@
   "sourceId": "b3-f2-b2",
   "notes": [
     "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
-    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。"
+    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
+    "館内図は屋内の範囲を表示。屋外側の張り出しは含めない。",
+    "図面右側の吹き抜けは外部に開いている。北側と南側の移動は中央または図面左側の廊下を使用。"
   ],
   "outline": [
     [0, 0],
     [100, 0],
-    [100, 60],
-    [110, 60],
-    [110, 70],
-    [100, 70],
+    [100, 28],
+    [81, 28],
+    [81, 63],
+    [100, 63],
     [100, 96],
     [20, 96],
     [20, 25],
@@ -28,12 +30,6 @@
       [64, 28],
       [64, 63],
       [44, 63]
-    ],
-    [
-      [81, 28],
-      [95, 28],
-      [95, 63],
-      [81, 63]
     ]
   ],
   "rooms": [
@@ -445,6 +441,24 @@
         "name": "2F トイレ前廊下",
         "position": [23.5, 23],
         "type": "corridor"
+      },
+      {
+        "id": "n85",
+        "name": "2F 北側廊下",
+        "position": [85, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "mid-n",
+        "name": "2F 中央廊下 北側分岐",
+        "position": [72, 23],
+        "type": "corridor"
+      },
+      {
+        "id": "mid-s",
+        "name": "2F 中央廊下 南側分岐",
+        "position": [72, 67],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -474,7 +488,7 @@
       },
       {
         "from": "n64",
-        "to": "n75",
+        "to": "mid-n",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -482,7 +496,7 @@
       },
       {
         "from": "n75",
-        "to": "ne",
+        "to": "n85",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -514,7 +528,7 @@
       },
       {
         "from": "s69",
-        "to": "s86",
+        "to": "mid-s",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -539,14 +553,6 @@
       {
         "from": "west",
         "to": "sw",
-        "type": "walk",
-        "verification": "diagram",
-        "isIndoor": true,
-        "isAccessible": true
-      },
-      {
-        "from": "ne",
-        "to": "se",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -602,7 +608,7 @@
       },
       {
         "from": "room-204",
-        "to": "ne",
+        "to": "n85",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
@@ -665,7 +671,7 @@
         "isAccessible": true
       },
       {
-        "from": "n75",
+        "from": "mid-n",
         "to": "mid",
         "type": "walk",
         "verification": "diagram",
@@ -674,7 +680,7 @@
       },
       {
         "from": "mid",
-        "to": "s69",
+        "to": "mid-s",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -727,6 +733,30 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "wc-a-hall"
+      },
+      {
+        "from": "n85",
+        "to": "ne",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "mid-n",
+        "to": "n75",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "mid-s",
+        "to": "s86",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
       }
     ]
   }

@@ -9,14 +9,17 @@
   "notes": [
     "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
     "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
-    "掲示板の「現在位置」は撮影した掲示板の位置であり、利用者の現在地ではない。"
+    "掲示板の「現在位置」は撮影した掲示板の位置であり、利用者の現在地ではない。",
+    "屋外階段・屋外の通路は館内図の案内対象外。"
   ],
   "outline": [
     [0, 0],
-    [125, 0],
-    [125, 96],
+    [100, 0],
+    [100, 96],
     [20, 96],
-    [20, 25],
+    [20, 63],
+    [27, 63],
+    [27, 25],
     [0, 25]
   ],
   "voids": [
@@ -25,12 +28,6 @@
       [80, 32],
       [80, 47],
       [43, 47]
-    ],
-    [
-      [108, 56],
-      [125, 56],
-      [125, 61],
-      [108, 61]
     ]
   ],
   "rooms": [
@@ -176,7 +173,7 @@
       {
         "id": "nw",
         "name": "1F 北西廊下",
-        "position": [24, 26],
+        "position": [35, 26],
         "type": "corridor"
       },
       {
@@ -248,7 +245,7 @@
       {
         "id": "west",
         "name": "西側廊下",
-        "position": [24, 46],
+        "position": [35, 46],
         "type": "corridor"
       },
       {
@@ -331,6 +328,12 @@
         "name": "1F AED前（推定）",
         "position": [96, 62],
         "type": "facility_entrance"
+      },
+      {
+        "id": "west-south",
+        "name": "1F 西側廊下の曲がり角",
+        "position": [35, 67],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -424,7 +427,7 @@
       },
       {
         "from": "west",
-        "to": "sw",
+        "to": "west-south",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -541,6 +544,14 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "aed-approach"
+      },
+      {
+        "from": "west-south",
+        "to": "sw",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
       }
     ]
   }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readData } from '../scripts/read-data.mjs';
 import { compileCampus } from '../.checks/data/compile.js';
 import { validateSources } from '../.checks/data/validate.js';
-import { localToWorld, worldToLocal, segmentIsWalkable } from '../.checks/data/geometry.js';
+import { localToWorld, worldToLocal, pointInPolygon, segmentIsWalkable } from '../.checks/data/geometry.js';
 import { AStarPathfinder } from '../.checks/pathfinding/AStar.js';
 
 const source = await readData();
@@ -41,6 +41,46 @@ test('routes cannot cross a room, an atrium or an equipment area', () => {
   const outline = [[0,0],[10,0],[10,10],[0,10]], narrow = [[4.00001,0],[4.00002,0],[4.00002,10],[4.00001,10]];
   assert.equal(segmentIsWalkable([1,5], [9,5], outline, [narrow]), false);
   assert.equal(segmentIsWalkable([1,1], [1,9], outline, [narrow]), true);
+});
+
+test('Building 3 indoor footprints exclude outdoor stair remnants and retain real corridors', () => {
+  const floor = id => source.floors.find(f => f.buildingId === 'b3' && f.id === id);
+  for (const id of ['f2', 'f3', 'f4']) {
+    assert.equal(pointInPolygon([105, 65], floor(id).outline), false);
+    assert.equal(pointInPolygon([97, 67], floor(id).outline), true);
+  }
+  for (const id of ['b1', 'f1'])
+    assert.equal(pointInPolygon([24, 46], floor(id).outline), false);
+  assert.equal(pointInPolygon([115, 40], floor('f1').outline), false);
+  assert.equal(pointInPolygon([103, 45], floor('b1').outline), false);
+  assert.equal(pointInPolygon([97, 45], floor('f2').outline), false);
+  for (const id of ['f3', 'f4'])
+    assert.equal(pointInPolygon([97, 45], floor(id).outline), true);
+  const route = finder.findPath('b3/f2/stair1', 'b3/f2/room-205');
+  assert.ok(route.pathNodes.some(n => n.id === 'b3/f2/mid'));
+  assert.ok(route.pathNodes.every(n => n.floor === 2));
+  for (const level of [2, 3, 4]) {
+    const across = finder.findPath(`b3/f${level}/room-${level}04`, `b3/f${level}/room-${level}01`);
+    const building = campus.buildings.find(b => b.id === 'b3');
+    assert.ok(across.pathNodes.every(n => worldToLocal(building, n.position)[0] <= 85));
+  }
+  for (const f of source.floors.filter(f => f.buildingId === 'b3')) {
+    assert.ok(f.features.filter(feature => feature.type === 'stairs')
+      .every(feature => ['stairs1', 'stairs2'].includes(feature.id)));
+    assert.ok(f.navigation.nodes.every(n => !/stair[345]/.test(n.id)));
+  }
+});
+
+test('walk edges cannot cross stair or elevator interiors and facility approaches stay on their footprints', () => {
+  for (const [id, positions] of [['b2', [[26, 17], [32, 17]]], ['f1', [[95, 1], [95, 22]]]]) {
+    const bad = structuredClone(source), floor = bad.floors.find(f => f.buildingId === 'b3' && f.id === id);
+    floor.navigation.nodes.push(...positions.map((position, i) => ({ id: `bad-${i}`, name: 'Invalid corridor', position, type: 'corridor' })));
+    floor.navigation.edges.push({ from: 'bad-0', to: 'bad-1', type: 'walk', verification: 'inferred', isIndoor: true, isAccessible: true });
+    assert.ok(validate(bad).some(e => e.includes('Edge crosses room, void or service area')));
+  }
+  const bad = structuredClone(source), floor = bad.floors.find(f => f.buildingId === 'b3' && f.id === 'b1');
+  floor.navigation.nodes.find(n => n.id === 'stair1').position = [86, 26];
+  assert.ok(validate(bad).some(e => e.includes('stairs1: entrance is not on facility')));
 });
 
 test('building-local coordinates transform consistently, including rotation', () => {

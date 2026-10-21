@@ -8,15 +8,12 @@
   "sourceId": "b3-f3-b1",
   "notes": [
     "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
-    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。"
+    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
+    "館内図は屋内の範囲を表示。屋外側の張り出しは含めない。"
   ],
   "outline": [
     [0, 0],
     [100, 0],
-    [100, 60],
-    [110, 60],
-    [110, 70],
-    [100, 70],
     [100, 96],
     [20, 96],
     [20, 25],
@@ -408,6 +405,12 @@
         "name": "3F トイレ前廊下",
         "position": [23.5, 23],
         "type": "corridor"
+      },
+      {
+        "id": "n85",
+        "name": "3F 北側廊下",
+        "position": [85, 23],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -445,7 +448,7 @@
       },
       {
         "from": "n75",
-        "to": "ne",
+        "to": "n85",
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
@@ -565,7 +568,7 @@
       },
       {
         "from": "room-304",
-        "to": "ne",
+        "to": "n85",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
@@ -650,6 +653,14 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "wc-a-hall"
+      },
+      {
+        "from": "n85",
+        "to": "ne",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
       }
     ]
   }

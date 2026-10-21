@@ -150,7 +150,7 @@ export function validateSources(
             node,
             `${ctx}/${feature.id}: missing facility entrance ${feature.entrance}`,
           );
-          if (node && ["restroom", "entrance"].includes(feature.type))
+          if (node)
             check(
               pointInPolygon(node.position, feature.polygon),
               `${ctx}/${feature.id}: entrance is not on facility`,
@@ -298,7 +298,7 @@ export function validateSources(
           ...floor.voids,
           ...floor.rooms.map((r) => r.polygon),
           ...floor.features
-            .filter((f) => ["restroom", "service", "pit"].includes(f.type))
+            .filter((f) => ["restroom", "service", "pit", "stairs", "elevator"].includes(f.type))
             .map((f) => f.polygon),
         ];
         if (
