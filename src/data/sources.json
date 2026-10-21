@@ -2,7 +2,7 @@
   {
     "id": "campus-plan",
     "filename": "1000000929.jpg",
-    "description": "神奈川大学 横浜キャンパス校舎配置図。建物の相対位置と隙間は模式的な通路配置の参考図でも補足。撮影・図面改訂日は不明で、実寸・方位は未校正。"
+    "description": "神奈川大学 横浜キャンパス校舎配置図。建物番号と門の名称・対応関係の識別に参照。キャンパス図の建物形状・位置は空中写真を参考に別途作成。撮影・図面改訂日は不明。"
   },
   {
     "id": "b3-f4-f1",
@@ -33,5 +33,12 @@
     "id": "campus-path-reference",
     "filename": "campus-path-reference",
     "description": "作成途中の模式的なキャンパス通路配置図。通路の接続関係と定性的な道幅を参照。縮尺・実距離・通行条件は未校正。"
+  },
+  {
+    "id": "gsi-campus-aerial",
+    "filename": "seamlessphoto/18/{x}/{y}.jpg",
+    "url": "https://maps.gsi.go.jp/#18/35.4847/139.6201/&base=seamlessphoto&ls=seamlessphoto&disp=1",
+    "description": "出典：国土地理院 地理院タイル「全国最新写真（シームレス）」。2026-10-21 UTC取得、撮影年月は未特定。ズーム18、使用範囲はタイルX=232738〜232741・Y=103401〜103404。建物の大まかな位置・向きを読み取り、外形と屋外参考経路を簡略化して作成・加工。原画像は同梱しない。建物番号・門の対応は校舎配置図で識別。屋根の傾き・倒れ込み、樹木や影で隠れた場所、2・26・27・29・31号館と門の詳細は現地照合が必要。",
+    "termsUrl": "https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html"
   }
 ]

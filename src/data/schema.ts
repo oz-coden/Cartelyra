@@ -75,6 +75,7 @@ export interface CampusSource {
   connections?: SourceEdge[]; // Explicit links between buildings, using qualified node IDs.
   outdoor?: {
     sourceId: string;
+    positionSourceId?: string;
     notes: string[];
     nodes: Array<{
       id: string;
@@ -97,9 +98,23 @@ export interface SourceDocument {
   id: string;
   filename: string;
   description: string;
+  url?: string;
+  termsUrl?: string;
 }
 export interface CampusOverview {
   sourceId: string;
+  notes?: string[];
+  reference?: {
+    type: "gsi-xyz";
+    zoom: number;
+    tileOrigin: Point2;
+    pixelOffset: Point2;
+    pixelsPerUnit: number;
+    orientation: "north-up";
+    retrievedAt: string;
+    imageryDate: string | null;
+    attribution: { label: string; url: string };
+  };
   buildings: Array<{ id: string; name: string; polygon: Point2[] }>;
   gates: Array<{
     id: string;

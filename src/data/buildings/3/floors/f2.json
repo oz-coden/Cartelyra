@@ -237,79 +237,79 @@
     "nodes": [
       {
         "id": "nw",
-        "name": "2F 北西廊下",
+        "name": "2F 図面左上廊下",
         "position": [24, 23],
         "type": "corridor"
       },
       {
         "id": "n42",
-        "name": "2F 北側廊下",
+        "name": "2F 図面上側廊下",
         "position": [42, 23],
         "type": "corridor"
       },
       {
         "id": "n50",
-        "name": "2F 北側廊下",
+        "name": "2F 図面上側廊下",
         "position": [50, 23],
         "type": "corridor"
       },
       {
         "id": "n64",
-        "name": "2F 北側廊下",
+        "name": "2F 図面上側廊下",
         "position": [64, 23],
         "type": "corridor"
       },
       {
         "id": "n75",
-        "name": "2F 北側廊下",
+        "name": "2F 図面上側廊下",
         "position": [75, 23],
         "type": "corridor"
       },
       {
         "id": "ne",
-        "name": "2F 北東廊下",
+        "name": "2F 図面右上廊下",
         "position": [97, 23],
         "type": "corridor"
       },
       {
         "id": "sw",
-        "name": "2F 南西廊下",
+        "name": "2F 図面左下廊下",
         "position": [24, 67],
         "type": "corridor"
       },
       {
         "id": "s36",
-        "name": "2F 南側廊下",
+        "name": "2F 図面下側廊下",
         "position": [36, 67],
         "type": "corridor"
       },
       {
         "id": "s54",
-        "name": "2F 南側廊下",
+        "name": "2F 図面下側廊下",
         "position": [54, 67],
         "type": "corridor"
       },
       {
         "id": "s69",
-        "name": "2F 南側廊下",
+        "name": "2F 図面下側廊下",
         "position": [69, 67],
         "type": "corridor"
       },
       {
         "id": "s86",
-        "name": "2F 南側廊下",
+        "name": "2F 図面下側廊下",
         "position": [86, 67],
         "type": "corridor"
       },
       {
         "id": "se",
-        "name": "2F 南東廊下",
+        "name": "2F 図面右下廊下",
         "position": [97, 67],
         "type": "corridor"
       },
       {
         "id": "west",
-        "name": "西側廊下",
+        "name": "図面左側廊下",
         "position": [24, 46],
         "type": "corridor"
       },
@@ -372,13 +372,13 @@
       },
       {
         "id": "west-209",
-        "name": "2F 西側廊下",
+        "name": "2F 図面左側廊下",
         "position": [24, 36],
         "type": "corridor"
       },
       {
         "id": "west-208",
-        "name": "2F 西側廊下",
+        "name": "2F 図面左側廊下",
         "position": [24, 54],
         "type": "corridor"
       },
@@ -444,19 +444,19 @@
       },
       {
         "id": "n85",
-        "name": "2F 北側廊下",
+        "name": "2F 図面上側廊下",
         "position": [85, 23],
         "type": "corridor"
       },
       {
         "id": "mid-n",
-        "name": "2F 中央廊下 北側分岐",
+        "name": "2F 中央廊下 図面上側分岐",
         "position": [72, 23],
         "type": "corridor"
       },
       {
         "id": "mid-s",
-        "name": "2F 中央廊下 南側分岐",
+        "name": "2F 中央廊下 図面下側分岐",
         "position": [72, 67],
         "type": "corridor"
       }

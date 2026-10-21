@@ -6,100 +6,112 @@
   "outdoor": {
     "sourceId": "campus-path-reference",
     "notes": [
-      "縮尺のない通路配置の参考図から接続関係を登録した模式経路。実距離・所要時間・正確な方位は未校正。",
-      "3号館北側出入口から西門、12号館・17号館東側の地上通路、大通りを経て20号館へ接続。立体交差の上側へは接続しない。",
-      "道幅は定性的な参考情報のみ。経路選択の重みには未使用。段差・開放時間・通行条件は未確認。"
+      "通路の接続関係を模式的な参考図から登録し、位置と向きを国土地理院の空中写真に合わせて概略調整。撮影年月は不明。実距離・所要時間は未校正。",
+      "3号館の8号館側出入口から西門、12号館・17号館と道路の間の地上通路、13号館と17号館の間の大通りを経て20号館へ接続。立体交差の上側へは接続しない。",
+      "樹木・屋根・日陰で見えない部分と出入口は代表点を推定。道幅は定性的な参考情報のみで、経路選択の重みには未使用。段差・開放時間・通行条件は未確認。"
     ],
     "nodes": [
       {
         "id": "b3-north",
-        "name": "3号館 北側出入口前",
-        "position": [82, 65],
+        "name": "3号館 8号館側出入口前",
+        "position": [79.125, 22.875],
         "layer": "ground"
       },
       {
         "id": "b3-front",
-        "name": "3号館 北側の通路",
-        "position": [82, 64],
+        "name": "3号館・8号館間の通路",
+        "position": [77.5, 22.5],
         "layer": "ground"
       },
       {
         "id": "b3-turn",
-        "name": "3号館 北側の曲がり角",
-        "position": [83, 64],
+        "name": "3号館前の曲がり角",
+        "position": [76.875, 19.5],
         "layer": "ground"
       },
       {
         "id": "b7-east-south",
-        "name": "7号館 東側通路の南端",
-        "position": [83, 49],
+        "name": "7号館・5号館間の通路",
+        "position": [58.75, 18.75],
         "layer": "ground"
       },
       {
         "id": "b7-east",
-        "name": "7号館 東側通路",
-        "position": [81, 49],
+        "name": "7号館前の通路",
+        "position": [57.5, 19.75],
         "layer": "ground"
       },
       {
         "id": "b7-north-east",
-        "name": "7号館 北東側の曲がり角",
-        "position": [81, 45],
+        "name": "7号館・6号館間の曲がり角",
+        "position": [56.0, 18.875],
         "layer": "ground"
       },
       {
         "id": "west-gate-south",
-        "name": "西門 南側の通路",
-        "position": [76, 45],
+        "name": "西門 7号館側の通路",
+        "position": [54.875, 19.375],
         "layer": "ground"
       },
       {
         "id": "west-gate",
         "name": "西門",
-        "position": [76, 44],
+        "position": [53.75, 20.0],
         "layer": "ground",
         "gateId": "west"
       },
       {
         "id": "west-gate-north",
-        "name": "西門 北側の通路",
-        "position": [76, 43.5],
+        "name": "西門 12号館側の通路",
+        "position": [52.875, 19.625],
         "layer": "ground"
       },
       {
         "id": "b12-east-south",
-        "name": "12号館 東側への曲がり角",
-        "position": [81.5, 43.5],
+        "name": "12号館・6号館間の曲がり角",
+        "position": [52.25, 19.5],
         "layer": "ground"
       },
       {
         "id": "b12-east",
-        "name": "12号館 東側の地上通路（立体交差の下）",
-        "position": [81.5, 39],
+        "name": "12号館前の地上通路（立体交差の下）",
+        "position": [46.25, 19.125],
         "layer": "ground"
       },
       {
         "id": "b17-east",
-        "name": "17号館 東側の地上通路",
-        "position": [81.5, 29],
+        "name": "17号館・19号館間の地上通路",
+        "position": [31.25, 18.75],
         "layer": "ground"
       },
       {
         "id": "avenue-east",
-        "name": "13号館と17号館の間の大通り 東側",
-        "position": [81.5, 24],
+        "name": "13号館と17号館の間の大通り 19号館側",
+        "position": [23.125, 18.5],
+        "layer": "ground"
+      },
+      {
+        "id": "avenue-turn",
+        "name": "大通りの13号館角",
+        "position": [22.875, 35.0],
+        "layer": "ground"
+      },
+      {
+        "id": "b20-approach",
+        "name": "13号館・20号館間の通路",
+        "position": [15.875, 36.875],
         "layer": "ground"
       },
       {
         "id": "avenue-west",
         "name": "大通りの20号館側",
-        "position": [57, 24],
+        "position": [15.625, 38.75],
         "layer": "ground"
       },
       {
         "id": "b20-south-east",
-        "name": "20号館 南側・図面右端出入口前",
-        "position": [54, 24],
+        "name": "20号館 図面下側・右端出入口前",
+        "position": [14.5, 40.0],
         "layer": "ground"
       }
     ],
@@ -213,13 +225,31 @@
         "from": "b17-east"
       },
       {
-        "to": "avenue-west",
+        "to": "avenue-turn",
         "type": "outdoor",
         "verification": "inferred",
         "isIndoor": false,
         "isAccessible": true,
         "widthClass": "wide",
         "from": "avenue-east"
+      },
+      {
+        "to": "b20-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "avenue-turn"
+      },
+      {
+        "to": "avenue-west",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b20-approach"
       },
       {
         "to": "b20-south-east",
@@ -244,6 +274,7 @@
         "isAccessible": true,
         "from": "b20-south-east"
       }
-    ]
+    ],
+    "positionSourceId": "gsi-campus-aerial"
   }
 }

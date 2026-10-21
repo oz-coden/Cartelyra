@@ -11,7 +11,7 @@
     "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
     "掲示板の「現在位置」は撮影した掲示板の位置であり、利用者の現在地ではない。",
     "屋外階段・屋外の通路は館内図の案内対象外。",
-    "北側出入口は図面左、南側出入口は図面右。図面の上下左右はキャンパスの方位とは一致しない。"
+    "8号館側出入口は図面左、新東門側出入口は図面右。室内図の上下左右はキャンパス図の方位とは一致しない。"
   ],
   "outline": [
     [0, 0],
@@ -170,7 +170,7 @@
     },
     {
       "id": "entrance-north",
-      "label": "北側出入口",
+      "label": "8号館側出入口",
       "type": "entrance",
       "polygon": [
         [27, 44],
@@ -179,12 +179,12 @@
         [27, 48]
       ],
       "entrance": "entrance-north",
-      "aliases": ["北側入口"],
-      "description": "1Fの図面左側にある出入口。屋外参考経路に接続。"
+      "aliases": ["図面左側出入口", "8号館側入口"],
+      "description": "1Fの図面左側、8号館に面する出入口の代表点。屋外参考経路に接続。"
     },
     {
       "id": "entrance-south",
-      "label": "南側出入口",
+      "label": "新東門側出入口",
       "type": "entrance",
       "polygon": [
         [100, 44],
@@ -193,87 +193,87 @@
         [100, 48]
       ],
       "entrance": "entrance-south",
-      "aliases": ["南側入口"],
-      "description": "1Fの図面右側にある出入口。屋外への接続は未登録。"
+      "aliases": ["図面右側出入口", "新東門側入口"],
+      "description": "1Fの図面右側、新東門に面する出入口の代表点。屋外への接続は未登録。"
     }
   ],
   "navigation": {
     "nodes": [
       {
         "id": "nw",
-        "name": "1F 北西廊下",
+        "name": "1F 図面左上廊下",
         "position": [35, 26],
         "type": "corridor"
       },
       {
         "id": "n42",
-        "name": "1F 北側廊下",
+        "name": "1F 図面上側廊下",
         "position": [42, 26],
         "type": "corridor"
       },
       {
         "id": "n50",
-        "name": "1F 北側廊下",
+        "name": "1F 図面上側廊下",
         "position": [50, 26],
         "type": "corridor"
       },
       {
         "id": "n64",
-        "name": "1F 北側廊下",
+        "name": "1F 図面上側廊下",
         "position": [64, 26],
         "type": "corridor"
       },
       {
         "id": "n75",
-        "name": "1F 北側廊下",
+        "name": "1F 図面上側廊下",
         "position": [75, 26],
         "type": "corridor"
       },
       {
         "id": "ne",
-        "name": "1F 北東廊下",
+        "name": "1F 図面右上廊下",
         "position": [97, 26],
         "type": "corridor"
       },
       {
         "id": "sw",
-        "name": "1F 南西廊下",
+        "name": "1F 図面左下廊下",
         "position": [24, 67],
         "type": "corridor"
       },
       {
         "id": "s36",
-        "name": "1F 南側廊下",
+        "name": "1F 図面下側廊下",
         "position": [36, 67],
         "type": "corridor"
       },
       {
         "id": "s54",
-        "name": "1F 南側廊下",
+        "name": "1F 図面下側廊下",
         "position": [54, 67],
         "type": "corridor"
       },
       {
         "id": "s69",
-        "name": "1F 南側廊下",
+        "name": "1F 図面下側廊下",
         "position": [69, 67],
         "type": "corridor"
       },
       {
         "id": "s86",
-        "name": "1F 南側廊下",
+        "name": "1F 図面下側廊下",
         "position": [86, 67],
         "type": "corridor"
       },
       {
         "id": "se",
-        "name": "1F 南東廊下",
+        "name": "1F 図面右下廊下",
         "position": [97, 67],
         "type": "corridor"
       },
       {
         "id": "west",
-        "name": "西側廊下",
+        "name": "図面左側廊下",
         "position": [35, 46],
         "type": "corridor"
       },
@@ -360,27 +360,27 @@
       },
       {
         "id": "west-south",
-        "name": "1F 西側廊下の曲がり角",
+        "name": "1F 図面左側廊下の曲がり角",
         "position": [35, 67],
         "type": "corridor"
       },
       {
         "id": "entrance-north",
-        "name": "北側出入口",
+        "name": "8号館側出入口",
         "position": [27, 46],
         "type": "preset",
         "isPreset": true
       },
       {
         "id": "entrance-south",
-        "name": "南側出入口",
+        "name": "新東門側出入口",
         "position": [100, 46],
         "type": "preset",
         "isPreset": true
       },
       {
         "id": "entrance-south-hall",
-        "name": "1F 南側出入口前廊下",
+        "name": "1F 新東門側出入口前廊下",
         "position": [97, 46],
         "type": "corridor"
       }

@@ -166,79 +166,79 @@
     "nodes": [
       {
         "id": "nw",
-        "name": "B1 北西廊下",
+        "name": "B1 図面左上廊下",
         "position": [35, 26],
         "type": "corridor"
       },
       {
         "id": "n42",
-        "name": "B1 北側廊下",
+        "name": "B1 図面上側廊下",
         "position": [42, 26],
         "type": "corridor"
       },
       {
         "id": "n50",
-        "name": "B1 北側廊下",
+        "name": "B1 図面上側廊下",
         "position": [50, 26],
         "type": "corridor"
       },
       {
         "id": "n64",
-        "name": "B1 北側廊下",
+        "name": "B1 図面上側廊下",
         "position": [64, 26],
         "type": "corridor"
       },
       {
         "id": "n75",
-        "name": "B1 北側廊下",
+        "name": "B1 図面上側廊下",
         "position": [75, 26],
         "type": "corridor"
       },
       {
         "id": "ne",
-        "name": "B1 北東廊下",
+        "name": "B1 図面右上廊下",
         "position": [93, 26],
         "type": "corridor"
       },
       {
         "id": "sw",
-        "name": "B1 南西廊下",
+        "name": "B1 図面左下廊下",
         "position": [24, 67],
         "type": "corridor"
       },
       {
         "id": "s36",
-        "name": "B1 南側廊下",
+        "name": "B1 図面下側廊下",
         "position": [36, 67],
         "type": "corridor"
       },
       {
         "id": "s54",
-        "name": "B1 南側廊下",
+        "name": "B1 図面下側廊下",
         "position": [54, 67],
         "type": "corridor"
       },
       {
         "id": "s69",
-        "name": "B1 南側廊下",
+        "name": "B1 図面下側廊下",
         "position": [69, 67],
         "type": "corridor"
       },
       {
         "id": "s86",
-        "name": "B1 南側廊下",
+        "name": "B1 図面下側廊下",
         "position": [86, 67],
         "type": "corridor"
       },
       {
         "id": "se",
-        "name": "B1 南東廊下",
+        "name": "B1 図面右下廊下",
         "position": [93, 67],
         "type": "corridor"
       },
       {
         "id": "west",
-        "name": "西側廊下",
+        "name": "図面左側廊下",
         "position": [35, 46],
         "type": "corridor"
       },
@@ -325,7 +325,7 @@
       },
       {
         "id": "west-south",
-        "name": "B1 西側廊下の曲がり角",
+        "name": "B1 図面左側廊下の曲がり角",
         "position": [35, 67],
         "type": "corridor"
       },

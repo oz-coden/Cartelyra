@@ -531,6 +531,15 @@ body[data-view="3d"] .three-only {
 .map-gate {
   font-size: 1.6px;
 }
+.map-north-arrow {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 0.4;
+  pointer-events: none;
+}
+.map-north-label {
+  font-size: 2px;
+}
 .empty-label {
   font-size: 4px;
 }

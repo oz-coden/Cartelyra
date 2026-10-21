@@ -230,6 +230,9 @@ export class FloorMap {
       return;
     }
     const name = this.building?.name ?? "建物";
+    document.getElementById("map-subtitle")!.textContent = "掲示図に基づく模式図";
+    document.getElementById("map-legend")!.textContent =
+      "青：部屋　緑：WC　水色：EV　黄：階段　紫：参考ルート";
     document.getElementById("map-heading")!.textContent =
       `${name}${this.floor ? ` / ${this.floor.label}` : ""}`;
     this.svg.setAttribute(
@@ -410,10 +413,33 @@ export class FloorMap {
     }
   }
   private renderOverview() {
-    this.svg.setAttribute("aria-label", "横浜キャンパス 建物配置の模式図");
+    this.svg.setAttribute("aria-label", this.overview.reference
+      ? "横浜キャンパス 空中写真を参考にした建物配置の概略図（北が上）"
+      : "横浜キャンパス 建物配置の模式図");
     document.getElementById("map-heading")!.textContent = "横浜キャンパス";
-    document.getElementById("map-caption")!.textContent =
-      "建物を選ぶと館内図を表示。破線は3号館北側〜西門〜20号館の屋外参考経路です。実寸・方位は未校正。他の屋外経路は未登録です。";
+    document.getElementById("map-subtitle")!.textContent = this.overview.reference
+      ? "空中写真を参考にした概略図・北が上"
+      : "建物配置の模式図";
+    document.getElementById("map-legend")!.textContent =
+      "水色：フロア登録済み　灰：フロア未登録　破線：屋外参考経路　紫：選択中の経路";
+    const caption = document.getElementById("map-caption")!;
+    caption.textContent = this.overview.notes?.join(" ") ??
+      "建物を選ぶと館内図を表示。屋外の経路・実寸・方位は未校正です。";
+    if (this.overview.reference) {
+      const attribution = document.createElement("a");
+      attribution.textContent = `出典：${this.overview.reference.attribution.label}`;
+      attribution.href = this.overview.reference.attribution.url;
+      attribution.target = "_blank";
+      attribution.rel = "noopener noreferrer";
+      caption.append(" ", attribution);
+      const box = bounds(this.overview.buildings.flatMap((b) => b.polygon));
+      const x = box.x + box.w / 2 + 3, y = box.z - box.d / 2 + 2;
+      this.svg.append(element("path", {
+        d: `M ${x} ${y + 6} V ${y} m -1.3 2 1.3 -2 1.3 2`,
+        class: "map-north-arrow", "aria-hidden": "true",
+      }));
+      this.label("北", [x, y - 2], "map-label map-north-label");
+    }
     const outdoorNodes = new Map(this.campus.navigation.nodes.map((n) => [n.id, n]));
     for (const edge of this.campus.navigation.edges) {
       const a = outdoorNodes.get(edge.from), b = outdoorNodes.get(edge.to);
@@ -439,6 +465,7 @@ export class FloorMap {
             y: String(b.z),
             "text-anchor": "middle",
             "dominant-baseline": "middle",
+            style: `font-size:${Math.min(2.1, b.w / (building.name.length * 0.65 + 1), b.d / 1.8)}px`,
           },
           building.name,
         ),

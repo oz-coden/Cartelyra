@@ -155,7 +155,7 @@
     "nodes": [
       {
         "id": "nw",
-        "name": "北側廊下 B2",
+        "name": "図面上側廊下 B2",
         "position": [32, 12],
         "type": "corridor"
       },
@@ -167,7 +167,7 @@
       },
       {
         "id": "west",
-        "name": "西側廊下 B2",
+        "name": "図面左側廊下 B2",
         "position": [32, 31],
         "type": "corridor"
       },

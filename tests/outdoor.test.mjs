@@ -14,7 +14,7 @@ const compile = (s) => compileCampus(s.manifest, s.buildings, s.floors);
 const validate = (s) => validateSources(s.manifest, s.buildings, s.floors, s.sources, s.overview);
 const campus = compile(source), places = placeIndex(campus, source.overview);
 
-test("Building 3 has distinct north/south entrances; the registered outdoor route joins north to Building 20 via West Gate", () => {
+test("Building 3 has distinct Building 8/New East Gate-facing entrances; the outdoor route joins the Building 8 side to Building 20 via West Gate", () => {
   const entries = places.filter((p) => p.buildingId === "b3" && p.kind === "entrance");
   assert.deepEqual(entries.map((p) => p.featureId), ["entrance-north", "entrance-south"]);
   const finder = new AStarPathfinder(campus);
@@ -60,13 +60,13 @@ test("Outdoor authoring rejects shortcuts through buildings, false layer transfe
     const s = structuredClone(source); mutate(s.manifest.outdoor);
     assert.ok(validate(s).some((e) => pattern.test(e)), validate(s).join("\n"));
   };
-  check((o) => o.edges.push({ ...o.edges[0], from: "b3-front", to: "west-gate" }), /Outdoor edge crosses building/);
+  check((o) => o.edges.push({ ...o.edges[0], from: "b3-front", to: "avenue-west" }), /Outdoor edge crosses building/);
   check((o) => o.nodes.find((n) => n.id === "b12-east").layer = "bridge", /layer transfer needs explicit/);
   check((o) => o.links[0].to = "b3/f1/room-103", /must use a building entrance/);
   check((o) => o.links[0].to = "b3/f1/missing", /Missing outdoor entrance endpoint/);
   check((o) => o.edges[0].widthClass = "10m", /Invalid outdoor width/);
   check((o) => o.nodes.find((n) => n.gateId).gateId = "main", /Invalid outdoor gate binding/);
-  check((o) => o.nodes[0].position = [81, 64], /must be on building overview boundary/);
+  check((o) => o.nodes[0].position = [o.nodes[0].position[0] - 1, o.nodes[0].position[1]], /must be on building overview boundary/);
   const closed = structuredClone(source);
   closed.manifest.outdoor.edges.find((e) => e.to === "west-gate").blocked = true;
   assert.deepEqual(validate(closed), []);
@@ -82,6 +82,9 @@ test("Overview renders outdoor route segments while indoor plans keep their own 
   assert.equal(document.querySelectorAll(".map-outdoor-path").length, source.manifest.outdoor.edges.length);
   assert.ok(document.querySelectorAll(".map-route").length > 0);
   assert.equal(document.querySelectorAll(".map-route-marker").length, 2);
+  assert.match(document.querySelector("#map-canvas svg").getAttribute("aria-label"), /北が上/);
+  assert.equal(document.querySelectorAll(".map-north-arrow").length, 1);
+  assert.equal(document.querySelector("#map-caption a").getAttribute("href"), "https://maps.gsi.go.jp/development/ichiran.html");
   assert.match(document.querySelector('[data-place="campus/gate/west"]').getAttribute("aria-label"), /参考経路あり/);
   assert.match(document.querySelector('[data-place="campus/gate/main"]').getAttribute("aria-label"), /未登録/);
   const catalog = buildingCatalog(campus, source.overview);
@@ -89,6 +92,7 @@ test("Overview renders outdoor route segments while indoor plans keep their own 
     const building = catalog.find((b) => b.id === id);
     map.setLocation(building, building.data.floors.find((f) => f.level === 1));
     map.showOverview(false);
+    assert.equal(document.querySelectorAll(".map-north-arrow,#map-caption a").length, 0);
     assert.ok(document.querySelectorAll(".map-route").length > 0);
     assert.equal(document.querySelectorAll(".map-outdoor-path").length, 0);
   }
@@ -98,4 +102,19 @@ test("Overview renders outdoor route segments while indoor plans keep their own 
   assert.match(document.getElementById("route-confidence").textContent, /屋外区間はキャンパス図/);
   map.showOverview(true); map.setRoute(null);
   assert.equal(document.querySelectorAll(".map-route,.map-route-marker").length, 0);
+});
+
+test("Aerial reference metadata preserves attribution and rejects invalid scales, dates and source bindings", () => {
+  assert.equal(source.manifest.coordinateUnit, "schematic");
+  assert.equal(source.overview.reference.imageryDate, null);
+  for (const [mutate, pattern] of [
+    [(s) => s.overview.reference.pixelsPerUnit = 0, /Invalid overview reference scale/],
+    [(s) => s.overview.reference.tileOrigin = [2 ** 18, 0], /Invalid overview reference tile origin/],
+    [(s) => s.overview.reference.retrievedAt = "unknown", /Invalid overview reference date/],
+    [(s) => s.overview.reference.attribution.url = "javascript:alert(1)", /Invalid overview attribution/],
+    [(s) => s.manifest.outdoor.positionSourceId = "missing", /Unknown outdoor position source/],
+  ]) {
+    const s = structuredClone(source); mutate(s);
+    assert.ok(validate(s).some((error) => pattern.test(error)));
+  }
 });

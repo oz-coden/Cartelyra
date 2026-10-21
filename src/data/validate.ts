@@ -387,6 +387,18 @@ export function validateSources(
     sourceIds.has(overview.sourceId),
     `Unknown overview source ${overview.sourceId}`,
   );
+  if (overview.reference) {
+    const r = overview.reference;
+    check(r.type === "gsi-xyz" && r.orientation === "north-up", "Invalid overview reference type or orientation");
+    check(Number.isInteger(r.zoom) && r.zoom >= 0 && r.zoom <= 24, "Invalid overview reference zoom");
+    check(finitePoint(r.tileOrigin) && r.tileOrigin.every((v) => Number.isInteger(v) && v >= 0 && v < 2 ** r.zoom), "Invalid overview reference tile origin");
+    check(finitePoint(r.pixelOffset), "Invalid overview reference pixel offset");
+    check(Number.isFinite(r.pixelsPerUnit) && r.pixelsPerUnit > 0, "Invalid overview reference scale");
+    check(Number.isFinite(Date.parse(r.retrievedAt)) &&
+      (r.imageryDate === null || Number.isFinite(Date.parse(r.imageryDate))), "Invalid overview reference date");
+    check(typeof r.attribution?.label === "string" && !!r.attribution.label &&
+      typeof r.attribution?.url === "string" && r.attribution.url.startsWith("https://"), "Invalid overview attribution");
+  }
   check(
     unique(overview.buildings.map((b) => b.id)),
     "Duplicate overview building ID",
@@ -410,6 +422,8 @@ export function validateSources(
   if (outdoor) {
     check(manifest.coordinateUnit === "schematic", "Outdoor overview coordinates require schematic units");
     check(sourceIds.has(outdoor.sourceId), "Unknown outdoor source");
+    if (outdoor.positionSourceId !== undefined)
+      check(sourceIds.has(outdoor.positionSourceId), "Unknown outdoor position source");
     check(unique(outdoor.nodes.map((n) => n.id)), "Duplicate outdoor node IDs");
     const nodes = new Map(outdoor.nodes.map((n) => [n.id, n]));
     const gates = outdoor.nodes.flatMap((n) => n.gateId ? [n.gateId] : []);

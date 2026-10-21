@@ -236,79 +236,79 @@
     "nodes": [
       {
         "id": "nw",
-        "name": "4F 北西廊下",
+        "name": "4F 図面左上廊下",
         "position": [24, 23],
         "type": "corridor"
       },
       {
         "id": "n42",
-        "name": "4F 北側廊下",
+        "name": "4F 図面上側廊下",
         "position": [42, 23],
         "type": "corridor"
       },
       {
         "id": "n50",
-        "name": "4F 北側廊下",
+        "name": "4F 図面上側廊下",
         "position": [50, 23],
         "type": "corridor"
       },
       {
         "id": "n64",
-        "name": "4F 北側廊下",
+        "name": "4F 図面上側廊下",
         "position": [64, 23],
         "type": "corridor"
       },
       {
         "id": "n75",
-        "name": "4F 北側廊下",
+        "name": "4F 図面上側廊下",
         "position": [75, 23],
         "type": "corridor"
       },
       {
         "id": "ne",
-        "name": "4F 北東廊下",
+        "name": "4F 図面右上廊下",
         "position": [97, 23],
         "type": "corridor"
       },
       {
         "id": "sw",
-        "name": "4F 南西廊下",
+        "name": "4F 図面左下廊下",
         "position": [24, 67],
         "type": "corridor"
       },
       {
         "id": "s36",
-        "name": "4F 南側廊下",
+        "name": "4F 図面下側廊下",
         "position": [36, 67],
         "type": "corridor"
       },
       {
         "id": "s54",
-        "name": "4F 南側廊下",
+        "name": "4F 図面下側廊下",
         "position": [54, 67],
         "type": "corridor"
       },
       {
         "id": "s69",
-        "name": "4F 南側廊下",
+        "name": "4F 図面下側廊下",
         "position": [69, 67],
         "type": "corridor"
       },
       {
         "id": "s86",
-        "name": "4F 南側廊下",
+        "name": "4F 図面下側廊下",
         "position": [86, 67],
         "type": "corridor"
       },
       {
         "id": "se",
-        "name": "4F 南東廊下",
+        "name": "4F 図面右下廊下",
         "position": [97, 67],
         "type": "corridor"
       },
       {
         "id": "west",
-        "name": "西側廊下",
+        "name": "図面左側廊下",
         "position": [24, 46],
         "type": "corridor"
       },
@@ -419,7 +419,7 @@
       },
       {
         "id": "n85",
-        "name": "4F 北側廊下",
+        "name": "4F 図面上側廊下",
         "position": [85, 23],
         "type": "corridor"
       }

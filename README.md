@@ -15,14 +15,14 @@
 
 **Uniview** is a static web application that displays building layouts, floor plans and reference routes for Kanagawa University’s Yokohama Campus. Rendering, search and route calculation run in the browser.
 
-It is an **unofficial prototype** based on campus and floor maps. Actual dimensions, entrances, stair/elevator connections and access restrictions have not yet been verified.
+It is an **unofficial prototype** using aerial-photo observations for the campus overview and posted diagrams for indoor plans. Actual dimensions, entrances, stair/elevator connections and access restrictions have not yet been field verified.
 
 ## Coverage and usage
 
 | Area | Current coverage |
 | --- | --- |
-| Campus | 30 buildings and four gates can be selected. A schematic outdoor route connects Building 3’s north entrance, West Gate and Building 20 |
-| Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; north and south entrances on 1F |
+| Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. An outdoor reference route connects Building 3’s Building 8-facing entrance, West Gate and Building 20 |
+| Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | WCs and facilities | 26 WCs (17 in Building 3, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
@@ -39,7 +39,7 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 
 “最短” (shortest) minimizes distance in the registered schematic coordinates; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
 
-Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. The outdoor reference route joins Building 3’s north entrance to Building 20’s rightmost entrance on the south side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 3’s south entrance and the other two Building 20 entrances currently connect to indoor routes only. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
+Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. The outdoor reference route joins Building 3’s Building 8-facing entrance to Building 20’s rightmost entrance on the lower side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 3’s New East Gate-facing entrance and the other two Building 20 entrances currently connect to indoor routes only. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
 
 A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Selecting a place within the current building retains the 3D camera; selecting a place in another building fits that building into view while preserving the floor display mode and spacing. Green/red 3D pins mark the actual route endpoints, while purple diamonds mark transitions to another floor or the outdoor route. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
@@ -48,6 +48,8 @@ The 3D view loads on demand, so the floor plan remains available without WebGL.
 ## Editing map data
 
 Editing a floor’s JSON updates the floor plan, 3D view, search, facility list and route calculation together. Additional buildings can be registered by adding building and floor JSON files. See [Data authoring and verification](docs/data-authoring.md) for coordinate conventions, sources, verification status and examples.
+
+The [outdoor reference and field-survey guide](docs/outdoor-survey.md) records the aerial source, drawing rules, unresolved positions and how to estimate distances from timed walks.
 
 See [Building 20 transcription checks](docs/building-20-review.md) for unresolved room numbers/names and connectivity.
 
@@ -78,9 +80,11 @@ For GitHub Pages, set the repository’s **Settings → Pages → Build and depl
 
 Kanagawa University’s official [Yokohama Campus information page](https://www.kanagawa-u.ac.jp/aboutus/information/facilities/yokohama/) provides the campus map and barrier-free/AED map.
 
+The campus overview was created and simplified with reference to [GSI Tiles: seamless aerial photos](https://maps.gsi.go.jp/development/ichiran.html), retrieved on 21 October 2026 UTC. The capture date has not been identified; current entrances and access conditions require field checks.
+
 ## License
 
-This project is released under the [MIT License](LICENSE).
+The application code is released under the [MIT License](LICENSE). Referenced maps and aerial imagery remain subject to their respective providers’ terms.
 
 ---
 
@@ -99,14 +103,14 @@ This project is released under the [MIT License](LICENSE).
 
 **Uniview** は、神奈川大学 横浜キャンパスの建物配置・フロア図と、参考経路を表示する静的なWebアプリです。表示・検索・経路計算はブラウザー内で行います。
 
-キャンパスマップ、フロアマップをもとにした**非公式の試作版**です。現時点では、実寸・出入口・階段／EVの接続・利用制限などは確認していません。
+屋外配置は空中写真の観察、館内図は掲示案内図をもとにした**非公式の試作版**です。現時点では、実寸・出入口・階段／EVの接続・利用制限などの現地確認は完了していません。
 
 ## 登録範囲と操作
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 30棟と4か所の門を選択可能。3号館北側〜西門〜20号館の屋外参考経路を登録 |
-| 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに北側・南側の出入口 |
+| キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。3号館の8号館側〜西門〜20号館の屋外参考経路を登録 |
+| 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | WC・設備 | WC 26か所（3号館17・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
@@ -123,7 +127,7 @@ This project is released under the [MIT License](LICENSE).
 
 「最短」は登録座標上の距離を最小化して経路を探します。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
 
-部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。屋外参考経路は、3号館北側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面南側・右端出入口へ接続しています。3号館南側と20号館の残り2か所の出入口は、現在は館内経路のみ接続しています。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
+部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。屋外参考経路は、3号館の8号館側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面下側・右端出入口へ接続しています。3号館の新東門側と20号館の残り2か所の出入口は、現在は館内経路のみ接続しています。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
 
 選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。同じ棟の場所を選択した場合は3Dカメラを維持し、別棟の場所を選択した場合は階の表示モードと間隔を保って、その棟を表示範囲に収めます。3Dの緑・赤のピンは実際の出発地・目的地を示し、紫のひし形は別の階や屋外への中継地点を示します。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
@@ -132,6 +136,8 @@ This project is released under the [MIT License](LICENSE).
 ## 編集方法
 
 各階のJSONを編集すると、平面図・3D・検索・設備一覧・経路計算に共通して反映されます。他棟も建物・階のJSONを追加して登録できます。座標、出典、確認状態の扱いと具体例は [データ編集ガイド](docs/data-authoring.md) を参照してください。
+
+空中写真の出典、独自の描画ルール、未確定の位置と歩行時間からの距離推定は、[屋外配置と現地計測](docs/outdoor-survey.md)にまとめています。
 
 20号館の室番号・室名と接続の確認項目は、[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。
 
@@ -162,6 +168,8 @@ GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages �
 
 神奈川大学公式の[横浜キャンパス紹介ページ](https://www.kanagawa-u.ac.jp/aboutus/information/facilities/yokohama/)には、キャンパスマップとバリアフリー・AEDマップが掲載されています。
 
+キャンパス図は[国土地理院の地理院タイル「全国最新写真（シームレス）」](https://maps.gsi.go.jp/development/ichiran.html)（2026年10月21日 UTC取得）を参考に、簡略化・加工して作成しています。撮影年月は未特定で、現在の入口・通行条件は現地照合が必要です。
+
 ## ライセンス
 
-This project is released under the [MIT License](LICENSE).
+アプリケーションのコードは [MIT License](LICENSE) で公開しています。参照した地図・空中写真の利用条件は、それぞれの提供元の規約に従います。
