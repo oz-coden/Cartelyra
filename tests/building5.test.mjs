@@ -30,6 +30,12 @@ test("Building 5 preserves four floors, numbered subrooms, WC types and generic 
   assert.equal(places.filter((p) => p.kind === "elevator").length, 0);
   assert.equal(searchPlaces(places, "5号館 2F CAD")[0].id, "5-201");
   assert.equal(searchPlaces(places, "5号館 3F 302-1")[0].id, "5-302-1");
+  assert.equal(searchPlaces(places, "5号館 暗室")[0].id, "5-313");
+  const first = source.floors.find((f) => f.buildingId === "b5" && f.id === "f1");
+  assert.ok(!first.features.some((f) => f.id === "unlabelled-top"));
+  assert.equal(pointInPolygon([38, -5], first.outline), false);
+  assert.ok(places.some((p) => p.id === "5-11"));
+  assert.deepEqual(searchPlaces(places, "5号館 外階段").map((p) => p.id), ["b5/f2/feature/entrance-side"]);
 });
 
 test("Building 5 enters on 2F; its external stairs do not become a fictitious indoor 1F transfer", () => {
@@ -41,8 +47,8 @@ test("Building 5 enters on 2F; its external stairs do not become a fictitious in
   const entry = floor.navigation.nodes.find((n) => n.id === "entrance-side");
   assert.ok(pointInPolygon(entry.position, floor.outline));
   assert.equal(pointInInterior(entry.position, floor.outline), false);
-  const external = places.find((p) => p.featureId === "stairs-side");
-  assert.equal(external.nodeId, undefined);
+  assert.ok(!places.some((p) => p.featureId === "stairs-side"));
+  assert.equal(places.filter((p) => p.kind === "stairs").length, 8);
   assert.ok(source.buildings.find((b) => b.id === "b5").connections.every((e) =>
     !e.from.includes("stairs-side") && !e.to.includes("stairs-side")));
   for (const place of places.filter((p) => p.nodeId)) {
@@ -61,16 +67,19 @@ test("Building 5 enters on 2F; its external stairs do not become a fictitious in
   assert.equal(finder.findPath("b3/f1/room-103", entries[0].nodeId), null);
 });
 
-test("Building 5 inner-room limits remain explicit and the ambiguous preparation room stays unlinked", () => {
-  for (const [id, front] of [["104-1", "104"], ["302-1", "302"], ["308", "307"], ["311", "309"]]) {
+test("Building 5 inner-room guidance ends at explicit provisional front rooms without traversing them", () => {
+  for (const [id, front] of [["104-1", "104"], ["302-1", "302"], ["308", "307"], ["310", "307"], ["311", "309"], ["312", "309"]]) {
     const room = places.find((p) => p.id === `5-${id}`);
     assert.equal(room.approachRoomId, `5-${front}`);
     assert.equal(room.nodeId, places.find((p) => p.id === `5-${front}`).nodeId);
   }
-  for (const id of ["5-310", "5-312"]) {
-    const pending = places.find((p) => p.id === id);
-    assert.equal(pending.nodeId, undefined);
-    assert.equal(pending.approachRoomId, undefined);
+  for (const id of ["5-308", "5-310", "5-311", "5-312"]) {
+    const place = places.find((p) => p.id === id);
+    assert.match(place.description, /暫定推定/);
+    const route = finder.findPath("b5/f2/entrance-side", place.nodeId);
+    assert.ok(route.inferredConnections > 0);
+    assert.equal(route.pathNodes.at(-1).id, place.nodeId);
+    assert.equal(finder.findPath("b5/f2/entrance-side", place.nodeId, "shortest", false), null);
   }
   for (const num of ["403", "404"]) {
     const route = finder.findPath("b5/f2/entrance-side", `b5/f4/room-${num}`);

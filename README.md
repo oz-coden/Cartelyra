@@ -24,7 +24,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. An outdoor reference route connects Building 3’s Building 8-facing entrance, West Gate and Building 20 |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
-| Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and four inner rooms via a named front room; 5-310 and 5-312 remain unlinked |
+| Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | WCs and facilities | 30 WCs (17 in Building 3, four in Building 5, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
@@ -113,7 +113,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。3号館の8号館側〜西門〜20号館の屋外参考経路を登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
-| 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の4室は指定した手前の部屋まで参考案内。5-310・5-312は接続未確定 |
+| 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | WC・設備 | WC 30か所（3号館17・5号館4・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |

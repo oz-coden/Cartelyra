@@ -35,18 +35,6 @@
   "voids": [],
   "features": [
     {
-      "id": "stairs-side",
-      "label": "外階段",
-      "type": "stairs",
-      "polygon": [
-        [28, 16],
-        [34, 16],
-        [34, 24],
-        [28, 24]
-      ],
-      "description": "屋外から2Fの出入口へ上がる外階段。館内の1F〜2F接続としては扱わない。屋外側の経路は未登録。"
-    },
-    {
       "id": "unlabelled-top-left",
       "label": "用途未確認",
       "type": "service",
