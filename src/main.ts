@@ -11,6 +11,7 @@ import { FloorControl } from "./ui/FloorControl";
 import { LocationState } from "./ui/LocationState";
 import { StepGuide } from "./ui/StepGuide";
 import { FloorMap } from "./ui/FloorMap";
+import { SelectionPopover } from "./ui/SelectionPopover";
 import { SelectionState } from "./ui/SelectionState";
 import { ThreeDisplayState } from "./ui/ThreeDisplayState";
 import type { ThreeView } from "./scene/ThreeView";
@@ -44,6 +45,20 @@ export class UniviewApp {
     campusData,
     overviewJson as CampusOverview,
   );
+  private popover = new SelectionPopover(
+    document.getElementById("room-tooltip")!,
+    document.getElementById("map-stage")!,
+    () => document.getElementById(
+      this.view === "3d" ? "canvas-container" : "map-canvas",
+    )!,
+    () => {
+      const id = this.selection.selected?.id;
+      if (!id) return null;
+      return this.view === "3d"
+        ? this.three?.getPlaceAnchor(id) ?? null
+        : this.map.getPlaceAnchor(id);
+    },
+  );
   private view: View = "floor";
   private category = "all";
   private result: RouteResult | null = null;
@@ -70,6 +85,7 @@ export class UniviewApp {
     };
     this.floors.onExplodeChange = () => this.sync3D();
     this.floors.onShowAllChange = () => this.sync3D();
+    this.map.onViewChange = () => this.popover.update();
     this.map.onPlaceSelect = (place) => this.selectPlace(place);
     this.map.onBackgroundClick = () => this.hideDetails();
     this.map.onBuildingSelect = (id) => {
@@ -232,6 +248,7 @@ export class UniviewApp {
       )
         .then((view) => {
           this.three = view;
+          view.onViewChange = () => this.popover.update();
           view.onPlaceSelect = (id) => {
             const place = this.places.find((p) => p.id === id);
             if (place) this.selectPlace(place);
@@ -293,6 +310,7 @@ export class UniviewApp {
       if (previous !== "3d") this.three?.reset();
     }
     if (this.selection.selected) this.highlightSelected();
+    this.popover.update();
   }
   private searchRoute(
     a: string,
@@ -359,10 +377,10 @@ export class UniviewApp {
     document.getElementById("tooltip-title")!.textContent = place.name;
     document.getElementById("tooltip-desc")!.textContent =
       `${placeContext(place)} / ${place.description ?? (place.nodeId ? "入口は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")}`;
-    document.getElementById("room-tooltip")!.classList.remove("hidden");
+    this.popover.show();
   }
   private hideDetails() {
-    document.getElementById("room-tooltip")!.classList.add("hidden");
+    this.popover.hide();
     this.selection.selected = null;
     this.highlightSelected();
   }

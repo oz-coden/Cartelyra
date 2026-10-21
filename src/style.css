@@ -651,9 +651,6 @@ body[data-view="3d"] .three-only {
     order: 1;
     padding: 12px;
   }
-  .place-details {
-    order: 3;
-  }
   .facilities {
     order: 4;
   }
@@ -692,15 +689,45 @@ body[data-view="3d"] .three-only {
   }
 }
 
-/* Selection and route actions remain in the map workspace in every display mode. */
+/* The map stage reserves the same space whether or not a place is selected. */
+.map-stage {
+  position: relative;
+  min-width: 0;
+}
 .place-details {
-  position: sticky;
-  top: 0;
+  position: absolute;
   z-index: 5;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface);
-  padding: 12px 16px;
+  box-shadow: 0 6px 24px #0003;
+}
+.place-details-content {
+  padding: 12px;
+  max-height: var(--popover-max-height);
+  overflow: auto;
+  border-radius: inherit;
+}
+.place-details::before {
+  content: "";
+  position: absolute;
+  left: var(--anchor-x);
+  width: 14px;
+  height: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transform: translateX(-50%) rotate(45deg);
+  z-index: -1;
+}
+.place-details[data-side="above"]::before {
+  bottom: -8px;
+  border-top: 0;
+  border-left: 0;
+}
+.place-details[data-side="below"]::before {
+  top: -8px;
+  border-bottom: 0;
+  border-right: 0;
 }
 .place-details .control-header {
   margin-bottom: 4px;
@@ -743,9 +770,7 @@ body[data-view="3d"] .three-only {
   stroke-width: 0.7;
 }
 @media (max-width: 899px) {
-  .map-workspace > .place-details,
-  .map-workspace > .map-panel,
-  .map-workspace > .canvas-container,
+  .map-workspace > .map-stage,
   .map-workspace > .step-guide {
     order: 0;
   }

@@ -95,7 +95,7 @@ test("gates are searchable and selectable on the overview and can be named endpo
   }
 });
 
-test("3D picking, shared action card, endpoint routing, highlighting and gap controls work together without moving the camera", async () => {
+test("3D picking, anchored action bubble, endpoint routing, highlighting and gap controls work together without moving the camera", async () => {
   const { document, window, server } = await setup();
   try {
     const [{ UniviewApp }, { ThreeView }] = await Promise.all([
@@ -183,6 +183,10 @@ test("3D picking, shared action card, endpoint routing, highlighting and gap con
         moves,
         "selecting a place must not request camera movement",
       );
+      const anchor = view.getPlaceAnchor(id);
+      assert.ok(anchor, "visible selected meshes need a projected bubble anchor");
+      assert.ok(Math.abs(anchor.x - 500) < 0.01);
+      assert.ok(Math.abs(anchor.y - 350) < 0.01);
       return mesh;
     };
     document.getElementById("btn-pick-start").click();
@@ -222,6 +226,19 @@ test("3D picking, shared action card, endpoint routing, highlighting and gap con
         group.userData.baseElevation + group.userData.stackIndex * 9,
       );
     assert.equal(document.getElementById("explode-value").textContent, "100%");
+    const anchorBefore = view.getPlaceAnchor("b3/f1/feature/wc-w");
+    showAll.checked = false;
+    showAll.dispatchEvent(new window.Event("change"));
+    assert.equal(view.getPlaceAnchor("3-401"), null, "hidden floors have no bubble anchor");
+    showAll.checked = true;
+    showAll.dispatchEvent(new window.Event("change"));
+    const anchorAfter = view.getPlaceAnchor("b3/f1/feature/wc-w");
+    assert.deepEqual(anchorAfter, anchorBefore);
+    let viewChanges = 0;
+    const update = view.onViewChange;
+    view.onViewChange = () => { viewChanges++; update?.(); };
+    host.onFrame();
+    assert.equal(viewChanges, 1, "render frames update the bubble after camera motion");
     const moves = host.moves;
     pick("3-401");
     assert.equal(host.moves, moves);

@@ -228,48 +228,53 @@
           <span id="pick-banner-text"></span
           ><button id="btn-cancel-pick">キャンセル</button>
         </div>
-        <section
-          id="room-tooltip"
-          class="panel-section place-details hidden"
-          aria-label="選択した場所"
-        >
-          <div class="control-header">
-            <h2 id="tooltip-title"></h2>
-            <button id="btn-close-selection" aria-label="場所の選択を解除">
-              ×
-            </button>
-          </div>
-          <p id="tooltip-desc"></p>
-          <div class="tooltip-actions">
-            <button id="btn-tooltip-set-start">ここから出発</button
-            ><button id="btn-tooltip-set-dest" class="primary">
-              ここへ行く
-            </button>
-          </div>
-        </section>
-
-        <section id="map-panel" class="map-panel">
-          <div class="map-header">
-            <div>
-              <h2 id="map-heading"></h2>
-              <p class="muted">掲示図に基づく模式図</p>
+        <div id="map-stage" class="map-stage">
+          <section id="map-panel" class="map-panel">
+            <div class="map-header">
+              <div>
+                <h2 id="map-heading"></h2>
+                <p class="muted">掲示図に基づく模式図</p>
+              </div>
+              <div>
+                <button id="map-zoom-out" aria-label="地図を縮小">−</button
+                ><button id="map-zoom-in" aria-label="地図を拡大">＋</button>
+              </div>
             </div>
-            <div>
-              <button id="map-zoom-out" aria-label="地図を縮小">−</button
-              ><button id="map-zoom-in" aria-label="地図を拡大">＋</button>
+            <div id="map-canvas" class="map-canvas"></div>
+            <p class="map-legend">
+              青：部屋　緑：WC　水色：EV　黄：階段　紫：参考ルート
+            </p>
+            <p id="map-caption" class="map-caption"></p>
+          </section>
+          <div
+            id="canvas-container"
+            class="canvas-container hidden"
+            aria-label="建物の3D表示"
+          ></div>
+          <section
+            id="room-tooltip"
+            class="place-details hidden"
+            role="region"
+            aria-labelledby="tooltip-title"
+            aria-label="選択した場所"
+          >
+            <div class="place-details-content">
+              <div class="control-header">
+                <h2 id="tooltip-title"></h2>
+                <button id="btn-close-selection" aria-label="場所の選択を解除">
+                  ×
+                </button>
+              </div>
+              <p id="tooltip-desc"></p>
+              <div class="tooltip-actions">
+                <button id="btn-tooltip-set-start">ここから出発</button
+                ><button id="btn-tooltip-set-dest" class="primary">
+                  ここへ行く
+                </button>
+              </div>
             </div>
-          </div>
-          <div id="map-canvas" class="map-canvas"></div>
-          <p class="map-legend">
-            青：部屋　緑：WC　水色：EV　黄：階段　紫：参考ルート
-          </p>
-          <p id="map-caption" class="map-caption"></p>
-        </section>
-        <div
-          id="canvas-container"
-          class="canvas-container hidden"
-          aria-label="建物の3D表示"
-        ></div>
+          </section>
+        </div>
         <section
           id="step-guide"
           class="step-guide hidden"

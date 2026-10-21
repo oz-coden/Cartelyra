@@ -2,47 +2,74 @@
 
 日本語の説明は[目次](#目次)から読めます。
 
-A static, browser-side campus map and reference route planner for Kanagawa University’s Yokohama Campus. 
+## Contents
 
-The map data is transcribed from a campus layout plan and photographs of posted Building 3 floor plans. It is **unofficial and not field verified**. Floor plans are schematic; dimensions, heights, entrances, facility availability and access restrictions have not been surveyed.
+1. [Overview](#overview)
+2. [Coverage and usage](#coverage-and-usage)
+3. [Editing map data](#editing-map-data)
+4. [Deployment](#deployment)
+5. [References](#references)
+6. [License](#license)
 
-- Campus overview: 30 selectable building locations and four searchable/selectable gates. Buildings without floor data show an explicit unregistered state; outdoor routes are not registered.
-- Building 3: B2, B1, 1F, 2F, 3F and 4F; 35 main rooms, 34 with provisional route connections. Room `3-B202` has no route connection because its entrance is unclear.
-- SVG floor maps with building/floor selection, keyboard picking, pan/zoom and searchable rooms, facilities and gates. Building 3 includes 17 WCs (male, female and multipurpose), an AED, elevators and stairs. Facility entrances and availability are provisional.
-- Shared place indexing and building-local state power search, map selection, facility lists and building-aware route steps. Additional authored buildings load from JSON without per-building UI code. Selection and route actions are shared across views; picking a place does not move the 3D camera.
-- Optional Three.js view generated from the same polygons, including atrium holes. The 3D bundle loads only when selected and pauses while hidden; the default SVG view works without WebGL.
-- Shortest schematic route, stair avoidance, indoor preference and stairs preference. Stair avoidance does **not** certify wheelchair accessibility.
-- Distances and walking times display “未測定” (not measured). Inferred connections can be excluded; no field-verified route network exists yet.
+## Overview
 
-## Develop and check
+**Uniview** is a static web application that displays building layouts, floor plans and reference routes for Kanagawa University’s Yokohama Campus. Rendering, search and route calculation run in the browser.
 
-Use Node.js 20.19 or newer and npm. Node.js is a development/build dependency, not a production application server.
+It is an **unofficial prototype** based on campus and floor maps. Actual dimensions, entrances, stair/elevator connections and access restrictions have not yet been verified.
+
+## Coverage and usage
+
+| Area | Current coverage |
+| --- | --- |
+| Campus | 30 buildings and four gates can be selected. Outdoor routes are not registered |
+| Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F |
+| Main rooms | 35 rooms; 34 have inferred entrance and corridor connections |
+| WCs and facilities | 17 WCs, one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
+| 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
+| Basement equipment areas and pits | Display only; excluded from route search |
+| Actual distances and walking times | Not measured |
+
+1. Select a building using the building selector or campus map, then use the floor buttons to change floors. Buildings without floor data display their registration status.
+2. Switch views using “キャンパス” (campus), “平面図” (floor plan) and “3D” at the top. Drag the floor plan to pan, and use the mouse wheel or +/− buttons to zoom.
+3. Enter a room name or a term such as “WC”, “トイレ” (toilet), “EV” or “正門” (main gate) in the start/destination field, then select a suggestion. Space-separated queries such as “3号館 2F 女性” (Building 3, 2F, female) are supported. Suggestions prioritize the current building and floor.
+4. Alternatively, select a place on the map or in “このフロアの場所” (places on this floor), then choose “ここから出発” (start here) or “ここへ行く” (go here). Places without registered entrances or outdoor routes can be saved as endpoints, but no routes to them are shown.
+5. Select a route-step card to switch to its building and floor. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
+6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
+
+“最短” (shortest) minimizes distance in the registered schematic coordinates; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
+
+A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
+
+The 3D view loads on demand, so the floor plan remains available without WebGL.
+
+## Editing map data
+
+Editing a floor’s JSON updates the floor plan, 3D view, search, facility list and route calculation together. Additional buildings can be registered by adding building and floor JSON files. See [Data authoring and verification](docs/data-authoring.md) for coordinate conventions, sources, verification status and examples.
+
+Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, registering outdoor routes and other buildings, and creating an editor with floor-plan underlays.
+
+## Deployment
+
+Use Node.js 20.19 or newer and npm to run the following commands. `npm run build` validates map data, checks types and generates static files in `dist/`.
 
 ```bash
 git clone https://github.com/oz-coden/Uniview.git
 cd Uniview
 npm ci
-npm run dev
+npm run dev           # Start the development server
+npm run validate:data # Validate map data
+npm test              # Run automated tests
+npm run build         # Validate, type-check and generate static files
+npm run preview       # Preview the build locally
 ```
 
-```bash
-npm run validate:data  # source references, IDs, connectivity and geometric checks
-npm test               # DOM integration, facility routing and all-room-pair optimality checks
-npm run build          # validation, TypeScript and static build
-npm run preview        # serve the built output locally
-```
+Deploy the contents of `dist/` to a static host. Node.js is needed for development/builds; a production application server is not required.
 
-Deploy the contents of `dist/` to a static host such as GitHub Pages. Vite uses relative asset paths. The included deployment workflow requires GitHub Pages to be configured to use GitHub Actions.
-
-## Data maintenance
-
-Data lives under `src/data/`, split into a campus manifest, overview, building records and per-floor JSON files. Shared compiler code transforms building-local geometry and navigation nodes into world coordinates for 3D rendering and route search. Files are discovered at build time; no database, API key or runtime backend is required.
-
-See [Data authoring and verification](docs/data-authoring.md) for file paths, coordinate conventions, an editing example, provenance and remaining survey tasks. See [requirements and interaction rules](docs/requirements.md) for the product scope and shared selection/3D behavior. See [Architecture and review notes](docs/architecture-review.md) for the current structure, resolved review findings and verification limits. A graphical map editor and complete campus routing are future work.
+For GitHub Pages, set the repository’s **Settings → Pages → Build and deployment → Source → GitHub Actions**.
 
 ## References
 
-Kanagawa University publishes the campus map and barrier-free/AED map on its [Yokohama Campus information page](https://www.kanagawa-u.ac.jp/aboutus/information/facilities/yokohama/).
+Kanagawa University’s official [Yokohama Campus information page](https://www.kanagawa-u.ac.jp/aboutus/information/facilities/yokohama/) provides the campus map and barrier-free/AED map.
 
 ## License
 
@@ -55,16 +82,13 @@ This project is released under the [MIT License](LICENSE).
 ## 目次
 
 1. [概要](#概要)
-2. [開発背景](#開発背景)
-3. [機能](#機能)
-4. [使い方](#使い方)
-5. [前提・依存](#前提依存)
-6. [導入方法](#導入方法)
-7. [設定](#設定)
-8. [ライセンス](#ライセンス)
-9. [クレジット](#クレジット)
+2. [登録範囲と操作](#登録範囲と操作)
+3. [編集方法](#編集方法)
+4. [公開方法](#公開方法)
+5. [参考資料](#参考資料)
+6. [ライセンス](#ライセンス)
 
-## 概要  
+## 概要
 
 **Uniview** は、神奈川大学 横浜キャンパスの建物配置・フロア図と、参考経路を表示する静的なWebアプリです。表示・検索・経路計算はブラウザー内で行います。
 
@@ -91,7 +115,7 @@ This project is released under the [MIT License](LICENSE).
 
 「最短」は登録座標上の距離を最小化して経路を探します。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
 
-選択した場所は地図側の共通カードに表示し、「ここから出発」「ここへ行く」で指定できます。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
+選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
 3Dは必要時に読み込むため、WebGLが利用できない環境でも平面図を利用できます。
 
@@ -104,6 +128,19 @@ This project is released under the [MIT License](LICENSE).
 ## 公開方法
 
 Node.js 20.19以上とnpmで、次のコマンドを実行します。`npm run build` はデータ検証・型検査・静的ファイル生成を行い、`dist/` が出力されます。
+
+```bash
+git clone https://github.com/oz-coden/Uniview.git
+cd Uniview
+npm ci
+npm run dev           # 開発サーバーを起動
+npm run validate:data # 地図データを検証
+npm test             # 自動テストを実行
+npm run build        # 検証・型検査・静的ファイル生成
+npm run preview      # ビルド結果をローカルで確認
+```
+
+`dist/` の内容を静的ホスティングに配置します。Node.jsは開発・ビルド時に必要で、公開用のアプリケーションサーバーは不要です。
 
 GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages → Build and deployment → Source → GitHub Actions** を設定します。
 

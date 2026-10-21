@@ -12,7 +12,7 @@ Uniview is a static Vite/TypeScript application. Campus JSON is compiled at buil
 
 Building metadata and per-floor JSON are discovered automatically. No building-specific condition is needed in search, the floor controls, map selection or the 3D view. The campus overview can include buildings whose floors have not yet been registered.
 
-`ui/SelectionState.ts` stores the selected place and pending endpoint target. `ui/ThreeDisplayState.ts` stores the 3D display mode and gap independently. Selecting a place or calculating a route does not change the camera or collapse an expanded view. The shared action card belongs to the map workspace. Room and facility meshes share one emissive-material registry. `SceneHost` separates rendering from ThreeView interaction so the complete selection/route flow can be tested without a GPU.
+`ui/SelectionState.ts` stores the selected place and pending endpoint target. `ui/ThreeDisplayState.ts` stores the 3D display mode and gap independently. Selecting a place or calculating a route does not change the camera or collapse an expanded view. `SelectionPopover` overlays the map stage and follows projected place positions in SVG and 3D without affecting document layout. Room and facility meshes share one emissive-material registry. `SceneHost` separates rendering from ThreeView interaction so the complete selection/route flow can be tested without a GPU.
 
 See [requirements and interaction rules](requirements.md) for the product scope and state-transition rules.
 
@@ -30,10 +30,10 @@ See [requirements and interaction rules](requirements.md) for the product scope 
 | Keyboard and text rendering | Guide cards were clickable divs and inserted instruction text as HTML | Guide cards are native buttons and instructions use text nodes; SVG places/buildings and search support keyboard choice |
 | Pick mode | Input and map selection could leave pick state out of sync | A shared SelectionState owns the selected place and pick target; SearchPanel clears the target after endpoint selection or cancellation |
 | Browser storage | Theme initialization could fail when local storage was unavailable | Storage failures are tolerated and theme switching works for the current visit |
-| Responsive layout | Fixed overlays made map, guide and details compete for space | Grid/flex sections place building/floor controls, map, routing, details and facilities in explicit desktop/mobile layouts |
+| Responsive layout | Fixed overlays made map, guide and details compete for space | Grid/flex sections place controls, map, routing and facilities in desktop/mobile layouts; selected-place details use an anchored overlay within the map |
 | Gate selection | Gates were non-interactive labels | Gate IDs and campus-scoped places support search, keyboard/map selection and named endpoints without fabricating routes |
 | 3D gap controls | Slider appeared enabled in single-floor mode but had no visible effect | Slider changes select all-floor mode and retain the chosen gap independently of place selection |
-| 3D feedback/actions | Only rooms had emissive highlights, and actions were below the sidebar list | All selectable meshes share highlighting and the action card stays in the map workspace; selection does not move the camera |
+| 3D feedback/actions | Only rooms had emissive highlights, and actions were below the sidebar list | All selectable meshes share highlighting and the action bubble follows the selected place on the map; selection does not move the camera |
 | 3D selection | Hidden floors or buildings could still be raycast targets; facilities were not selectable | Picker checks ancestor visibility and includes facility meshes; focused display shows the selected building/floor |
 | 3D coordinates/resources | Level zero was treated as absent; camera assumed one building; route materials were not fully disposed | Level zero is valid, view fitting uses selected geometry, and discarded route resources and theme grids are disposed |
 | Dependencies | The lockfile included an affected build-time `source-map-js` version | Lockfile resolves `source-map-js` 1.2.2; `npm audit` reports no known vulnerabilities at review time |
@@ -44,7 +44,7 @@ The authored floor data covers Building 3 only: six floors, 35 main rooms (34 ro
 
 Automated checks cover source references and corridor geometry, every pair of routable rooms in four modes against an independent Floyd–Warshall result, facility reachability, provisional-only exclusions, synthetic additional buildings, cross-building connections, missing floors, level zero, SVG selection and marker isolation, keyboard search, endpoint editing, pick-state reset and safe text rendering. A DOM integration test loads the actual Vite entry point and exercises room-to-WC routing. CPU-side Three.js tests exercise WC mesh picking, visibility and level-zero position handling. An interaction test uses the actual app, ThreeView, picker and room/facility meshes with a headless SceneHost to verify 3D endpoint selection, shared actions, emissive highlighting, gap transforms and camera stability together.
 
-These checks do not validate browser layout, WebGL rendering, mobile touch behavior or screen-reader announcements. The browser used for review has WebGL disabled, so real WebGL output still needs browser/device verification. The optional Three.js chunk remains approximately 570 kB before compression; it is not loaded for the default SVG map.
+DOM and CPU-side checks do not validate browser rendering. Separate Chromium checks at 320, 390, 900 and 1440 pixel viewport widths verify that place selection leaves the map position and page/workspace scroll unchanged, bubbles stay within map edges, endpoint actions work, and bubbles follow SVG zoom. Software WebGL checks verify 3D display and bubble tracking during camera rotation and floor expansion. Physical mobile devices, hardware GPU rendering, multi-touch behavior and screen-reader announcements still need device verification. The optional Three.js chunk remains approximately 570 kB before compression; it is not loaded for the default SVG map.
 
 ## Remaining map work
 

@@ -6,6 +6,7 @@ import type {
   Place,
   RouteResult,
 } from "../types/campus";
+import type { ScreenPoint } from "./SelectionPopover";
 import type { CampusOverview } from "../data/schema";
 import { bounds, worldToLocal } from "../data/geometry.js";
 import {
@@ -43,6 +44,7 @@ export class FloorMap {
     class: "route-overlay",
     "pointer-events": "none",
   });
+  public onViewChange: (() => void) | null = null;
   public onPlaceSelect: ((place: Place) => void) | null = null;
   public onBuildingSelect: ((id: string) => void) | null = null;
   public onBackgroundClick: (() => void) | null = null;
@@ -81,6 +83,27 @@ export class FloorMap {
       g.setAttribute("aria-pressed", String(selected));
     });
   }
+  public getPlaceAnchor(id: string): ScreenPoint | null {
+    const place = this.places.find((p) => p.id === id);
+    if (
+      !place ||
+      (this.overviewMode
+        ? place.scope !== "campus"
+        : place.scope === "campus" ||
+          place.buildingId !== this.building?.id ||
+          place.floorLevel !== this.floor?.level)
+    ) return null;
+    const rect = this.svg.getBoundingClientRect();
+    const [x, y, w, h] = this.viewBox;
+    const scale = Math.min(rect.width / w, rect.height / h);
+    if (scale <= 0) return null;
+    const point = {
+      x: rect.left + (rect.width - w * scale) / 2 + (place.position[0] - x) * scale,
+      y: rect.top + (rect.height - h * scale) / 2 + (place.position[1] - y) * scale,
+    };
+    return point.x >= rect.left && point.x <= rect.right &&
+      point.y >= rect.top && point.y <= rect.bottom ? point : null;
+  }
   public resetView() {
     const polygons = this.overviewMode
       ? this.overview.buildings.flatMap((b) => b.polygon)
@@ -105,6 +128,7 @@ export class FloorMap {
   }
   private applyViewBox() {
     this.svg.setAttribute("viewBox", this.viewBox.join(" "));
+    this.onViewChange?.();
   }
   private setupPanZoom() {
     let start: { x: number; y: number; box: number[] } | null = null,

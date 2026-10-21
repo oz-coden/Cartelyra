@@ -31,6 +31,7 @@ export const DARK_THEME: ThemeColors = {
 
 /** Rendering boundary: state and picking can be tested without a GPU. */
 export interface SceneHost {
+  onFrame?: (() => void) | null;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: { domElement: HTMLElement };
@@ -46,6 +47,7 @@ export interface SceneHost {
 }
 
 export class SceneManager {
+  public onFrame: (() => void) | null = null;
   public scene: THREE.Scene;
   public camera: THREE.PerspectiveCamera;
   public renderer: THREE.WebGLRenderer;
@@ -265,5 +267,6 @@ export class SceneManager {
     TWEEN.update(time);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
+    this.onFrame?.();
   }
 }

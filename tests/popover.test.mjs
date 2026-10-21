@@ -1,0 +1,43 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { parseHTML } from "linkedom";
+import { SelectionPopover } from "../.checks/ui/SelectionPopover.js";
+
+const rect = (left, top, width, height) => ({ left, top, width, height, right: left + width, bottom: top + height });
+
+test("selection popover stays inside the map, flips near its top edge, follows anchors and hides offscreen", () => {
+  const { document, window } = parseHTML('<div id="stage"><div id="map"></div><section id="bubble" class="hidden"></section></div>');
+  globalThis.window = window;
+  const stage = document.getElementById("stage"), map = document.getElementById("map"), bubble = document.getElementById("bubble");
+  stage.getBoundingClientRect = () => rect(20, 100, 600, 600);
+  let viewport = rect(40, 150, 560, 400);
+  map.getBoundingClientRect = () => viewport;
+  bubble.getBoundingClientRect = () => rect(0, 0, parseFloat(bubble.style.width) || 290, 140);
+  let anchor = { x: 320, y: 400 };
+  const popover = new SelectionPopover(bubble, stage, () => map, () => anchor);
+  popover.show();
+  assert.equal(bubble.classList.contains("hidden"), false);
+  assert.equal(bubble.style.visibility, "visible");
+  assert.equal(bubble.dataset.side, "above");
+  assert.equal(parseFloat(bubble.style.left), 155);
+  assert.equal(parseFloat(bubble.style.top), 146);
+  anchor = { x: 595, y: 155 };
+  popover.update();
+  assert.equal(bubble.dataset.side, "below");
+  assert.equal(parseFloat(bubble.style.left), 282);
+  assert.equal(parseFloat(bubble.style.top), 69);
+  viewport = rect(40, 150, 240, 300);
+  anchor = { x: 45, y: 440 };
+  window.dispatchEvent(new window.Event("resize"));
+  assert.equal(bubble.style.width, "224px");
+  assert.equal(bubble.style.left, "28px");
+  assert.equal(bubble.style.top, "186px");
+  anchor = null;
+  popover.update();
+  assert.equal(bubble.style.visibility, "hidden");
+  anchor = { x: 150, y: 300 };
+  popover.update();
+  assert.equal(bubble.style.visibility, "visible");
+  popover.hide();
+  assert.equal(bubble.classList.contains("hidden"), true);
+});

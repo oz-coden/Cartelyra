@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { CampusData, RouteResult, RouteStep } from "../types/campus";
+import type { ScreenPoint } from "../ui/SelectionPopover";
 import type { SceneHost } from "./SceneManager";
 import { SceneManager } from "./SceneManager";
 import { BuildingRenderer } from "./BuildingRenderer";
@@ -20,6 +21,7 @@ export class ThreeView {
   private dark = false;
   public explode: ExplodeController;
   public picker: RaycastPicker;
+  public onViewChange: (() => void) | null = null;
   public onPlaceSelect: ((id: string) => void) | null = null;
   constructor(
     private data: CampusData,
@@ -27,11 +29,14 @@ export class ThreeView {
     scene?: SceneHost,
   ) {
     this.scene = scene ?? new SceneManager(container);
+    this.scene.onFrame = () => this.onViewChange?.();
     this.buildings = new BuildingRenderer(data);
     this.scene.scene.add(this.buildings.rootGroup);
     this.explode = new ExplodeController(this.buildings);
-    this.explode.onUpdateCallback = () =>
+    this.explode.onUpdateCallback = () => {
       this.routes.forEach((r) => r.updatePositions());
+      this.onViewChange?.();
+    };
     this.picker = new RaycastPicker(
       this.scene.camera,
       this.scene.renderer.domElement,
@@ -93,6 +98,30 @@ export class ThreeView {
       else flush();
     }
     flush();
+  }
+  public getPlaceAnchor(id: string): ScreenPoint | null {
+    const mesh = this.buildings.placeMeshes.find(
+      (m) => m.userData.placeId === id,
+    );
+    if (!mesh) return null;
+    for (let parent: THREE.Object3D | null = mesh; parent; parent = parent.parent)
+      if (!parent.visible) return null;
+    mesh.updateWorldMatrix(true, false);
+    const box = new THREE.Box3().setFromObject(mesh);
+    const point = box.getCenter(new THREE.Vector3());
+    point.y = box.max.y;
+    this.scene.camera.updateMatrixWorld();
+    point.project(this.scene.camera);
+    if (
+      point.z < -1 || point.z > 1 ||
+      Math.abs(point.x) > 1 || Math.abs(point.y) > 1
+    ) return null;
+    const rect = this.scene.renderer.domElement.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    return {
+      x: rect.left + (point.x + 1) * rect.width / 2,
+      y: rect.top + (1 - point.y) * rect.height / 2,
+    };
   }
   public selectPlace(id: string | null) {
     this.buildings.highlightPlace(id);
