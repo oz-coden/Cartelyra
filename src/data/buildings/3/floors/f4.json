@@ -224,17 +224,6 @@
       "entrance": "stair2"
     },
     {
-      "id": "stairs3",
-      "label": "階段3（接続未確認）",
-      "type": "stairs",
-      "polygon": [
-        [100, 60],
-        [110, 60],
-        [110, 70],
-        [100, 70]
-      ]
-    },
-    {
       "id": "store",
       "label": "3-41 収納庫",
       "type": "service",
