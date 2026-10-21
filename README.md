@@ -24,7 +24,7 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 | Campus | 30 buildings and four gates can be selected. Outdoor routes are not registered |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
-| Building 20 | 1F–4F; 108 room areas (one awaiting room-number confirmation), nine WCs, stairs and elevators. Entrances and routes are not registered |
+| Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs and elevators. Entrances and routes are not registered |
 | WCs and facilities | 26 WCs (17 in Building 3, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
@@ -104,7 +104,7 @@ This project is released under the [MIT License](LICENSE).
 | キャンパス全体 | 30棟と4か所の門を選択可能。屋外経路は未登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
-| 20号館 | 1〜4F・108室区画（うち1区画は室番号確認待ち）、WC 9か所・階段・EV。入口・経路は未登録 |
+| 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV。入口・経路は未登録 |
 | WC・設備 | WC 26か所（3号館17・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
