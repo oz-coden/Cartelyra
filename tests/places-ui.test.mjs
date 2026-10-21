@@ -98,7 +98,8 @@ test("building catalog includes all overview buildings; floor state is scoped an
     catalog = buildingCatalog(data, d.overview),
     state = new LocationState(catalog);
   assert.equal(catalog.length, 31);
-  assert.equal(state.buildingId, "b3");
+  assert.equal(state.buildingId, "b1");
+  state.selectBuilding("b3");
   state.selectFloor(4);
   state.selectBuilding("b99");
   assert.equal(state.floorLevel, 1);
@@ -108,11 +109,11 @@ test("building catalog includes all overview buildings; floor state is scoped an
   state.selectBuilding("b99");
   assert.equal(state.floorLevel, -1);
   assert.equal(state.selectFloor(99), false);
-  state.selectBuilding("b1");
+  state.selectBuilding("b2");
   assert.equal(state.floorLevel, null);
   assert.equal(state.floor, undefined);
   assert.equal(state.selectBuilding("missing"), false);
-  assert.equal(state.buildingId, "b1");
+  assert.equal(state.buildingId, "b2");
   const zeroFloor = structuredClone(data.buildings.find((b) => b.id === "b99").floors[0]);
   zeroFloor.level = 0;
   zeroFloor.label = "G";
@@ -208,11 +209,11 @@ test("SVG exposes WCs and all buildings to keyboard selection, with an honest em
   assert.ok(groups.every((g) => g.getAttribute("role") === "button"));
   key(
     window,
-    groups.find((g) => g.getAttribute("aria-label").startsWith("1号館")),
+    groups.find((g) => g.getAttribute("aria-label").startsWith("2号館")),
     " ",
   );
-  assert.equal(building, "b1");
-  map.setLocation(catalog.find((b) => b.id === "b1"));
+  assert.equal(building, "b2");
+  map.setLocation(catalog.find((b) => b.id === "b2"));
   map.showOverview(false);
   assert.match(document.getElementById("map-caption").textContent, /未登録/);
   assert.equal(document.querySelectorAll("[data-place]").length, 0);

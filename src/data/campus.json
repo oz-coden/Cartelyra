@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "campusName": "神奈川大学 横浜キャンパス",
   "coordinateUnit": "schematic",
-  "buildingIds": ["b3", "b20", "b5"],
+  "buildingIds": ["b3", "b20", "b5", "b1"],
   "outdoor": {
     "sourceId": "campus-path-reference",
     "notes": [

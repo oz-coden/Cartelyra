@@ -40,7 +40,9 @@ test("application selects buildings, focuses WC details and routes from a room t
     // linkedom does not initialize the checkbox's checked property from HTML.
     document.getElementById("allow-inferred").checked = true;
     assert.equal(select.options.length, 30);
-    assert.equal(select.value, "b3");
+    assert.equal(select.value, "b1");
+    select.value = "b3";
+    select.dispatchEvent(new window.Event("change"));
     document
       .querySelector('[data-place="b3/f1/feature/wc-w"]')
       .dispatchEvent(new window.Event("click", { bubbles: true }));
@@ -63,12 +65,12 @@ test("application selects buildings, focuses WC details and routes from a room t
     );
     document.getElementById("btn-view-campus").click();
     assert.equal(document.body.dataset.view, "campus");
-    const b1 = [...document.querySelectorAll(".map-campus-building")].find(
-      (g) => g.getAttribute("aria-label").startsWith("1号館"),
+    const empty = [...document.querySelectorAll(".map-campus-building")].find(
+      (g) => g.getAttribute("aria-label").startsWith("2号館"),
     );
-    b1.dispatchEvent(new window.Event("click", { bubbles: true }));
+    empty.dispatchEvent(new window.Event("click", { bubbles: true }));
     assert.equal(document.body.dataset.view, "floor");
-    assert.equal(select.value, "b1");
+    assert.equal(select.value, "b2");
     assert.match(document.getElementById("map-caption").textContent, /未登録/);
     assert.equal(document.querySelectorAll("[data-place]").length, 0);
     select.value = "b3";

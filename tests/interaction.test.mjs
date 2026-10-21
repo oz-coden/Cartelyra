@@ -131,6 +131,9 @@ test("3D picking, anchored action bubble, endpoint routing, highlighting and gap
       view = new ThreeView(data, container, host);
       return view;
     });
+    const select = document.getElementById("building-select");
+    select.value = "b3";
+    select.dispatchEvent(new window.Event("change"));
     document.getElementById("btn-view-3d").click();
     // setView awaits the lazy view factory; drain those microtasks before observing it.
     await new Promise((resolve) => setImmediate(resolve));

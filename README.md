@@ -22,11 +22,12 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Area | Current coverage |
 | --- | --- |
 | Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. An outdoor reference route connects Building 3’s Building 8-facing entrance, West Gate and Building 20 |
+| Building 1 | B1–8F; 139 areas (including two unreadable labels), 133 with corridor-side reference routes, 23 WCs, two stair cores and two elevators. Three 1F entrances; unresolved labels/access remain documented |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
-| WCs and facilities | 30 WCs (17 in Building 3, four in Building 5, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
+| WCs and facilities | 53 WCs (23 in Building 1, 17 in Building 3, four in Building 5, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
 | Actual distances and walking times | Not measured |
@@ -52,7 +53,7 @@ Editing a floor’s JSON updates the floor plan, 3D view, search, facility list 
 
 The [outdoor reference and field-survey guide](docs/outdoor-survey.md) records the aerial source, drawing rules, unresolved positions and how to estimate distances from timed walks.
 
-See [Building 5 transcription checks](docs/building-5-review.md) and [Building 20 transcription checks](docs/building-20-review.md) for unresolved labels and connectivity. Building 5 has indoor reference routes from its 2F entrance; its outdoor approach is not yet connected to the campus network. Stair avoidance cannot reach other floors in Building 5 because no elevator is registered.
+See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 transcription checks](docs/building-5-review.md) and [Building 20 transcription checks](docs/building-20-review.md) for unresolved labels and connectivity. Building 1 has indoor reference routes using stairs or elevators; its outdoor approach is not connected. Building 5 has indoor reference routes from its 2F entrance; its outdoor approach is not yet connected to the campus network. Stair avoidance cannot reach other floors in Building 5 because no elevator is registered.
 
 Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, adding more outdoor routes and buildings, and creating an editor with floor-plan underlays.
 
@@ -111,11 +112,12 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 対象 | 現在の状態 |
 | --- | --- |
 | キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。3号館の8号館側〜西門〜20号館の屋外参考経路を登録 |
+| 1号館 | B1〜8F・139区画（番号未確認2区画を含む）、133区画に通路側までの参考案内。WC 23か所・階段2系統・EV2基・1F出入口3か所。判読や入口が不明な区画は確認待ちとして保持 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
-| WC・設備 | WC 30か所（3号館17・5号館4・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
+| WC・設備 | WC 53か所（1号館23・3号館17・5号館4・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
@@ -141,7 +143,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 空中写真の出典、独自の描画ルール、未確定の位置と歩行時間からの距離推定は、[屋外配置と現地計測](docs/outdoor-survey.md)にまとめています。
 
-室番号・室名と接続の確認項目は、[5号館の図面登録と確認項目](docs/building-5-review.md)と[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。5号館は外階段から入る2F出入口を起点に館内の参考案内ができますが、屋外経路との接続は未登録です。EVは未登録のため、階段を避ける条件では別の階へ案内できません。
+室番号・室名と接続の確認項目は、[1号館の図面登録と確認項目](docs/building-1-review.md)、[5号館の図面登録と確認項目](docs/building-5-review.md)と[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。1号館は階段・EVで館内を参考案内しますが、屋外経路との接続は未登録です。5号館は外階段から入る2F出入口を起点に館内の参考案内ができますが、屋外経路との接続は未登録です。EVは未登録のため、階段を避ける条件では別の階へ案内できません。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路の拡充・他棟の登録、図面を下敷きにした編集ツールがあります。
 
