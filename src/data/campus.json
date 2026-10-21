@@ -69,25 +69,25 @@
       {
         "id": "b12-east-south",
         "name": "12号館 東側への曲がり角",
-        "position": [79.5, 43.5],
+        "position": [81.5, 43.5],
         "layer": "ground"
       },
       {
         "id": "b12-east",
         "name": "12号館 東側の地上通路（立体交差の下）",
-        "position": [79.5, 39],
+        "position": [81.5, 39],
         "layer": "ground"
       },
       {
         "id": "b17-east",
         "name": "17号館 東側の地上通路",
-        "position": [79.5, 29],
+        "position": [81.5, 29],
         "layer": "ground"
       },
       {
         "id": "avenue-east",
         "name": "13号館と17号館の間の大通り 東側",
-        "position": [79.5, 24],
+        "position": [81.5, 24],
         "layer": "ground"
       },
       {
