@@ -2,7 +2,12 @@ import "./style.css";
 import { campusData } from "./data/load";
 import overviewJson from "./data/overview.json";
 import type { CampusOverview } from "./data/schema";
-import { buildingCatalog, placeContext, placeIndex } from "./data/places";
+import {
+  buildingCatalog,
+  placeContext,
+  placeIndex,
+  placeRouteNotice,
+} from "./data/places";
 import type { Place, RouteFilterType, RouteResult } from "./types/campus";
 import { AStarPathfinder } from "./pathfinding/AStar";
 import { ThemeManager } from "./ui/ThemeManager";
@@ -166,6 +171,7 @@ export class UniviewApp {
       ["elevator", "EV"],
       ["stairs", "階段"],
       ["aed", "AED"],
+      ["entrance", "出入口"],
     ]) {
       const button = document.createElement("button");
       button.textContent = label;
@@ -217,7 +223,9 @@ export class UniviewApp {
       const button = document.createElement("button");
       button.textContent = place.name;
       const state = document.createElement("small");
-      state.textContent = place.nodeId ? "参考経路あり" : "経路未登録";
+      state.textContent = place.approachRoomId
+        ? "手前の部屋まで案内"
+        : place.nodeId ? "参考経路あり" : "経路未登録";
       button.append(state);
       button.addEventListener("click", () => this.selectPlace(place));
       list.append(button);
@@ -318,12 +326,36 @@ export class UniviewApp {
     filter: RouteFilterType,
     inferred: boolean,
   ) {
-    const unavailable = [a, b]
-      .map((id) => this.places.find((p) => p.id === id || p.nodeId === id))
-      .filter((p): p is Place => !!p && !p.nodeId);
+    const endpoints = [a, b].map((id) =>
+      this.places.find((p) => p.id === id) ??
+      this.places.find((p) => p.nodeId === id && !p.approachRoomId),
+    );
+    const unavailable = endpoints.filter((p): p is Place => !!p && !p.nodeId);
     this.result = unavailable.length
       ? null
-      : this.pathfinder.findPath(a, b, filter, inferred);
+      : this.pathfinder.findPath(
+          endpoints[0]?.nodeId ?? a,
+          endpoints[1]?.nodeId ?? b,
+          filter,
+          inferred,
+        );
+    if (this.result) {
+      this.result.endpointNotes = endpoints
+        .filter((p): p is Place => !!p)
+        .map(placeRouteNotice)
+        .filter(Boolean);
+      if (this.result.endpointNotes.length) {
+        const start = endpoints[0], dest = endpoints[1];
+        if (this.result.steps.length === 1)
+          this.result.steps[0].instruction = `出発地と目的地の案内地点は同じです。${this.result.endpointNotes.join(" ")}`;
+        else {
+          if (start?.approachRoomName)
+            this.result.steps[0].instruction = `「${start.name}」の案内地点（${start.approachRoomName}の通路側）から出発`;
+          if (dest?.approachRoomName)
+            this.result.steps[this.result.steps.length - 1].instruction = `「${dest.name}」の案内地点（${dest.approachRoomName}の通路側）に到着。室内への案内は行いません。`;
+        }
+      }
+    }
     this.map.setRoute(this.result);
     this.three?.renderRoute(this.result);
     if (!this.result) {
@@ -376,7 +408,7 @@ export class UniviewApp {
     this.highlightSelected();
     document.getElementById("tooltip-title")!.textContent = place.name;
     document.getElementById("tooltip-desc")!.textContent =
-      `${placeContext(place)} / ${place.description ?? (place.nodeId ? "入口は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")}`;
+      `${placeContext(place)} / ${place.description ?? (place.nodeId ? "通路側の案内地点は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")} ${placeRouteNotice(place)}`.trim();
     this.popover.show();
   }
   private hideDetails() {

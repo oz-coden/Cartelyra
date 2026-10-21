@@ -47,13 +47,16 @@ export function placeIndex(
         floorLabel: floor.label,
       };
       for (const room of floor.rooms) {
+        const approach = floor.rooms.find((r) => r.id === room.approachRoomId);
         places.push({
           ...context,
           id: room.id,
           name: room.name,
           kind: "room",
           roomId: room.id,
-          nodeId: room.entranceNodeId,
+          nodeId: approach?.entranceNodeId ?? room.entranceNodeId,
+          approachRoomId: approach?.id,
+          approachRoomName: approach?.name,
           position: [room.box.x, room.box.z],
           polygon: room.polygon,
           aliases: [room.id, ...room.aliases],
@@ -62,7 +65,7 @@ export function placeIndex(
         if (room.entranceNodeId) indexedNodes.add(room.entranceNodeId);
       }
       for (const feature of floor.features ?? []) {
-        if (!["restroom", "elevator", "stairs", "aed"].includes(feature.type))
+        if (!["restroom", "elevator", "stairs", "aed", "entrance"].includes(feature.type))
           continue;
         const box = bounds(feature.polygon);
         const aliases = [...(feature.aliases ?? []), feature.label];
@@ -84,12 +87,13 @@ export function placeIndex(
           );
         if (feature.type === "elevator") aliases.push("EV", "エレベーター");
         if (feature.type === "aed") aliases.push("AED", "自動体外式除細動器");
+        if (feature.type === "entrance") aliases.push("入口", "出入口", "entrance");
         places.push({
           ...context,
           id: featurePlaceId(building.id, floor.id, feature.id),
           featureId: feature.id,
           name: feature.label,
-          kind: feature.type as "restroom" | "elevator" | "stairs" | "aed",
+          kind: feature.type as "restroom" | "elevator" | "stairs" | "aed" | "entrance",
           position: [box.x, box.z],
           polygon: feature.polygon,
           aliases,
@@ -137,6 +141,10 @@ export const placeContext = (place: Place) =>
     : `${place.buildingName} ${place.floorLabel}`;
 export const placeDisplayName = (place: Place) =>
   `${place.name}（${placeContext(place)}）`;
+export const placeRouteNotice = (place: Place) =>
+  place.approachRoomName
+    ? `${place.name}は「${place.approachRoomName}」の通路側まで案内します。室内の通り抜けは案内しません。`
+    : "";
 export const normalizeSearch = (value: string) =>
   value.normalize("NFKC").replace(/[−–—]/g, "-").trim().toLowerCase();
 export function searchPlaces(

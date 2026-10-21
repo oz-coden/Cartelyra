@@ -27,6 +27,7 @@ export interface FloorSource {
     category: RoomCategory;
     polygon: Point2[];
     entrance?: string;
+    approachRoomId?: string;
     description?: string;
   }>;
   navigation: {

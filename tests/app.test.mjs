@@ -37,6 +37,8 @@ test("application selects buildings, focuses WC details and routes from a room t
     await server.ssrLoadModule("/src/main.ts");
     window.dispatchEvent(new window.Event("DOMContentLoaded"));
     const select = document.getElementById("building-select");
+    // linkedom does not initialize the checkbox's checked property from HTML.
+    document.getElementById("allow-inferred").checked = true;
     assert.equal(select.options.length, 30);
     assert.equal(select.value, "b3");
     document
@@ -94,8 +96,25 @@ test("application selects buildings, focuses WC details and routes from a room t
     document.querySelector('[data-place="20-113"]').dispatchEvent(new window.Event("click", { bubbles: true }));
     document.getElementById("btn-tooltip-set-dest").click();
     assert.match(document.getElementById("input-dest").value, /20-113.*20号館 1F/);
-    assert.match(document.getElementById("toast").textContent, /入口・接続.*未登録/);
+    assert.match(document.getElementById("toast").textContent, /この条件で接続する経路は未登録/);
     assert.equal(document.querySelectorAll(".map-route").length, 0);
+    document.querySelector('[data-place="b20/f1/feature/entrance-left"]').dispatchEvent(new window.Event("click", { bubbles: true }));
+    document.getElementById("btn-tooltip-set-start").click();
+    assert.ok(document.querySelectorAll(".map-route").length > 0);
+    const third = [...document.querySelectorAll("#floor-buttons button")].find((b) => b.textContent === "3F");
+    third.click();
+    document.querySelector('[data-place="20-306"]').dispatchEvent(new window.Event("click", { bubbles: true }));
+    assert.match(document.getElementById("tooltip-desc").textContent, /20-306-1.*通路側まで/);
+    document.getElementById("btn-tooltip-set-dest").click();
+    assert.match(document.getElementById("input-dest").value, /20-306 教授室/);
+    assert.match(document.getElementById("route-confidence").textContent, /20-306-1.*通路側まで/);
+    assert.match(document.getElementById("step-guide-list").textContent, /案内地点（20-306-1.*通路側）に到着/);
+    document.getElementById("btn-swap-points").click();
+    assert.match(document.getElementById("step-guide-list").textContent, /案内地点（20-306-1.*通路側）から出発/);
+    document.querySelector('[data-place="20-306-1"]').dispatchEvent(new window.Event("click", { bubbles: true }));
+    document.getElementById("btn-tooltip-set-dest").click();
+    assert.match(document.getElementById("route-confidence").textContent, /案内地点は同じ/);
+    assert.match(document.getElementById("step-guide-list").textContent, /室内の通り抜けは案内しません/);
     const fourth = [...document.querySelectorAll("#floor-buttons button")].find((b) => b.textContent === "4F");
     fourth.click();
     assert.match(document.getElementById("map-heading").textContent, /20号館.*4F/);
@@ -155,6 +174,8 @@ test("3D geometry selects WC meshes, hides other floors/buildings and supports l
       (m) => m.userData.placeId === "b3/f1/feature/wc-w",
     );
     assert.ok(mesh);
+    for (const id of ["left", "center", "right"])
+      assert.ok(renderer.placeMeshes.some((m) => m.userData.placeId === `b20/f1/feature/entrance-${id}`));
     const box = new THREE.Box3().setFromObject(mesh),
       point = box.getCenter(new THREE.Vector3());
     const camera = new THREE.OrthographicCamera(-5, 5, 5, -5, 0.1, 200);

@@ -172,7 +172,7 @@ export class SearchPanel {
       name.className = "suggestion-name";
       name.textContent = place.name;
       sub.className = "suggestion-sub";
-      sub.textContent = `${placeContext(place)}${place.nodeId ? "" : " / 経路未登録"}`;
+      sub.textContent = `${placeContext(place)}${place.approachRoomId ? " / 手前の部屋まで案内" : place.nodeId ? "" : " / 経路未登録"}`;
       row.append(name, sub);
       row.addEventListener("click", () => {
         this.onPlaceFocus?.(place);
@@ -205,7 +205,11 @@ export class SearchPanel {
     this.checkAndTriggerSearch();
   }
   public setPlace(target: Target, place: Place) {
-    this.setPoint(target, place.nodeId ?? place.id, placeDisplayName(place));
+    this.setPoint(
+      target,
+      place.approachRoomId ? place.id : place.nodeId ?? place.id,
+      placeDisplayName(place),
+    );
   }
   public cancelPick() {
     this.setPick("none");
@@ -242,12 +246,15 @@ export class SearchPanel {
         : "未測定";
     document.getElementById("summary-vertical")!.textContent =
       result.floorChanges ? `${result.floorChanges} フロア移動` : "階移動なし";
-    document.getElementById("route-confidence")!.textContent =
-      result.pathNodes.length === 1
-        ? "出発地と目的地は同じ場所です"
+    const confidence = result.pathNodes.length === 1
+        ? result.endpointNotes?.length
+          ? "出発地と目的地の案内地点は同じです"
+          : "出発地と目的地は同じ場所です"
         : result.inferredConnections
           ? "参考ルート（現地未確認の接続を含みます）"
           : "現地確認済みの接続";
+    document.getElementById("route-confidence")!.textContent =
+      [confidence, ...(result.endpointNotes ?? [])].join(" / ");
     document.getElementById("route-summary-panel")!.classList.remove("hidden");
   }
   public hideSummary() {

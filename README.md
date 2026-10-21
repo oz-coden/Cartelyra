@@ -24,7 +24,7 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 | Campus | 30 buildings and four gates can be selected. Outdoor routes are not registered |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
-| Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs and elevators. Entrances and routes are not registered |
+| Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | WCs and facilities | 26 WCs (17 in Building 3, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
@@ -38,6 +38,8 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
 
 “最短” (shortest) minimizes distance in the registered schematic coordinates; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
+
+Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. Building entrances connect to indoor routes only until outdoor paths are registered.
 
 A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
@@ -104,7 +106,7 @@ This project is released under the [MIT License](LICENSE).
 | キャンパス全体 | 30棟と4か所の門を選択可能。屋外経路は未登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
-| 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV。入口・経路は未登録 |
+| 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | WC・設備 | WC 26か所（3号館17・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
@@ -118,6 +120,8 @@ This project is released under the [MIT License](LICENSE).
 6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
 「最短」は登録座標上の距離を最小化して経路を探します。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
+
+部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。建物出入口は館内経路へ接続し、屋外経路は別途登録します。
 
 選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 

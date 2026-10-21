@@ -150,7 +150,7 @@ export function validateSources(
             node,
             `${ctx}/${feature.id}: missing facility entrance ${feature.entrance}`,
           );
-          if (node && feature.type === "restroom")
+          if (node && ["restroom", "entrance"].includes(feature.type))
             check(
               pointInPolygon(node.position, feature.polygon),
               `${ctx}/${feature.id}: entrance is not on facility`,
@@ -162,6 +162,14 @@ export function validateSources(
         `${ctx}: duplicate navigation node IDs`,
       );
       for (const room of floor.rooms) {
+        if (room.approachRoomId !== undefined) {
+          const approach = floor.rooms.find((r) => r.id === room.approachRoomId);
+          check(
+            approach && approach.id !== room.id && approach.entrance &&
+              !approach.approachRoomId && !room.entrance,
+            `${room.id}: approach room must have a direct entrance on the same floor; chains and direct entrance overrides are invalid`,
+          );
+        }
         roomIds.push(room.id);
         placeIds.push(room.id);
         const validRoom = polygon(room.polygon, room.id);

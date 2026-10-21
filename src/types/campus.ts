@@ -5,7 +5,7 @@ export type Verification = "diagram" | "inferred" | "verified";
 export interface FloorFeature {
   id: string;
   label: string;
-  type: "stairs" | "elevator" | "restroom" | "aed" | "service" | "pit";
+  type: "stairs" | "elevator" | "restroom" | "aed" | "entrance" | "service" | "pit";
   polygon: Point2[];
   aliases?: string[];
   entrance?: string; // Floor-local navigation ID in source files.
@@ -24,6 +24,8 @@ interface PlaceBase {
   polygon?: Point2[];
   aliases: string[];
   nodeId?: string;
+  approachRoomId?: string;
+  approachRoomName?: string;
   roomId?: string;
   featureId?: string;
   description?: string;
@@ -64,6 +66,7 @@ export interface Room {
   capacity?: number;
   box: RoomBox;
   entranceNodeId?: string;
+  approachRoomId?: string; // Guide only to this room's corridor side, without entering it.
   polygon?: Point2[];
   verification?: Verification;
   floorLevel: number;
@@ -170,6 +173,7 @@ export interface RouteStep {
 }
 
 export interface RouteResult {
+  endpointNotes?: string[];
   pathNodes: NavNode[];
   totalDistance: number;
   estimatedMinutes: number;

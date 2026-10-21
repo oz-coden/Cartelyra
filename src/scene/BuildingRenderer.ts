@@ -253,7 +253,9 @@ export class BuildingRenderer {
           ? "#218c9e"
           : feature.type === "aed"
             ? "#cf4563"
-            : "#8793a5";
+            : feature.type === "entrance"
+              ? "#168568"
+              : "#8793a5";
     const geometry = this.polygonGeometry(feature.polygon, 1.5);
     const mesh = new THREE.Mesh(
       geometry,
@@ -264,7 +266,7 @@ export class BuildingRenderer {
       }),
     );
     mesh.userData.placeId = featurePlaceId(building.id, floor.id, feature.id);
-    if (["restroom", "elevator", "stairs", "aed"].includes(feature.type)) {
+    if (["restroom", "elevator", "stairs", "aed", "entrance"].includes(feature.type)) {
       this.placeMeshes.push(mesh);
       this.placeMaterials.set(mesh.userData.placeId, {
         mesh,

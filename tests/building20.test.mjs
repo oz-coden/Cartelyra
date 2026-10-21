@@ -39,11 +39,11 @@ test("Building 20 has four schematic floors, 108 numbered room areas and a non-t
   assert.equal(facilities.filter((p) => p.kind === "elevator").length, 4);
 });
 
-test("Building 20 search and endpoint selection retain unknown connectivity without invented routes", () => {
+test("Building 20 searches generic room names and keeps separate buildings disconnected", () => {
   const result = searchPlaces(places, "20号館 4F 420");
   assert.equal(result[0].id, "20-420");
   assert.equal(result[0].floorLevel, 4);
-  assert.equal(result[0].nodeId, undefined);
+  assert.equal(result[0].nodeId, "b20/f4/room-420");
   assert.equal(result[0].name, "20-420 研究室");
   assert.deepEqual(searchPlaces(places, "上原研究室"), []);
   assert.deepEqual(searchPlaces(places, "音楽情報処理"), []);
@@ -54,9 +54,53 @@ test("Building 20 search and endpoint selection retain unknown connectivity with
   assert.ok(searchPlaces(places, "20号館 1F 多目的").some((p) => p.id === "b20/f1/feature/wc-a"));
   const finder = new AStarPathfinder(campus);
   for (const place of places.filter((p) => p.buildingId === "b20")) {
-    assert.equal(place.nodeId, undefined);
-    assert.equal(finder.findPath("b3/f1/room-103", place.id), null);
+    assert.ok(place.nodeId, place.id);
+    assert.equal(finder.findPath("b3/f1/room-103", place.nodeId), null);
   }
-  assert.equal(campus.navigation.nodes.some((n) => n.buildingId === "b20"), false);
+  assert.ok(campus.navigation.nodes.some((n) => n.buildingId === "b20"));
   assert.ok(finder.findPath("b3/f1/room-103", "b3/f4/room-401"));
+});
+
+
+test("Building 20 entrances connect all corridor-side destinations in every route mode", () => {
+  const finder = new AStarPathfinder(campus);
+  const local = places.filter((p) => p.buildingId === "b20");
+  const entries = local.filter((p) => p.kind === "entrance");
+  assert.equal(entries.length, 3);
+  const rooms = building.floors.flatMap((f) => f.rooms);
+  assert.equal(rooms.filter((r) => r.entranceNodeId).length, 95);
+  assert.equal(rooms.filter((r) => r.approachRoomId).length, 13);
+  for (const entry of entries) {
+    assert.equal(entry.floorLevel, 1);
+    for (const mode of ["shortest", "accessible", "indoor", "stairs"])
+      for (const place of local) {
+        const route = finder.findPath(entry.nodeId, place.nodeId, mode);
+        assert.ok(route, `${entry.id} -> ${place.id} (${mode})`);
+        assert.ok(route.pathNodes.every((n) => n.buildingId === "b20"));
+        assert.equal(route.pathNodes.at(-1).id, place.nodeId);
+        assert.equal(route.floorChanges, place.floorLevel - 1);
+        if (mode === "accessible")
+          assert.ok(route.steps.every((s) => s.edgeType !== "stairs"));
+        if (entry.nodeId !== place.nodeId)
+          assert.equal(finder.findPath(entry.nodeId, place.nodeId, mode, false), null);
+      }
+  }
+  for (const id of ["stairs-left", "stairs-center", "stairs-right"])
+    assert.ok(finder.findPath(`b20/f1/${id}`, `b20/f4/${id}`, "stairs").steps.some((s) => s.edgeType === "stairs"));
+});
+
+test("Inner rooms end at an explicit front room without traversing its interior", () => {
+  const finder = new AStarPathfinder(campus);
+  for (const place of places.filter((p) => p.buildingId === "b20" && p.approachRoomId)) {
+    const front = places.find((p) => p.id === place.approachRoomId);
+    assert.equal(place.nodeId, front.nodeId);
+    assert.ok(!building.floors.flatMap((f) => f.rooms).find((r) => r.id === place.id).entranceNodeId);
+    assert.ok(finder.findPath("b20/f1/entrance-left", place.nodeId));
+  }
+  for (const target of ["missing", "20-420", "20-329", "20-306"]) {
+    const bad = structuredClone(source);
+    const floor = bad.floors.find((f) => f.buildingId === "b20" && f.id === "f3");
+    floor.rooms.find((r) => r.id === "20-329").approachRoomId = target;
+    assert.ok(validateSources(bad.manifest, bad.buildings, bad.floors, bad.sources, bad.overview).some((e) => e.includes("approach room must have a direct entrance")));
+  }
 });

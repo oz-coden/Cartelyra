@@ -15,5 +15,102 @@
     "f3",
     "f4"
   ],
-  "connections": []
+  "connections": [
+    {
+      "from": "b20/f1/stairs-left",
+      "to": "b20/f2/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f1/stairs-center",
+      "to": "b20/f2/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f1/stairs-right",
+      "to": "b20/f2/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f1/elevator",
+      "to": "b20/f2/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b20/f2/stairs-left",
+      "to": "b20/f3/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f2/stairs-center",
+      "to": "b20/f3/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f2/stairs-right",
+      "to": "b20/f3/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f2/elevator",
+      "to": "b20/f3/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    },
+    {
+      "from": "b20/f3/stairs-left",
+      "to": "b20/f4/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f3/stairs-center",
+      "to": "b20/f4/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f3/stairs-right",
+      "to": "b20/f4/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b20/f3/elevator",
+      "to": "b20/f4/elevator",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true
+    }
+  ]
 }
