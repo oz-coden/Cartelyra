@@ -120,8 +120,11 @@ export interface NavNode {
   id: string;
   name: string;
   position: [number, number, number]; // World [x, y, z] in the campus coordinate unit.
-  floor: number;
+  floor?: number; // Absent for campus outdoor nodes; level zero remains a valid indoor floor.
   buildingId?: string;
+  overviewPosition?: Point2; // Campus diagram frame, independent of indoor 3D coordinates.
+  outdoorLayer?: "ground" | "bridge" | "underground";
+  gateId?: string;
   type: NavNodeType;
   isPreset?: boolean;
 }
@@ -140,6 +143,7 @@ export interface NavEdge {
   verification?: Verification;
   bidirectional?: boolean;
   blocked?: boolean;
+  widthClass?: "unknown" | "wide" | "narrow"; // Qualitative reference only, not a measured width.
 }
 
 export interface CampusData {
@@ -166,7 +170,7 @@ export interface RouteStep {
   instruction: string;
   nodeId: string;
   position: [number, number, number];
-  floor: number;
+  floor?: number;
   buildingId?: string;
   edgeType?: NavEdgeType;
   distance: number;

@@ -116,7 +116,7 @@ export class StepGuide {
       case "bridge":
         return "連絡通路";
       case "outdoor":
-        return "屋外広場";
+        return "屋外通路";
       default:
         return "フロア内移動";
     }

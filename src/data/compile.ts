@@ -53,6 +53,26 @@ export function compileCampus(
     return { ...source, floors: runtimeFloors };
   });
   edges.push(...(manifest.connections ?? []));
+  const outdoor = manifest.outdoor;
+  if (outdoor) {
+    const qualify = (id: string) => `campus/outdoor/${id}`;
+    for (const node of outdoor.nodes)
+      nodes.push({
+        id: qualify(node.id), name: node.name, type: "outdoor",
+        position: [node.position[0], 0, node.position[1]],
+        overviewPosition: node.position, outdoorLayer: node.layer, gateId: node.gateId,
+      });
+    for (const edge of outdoor.edges)
+      edges.push({ ...edge, from: qualify(edge.from), to: qualify(edge.to) });
+    for (const link of outdoor.links) {
+      const outside = outdoor.nodes.find((n) => n.id === link.from)!;
+      nodes.find((n) => n.id === link.to)!.overviewPosition = outside.position;
+      // Explicit transition cost prevents unrelated indoor/overview coordinate frames
+      // from creating an artificial straight-line distance between the two maps.
+      edges.push({ ...link, from: qualify(link.from), type: "outdoor",
+        isIndoor: false, distance: 1 });
+    }
+  }
   return {
     campusName: manifest.campusName,
     coordinateUnit: manifest.coordinateUnit,

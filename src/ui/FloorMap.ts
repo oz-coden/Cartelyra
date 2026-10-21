@@ -358,7 +358,27 @@ export class FloorMap {
   }
   private renderRoute() {
     this.overlay.replaceChildren();
-    if (!this.result || !this.floor || this.overviewMode) return;
+    if (!this.result) return;
+    if (this.overviewMode) {
+      const nodes = this.result.pathNodes;
+      for (let i = 1; i < nodes.length; i++) {
+        const a = nodes[i - 1], b = nodes[i];
+        if (a.overviewPosition && b.overviewPosition && (!a.buildingId || !b.buildingId))
+          this.overlay.append(element("polyline", {
+            points: points([a.overviewPosition, b.overviewPosition]), class: "map-route",
+          }));
+      }
+      for (const node of nodes.filter((n) => n.overviewPosition &&
+        (n.buildingId || n === nodes[0] || n === nodes.at(-1)))) {
+        const p = node.overviewPosition!;
+        this.overlay.append(element("circle", {
+          cx: String(p[0]), cy: String(p[1]), r: "1.1",
+          class: `map-route-marker ${node === nodes[0] ? "start" : node === nodes.at(-1) ? "goal" : "transfer"}`,
+        }));
+      }
+      return;
+    }
+    if (!this.floor) return;
     const nodes = this.result.pathNodes,
       matches = (n: NavNode) =>
         n.floor === this.floor!.level && n.buildingId === this.building?.id;
@@ -393,7 +413,15 @@ export class FloorMap {
     this.svg.setAttribute("aria-label", "横浜キャンパス 建物配置の模式図");
     document.getElementById("map-heading")!.textContent = "横浜キャンパス";
     document.getElementById("map-caption")!.textContent =
-      "建物を選択してフロアの登録状況を確認できます。実寸・方位は未校正。棟間の屋外経路は未登録です。";
+      "建物を選ぶと館内図を表示。破線は3号館北側〜西門〜20号館の屋外参考経路です。実寸・方位は未校正。他の屋外経路は未登録です。";
+    const outdoorNodes = new Map(this.campus.navigation.nodes.map((n) => [n.id, n]));
+    for (const edge of this.campus.navigation.edges) {
+      const a = outdoorNodes.get(edge.from), b = outdoorNodes.get(edge.to);
+      if (!a?.buildingId && !b?.buildingId && a?.overviewPosition && b?.overviewPosition && !edge.blocked)
+        this.svg.append(element("polyline", {
+          points: points([a.overviewPosition, b.overviewPosition]), class: "map-outdoor-path",
+        }));
+    }
     const catalog = buildingCatalog(this.campus, this.overview);
     for (const building of this.overview.buildings) {
       const supported = !!catalog.find((b) => b.id === building.id)?.data
@@ -450,11 +478,13 @@ export class FloorMap {
           gate.name,
         ),
       );
-      this.interactive(group, `${gate.name}（屋外経路未登録）`, () =>
+      this.interactive(group, `${gate.name}（${gate.nodeId ? "屋外参考経路あり" : "屋外経路未登録"}）`, () =>
         this.onPlaceSelect?.(gate),
       );
       this.svg.append(group);
     }
+    this.svg.append(this.overlay);
+    this.renderRoute();
     this.selectPlace(this.selected);
   }
 }

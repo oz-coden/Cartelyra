@@ -73,6 +73,24 @@ export interface CampusSource {
   coordinateUnit: "schematic" | "meters";
   buildingIds: string[];
   connections?: SourceEdge[]; // Explicit links between buildings, using qualified node IDs.
+  outdoor?: {
+    sourceId: string;
+    notes: string[];
+    nodes: Array<{
+      id: string;
+      name: string;
+      position: Point2; // Campus overview coordinates, never indoor world coordinates.
+      layer: "ground" | "bridge" | "underground";
+      gateId?: string;
+    }>;
+    edges: Array<SourceEdge & { widthClass: "unknown" | "wide" | "narrow" }>;
+    links: Array<{
+      from: string; // Outdoor-local ID on the building's overview boundary.
+      to: string; // Qualified indoor entrance node ID.
+      verification: Verification;
+      isAccessible: boolean;
+    }>;
+  };
 }
 
 export interface SourceDocument {

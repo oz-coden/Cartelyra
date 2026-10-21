@@ -39,7 +39,7 @@ test("Building 20 has four schematic floors, 108 numbered room areas and a non-t
   assert.equal(facilities.filter((p) => p.kind === "elevator").length, 4);
 });
 
-test("Building 20 searches generic room names and keeps separate buildings disconnected", () => {
+test("Building 20 searches generic room names and connects registered buildings through the outdoor network", () => {
   const result = searchPlaces(places, "20号館 4F 420");
   assert.equal(result[0].id, "20-420");
   assert.equal(result[0].floorLevel, 4);
@@ -55,7 +55,7 @@ test("Building 20 searches generic room names and keeps separate buildings disco
   const finder = new AStarPathfinder(campus);
   for (const place of places.filter((p) => p.buildingId === "b20")) {
     assert.ok(place.nodeId, place.id);
-    assert.equal(finder.findPath("b3/f1/room-103", place.nodeId), null);
+    assert.ok(finder.findPath("b3/f1/room-103", place.nodeId));
   }
   assert.ok(campus.navigation.nodes.some((n) => n.buildingId === "b20"));
   assert.ok(finder.findPath("b3/f1/room-103", "b3/f4/room-401"));

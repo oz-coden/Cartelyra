@@ -2,8 +2,248 @@
   "schemaVersion": 1,
   "campusName": "神奈川大学 横浜キャンパス",
   "coordinateUnit": "schematic",
-  "buildingIds": [
-    "b3",
-    "b20"
-  ]
+  "buildingIds": ["b3", "b20"],
+  "outdoor": {
+    "sourceId": "campus-path-reference",
+    "notes": [
+      "縮尺のない通路配置の参考図から接続関係を登録した模式経路。実距離・所要時間・正確な方位は未校正。",
+      "3号館北側出入口から西門、12号館・17号館東側の地上通路、大通りを経て20号館へ接続。立体交差の上側へは接続しない。",
+      "道幅は定性的な参考情報のみ。経路選択の重みには未使用。段差・開放時間・通行条件は未確認。"
+    ],
+    "nodes": [
+      {
+        "id": "b3-north",
+        "name": "3号館 北側出入口前",
+        "position": [82, 65],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-front",
+        "name": "3号館 北側の通路",
+        "position": [82, 64],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-turn",
+        "name": "3号館 北側の曲がり角",
+        "position": [83, 64],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-east-south",
+        "name": "7号館 東側通路の南端",
+        "position": [83, 49],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-east",
+        "name": "7号館 東側通路",
+        "position": [81, 49],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-north-east",
+        "name": "7号館 北東側の曲がり角",
+        "position": [81, 45],
+        "layer": "ground"
+      },
+      {
+        "id": "west-gate-south",
+        "name": "西門 南側の通路",
+        "position": [76, 45],
+        "layer": "ground"
+      },
+      {
+        "id": "west-gate",
+        "name": "西門",
+        "position": [76, 44],
+        "layer": "ground",
+        "gateId": "west"
+      },
+      {
+        "id": "west-gate-north",
+        "name": "西門 北側の通路",
+        "position": [76, 43.5],
+        "layer": "ground"
+      },
+      {
+        "id": "b12-east-south",
+        "name": "12号館 東側への曲がり角",
+        "position": [79.5, 43.5],
+        "layer": "ground"
+      },
+      {
+        "id": "b12-east",
+        "name": "12号館 東側の地上通路（立体交差の下）",
+        "position": [79.5, 39],
+        "layer": "ground"
+      },
+      {
+        "id": "b17-east",
+        "name": "17号館 東側の地上通路",
+        "position": [79.5, 29],
+        "layer": "ground"
+      },
+      {
+        "id": "avenue-east",
+        "name": "13号館と17号館の間の大通り 東側",
+        "position": [79.5, 24],
+        "layer": "ground"
+      },
+      {
+        "id": "avenue-west",
+        "name": "大通りの20号館側",
+        "position": [57, 24],
+        "layer": "ground"
+      },
+      {
+        "id": "b20-south-east",
+        "name": "20号館 南側・図面右端出入口前",
+        "position": [54, 24],
+        "layer": "ground"
+      }
+    ],
+    "edges": [
+      {
+        "to": "b3-front",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b3-north"
+      },
+      {
+        "to": "b3-turn",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b3-front"
+      },
+      {
+        "to": "b7-east-south",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b3-turn"
+      },
+      {
+        "to": "b7-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-east-south"
+      },
+      {
+        "to": "b7-north-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-east"
+      },
+      {
+        "to": "west-gate-south",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-north-east"
+      },
+      {
+        "to": "west-gate",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "west-gate-south"
+      },
+      {
+        "to": "west-gate-north",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "west-gate"
+      },
+      {
+        "to": "b12-east-south",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "west-gate-north"
+      },
+      {
+        "to": "b12-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b12-east-south"
+      },
+      {
+        "to": "b17-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b12-east"
+      },
+      {
+        "to": "avenue-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b17-east"
+      },
+      {
+        "to": "avenue-west",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "wide",
+        "from": "avenue-east"
+      },
+      {
+        "to": "b20-south-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "avenue-west"
+      }
+    ],
+    "links": [
+      {
+        "to": "b3/f1/entrance-north",
+        "verification": "inferred",
+        "isAccessible": true,
+        "from": "b3-north"
+      },
+      {
+        "to": "b20/f1/entrance-right",
+        "verification": "inferred",
+        "isAccessible": true,
+        "from": "b20-south-east"
+      }
+    ]
+  }
 }

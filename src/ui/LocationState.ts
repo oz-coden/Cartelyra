@@ -44,7 +44,7 @@ export class LocationState {
     return true;
   }
   public focusNode(node: NavNode): boolean {
-    if (!node.buildingId || !this.selectBuilding(node.buildingId)) return false;
+    if (!node.buildingId || node.floor === undefined || !this.selectBuilding(node.buildingId)) return false;
     return this.selectFloor(node.floor);
   }
 }

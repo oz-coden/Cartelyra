@@ -139,8 +139,12 @@ export class UniviewApp {
             this.setPoint(target, this.selection.selected);
         });
     this.guide.onStepClick = (step) => {
+      if (!step.buildingId) {
+        void this.setView("campus");
+        return;
+      }
       if (step.buildingId) this.location.selectBuilding(step.buildingId);
-      this.location.selectFloor(step.floor);
+      if (step.floor !== undefined) this.location.selectFloor(step.floor);
       this.applyLocation();
       if (this.view === "campus") void this.setView("floor");
       if (this.view === "3d") this.three?.focusStep(step);

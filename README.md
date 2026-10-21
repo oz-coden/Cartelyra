@@ -21,8 +21,8 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 
 | Area | Current coverage |
 | --- | --- |
-| Campus | 30 buildings and four gates can be selected. Outdoor routes are not registered |
-| Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F |
+| Campus | 30 buildings and four gates can be selected. A schematic outdoor route connects Building 3’s north entrance, West Gate and Building 20 |
+| Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; north and south entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | WCs and facilities | 26 WCs (17 in Building 3, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
@@ -34,12 +34,12 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 2. Switch views using “キャンパス” (campus), “平面図” (floor plan) and “3D” at the top. Drag the floor plan to pan, and use the mouse wheel or +/− buttons to zoom.
 3. Enter a room name or a term such as “WC”, “トイレ” (toilet), “EV” or “正門” (main gate) in the start/destination field, then select a suggestion. Space-separated queries such as “3号館 2F 女性” (Building 3, 2F, female) are supported. Suggestions prioritize the current building and floor.
 4. Alternatively, select a place on the map or in “このフロアの場所” (places on this floor), then choose “ここから出発” (start here) or “ここへ行く” (go here). Places without registered entrances or outdoor routes can be saved as endpoints, but no routes to them are shown.
-5. Select a route-step card to switch to its building and floor. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
+5. Select a route-step card to switch to its building and floor, or to the campus map for outdoor steps. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
 6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
 
 “最短” (shortest) minimizes distance in the registered schematic coordinates; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
 
-Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. Building entrances connect to indoor routes only until outdoor paths are registered.
+Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. The outdoor reference route joins Building 3’s north entrance to Building 20’s rightmost entrance on the south side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 3’s south entrance and the other two Building 20 entrances currently connect to indoor routes only. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
 
 A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
@@ -51,7 +51,7 @@ Editing a floor’s JSON updates the floor plan, 3D view, search, facility list 
 
 See [Building 20 transcription checks](docs/building-20-review.md) for unresolved room numbers/names and connectivity.
 
-Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, registering outdoor routes and other buildings, and creating an editor with floor-plan underlays.
+Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, adding more outdoor routes and buildings, and creating an editor with floor-plan underlays.
 
 ## Deployment
 
@@ -103,8 +103,8 @@ This project is released under the [MIT License](LICENSE).
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 30棟と4か所の門を選択可能。屋外経路は未登録 |
-| 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
+| キャンパス全体 | 30棟と4か所の門を選択可能。3号館北側〜西門〜20号館の屋外参考経路を登録 |
+| 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに北側・南側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | WC・設備 | WC 26か所（3号館17・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
@@ -116,12 +116,12 @@ This project is released under the [MIT License](LICENSE).
 2. 上部の「キャンパス」「平面図」「3D」で表示を切り替えます。平面図はドラッグで移動、ホイールまたは＋／−で拡大縮小できます。
 3. 出発地・目的地に部屋名や「WC」「トイレ」「EV」「正門」などを入力し、候補を選びます。「3号館 2F 女性」のような空白区切りの検索も可能です。候補は表示中の棟・階を優先します。
 4. 地図や「このフロアの場所」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口や屋外経路が未登録の場所も端点に指定できますが、その場所への経路は表示しません。
-5. 道順カードを選ぶと、その棟・階へ切り替わります。3Dでは「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
+5. 道順カードを選ぶと、その棟・階へ切り替わります。屋外の道順ではキャンパス図へ切り替わります。3Dでは「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
 6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
 「最短」は登録座標上の距離を最小化して経路を探します。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
 
-部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。建物出入口は館内経路へ接続し、屋外経路は別途登録します。
+部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。屋外参考経路は、3号館北側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面南側・右端出入口へ接続しています。3号館南側と20号館の残り2か所の出入口は、現在は館内経路のみ接続しています。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
 
 選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
@@ -133,7 +133,7 @@ This project is released under the [MIT License](LICENSE).
 
 20号館の室番号・室名と接続の確認項目は、[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。
 
-今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路・他棟の登録、図面を下敷きにした編集ツールがあります。
+今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路の拡充・他棟の登録、図面を下敷きにした編集ツールがあります。
 
 ## 公開方法
 

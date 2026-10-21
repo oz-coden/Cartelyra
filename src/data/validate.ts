@@ -406,5 +406,71 @@ export function validateSources(
   overview.gates.forEach((g) =>
     check(finitePoint(g.position), `Invalid gate ${g.name}`),
   );
+  const outdoor = manifest.outdoor;
+  if (outdoor) {
+    check(manifest.coordinateUnit === "schematic", "Outdoor overview coordinates require schematic units");
+    check(sourceIds.has(outdoor.sourceId), "Unknown outdoor source");
+    check(unique(outdoor.nodes.map((n) => n.id)), "Duplicate outdoor node IDs");
+    const nodes = new Map(outdoor.nodes.map((n) => [n.id, n]));
+    const gates = outdoor.nodes.flatMap((n) => n.gateId ? [n.gateId] : []);
+    check(unique(gates), "Duplicate outdoor gate binding");
+    const obstacles = overview.buildings.map((b) => b.polygon);
+    const area: Point2[] = [[-1000, -1000], [1000, -1000], [1000, 1000], [-1000, 1000]];
+    for (const node of outdoor.nodes) {
+      check(typeof node.id === "string" && !!node.id && !node.id.includes("/"), "Invalid outdoor node ID");
+      check(finitePoint(node.position), `Invalid outdoor position ${node.id}`);
+      check(["ground", "bridge", "underground"].includes(node.layer), `Invalid outdoor layer ${node.id}`);
+      if (finitePoint(node.position) && node.layer === "ground")
+        check(!obstacles.some((p) => pointInInterior(node.position, p)), `Outdoor node inside building ${node.id}`);
+      if (node.gateId) {
+        const gate = overview.gates.find((g) => g.id === node.gateId);
+        check(gate && gate.position.every((p, i) => p === node.position[i]), `Invalid outdoor gate binding ${node.id}`);
+      }
+    }
+    const seen = new Set<string>(), adjacent = new Map<string, Set<string>>();
+    for (const edge of outdoor.edges) {
+      const a = nodes.get(edge.from), b = nodes.get(edge.to);
+      check(a && b, `Missing outdoor edge endpoint ${edge.from} -> ${edge.to}`);
+      check(edge.from !== edge.to, `Outdoor self edge ${edge.from}`);
+      const key = edge.bidirectional === false ? `${edge.from}>${edge.to}` : [edge.from, edge.to].sort().join("|");
+      check(!seen.has(key), `Duplicate outdoor edge ${key}`);
+      seen.add(key);
+      check(["outdoor", "bridge", "stairs", "elevator"].includes(edge.type), `Invalid outdoor edge type ${edge.from}`);
+      check(["inferred", "diagram", "verified"].includes(edge.verification), `Invalid outdoor verification ${edge.from}`);
+      check(edge.isIndoor === false && typeof edge.isAccessible === "boolean" &&
+        (edge.type !== "stairs" || !edge.isAccessible), `Invalid outdoor flags ${edge.from}`);
+      check(["unknown", "wide", "narrow"].includes(edge.widthClass), `Invalid outdoor width class ${edge.from}`);
+      if (edge.distance !== undefined)
+        check(Number.isFinite(edge.distance) && edge.distance > 0, `Invalid outdoor distance ${edge.from}`);
+      if (!a || !b) continue;
+      check(a.layer === b.layer || ["stairs", "elevator"].includes(edge.type), `Outdoor layer transfer needs explicit vertical connection ${edge.from}`);
+      if (a.layer === "ground" && b.layer === "ground" && finitePoint(a.position) && finitePoint(b.position))
+        check(segmentIsWalkable(a.position, b.position, area, obstacles), `Outdoor edge crosses building ${edge.from} -> ${edge.to}`);
+      for (const [from, to] of [[edge.from, edge.to], [edge.to, edge.from]]) {
+        const set = adjacent.get(from) ?? new Set<string>(); set.add(to); adjacent.set(from, set);
+      }
+    }
+    const linked = new Set<string>();
+    for (const link of outdoor.links) {
+      const outside = nodes.get(link.from), inside = allNodes.get(link.to);
+      check(outside && inside, `Missing outdoor entrance endpoint ${link.from} -> ${link.to}`);
+      check(!linked.has(link.to), `Duplicate outdoor entrance binding ${link.to}`);
+      linked.add(link.to);
+      check(["inferred", "diagram", "verified"].includes(link.verification) && typeof link.isAccessible === "boolean", `Invalid outdoor entrance flags ${link.to}`);
+      if (!inside || !outside) continue;
+      check(inside.floor.features.some((f) => f.type === "entrance" && f.entrance === inside.node.id), `Outdoor link must use a building entrance ${link.to}`);
+      check(pointInPolygon(inside.node.position, inside.floor.outline) && !pointInInterior(inside.node.position, inside.floor.outline), `Indoor entrance must be on floor boundary ${link.to}`);
+      const footprint = overview.buildings.find((b) => b.id === inside.floor.buildingId)?.polygon;
+      check(footprint && pointInPolygon(outside.position, footprint) && !pointInInterior(outside.position, footprint), `Outdoor entrance must be on building overview boundary ${link.to}`);
+    }
+    if (outdoor.nodes.length) {
+      const reached = new Set([outdoor.nodes[0].id]), queue = [...reached];
+      for (let i = 0; i < queue.length; i++)
+        for (const next of adjacent.get(queue[i]) ?? [])
+          if (!reached.has(next)) { reached.add(next); queue.push(next); }
+      for (const node of outdoor.nodes)
+        check(reached.has(node.id), `Disconnected outdoor node ${node.id}`);
+    }
+  }
   return errors;
 }

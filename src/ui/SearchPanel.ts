@@ -254,7 +254,10 @@ export class SearchPanel {
           ? "参考ルート（現地未確認の接続を含みます）"
           : "現地確認済みの接続";
     document.getElementById("route-confidence")!.textContent =
-      [confidence, ...(result.endpointNotes ?? [])].join(" / ");
+      [confidence,
+        ...(result.pathNodes.some((n) => !n.buildingId)
+          ? ["屋外区間はキャンパス図で確認できます。道順を選ぶと対応する図へ切り替わります。"] : []),
+        ...(result.endpointNotes ?? [])].join(" / ");
     document.getElementById("route-summary-panel")!.classList.remove("hidden");
   }
   public hideSummary() {

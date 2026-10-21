@@ -96,8 +96,19 @@ test("application selects buildings, focuses WC details and routes from a room t
     document.querySelector('[data-place="20-113"]').dispatchEvent(new window.Event("click", { bubbles: true }));
     document.getElementById("btn-tooltip-set-dest").click();
     assert.match(document.getElementById("input-dest").value, /20-113.*20号館 1F/);
-    assert.match(document.getElementById("toast").textContent, /この条件で接続する経路は未登録/);
-    assert.equal(document.querySelectorAll(".map-route").length, 0);
+    assert.match(document.getElementById("route-confidence").textContent, /屋外区間はキャンパス図/);
+    assert.ok(document.querySelectorAll(".map-route").length > 0);
+    const outdoorStep = [...document.querySelectorAll("#step-guide-list button")]
+      .find((b) => b.textContent.includes("屋外へ出る"));
+    outdoorStep.click();
+    assert.equal(document.body.dataset.view, "campus");
+    assert.ok(document.querySelectorAll(".map-route").length > 0);
+    assert.match(select.value, /b20/);
+    const indoorStep = [...document.querySelectorAll("#step-guide-list button")]
+      .find((b) => b.textContent.includes("建物に入る"));
+    indoorStep.click();
+    assert.equal(document.body.dataset.view, "floor");
+    assert.equal(select.value, "b20");
     document.querySelector('[data-place="b20/f1/feature/entrance-left"]').dispatchEvent(new window.Event("click", { bubbles: true }));
     document.getElementById("btn-tooltip-set-start").click();
     assert.ok(document.querySelectorAll(".map-route").length > 0);

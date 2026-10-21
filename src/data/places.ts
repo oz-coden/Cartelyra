@@ -129,6 +129,7 @@ export function placeIndex(
       kind: "gate",
       scope: "campus",
       position: gate.position,
+      nodeId: campus.navigation.nodes.find((n) => n.gateId === gate.id)?.id,
       aliases: [...(gate.aliases ?? []), "門", "gate"],
       description: gate.description,
     });

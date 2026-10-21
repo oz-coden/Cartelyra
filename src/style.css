@@ -482,6 +482,13 @@ body[data-view="3d"] .three-only {
   stroke: #f09419;
   stroke-width: 1.1;
 }
+.map-outdoor-path {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 0.7;
+  stroke-dasharray: 1.2 0.8;
+  pointer-events: none;
+}
 .map-route {
   fill: none;
   stroke: #ad45d9;

@@ -143,7 +143,11 @@ export class AStarPathfinder {
         ? link.edge.reverseInstruction
         : link.edge.instruction;
       if (!instruction) {
-        if (pathNodes[i].buildingId !== to.buildingId)
+        if (pathNodes[i].buildingId && !to.buildingId)
+          instruction = `「${pathNodes[i].name}」から屋外へ出る`;
+        else if (!pathNodes[i].buildingId && to.buildingId)
+          instruction = `${floor} の「${to.name}」から建物に入る`;
+        else if (pathNodes[i].buildingId !== to.buildingId)
           instruction = `${floor} の「${to.name}」へ移動`;
         else if (link.edge.type === "stairs" || link.edge.type === "elevator") {
           instruction = `${link.edge.type === "stairs" ? "階段" : "EV"}で ${floor} へ移動`;
