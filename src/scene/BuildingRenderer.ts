@@ -201,9 +201,10 @@ export class BuildingRenderer {
     roomGroup.add(edgeLine);
 
     // Floating text label sprite
-    const labelSprite = this.createTextLabelSprite(room.id, baseColor);
+    const labelSprite = this.createTextLabelSprite(room.mapLabel ?? room.id, baseColor);
     labelSprite.position.set(x, h + 0.8, z);
-    labelSprite.scale.set(10, 2.5, 1);
+    const labelWidth = Math.min(10, w * 0.9, d * 2);
+    labelSprite.scale.set(labelWidth, labelWidth / 4, 1);
     roomGroup.add(labelSprite);
 
     // Save record for fast interaction & highlighting

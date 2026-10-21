@@ -21,6 +21,7 @@ export interface FloorSource {
   features: FloorFeature[];
   rooms: Array<{
     id: string;
+    mapLabel?: string;
     name: string;
     aliases: string[];
     category: RoomCategory;

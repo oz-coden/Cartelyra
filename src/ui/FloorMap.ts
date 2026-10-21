@@ -303,9 +303,12 @@ export class FloorMap {
             r: "2",
           }),
         );
+      const room = place.kind === "room"
+        ? this.floor.rooms.find((r) => r.id === place.roomId)
+        : undefined;
       const label =
         place.kind === "room"
-          ? place.roomId!
+          ? room?.mapLabel ?? place.roomId!
           : place.kind === "restroom"
             ? place.restroomType
               ? {
@@ -328,6 +331,9 @@ export class FloorMap {
                 : "map-label map-feature-label",
             "text-anchor": "middle",
             "dominant-baseline": "middle",
+            ...(room ? {
+              style: `font-size:${Math.min(2.5, room.box.w / (label.length * 0.65 + 1), room.box.d / 1.8)}px`,
+            } : {}),
           },
           label,
         ),

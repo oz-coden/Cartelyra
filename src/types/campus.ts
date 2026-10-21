@@ -57,6 +57,7 @@ export interface RoomBox {
 
 export interface Room {
   id: string;
+  mapLabel?: string;
   name: string;
   aliases: string[];
   category: RoomCategory;

@@ -19,22 +19,23 @@ test('six photographed floors, 35 main rooms, 34 routable rooms; authoring data 
   assert.equal(rooms.length, 35); assert.equal(rooms.filter(r => r.entranceNodeId).length, 34);
   assert.equal(rooms.find(r => r.id === '3-B202').entranceNodeId, undefined);
   assert.equal(campus.coordinateUnit, 'schematic');
-  assert.ok(source.buildings[0].connections.every(e => e.verification === 'inferred'));
+  assert.ok(source.buildings.find(b => b.id === 'b3').connections.every(e => e.verification === 'inferred'));
 });
 
 test('missing endpoints, duplicate IDs, missing sources and isolated rooms are reported', () => {
   const bad = structuredClone(source);
-  bad.floors[0].navigation.edges.push({ ...bad.floors[0].navigation.edges[0], to: 'missing' });
-  bad.floors[1].navigation.nodes.push(bad.floors[1].navigation.nodes[0]);
-  bad.floors[2].sourceId = 'missing';
-  const room = bad.floors[3].rooms[0];
-  bad.floors[3].navigation.edges = bad.floors[3].navigation.edges.filter(e => e.from !== room.entrance && e.to !== room.entrance);
+  const targetFloors = bad.floors.filter(f => f.buildingId === 'b3');
+  targetFloors[0].navigation.edges.push({ ...targetFloors[0].navigation.edges[0], to: 'missing' });
+  targetFloors[1].navigation.nodes.push(targetFloors[1].navigation.nodes[0]);
+  targetFloors[2].sourceId = 'missing';
+  const room = targetFloors[3].rooms[0];
+  targetFloors[3].navigation.edges = targetFloors[3].navigation.edges.filter(e => e.from !== room.entrance && e.to !== room.entrance);
   const errors = validate(bad).join('\n');
   for (const expected of ['Missing edge endpoint', 'duplicate navigation node IDs', 'missing source', 'Disconnected navigation node']) assert.ok(errors.includes(expected), expected);
 });
 
 test('routes cannot cross a room, an atrium or an equipment area', () => {
-  const bad = structuredClone(source), floor = bad.floors.find(f => f.id === 'f4');
+  const bad = structuredClone(source), floor = bad.floors.find(f => f.buildingId === 'b3' && f.id === 'f4');
   floor.navigation.edges.push({ ...floor.navigation.edges[0], from: 'n50', to: 's54' });
   assert.ok(validate(bad).some(e => e.includes('Edge crosses room, void or service area')));
   const outline = [[0,0],[10,0],[10,10],[0,10]], narrow = [[4.00001,0],[4.00002,0],[4.00002,10],[4.00001,10]];
@@ -50,14 +51,14 @@ test('building-local coordinates transform consistently, including rotation', ()
 });
 
 test('another building can reuse floor IDs without mixing floors or entrances', () => {
-  const d = structuredClone(source), second = structuredClone(d.buildings[0]);
+  const d = structuredClone(source), second = structuredClone(d.buildings.find(b => b.id === 'b3'));
   second.id = 'b99'; second.code = '99'; second.origin = [200, 0, 10];
   second.connections = second.connections.map(e => ({ ...e, from: e.from.replace('b3/', 'b99/'), to: e.to.replace('b3/', 'b99/') }));
   d.manifest.buildingIds.push('b99'); d.buildings.push(second);
-  d.floors.push(...structuredClone(d.floors).map(f => ({ ...f, buildingId: 'b99', rooms: f.rooms.map(r => ({ ...r, id: r.id.replace('3-', '99-') })) })));
+  d.floors.push(...structuredClone(d.floors.filter(f => f.buildingId === 'b3')).map(f => ({ ...f, buildingId: 'b99', rooms: f.rooms.map(r => ({ ...r, id: r.id.replace('3-', '99-') })) })));
   assert.deepEqual(validate(d), []);
   const data = compileCampus(d.manifest, d.buildings, d.floors);
-  assert.equal(data.buildings[1].floors[0].rooms[0].buildingId, 'b99');
+  assert.equal(data.buildings.find(b => b.id === 'b99').floors[0].rooms[0].buildingId, 'b99');
   assert.ok(data.navigation.nodes.some(n => n.id.startsWith('b99/f1/')));
 });
 

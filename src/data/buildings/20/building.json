@@ -1,0 +1,19 @@
+{
+  "id": "b20",
+  "name": "20号館",
+  "code": "20",
+  "color": "#416b9b",
+  "origin": [
+    130,
+    0,
+    -160
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+  ],
+  "connections": []
+}

@@ -38,7 +38,7 @@ function key(window, el, key) {
 }
 function secondBuilding() {
   const d = structuredClone(source),
-    second = structuredClone(d.buildings[0]);
+    second = structuredClone(d.buildings.find((b) => b.id === "b3"));
   second.id = "b99";
   second.name = "99号館";
   second.code = "99";
@@ -51,7 +51,7 @@ function secondBuilding() {
   d.manifest.buildingIds.push("b99");
   d.buildings.push(second);
   d.floors.push(
-    ...structuredClone(d.floors).map((f) => ({
+    ...structuredClone(d.floors.filter((f) => f.buildingId === "b3")).map((f) => ({
       ...f,
       buildingId: "b99",
       rooms: f.rooms.map((r) => ({ ...r, id: r.id.replace("3-", "99-") })),
@@ -63,12 +63,13 @@ const validate = (d) =>
   validateSources(d.manifest, d.buildings, d.floors, d.sources, d.overview);
 
 test("17 WCs and AED have explicit provisional connections; every linked place is reachable in four modes", () => {
-  assert.equal(places.filter((p) => p.kind === "restroom").length, 17);
-  assert.equal(places.filter((p) => p.kind === "aed").length, 1);
+  const b3Places = places.filter((p) => p.buildingId === "b3");
+  assert.equal(b3Places.filter((p) => p.kind === "restroom").length, 17);
+  assert.equal(b3Places.filter((p) => p.kind === "aed").length, 1);
   assert.equal(new Set(places.map((p) => p.id)).size, places.length);
   const finder = new AStarPathfinder(campus);
   for (const mode of ["shortest", "accessible", "indoor", "stairs"])
-    for (const place of places.filter((p) => p.nodeId)) {
+    for (const place of b3Places.filter((p) => p.nodeId)) {
       assert.ok(
         finder.findPath("b3/f1/room-103", place.nodeId, mode),
         `${mode} ${place.id}`,
@@ -80,14 +81,14 @@ test("17 WCs and AED have explicit provisional connections; every linked place i
           null,
         );
     }
-  assert.equal(searchPlaces(places, "ＷＣ").length, 17);
+  assert.equal(searchPlaces(b3Places, "ＷＣ").length, 17);
   assert.equal(searchPlaces(places, "3号館 2F 女性")[0].restroomType, "female");
   assert.ok(
     searchPlaces(places, "トイレ", "b3", 3)
       .slice(0, 3)
       .every((p) => p.floorLevel === 3),
   );
-  assert.equal(searchPlaces(places, "多目的").length, 5);
+  assert.equal(searchPlaces(b3Places, "多目的").length, 5);
   assert.ok(searchPlaces(places, "B202").some((p) => !p.nodeId));
 });
 
@@ -112,14 +113,14 @@ test("building catalog includes all overview buildings; floor state is scoped an
   assert.equal(state.floor, undefined);
   assert.equal(state.selectBuilding("missing"), false);
   assert.equal(state.buildingId, "b1");
-  const zeroFloor = structuredClone(data.buildings[1].floors[0]);
+  const zeroFloor = structuredClone(data.buildings.find((b) => b.id === "b99").floors[0]);
   zeroFloor.level = 0;
   zeroFloor.label = "G";
   const only = new LocationState([
     {
       id: "b99",
       name: "99号館",
-      data: { ...data.buildings[1], floors: [zeroFloor] },
+      data: { ...data.buildings.find((b) => b.id === "b99"), floors: [zeroFloor] },
     },
   ]);
   assert.equal(only.floorLevel, 0);
@@ -158,7 +159,7 @@ test("campus connections compile and route between buildings; steps retain build
 
 test("facility reference errors are detected; closures do not invalidate structural authoring", () => {
   const d = structuredClone(source),
-    floor = d.floors.find((f) => f.id === "f1"),
+    floor = d.floors.find((f) => f.buildingId === "b3" && f.id === "f1"),
     wc = floor.features.find((f) => f.id === "wc-w");
   wc.entrance = "missing";
   assert.ok(validate(d).some((e) => e.includes("missing facility entrance")));
@@ -170,7 +171,7 @@ test("facility reference errors are detected; closures do not invalidate structu
   );
   assert.equal(finder.findPath("b3/f1/room-103", "b3/f1/wc-w-entrance"), null);
   const f = structuredClone(source);
-  f.floors.find((x) => x.id === "f1").level = 0;
+  f.floors.find((x) => x.buildingId === "b3" && x.id === "f1").level = 0;
   assert.deepEqual(validate(f), []);
 });
 
@@ -243,7 +244,7 @@ test("equal floor numbers in another building cannot leak route markers into an 
   );
   map.setLocation(
     catalog.find((b) => b.id === "b99"),
-    data.buildings[1].floors.find((f) => f.level === 1),
+    data.buildings.find((b) => b.id === "b99").floors.find((f) => f.level === 1),
   );
   assert.ok(document.querySelectorAll(".map-route-marker").length > 0);
   assert.match(document.getElementById("map-heading").textContent, /99号館/);

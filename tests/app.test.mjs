@@ -87,6 +87,22 @@ test("application selects buildings, focuses WC details and routes from a room t
       document.getElementById("btn-pick-start").getAttribute("aria-pressed"),
       "false",
     );
+    select.value = "b20";
+    select.dispatchEvent(new window.Event("change"));
+    assert.equal(document.querySelectorAll("#floor-buttons button").length, 4);
+    assert.equal(document.querySelectorAll(".map-room").length, 20);
+    document.querySelector('[data-place="20-113"]').dispatchEvent(new window.Event("click", { bubbles: true }));
+    document.getElementById("btn-tooltip-set-dest").click();
+    assert.match(document.getElementById("input-dest").value, /20-113.*20号館 1F/);
+    assert.match(document.getElementById("toast").textContent, /入口・接続.*未登録/);
+    assert.equal(document.querySelectorAll(".map-route").length, 0);
+    const fourth = [...document.querySelectorAll("#floor-buttons button")].find((b) => b.textContent === "4F");
+    fourth.click();
+    assert.match(document.getElementById("map-heading").textContent, /20号館.*4F/);
+    assert.equal(document.querySelectorAll(".map-room").length, 28);
+    document.querySelector('[data-place="20-420"]').dispatchEvent(new window.Event("click", { bubbles: true }));
+    assert.match(document.getElementById("tooltip-title").textContent, /20-420.*室名未確認/);
+
   } finally {
     await server.close();
   }

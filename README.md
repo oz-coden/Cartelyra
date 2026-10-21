@@ -23,8 +23,9 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 | --- | --- |
 | Campus | 30 buildings and four gates can be selected. Outdoor routes are not registered |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F |
-| Main rooms | 35 rooms; 34 have inferred entrance and corridor connections |
-| WCs and facilities | 17 WCs, one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
+| Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
+| Building 20 | 1F–4F; 108 room areas (one awaiting room-number confirmation), nine WCs, stairs and elevators. Entrances and routes are not registered |
+| WCs and facilities | 26 WCs (17 in Building 3, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
 | Actual distances and walking times | Not measured |
@@ -45,6 +46,8 @@ The 3D view loads on demand, so the floor plan remains available without WebGL.
 ## Editing map data
 
 Editing a floor’s JSON updates the floor plan, 3D view, search, facility list and route calculation together. Additional buildings can be registered by adding building and floor JSON files. See [Data authoring and verification](docs/data-authoring.md) for coordinate conventions, sources, verification status and examples.
+
+See [Building 20 transcription checks](docs/building-20-review.md) for unresolved room numbers/names and connectivity.
 
 Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, registering outdoor routes and other buildings, and creating an editor with floor-plan underlays.
 
@@ -100,8 +103,9 @@ This project is released under the [MIT License](LICENSE).
 | --- | --- |
 | キャンパス全体 | 30棟と4か所の門を選択可能。屋外経路は未登録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図 |
-| 主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
-| WC・設備 | WC 17か所、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
+| 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
+| 20号館 | 1〜4F・108室区画（うち1区画は室番号確認待ち）、WC 9か所・階段・EV。入口・経路は未登録 |
+| WC・設備 | WC 26か所（3号館17・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
@@ -122,6 +126,8 @@ This project is released under the [MIT License](LICENSE).
 ## 編集方法
 
 各階のJSONを編集すると、平面図・3D・検索・設備一覧・経路計算に共通して反映されます。他棟も建物・階のJSONを追加して登録できます。座標、出典、確認状態の扱いと具体例は [データ編集ガイド](docs/data-authoring.md) を参照してください。
+
+20号館の室番号・室名と接続の確認項目は、[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路・他棟の登録、図面を下敷きにした編集ツールがあります。
 
