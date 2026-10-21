@@ -101,7 +101,7 @@ test("application selects buildings, focuses WC details and routes from a room t
     assert.match(document.getElementById("map-heading").textContent, /20号館.*4F/);
     assert.equal(document.querySelectorAll(".map-room").length, 28);
     document.querySelector('[data-place="20-420"]').dispatchEvent(new window.Event("click", { bubbles: true }));
-    assert.match(document.getElementById("tooltip-title").textContent, /20-420.*名称要確認/);
+    assert.match(document.getElementById("tooltip-title").textContent, /20-420 研究室/);
 
   } finally {
     await server.close();
