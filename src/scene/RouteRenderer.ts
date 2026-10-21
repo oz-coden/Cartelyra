@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { NavNode } from "../types/campus";
 
+type MarkerRole = "start" | "goal" | "transfer" | "start-goal";
+
 export class RouteRenderer {
   public group: THREE.Group;
   private currentTubeMesh: THREE.Mesh | null = null;
   private glowMesh: THREE.Mesh | null = null;
-  private startMarker: THREE.Group | null = null;
-  private goalMarker: THREE.Group | null = null;
+  private markers: THREE.Group[] = [];
+  private endpoints = { startId: "", goalId: "" };
   private pulseTexture: THREE.CanvasTexture | null = null;
   private animationId: number | null = null;
   private active = true;
@@ -63,27 +65,27 @@ export class RouteRenderer {
 
   public renderRoute(
     pathNodes: NavNode[],
-    getNodePosFn?: (node: NavNode) => THREE.Vector3,
+    getNodePosFn: (node: NavNode) => THREE.Vector3,
+    endpoints: { startId: string; goalId: string },
   ) {
     this.clearRoute();
 
-    if (pathNodes.length < 2) return;
+    if (!pathNodes.length) return;
 
     this.currentPathNodes = [...pathNodes];
-    if (getNodePosFn) {
-      this.getNodePosFn = getNodePosFn;
-    }
+    this.getNodePosFn = getNodePosFn;
+    this.endpoints = endpoints;
 
     this.buildRouteGeometry();
   }
 
   public updatePositions() {
-    if (this.currentPathNodes.length < 2 || !this.getNodePosFn) return;
+    if (!this.currentPathNodes.length || !this.getNodePosFn) return;
     this.buildRouteGeometry();
   }
 
   private buildRouteGeometry() {
-    if (this.currentPathNodes.length < 2) return;
+    if (!this.currentPathNodes.length) return;
 
     // Resolve 3D coordinates using dynamic position resolver
     const points = this.currentPathNodes.map((node) => {
@@ -98,6 +100,24 @@ export class RouteRenderer {
       );
     });
 
+    if (points.length > 1) this.buildTubeGeometry(points);
+    const indices = points.length === 1 ? [0] : [0, points.length - 1];
+    indices.forEach((index, i) => {
+      const node = this.currentPathNodes[index];
+      const start = node.id === this.endpoints.startId;
+      const goal = node.id === this.endpoints.goalId;
+      const role: MarkerRole = start && goal
+        ? "start-goal"
+        : start ? "start" : goal ? "goal" : "transfer";
+      if (!this.markers[i]) {
+        this.markers[i] = this.createMarker(role, node.id);
+        this.group.add(this.markers[i]);
+      }
+      this.markers[i].position.copy(points[index]);
+    });
+  }
+
+  private buildTubeGeometry(points: THREE.Vector3[]) {
     // Keep corridor corners. Smoothing can cut across rooms and atrium voids.
     const curve = new THREE.CurvePath<THREE.Vector3>();
     for (let i = 1; i < points.length; i++)
@@ -165,32 +185,18 @@ export class RouteRenderer {
         );
       }
     }
-
-    // Update or create markers
-    if (!this.startMarker) {
-      this.startMarker = this.createPinMarker(points[0], 0x10b981);
-      this.group.add(this.startMarker);
-    } else {
-      this.startMarker.position.copy(points[0]);
-    }
-
-    if (!this.goalMarker) {
-      this.goalMarker = this.createPinMarker(
-        points[points.length - 1],
-        0xf43f5e,
-      );
-      this.group.add(this.goalMarker);
-    } else {
-      this.goalMarker.position.copy(points[points.length - 1]);
-    }
   }
 
-  private createPinMarker(pos: THREE.Vector3, colorHex: number): THREE.Group {
+  private createMarker(role: MarkerRole, nodeId: string): THREE.Group {
     const markerGroup = new THREE.Group();
-    markerGroup.position.copy(pos);
+    markerGroup.userData = { type: "route-marker", role, nodeId };
+    const transfer = role === "transfer";
+    const colorHex = transfer ? 0xa855f7 : role === "goal" ? 0xf43f5e : 0x10b981;
 
-    // Pin head sphere
-    const sphereGeo = new THREE.SphereGeometry(0.75, 16, 16);
+    // Transfers use a short diamond; endpoint pins retain their start/goal colors.
+    const sphereGeo = transfer
+      ? new THREE.OctahedronGeometry(0.65)
+      : new THREE.SphereGeometry(0.75, 16, 16);
     const sphereMat = new THREE.MeshStandardMaterial({
       color: colorHex,
       emissive: colorHex,
@@ -198,24 +204,26 @@ export class RouteRenderer {
       roughness: 0.2,
     });
     const sphere = new THREE.Mesh(sphereGeo, sphereMat);
-    sphere.position.y = 2.4;
+    sphere.position.y = transfer ? 1.8 : 2.4;
     markerGroup.add(sphere);
 
     // Pin needle cone
-    const coneGeo = new THREE.ConeGeometry(0.5, 1.8, 16);
-    const coneMat = new THREE.MeshStandardMaterial({
-      color: colorHex,
-      roughness: 0.3,
-    });
-    const cone = new THREE.Mesh(coneGeo, coneMat);
-    cone.rotation.x = Math.PI; // point down
-    cone.position.y = 1.0;
-    markerGroup.add(cone);
+    if (!transfer) {
+      const coneGeo = new THREE.ConeGeometry(0.5, 1.8, 16);
+      const coneMat = new THREE.MeshStandardMaterial({
+        color: colorHex,
+        roughness: 0.3,
+      });
+      const cone = new THREE.Mesh(coneGeo, coneMat);
+      cone.rotation.x = Math.PI; // point down
+      cone.position.y = 1.0;
+      markerGroup.add(cone);
+    }
 
     // Ground ripple ring
-    const ringGeo = new THREE.RingGeometry(0.8, 1.6, 32);
+    const ringGeo = new THREE.RingGeometry(0.8, transfer ? 1.1 : 1.6, 32);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: colorHex,
+      color: role === "start-goal" ? 0xf43f5e : colorHex,
       transparent: true,
       opacity: 0.65,
       side: THREE.DoubleSide,
@@ -242,8 +250,7 @@ export class RouteRenderer {
     this.group.clear();
     this.currentTubeMesh = null;
     this.glowMesh = null;
-    this.startMarker = null;
-    this.goalMarker = null;
+    this.markers = [];
   }
 
   private startAnimation() {
@@ -254,12 +261,7 @@ export class RouteRenderer {
         // Move pulse along path
         this.pulseTexture.offset.x -= 0.018;
       }
-      if (this.startMarker) {
-        this.startMarker.rotation.y += 0.02;
-      }
-      if (this.goalMarker) {
-        this.goalMarker.rotation.y += 0.02;
-      }
+      this.markers.forEach((marker) => marker.rotation.y += 0.02);
     };
     loop();
   }

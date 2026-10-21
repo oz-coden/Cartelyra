@@ -78,12 +78,14 @@ export class ThreeView {
     this.routes = [];
     let segment: RouteResult["pathNodes"] = [];
     const flush = () => {
-      if (segment.length > 1) {
+      if (segment.length) {
         const renderer = new RouteRenderer(this.scene.scene);
         renderer.setDarkTheme(this.dark);
         renderer.setActive(this.active);
-        renderer.renderRoute(segment, (node) =>
-          this.buildings.getNodeWorldPosition(node),
+        renderer.renderRoute(
+          segment,
+          (node) => this.buildings.getNodeWorldPosition(node),
+          { startId: result!.pathNodes[0].id, goalId: result!.pathNodes.at(-1)!.id },
         );
         this.routes.push(renderer);
       }

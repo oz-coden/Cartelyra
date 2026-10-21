@@ -41,7 +41,7 @@ It is an **unofficial prototype** based on campus and floor maps. Actual dimensi
 
 Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. The outdoor reference route joins Building 3’s north entrance to Building 20’s rightmost entrance on the south side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 3’s south entrance and the other two Building 20 entrances currently connect to indoor routes only. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
 
-A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
+A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Selecting a place within the current building retains the 3D camera; selecting a place in another building fits that building into view while preserving the floor display mode and spacing. Green/red 3D pins mark the actual route endpoints, while purple diamonds mark transitions to another floor or the outdoor route. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
 The 3D view loads on demand, so the floor plan remains available without WebGL.
 
@@ -67,6 +67,8 @@ npm test              # Run automated tests
 npm run build         # Validate, type-check and generate static files
 npm run preview       # Preview the build locally
 ```
+
+The GitHub Pages workflow runs regression tests before building and publishing; a failed test stops deployment.
 
 Deploy the contents of `dist/` to a static host. Node.js is needed for development/builds; a production application server is not required.
 
@@ -123,7 +125,7 @@ This project is released under the [MIT License](LICENSE).
 
 部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。屋外参考経路は、3号館北側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面南側・右端出入口へ接続しています。3号館南側と20号館の残り2か所の出入口は、現在は館内経路のみ接続しています。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
 
-選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
+選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。同じ棟の場所を選択した場合は3Dカメラを維持し、別棟の場所を選択した場合は階の表示モードと間隔を保って、その棟を表示範囲に収めます。3Dの緑・赤のピンは実際の出発地・目的地を示し、紫のひし形は別の階や屋外への中継地点を示します。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
 3Dは必要時に読み込むため、WebGLが利用できない環境でも平面図を利用できます。
 
@@ -149,6 +151,8 @@ npm test             # 自動テストを実行
 npm run build        # 検証・型検査・静的ファイル生成
 npm run preview      # ビルド結果をローカルで確認
 ```
+
+GitHub Pagesの公開ワークフローは、ビルド・公開前に回帰テストを実行します。テストが失敗した場合は公開を停止します。
 
 `dist/` の内容を静的ホスティングに配置します。Node.jsは開発・ビルド時に必要で、公開用のアプリケーションサーバーは不要です。
 

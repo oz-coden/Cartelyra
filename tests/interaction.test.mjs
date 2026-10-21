@@ -303,3 +303,139 @@ test("3D picking, anchored action bubble, endpoint routing, highlighting and gap
     await server.close();
   }
 });
+
+async function setupThree() {
+  const env = await setup();
+  try {
+    const [{ UniviewApp }, { ThreeView }, { campusData }, { AStarPathfinder }] = await Promise.all([
+      env.server.ssrLoadModule("/src/main.ts"),
+      env.server.ssrLoadModule("/src/scene/ThreeView.ts"),
+      env.server.ssrLoadModule("/src/data/load.ts"),
+      env.server.ssrLoadModule("/src/pathfinding/AStar.ts"),
+    ]);
+    const canvas = env.document.createElement("canvas");
+    canvas.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1000, height: 700 });
+    const host = {
+      scene: new THREE.Scene(),
+      camera: new THREE.PerspectiveCamera(45, 1000 / 700, 0.1, 1500),
+      renderer: { domElement: canvas },
+      controls: { maxDistance: 450 },
+      moves: 0,
+      setActive() {}, setDarkTheme() {}, resize() {},
+      flyTo(target, position) {
+        this.moves++;
+        this.camera.position.copy(position);
+        this.camera.lookAt(target);
+        this.camera.updateMatrixWorld(true);
+      },
+    };
+    let view;
+    new UniviewApp(async (data, container) => {
+      container.append(canvas);
+      return view = new ThreeView(data, container, host);
+    });
+    env.document.getElementById("allow-inferred").checked = true;
+    env.document.getElementById("btn-view-3d").click();
+    await new Promise((resolve) => setImmediate(resolve));
+    return { ...env, host, view, data: campusData, finder: new AStarPathfinder(campusData) };
+  } catch (error) {
+    await env.server.close();
+    throw error;
+  }
+}
+
+test("3D search fits a different building and retains camera and gap state for selections within that building", async () => {
+  const { document, window, server, view, host } = await setupThree();
+  try {
+    const search = (target, query) => {
+      const input = document.getElementById(`input-${target}`);
+      input.value = query;
+      input.dispatchEvent(new window.Event("input"));
+      document.querySelector(`#suggestions-${target} button`).click();
+    };
+    const gap = document.getElementById("explode-slider");
+    gap.value = "80"; gap.dispatchEvent(new window.Event("input"));
+    const moves = host.moves;
+    search("dest", "20-420");
+    assert.equal(document.body.dataset.view, "3d");
+    assert.equal(document.getElementById("building-select").value, "b20");
+    assert.equal(host.moves, moves + 1);
+    assert.ok(view.getPlaceAnchor("20-420"), "the selected room must be inside the new building view");
+    assert.equal(document.getElementById("tooltip-title").textContent, "20-420 研究室");
+    assert.equal(gap.value, "80");
+    assert.equal(document.getElementById("show-all-floors").checked, true);
+    const before = host.camera.position.clone();
+    search("dest", "20-421");
+    search("dest", "20-306");
+    assert.equal(host.moves, moves + 1);
+    assert.ok(host.camera.position.equals(before), "same-building selection retains the camera even across floors");
+    search("start", "3-401");
+    assert.equal(host.moves, moves + 2);
+    assert.ok(view.getPlaceAnchor("3-401"));
+    assert.ok(!document.getElementById("route-summary-panel").classList.contains("hidden"));
+    document.getElementById("btn-swap-points").click();
+    assert.equal(host.moves, moves + 2, "route calculation and swapping endpoints must not reframe the view");
+    const all = document.getElementById("show-all-floors");
+    all.checked = false; all.dispatchEvent(new window.Event("change"));
+    search("dest", "20-420");
+    assert.equal(host.moves, moves + 3);
+    assert.equal(all.checked, false);
+    assert.equal(gap.value, "80");
+    assert.ok(view.getPlaceAnchor("20-420"), "single-floor mode also fits the destination building");
+  } finally { await server.close(); }
+});
+
+test("3D route markers distinguish global endpoints, transfers and isolated visible points across buildings and floors", async () => {
+  const { server, view, host, data, finder } = await setupThree();
+  try {
+    const markers = () => {
+      const result = [];
+      host.scene.traverse((o) => { if (o.userData.type === "route-marker") result.push(o); });
+      return result;
+    };
+    const route = finder.findPath("b3/f4/room-401", "b20/f4/room-420");
+    view.renderRoute(route);
+    view.setLocation("b3", 1, false);
+    assert.equal(markers().length, 2);
+    assert.ok(markers().every((m) => m.userData.role === "transfer"));
+    assert.ok(markers().every((m) => m.children[0].geometry.type === "OctahedronGeometry"));
+    for (const [building, floor, expected] of [
+      ["b3", 4, ["start", "transfer"]],
+      ["b20", 4, ["goal", "transfer"]],
+    ]) {
+      view.setLocation(building, floor, false);
+      assert.deepEqual(markers().map((m) => m.userData.role).sort(), expected);
+      for (const marker of markers()) {
+        if (marker.userData.role === "start") assert.equal(marker.userData.nodeId, route.pathNodes[0].id);
+        if (marker.userData.role === "goal") assert.equal(marker.userData.nodeId, route.pathNodes.at(-1).id);
+      }
+    }
+    view.setLocation("b20", 4, true);
+    view.explode.setExplodeRatio(0);
+    const before = markers().map((m) => ({ data: { ...m.userData }, position: m.position.clone() }));
+    view.explode.setExplodeRatio(1);
+    for (const marker of markers()) {
+      const previous = before.find((m) => m.data.nodeId === marker.userData.nodeId);
+      assert.deepEqual(marker.userData, previous.data);
+      const node = route.pathNodes.find((n) => n.id === marker.userData.nodeId);
+      const floor = data.buildings.find((b) => b.id === node.buildingId).floors.find((f) => f.level === node.floor);
+      assert.equal(marker.position.y - previous.position.y, floor.stackIndex * 9);
+    }
+    const reversed = finder.findPath("b20/f4/room-420", "b3/f4/room-401");
+    view.renderRoute(reversed);
+    assert.deepEqual(markers().map((m) => m.userData.role).sort(), ["start", "transfer"]);
+    const entrances = finder.findPath("b3/f1/entrance-north", "b20/f1/entrance-right");
+    view.renderRoute(entrances);
+    for (const [building, role] of [["b3", "start"], ["b20", "goal"]]) {
+      view.setLocation(building, 1, false);
+      assert.equal(markers().length, 1, "a single visible entrance still gets its endpoint marker");
+      assert.equal(markers()[0].userData.role, role);
+    }
+    view.setLocation("b3", 4, false);
+    view.renderRoute(finder.findPath("b3/f4/room-401", "b3/f4/room-401"));
+    assert.equal(markers().length, 1);
+    assert.equal(markers()[0].userData.role, "start-goal");
+    view.renderRoute(null);
+    assert.equal(markers().length, 0);
+  } finally { await server.close(); }
+});

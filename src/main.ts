@@ -383,14 +383,16 @@ export class UniviewApp {
     if (place.scope === "campus") {
       if (this.view !== "campus") void this.setView("campus");
     } else {
+      const buildingChanged = this.location.buildingId !== place.buildingId;
       if (
-        this.location.buildingId !== place.buildingId ||
+        buildingChanged ||
         this.location.floorLevel !== place.floorLevel
       ) {
         this.location.selectBuilding(place.buildingId);
         this.location.selectFloor(place.floorLevel);
         this.applyLocation();
       }
+      if (buildingChanged && this.view === "3d") this.three?.reset();
       if (this.view === "campus") void this.setView("floor");
     }
     if (details) this.showDetails(place);
