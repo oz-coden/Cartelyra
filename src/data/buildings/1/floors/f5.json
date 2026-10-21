@@ -8,7 +8,8 @@
   "sourceId": "b1-f5-b1-f1",
   "notes": [
     "掲示案内図から室番号と通路の接続関係を読み取り、共通の描画ルールで簡略化した模式図。寸法・階高は未測定。",
-    "扉は通路側の代表点。階段の連続性・EVの停止階・開放時間・利用条件は現地未確認で、参考接続として登録。図面の上下左右は実方位とは未対応。"
+    "扉は通路側の代表点。階段の連続性・EVの停止階・開放時間・利用条件は現地未確認で、参考接続として登録。図面の上下左右は実方位とは未対応。",
+    "1-515は1-514上側の小区画。上側の細い区画は1-516-2、右上端は1-516-3。1-516-2は暫定的に1-516の通路側まで案内し、室内の接続は現地調査待ち。"
   ],
   "outline": [
     [-12, 70],
@@ -129,11 +130,11 @@
       "entrance": "room-516-1"
     },
     {
-      "id": "1-515",
-      "name": "1-515",
+      "id": "1-516-2",
+      "name": "1-516-2",
       "aliases": [
-        "1-515",
-        "515"
+        "1-516-2",
+        "516-2"
       ],
       "category": "unknown",
       "polygon": [
@@ -142,7 +143,8 @@
         [31, 12],
         [24, 12]
       ],
-      "description": "番号は仮読。1-516に囲まれた区画で、廊下への直接の接続は不明。入口未登録。"
+      "description": "1-516を進入元とする暫定推定。1-516の通路側まで案内し、室内は通り抜けない。実際の入口・室間の接続は現地調査で見直す。",
+      "approachRoomId": "1-516"
     },
     {
       "id": "1-516",
@@ -251,9 +253,12 @@
       "entrance": "room-513"
     },
     {
-      "id": "1-f5-unknown-left",
-      "name": "5F 番号未確認（左上）",
-      "aliases": [],
+      "id": "1-515",
+      "name": "1-515",
+      "aliases": [
+        "1-515",
+        "515"
+      ],
       "category": "unknown",
       "polygon": [
         [10, 28],
@@ -261,13 +266,16 @@
         [16, 34],
         [10, 34]
       ],
-      "description": "5F図面左上、1-514の上にある小区画。反射のため室番号・用途・入口は未確認。",
-      "mapLabel": "番号未確認"
+      "description": "図面左上、1-514の上側の小区画。番号は照合済み。通路側の代表点まで参考案内。扉位置・用途・利用条件は現地未確認。",
+      "entrance": "room-515"
     },
     {
-      "id": "1-f5-unknown-right",
-      "name": "5F 番号未確認（右上）",
-      "aliases": [],
+      "id": "1-516-3",
+      "name": "1-516-3",
+      "aliases": [
+        "1-516-3",
+        "516-3"
+      ],
       "category": "unknown",
       "polygon": [
         [90, 12],
@@ -275,8 +283,8 @@
         [100, 20],
         [90, 20]
       ],
-      "description": "5F図面右上、1-516の端の小区画。室番号は判読できず、入口も未登録。",
-      "mapLabel": "番号未確認"
+      "description": "図面右上、1-516の端の小区画。番号は照合済み。下側通路の代表点まで参考案内。扉位置・室間の接続・利用条件は現地未確認。",
+      "entrance": "room-516-3"
     },
     {
       "id": "1-511",
@@ -745,6 +753,30 @@
         "name": "男性用トイレ",
         "position": [25, 65.0],
         "type": "facility_entrance"
+      },
+      {
+        "id": "room-515",
+        "name": "1-515",
+        "position": [16, 31],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-515",
+        "name": "5F 通路",
+        "position": [20, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "room-516-3",
+        "name": "1-516-3",
+        "position": [95, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-516-3",
+        "name": "5F 通路",
+        "position": [95, 22],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -947,14 +979,6 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-3"
-      },
-      {
-        "to": "hall-28",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-0"
       },
       {
         "to": "hall-19",
@@ -1179,6 +1203,46 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-11"
+      },
+      {
+        "to": "hall-515",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "room-515"
+      },
+      {
+        "to": "hall-515",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-0"
+      },
+      {
+        "to": "hall-28",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-515"
+      },
+      {
+        "to": "hall-516-3",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "room-516-3"
+      },
+      {
+        "to": "hall-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-516-3"
       }
     ]
   }
