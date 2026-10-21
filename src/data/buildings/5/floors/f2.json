@@ -1,0 +1,456 @@
+{
+  "buildingId": "b5",
+  "id": "f2",
+  "level": 2,
+  "label": "2F",
+  "stackIndex": 1,
+  "elevation": 5,
+  "sourceId": "b5-f1-f4",
+  "notes": [
+    "掲示案内図を基にした模式図。座標・寸法・階高は表示用で、実寸ではない。",
+    "通路に面する側の代表点まで参考案内。両端の階段は隣接階へ仮接続し、正確な扉位置・階段の利用条件・屋外との接続は未確認。",
+    "室内図の上下左右は実方位とは未対応。教授室は個人名を含めず用途のみを表示。",
+    "図面右側の外階段に面した出入口から入館する階は2F。外階段を館内の1F〜2F接続に置き換えない。5-21はサポートデスクという用途までを表示。"
+  ],
+  "outline": [
+    [0, 0],
+    [34, 0],
+    [34, 8],
+    [21, 8],
+    [21, 16],
+    [28, 16],
+    [28, 24],
+    [40, 24],
+    [40, 124],
+    [17, 124],
+    [17, 132],
+    [10, 132],
+    [10, 124],
+    [13, 124],
+    [13, 27],
+    [8, 27],
+    [8, 10],
+    [0, 10]
+  ],
+  "voids": [],
+  "features": [
+    {
+      "id": "stairs-side",
+      "label": "外階段",
+      "type": "stairs",
+      "polygon": [
+        [28, 16],
+        [34, 16],
+        [34, 24],
+        [28, 24]
+      ],
+      "description": "屋外から2Fの出入口へ上がる外階段。館内の1F〜2F接続としては扱わない。屋外側の経路は未登録。"
+    },
+    {
+      "id": "unlabelled-top-left",
+      "label": "用途未確認",
+      "type": "service",
+      "polygon": [
+        [0.5, 1],
+        [2.5, 1],
+        [2.5, 7],
+        [0.5, 7]
+      ],
+      "description": "掲示図の無記名区画。用途・入口は未確認。"
+    },
+    {
+      "id": "wc",
+      "label": "女性用トイレ",
+      "type": "restroom",
+      "restroomType": "female",
+      "polygon": [
+        [17, 8],
+        [21, 8],
+        [21, 15],
+        [17, 15]
+      ],
+      "entrance": "wc-entrance",
+      "description": "掲示図のトイレ記号。入口は通路側の代表点で、利用条件は現地未確認。"
+    },
+    {
+      "id": "stairs-top",
+      "label": "階段1",
+      "type": "stairs",
+      "polygon": [
+        [8, 12],
+        [12, 12],
+        [12, 24],
+        [8, 24]
+      ],
+      "entrance": "stairs-top",
+      "description": "掲示図で同じ位置にある階段記号を隣接階へ仮接続。屋内外の区分・利用条件は現地未確認。"
+    },
+    {
+      "id": "stairs-bottom",
+      "label": "階段2",
+      "type": "stairs",
+      "polygon": [
+        [10, 124],
+        [17, 124],
+        [17, 132],
+        [10, 132]
+      ],
+      "entrance": "stairs-bottom",
+      "description": "掲示図で同じ位置にある階段記号を隣接階へ仮接続。屋内外の区分・利用条件は現地未確認。"
+    },
+    {
+      "id": "entrance-side",
+      "label": "外階段側出入口",
+      "type": "entrance",
+      "polygon": [
+        [26, 18],
+        [28, 18],
+        [28, 22],
+        [26, 22]
+      ],
+      "entrance": "entrance-side",
+      "aliases": [
+        "2F入口",
+        "外階段入口"
+      ],
+      "description": "2Fの図面右側、外階段に面した建物出入口。屋外から入る階は2F。正確な扉位置・屋外側の経路は未確認。"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "5-21",
+      "name": "5-21 サポートデスク",
+      "aliases": [
+        "5-21",
+        "21"
+      ],
+      "category": "office",
+      "polygon": [
+        [4, 1],
+        [34, 1],
+        [34, 8],
+        [4, 8]
+      ],
+      "entrance": "room-21",
+      "description": "掲示図の英語表記から用途を登録。組織名の正式表記は未確認。通路側の代表点までの参考案内。"
+    },
+    {
+      "id": "5-201",
+      "name": "5-201 機械工学科CAD製図室",
+      "aliases": [
+        "5-201",
+        "201"
+      ],
+      "category": "lab",
+      "polygon": [
+        [20, 24],
+        [40, 24],
+        [40, 77],
+        [20, 77]
+      ],
+      "entrance": "room-201",
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は未確認。"
+    },
+    {
+      "id": "5-202",
+      "name": "5-202 機械工学科演習室",
+      "aliases": [
+        "5-202",
+        "202"
+      ],
+      "category": "lecture",
+      "polygon": [
+        [20, 77],
+        [40, 77],
+        [40, 110],
+        [20, 110]
+      ],
+      "entrance": "room-202",
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は未確認。"
+    },
+    {
+      "id": "5-203",
+      "name": "5-203 教授室",
+      "aliases": [
+        "5-203",
+        "203"
+      ],
+      "category": "office",
+      "polygon": [
+        [20, 110],
+        [40, 110],
+        [40, 116],
+        [20, 116]
+      ],
+      "entrance": "room-203",
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は未確認。"
+    },
+    {
+      "id": "5-204",
+      "name": "5-204 教授室",
+      "aliases": [
+        "5-204",
+        "204"
+      ],
+      "category": "office",
+      "polygon": [
+        [20, 116],
+        [40, 116],
+        [40, 124],
+        [20, 124]
+      ],
+      "entrance": "room-204",
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は未確認。"
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {
+        "id": "room-21",
+        "name": "5-21 サポートデスク",
+        "position": [16, 8],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-8",
+        "name": "2F 通路",
+        "position": [16, 8],
+        "type": "corridor"
+      },
+      {
+        "id": "room-201",
+        "name": "5-201 機械工学科CAD製図室",
+        "position": [20, 50.5],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-50p5",
+        "name": "2F 通路",
+        "position": [16, 50.5],
+        "type": "corridor"
+      },
+      {
+        "id": "room-202",
+        "name": "5-202 機械工学科演習室",
+        "position": [20, 93.5],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-93p5",
+        "name": "2F 通路",
+        "position": [16, 93.5],
+        "type": "corridor"
+      },
+      {
+        "id": "room-203",
+        "name": "5-203 教授室",
+        "position": [20, 113.0],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-113p0",
+        "name": "2F 通路",
+        "position": [16, 113.0],
+        "type": "corridor"
+      },
+      {
+        "id": "room-204",
+        "name": "5-204 教授室",
+        "position": [20, 120.0],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-120p0",
+        "name": "2F 通路",
+        "position": [16, 120.0],
+        "type": "corridor"
+      },
+      {
+        "id": "wc-entrance",
+        "name": "女性用トイレ",
+        "position": [17, 11.5],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-11p5",
+        "name": "2F 通路",
+        "position": [16, 11.5],
+        "type": "corridor"
+      },
+      {
+        "id": "stairs-top",
+        "name": "階段1",
+        "position": [12, 18],
+        "type": "stairs"
+      },
+      {
+        "id": "hall-18",
+        "name": "2F 通路",
+        "position": [16, 18],
+        "type": "corridor"
+      },
+      {
+        "id": "stairs-bottom",
+        "name": "階段2",
+        "position": [16, 124],
+        "type": "stairs"
+      },
+      {
+        "id": "hall-122",
+        "name": "2F 通路",
+        "position": [16, 122],
+        "type": "corridor"
+      },
+      {
+        "id": "entrance-side",
+        "name": "外階段側出入口（2F）",
+        "position": [28, 20],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-20",
+        "name": "2F 出入口前通路",
+        "position": [16, 20],
+        "type": "corridor"
+      }
+    ],
+    "edges": [
+      {
+        "from": "hall-8",
+        "to": "room-21",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-50p5",
+        "to": "room-201",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-93p5",
+        "to": "room-202",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-113p0",
+        "to": "room-203",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-120p0",
+        "to": "room-204",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-11p5",
+        "to": "wc-entrance",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-18",
+        "to": "stairs-top",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-122",
+        "to": "stairs-bottom",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-8",
+        "to": "hall-11p5",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-11p5",
+        "to": "hall-18",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-50p5",
+        "to": "hall-93p5",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-93p5",
+        "to": "hall-113p0",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-113p0",
+        "to": "hall-120p0",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "hall-120p0",
+        "to": "hall-122",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-18",
+        "to": "hall-20"
+      },
+      {
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-20",
+        "to": "hall-50p5"
+      },
+      {
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-20",
+        "to": "entrance-side"
+      }
+    ]
+  }
+}

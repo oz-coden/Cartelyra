@@ -1,0 +1,68 @@
+{
+  "id": "b5",
+  "name": "5号館",
+  "code": "5",
+  "color": "#4b7fa6",
+  "origin": [
+    260,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+  ],
+  "connections": [
+    {
+      "from": "b5/f1/stairs-top",
+      "to": "b5/f2/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b5/f1/stairs-bottom",
+      "to": "b5/f2/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b5/f2/stairs-top",
+      "to": "b5/f3/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b5/f2/stairs-bottom",
+      "to": "b5/f3/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b5/f3/stairs-top",
+      "to": "b5/f4/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    },
+    {
+      "from": "b5/f3/stairs-bottom",
+      "to": "b5/f4/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false
+    }
+  ]
+}
