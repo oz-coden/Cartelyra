@@ -10,7 +10,10 @@ import {
   pointInPolygon,
   pointInInterior,
   segmentIsWalkable,
+  segmentPolygonClearance,
 } from "./geometry.js";
+
+import { OVERVIEW_ROAD_WIDTH, OVERVIEW_ROAD_GAP } from "./overview-layout.js";
 
 const finitePoint = (p: unknown): p is Point2 =>
   Array.isArray(p) && p.length === 2 && p.every(Number.isFinite);
@@ -455,8 +458,14 @@ export function validateSources(
     check(typeof road.id === "string" && !!road.id && typeof road.name === "string" && !!road.name,
       "Invalid context road identity");
     check(sourceIds.has(road.sourceId), `Unknown context road source ${road.id}`);
-    check(Array.isArray(road.points) && road.points.length >= 2 && road.points.every(finitePoint),
-      `Invalid context road points ${road.id}`);
+    const valid = Array.isArray(road.points) && road.points.length >= 2 && road.points.every(finitePoint);
+    check(valid, `Invalid context road points ${road.id}`);
+    if (valid) for (let i = 1; i < road.points.length; i++) for (const building of overview.buildings) {
+      if (!Array.isArray(building.polygon) || building.polygon.length < 3 || !building.polygon.every(finitePoint)) continue;
+      const gap = segmentPolygonClearance(road.points[i - 1], road.points[i], building.polygon);
+      check(gap + 1e-7 >= OVERVIEW_ROAD_WIDTH / 2 + OVERVIEW_ROAD_GAP,
+        `Context road overlaps building or lacks drawing clearance ${road.id} -> ${building.id} (segment ${i})`);
+    }
   }
   check(unique(overview.gates.map((g) => g.id)), "Duplicate gate IDs");
   check(

@@ -11,6 +11,7 @@ import type {
 import type { ScreenPoint } from "./SelectionPopover";
 import type { CampusOverview } from "../data/schema";
 import { displayFloors, displayPoint, nodeInScope, soloScope } from "../data/display.js";
+import { OVERVIEW_ROAD_WIDTH, overviewPoints, overviewBuildingLabel } from "../data/overview-layout.js";
 import { bounds, worldToLocal } from "../data/geometry.js";
 import {
   buildingCatalog,
@@ -128,7 +129,7 @@ export class FloorMap {
   }
   public resetView() {
     const polygons = this.overviewMode
-      ? this.overview.buildings.flatMap((b) => b.polygon)
+      ? overviewPoints(this.overview)
       : displayFloors(this.campus, this.scope).flatMap(({ building, floor }) =>
           floor.outline?.map(p => displayPoint(building, p, !!this.scope.group)) ?? []);
     if (polygons?.length) {
@@ -494,11 +495,14 @@ export class FloorMap {
       }));
       this.label("北", [x, y - 2], "map-label map-north-label");
     }
+    const roadLayer = element("g", { class: "map-context-roads", "aria-hidden": "true" });
     for (const road of this.overview.contextRoads ?? [])
-      this.svg.append(element("polyline", {
+      roadLayer.append(element("polyline", {
         points: points(road.points), class: "map-context-road", "data-road": road.id,
+        "stroke-width": String(OVERVIEW_ROAD_WIDTH),
         "aria-hidden": "true",
       }));
+    this.svg.append(roadLayer);
     const outdoorNodes = new Map(this.campus.navigation.nodes.map((n) => [n.id, n]));
     for (const edge of this.campus.navigation.edges) {
       const a = outdoorNodes.get(edge.from), b = outdoorNodes.get(edge.to);
@@ -518,20 +522,16 @@ export class FloorMap {
         class: `map-campus-building${supported ? " supported" : ""}`,
       });
       group.append(element("polygon", { points: points(building.polygon) }));
-      const b = bounds(building.polygon);
-      group.append(
-        element(
-          "text",
-          {
-            x: String(b.x),
-            y: String(b.z),
-            "text-anchor": "middle",
-            "dominant-baseline": "middle",
-            style: `font-size:${Math.min(2.1, b.w / (building.name.length * 0.65 + 1), b.d / 1.8)}px`,
-          },
-          building.name,
-        ),
-      );
+      const label = overviewBuildingLabel(building.polygon, building.name);
+      const [labelX, labelY] = label.position;
+      const text = element("text", {
+        x: String(labelX), y: String(labelY), "text-anchor": "middle", "dominant-baseline": "middle",
+        transform: `rotate(${label.angle} ${labelX} ${labelY})`, style: `font-size:${label.fontSize}px`,
+      });
+      label.lines.forEach((line, i) => text.append(element("tspan", {
+        x: String(labelX), y: String(labelY + (i - (label.lines.length - 1) / 2) * label.fontSize * 1.2),
+      }, line)));
+      group.append(text);
       this.interactive(
         group,
         `${building.name}（${supported ? "フロア登録済み" : "フロア未登録"}）`,

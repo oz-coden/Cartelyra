@@ -44,7 +44,7 @@ export function pointInInterior(point: Point2, polygon: Point2[]): boolean {
   return true;
 }
 
-function horizontalIntervals(polygon: Point2[], y: number): Array<[number, number]> {
+export function horizontalIntervals(polygon: Point2[], y: number): Array<[number, number]> {
   const xs: number[] = [];
   polygon.forEach((a, i) => {
     const b = polygon[(i + 1) % polygon.length];
@@ -140,4 +140,22 @@ export function segmentIsWalkable(a: Point2, b: Point2, outline: Point2[], obsta
     const p: Point2 = [a[0] + dx * t, a[1] + dz * t];
     return pointInPolygon(p, outline) && !obstacles.some(polygon => pointInInterior(p, polygon));
   });
+}
+
+/** Minimum gap between a segment and a filled polygon, including containment and collinear contact. */
+export function segmentPolygonClearance(a: Point2, b: Point2, polygon: Point2[]): number {
+  if (pointInPolygon(a, polygon) || pointInPolygon(b, polygon)) return 0;
+  const pointSegment = (p: Point2, a: Point2, b: Point2) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+    return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+  };
+  let distance = Infinity;
+  for (let i = 0; i < polygon.length; i++) {
+    const c = polygon[i], d = polygon[(i + 1) % polygon.length];
+    if (segmentIntersections(a, b, c, d).length) return 0;
+    distance = Math.min(distance, pointSegment(a, c, d), pointSegment(b, c, d),
+      pointSegment(c, a, b), pointSegment(d, a, b));
+  }
+  return distance;
 }
