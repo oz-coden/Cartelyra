@@ -244,8 +244,13 @@ export class SearchPanel {
       result.distanceUnit === "meters"
         ? `約 ${result.estimatedMinutes} 分`
         : "未測定";
-    document.getElementById("summary-vertical")!.textContent =
-      result.floorChanges ? `${result.floorChanges} フロア移動` : "階移動なし";
+    const movement = result.verticalMovements;
+    document.getElementById("summary-vertical")!.textContent = [
+      ...(result.floorChanges ? [`${result.floorChanges} フロア移動`] : []),
+      ...(movement?.stairs ? ["階段あり"] : []),
+      ...(movement?.elevators ? ["EVあり"] : []),
+      ...(movement?.unmeasured ? ["昇降量未確認"] : []),
+    ].join(" / ") || "階移動なし";
     const confidence = result.pathNodes.length === 1
         ? result.endpointNotes?.length
           ? "出発地と目的地の案内地点は同じです"

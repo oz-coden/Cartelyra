@@ -1,5 +1,7 @@
 import type {
   CampusData,
+  Building,
+  DisplayScope,
   Floor,
   NavNode,
   Point2,
@@ -8,6 +10,7 @@ import type {
 } from "../types/campus";
 import type { ScreenPoint } from "./SelectionPopover";
 import type { CampusOverview } from "../data/schema";
+import { displayFloors, displayPoint, nodeInScope, soloScope } from "../data/display.js";
 import { bounds, worldToLocal } from "../data/geometry.js";
 import {
   buildingCatalog,
@@ -34,7 +37,10 @@ const points = (polygon: Point2[]) => polygon.map((p) => p.join(",")).join(" ");
 export class FloorMap {
   private svg = element("svg", { role: "group", "aria-label": "平面図" });
   private floor?: Floor;
-  private building?: BuildingEntry;
+  private scope: DisplayScope = soloScope(undefined, undefined);
+  private layer: SVGElement = this.svg;
+  private focused: string | null = null;
+  private emphasis = element("g", { class: "map-emphasis", "pointer-events": "none", "aria-hidden": "true" });
   private places: Place[];
   private result: RouteResult | null = null;
   private selected: string | null = null;
@@ -58,10 +64,10 @@ export class FloorMap {
     container.append(this.svg);
     this.setupPanZoom();
   }
-  public setLocation(building: BuildingEntry | undefined, floor?: Floor) {
-    const changed =
-      this.building?.id !== building?.id || this.floor?.id !== floor?.id;
-    this.building = building;
+  public setLocation(building: BuildingEntry | undefined, floor?: Floor, scope = soloScope(building?.data, floor)) {
+    const changed = this.scope.key !== scope.key || this.scope.levelId !== scope.levelId ||
+      (!scope.group && this.floor?.id !== floor?.id);
+    this.scope = scope;
     this.floor = floor;
     if (changed) this.resetView();
     this.render();
@@ -82,6 +88,20 @@ export class FloorMap {
       g.classList.toggle("selected", selected);
       g.setAttribute("aria-pressed", String(selected));
     });
+    this.renderEmphasis();
+  }
+  private renderEmphasis() {
+    this.emphasis.replaceChildren();
+    for (const [id, className] of [[this.selected, "map-selection-outline"], [this.focused, "map-focus-outline"]]) {
+      const source = [...this.svg.querySelectorAll<SVGGElement>("[data-place]")].find(g => g.dataset.place === id);
+      const shape = source?.querySelector("polygon, circle, rect");
+      if (!shape) continue;
+      const group = element("g", { transform: source?.closest(".map-floor")?.getAttribute("transform") ?? "" });
+      const clone = shape.cloneNode(true) as SVGElement;
+      clone.setAttribute("class", className!);
+      group.append(clone); this.emphasis.append(group);
+    }
+    this.svg.append(this.emphasis);
   }
   public getPlaceAnchor(id: string): ScreenPoint | null {
     const place = this.places.find((p) => p.id === id);
@@ -90,16 +110,18 @@ export class FloorMap {
       (this.overviewMode
         ? place.scope !== "campus"
         : place.scope === "campus" ||
-          place.buildingId !== this.building?.id ||
-          place.floorLevel !== this.floor?.level)
+          !displayFloors(this.campus, this.scope).some(({ building, floor }) =>
+            place.buildingId === building.id && place.floorLevel === floor.level))
     ) return null;
+    const building = this.campus.buildings.find(b => b.id === place.buildingId);
+    const position = this.scope.group && building && !this.overviewMode ? displayPoint(building, place.position, true) : place.position;
     const rect = this.svg.getBoundingClientRect();
     const [x, y, w, h] = this.viewBox;
     const scale = Math.min(rect.width / w, rect.height / h);
     if (scale <= 0) return null;
     const point = {
-      x: rect.left + (rect.width - w * scale) / 2 + (place.position[0] - x) * scale,
-      y: rect.top + (rect.height - h * scale) / 2 + (place.position[1] - y) * scale,
+      x: rect.left + (rect.width - w * scale) / 2 + (position[0] - x) * scale,
+      y: rect.top + (rect.height - h * scale) / 2 + (position[1] - y) * scale,
     };
     return point.x >= rect.left && point.x <= rect.right &&
       point.y >= rect.top && point.y <= rect.bottom ? point : null;
@@ -107,7 +129,8 @@ export class FloorMap {
   public resetView() {
     const polygons = this.overviewMode
       ? this.overview.buildings.flatMap((b) => b.polygon)
-      : this.floor?.outline;
+      : displayFloors(this.campus, this.scope).flatMap(({ building, floor }) =>
+          floor.outline?.map(p => displayPoint(building, p, !!this.scope.group)) ?? []);
     if (polygons?.length) {
       const b = bounds(polygons);
       this.viewBox = [b.x - b.w / 2 - 8, b.z - b.d / 2 - 8, b.w + 16, b.d + 16];
@@ -196,7 +219,7 @@ export class FloorMap {
       .addEventListener("click", () => this.zoom(1.25));
   }
   private label(text: string, p: Point2, className = "map-label") {
-    this.svg.append(
+    this.layer.append(
       element(
         "text",
         {
@@ -215,6 +238,8 @@ export class FloorMap {
     group.setAttribute("tabindex", "0");
     group.setAttribute("aria-label", label);
     group.addEventListener("click", select);
+    group.addEventListener("focus", () => { this.focused = group.dataset.place ?? null; this.renderEmphasis(); });
+    group.addEventListener("blur", () => { this.focused = null; this.renderEmphasis(); });
     group.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
@@ -224,53 +249,70 @@ export class FloorMap {
   }
   private render() {
     this.svg.replaceChildren();
+    this.layer = this.svg;
+    this.focused = null;
     this.applyViewBox();
     if (this.overviewMode) {
       this.renderOverview();
       return;
     }
-    const name = this.building?.name ?? "建物";
-    document.getElementById("map-subtitle")!.textContent = "掲示図に基づく模式図";
-    document.getElementById("map-legend")!.textContent =
-      "青：部屋　緑：WC　水色：EV　黄：階段　紫：参考ルート";
-    document.getElementById("map-heading")!.textContent =
-      `${name}${this.floor ? ` / ${this.floor.label}` : ""}`;
-    this.svg.setAttribute(
-      "aria-label",
-      `${name} ${this.floor?.label ?? "フロア未登録"} 平面図（模式図）`,
-    );
-    document.getElementById("map-caption")!.textContent =
-      this.floor?.notes?.join(" ") ??
-      "この建物のフロア・設備・経路は未登録です。建物配置はキャンパス表示で確認できます。";
-    if (!this.floor) {
+    const name = this.scope.label;
+    const level = this.scope.group?.levels.find(l => l.id === this.scope.levelId)?.label ?? this.floor?.label;
+    const shown = displayFloors(this.campus, this.scope);
+    document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟の模式図" : "掲示図に基づく模式図";
+    document.getElementById("map-legend")!.textContent = "青：部屋　緑：WC　水色：EV　黄：階段　破線：連絡通路　紫：参考ルート";
+    document.getElementById("map-heading")!.textContent = `${name}${level ? ` / ${level}` : ""}`;
+    this.svg.setAttribute("aria-label", `${name} ${level ?? "フロア未登録"} 平面図（模式図）`);
+    document.getElementById("map-caption")!.textContent = shown.length
+      ? [...(this.scope.group?.notes ?? []), ...shown.flatMap(({ floor }) => floor.notes ?? [])].join(" ")
+      : "この建物のフロア・設備・経路は未登録です。建物配置はキャンパス表示で確認できます。";
+    if (!shown.length) {
       this.label("フロア未登録", [50, 35], "map-label empty-label");
       this.label("資料の確認後に順次追加予定", [50, 45]);
       return;
     }
-    this.svg.append(
+    for (const { building, floor } of shown) {
+      const angle = building.rotation ?? 0, c = Math.cos(angle), sn = Math.sin(angle);
+      const group = element("g", { class: "map-floor", "data-building": building.id,
+        ...(this.scope.group ? { transform: `matrix(${c} ${-sn} ${sn} ${c} ${building.origin[0]} ${building.origin[2]})` } : {}) });
+      this.svg.append(group); this.layer = group;
+      this.renderFloor(building, floor);
+      if (this.scope.group) {
+        const b = bounds(floor.outline!);
+        this.label(`${building.name} ${floor.label}`, [b.x, b.z - b.d / 2 - 3], "map-label map-building-label");
+      }
+    }
+    this.layer = this.svg;
+    this.renderConnections();
+    this.svg.append(this.overlay);
+    this.renderRoute();
+    this.selectPlace(this.selected);
+  }
+  private renderFloor(building: Building, floor: Floor) {
+    this.layer.append(
       element("polygon", {
-        points: points(this.floor.outline!),
+        points: points(floor.outline!),
         class: "map-slab",
       }),
     );
-    for (const hole of this.floor.voids ?? []) {
-      this.svg.append(
+    for (const hole of floor.voids ?? []) {
+      this.layer.append(
         element("polygon", { points: points(hole), class: "map-void" }),
       );
       const b = bounds(hole);
       this.label("吹抜", [b.x, b.z], "map-label map-void-label");
     }
-    for (const feature of this.floor.features ?? []) {
+    for (const feature of floor.features ?? []) {
       if (
         this.places.some(
           (p) =>
-            p.buildingId === this.building?.id &&
-            p.floorLevel === this.floor!.level &&
+            p.buildingId === building.id &&
+            p.floorLevel === floor.level &&
             p.featureId === feature.id,
         )
       )
         continue;
-      this.svg.append(
+      this.layer.append(
         element("polygon", {
           points: points(feature.polygon),
           class: "map-feature",
@@ -281,8 +323,8 @@ export class FloorMap {
     }
     for (const place of this.places.filter(
       (p) =>
-        p.buildingId === this.building?.id &&
-        p.floorLevel === this.floor!.level,
+        p.buildingId === building.id &&
+        p.floorLevel === floor.level,
     )) {
       const group = element("g", {
         class:
@@ -307,7 +349,7 @@ export class FloorMap {
           }),
         );
       const room = place.kind === "room"
-        ? this.floor.rooms.find((r) => r.id === place.roomId)
+        ? floor.rooms.find((r) => r.id === place.roomId)
         : undefined;
       const label =
         place.kind === "room"
@@ -347,13 +389,21 @@ export class FloorMap {
         `${place.name} ${place.buildingName} ${place.floorLabel}${place.nodeId ? "" : "（経路未登録）"}`,
         () => this.onPlaceSelect?.(place),
       );
-      this.svg.append(group);
+      this.layer.append(group);
     }
-    this.svg.append(this.overlay);
-    this.renderRoute();
-    this.selectPlace(this.selected);
+  }
+  private renderConnections() {
+    if (!this.scope.group) return;
+    const nodes = new Map(this.campus.navigation.nodes.map(n => [n.id, n]));
+    for (const e of this.campus.navigation.edges) {
+      const a = nodes.get(e.from)!, b = nodes.get(e.to)!;
+      if (e.blocked || !a.buildingId || !b.buildingId || a.buildingId === b.buildingId ||
+        !nodeInScope(this.campus, this.scope, a) || !nodeInScope(this.campus, this.scope, b)) continue;
+      this.svg.append(element("polyline", { points: points([this.local(a), this.local(b)]), class: "map-connection", "pointer-events": "none" }));
+    }
   }
   private local(node: NavNode): Point2 {
+    if (this.scope.group) return [node.position[0], node.position[2]];
     return worldToLocal(
       this.campus.buildings.find((b) => b.id === node.buildingId)!,
       node.position,
@@ -384,7 +434,7 @@ export class FloorMap {
     if (!this.floor) return;
     const nodes = this.result.pathNodes,
       matches = (n: NavNode) =>
-        n.floor === this.floor!.level && n.buildingId === this.building?.id;
+        nodeInScope(this.campus, this.scope, n);
     for (let i = 1; i < nodes.length; i++)
       if (matches(nodes[i - 1]) && matches(nodes[i]))
         this.overlay.append(
@@ -394,12 +444,8 @@ export class FloorMap {
           }),
         );
     for (const node of nodes.filter(
-      (n) =>
-        matches(n) &&
-        (n === nodes[0] ||
-          n === nodes.at(-1) ||
-          n.type === "stairs" ||
-          n.type === "elevator"),
+      (n, i) => matches(n) &&
+        (i === 0 || i === nodes.length - 1 || !matches(nodes[i - 1]) || !matches(nodes[i + 1])),
     )) {
       const p = this.local(node);
       this.overlay.append(

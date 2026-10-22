@@ -393,7 +393,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.820836,
+        "cover": "indoor"
       },
       {
         "from": "n42",
@@ -401,7 +403,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.938098,
+        "cover": "indoor"
       },
       {
         "from": "n50",
@@ -409,7 +413,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.641672,
+        "cover": "indoor"
       },
       {
         "from": "n64",
@@ -417,7 +423,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.289885,
+        "cover": "indoor"
       },
       {
         "from": "n75",
@@ -425,7 +433,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 2.579771,
+        "cover": "indoor"
       },
       {
         "from": "sw",
@@ -433,7 +443,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.289885,
+        "cover": "indoor"
       },
       {
         "from": "west-south",
@@ -441,7 +453,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.117262,
+        "cover": "indoor"
       },
       {
         "from": "s36",
@@ -449,7 +463,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 2.110721,
+        "cover": "indoor"
       },
       {
         "from": "s54",
@@ -457,7 +473,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.758935,
+        "cover": "indoor"
       },
       {
         "from": "s69",
@@ -465,7 +483,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.993459,
+        "cover": "indoor"
       },
       {
         "from": "s86",
@@ -473,7 +493,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 1.289885,
+        "cover": "indoor"
       },
       {
         "from": "nw",
@@ -481,7 +503,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 2.345246,
+        "cover": "indoor"
       },
       {
         "from": "west",
@@ -489,7 +513,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 2.462508,
+        "cover": "indoor"
       },
       {
         "from": "stair1",
@@ -497,7 +523,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.741632,
+        "cover": "indoor"
       },
       {
         "from": "stair2",
@@ -505,7 +533,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.703574,
+        "cover": "indoor"
       },
       {
         "from": "elevator",
@@ -513,7 +543,9 @@
         "type": "walk",
         "verification": "diagram",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.82917,
+        "cover": "indoor"
       },
       {
         "from": "room-101",
@@ -521,7 +553,9 @@
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.117262,
+        "cover": "indoor"
       },
       {
         "from": "room-102",
@@ -529,7 +563,9 @@
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.117262,
+        "cover": "indoor"
       },
       {
         "from": "room-103",
@@ -537,7 +573,9 @@
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
-        "isAccessible": true
+        "isAccessible": true,
+        "routingCost": 0.351787,
+        "cover": "indoor"
       },
       {
         "to": "wc-w-hall",
@@ -545,7 +583,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-w-entrance"
+        "from": "wc-w-entrance",
+        "routingCost": 0.351787,
+        "cover": "indoor"
       },
       {
         "to": "wc-m-hall",
@@ -553,7 +593,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-m-entrance"
+        "from": "wc-m-entrance",
+        "routingCost": 0.351787,
+        "cover": "indoor"
       },
       {
         "to": "wc-a-hall",
@@ -561,7 +603,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-a-entrance"
+        "from": "wc-a-entrance",
+        "routingCost": 0.351787,
+        "cover": "indoor"
       },
       {
         "to": "wc-m-hall",
@@ -569,7 +613,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-w-hall"
+        "from": "wc-w-hall",
+        "routingCost": 1.231254,
+        "cover": "indoor"
       },
       {
         "to": "wc-a-hall",
@@ -577,7 +623,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-m-hall"
+        "from": "wc-m-hall",
+        "routingCost": 0.820836,
+        "cover": "indoor"
       },
       {
         "to": "nw",
@@ -585,7 +633,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "wc-a-hall"
+        "from": "wc-a-hall",
+        "routingCost": 1.393647,
+        "cover": "indoor"
       },
       {
         "to": "se",
@@ -593,7 +643,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "aed-approach"
+        "from": "aed-approach",
+        "routingCost": 0.597923,
+        "cover": "indoor"
       },
       {
         "to": "entrance-south-hall",
@@ -601,7 +653,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "ne"
+        "from": "ne",
+        "routingCost": 2.345246,
+        "cover": "indoor"
       },
       {
         "to": "se",
@@ -609,7 +663,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "entrance-south-hall"
+        "from": "entrance-south-hall",
+        "routingCost": 2.462508,
+        "cover": "indoor"
       },
       {
         "to": "west",
@@ -617,7 +673,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "entrance-north"
+        "from": "entrance-north",
+        "routingCost": 0.938098,
+        "cover": "indoor"
       },
       {
         "to": "entrance-south-hall",
@@ -625,7 +683,9 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "entrance-south"
+        "from": "entrance-south",
+        "routingCost": 0.351787,
+        "cover": "indoor"
       }
     ]
   }

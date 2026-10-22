@@ -474,14 +474,30 @@ body[data-view="3d"] .three-only {
 .map-room-unlinked {
   stroke-dasharray: 1 1;
 }
-.map-room.selected polygon,
-.map-place.selected polygon,
-.map-place.selected circle,
-.map-room:focus polygon,
-.map-place:focus polygon {
+/* Shape copies are drawn after rooms and routes, so neighboring fills cannot hide the outline. */
+.map-selection-outline,
+.map-focus-outline {
+  fill: none;
   stroke: #f09419;
-  stroke-width: 1.1;
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-dasharray: none;
+  vector-effect: non-scaling-stroke;
 }
+.map-focus-outline { stroke-dasharray: 5 3; }
+#map-canvas svg [tabindex]:focus { outline: none; }
+#map-canvas svg .map-campus-building:focus-visible polygon {
+  stroke: #f09419;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+.map-connection {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 0.7;
+  stroke-dasharray: 2 1;
+}
+.map-building-label { fill: var(--text); font-weight: 700; }
 .map-outdoor-path {
   fill: none;
   stroke: var(--muted);

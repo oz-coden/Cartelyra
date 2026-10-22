@@ -31,6 +31,9 @@
           <label for="building-select">建物</label
           ><select id="building-select"></select>
           <p id="building-status" class="muted" aria-live="polite"></p>
+          <label id="group-display-option" class="hidden"><input id="show-connected" type="checkbox" checked />
+            連絡棟をまとめて表示</label>
+          <p id="group-status" class="muted" aria-live="polite"></p>
           <div id="floor-control">
             <div class="control-header">
               <h2>フロア</h2>
@@ -146,7 +149,7 @@
                 data-filter="shortest"
                 aria-pressed="true"
               >
-                最短</button
+                標準</button
               ><button
                 class="filter-btn"
                 data-filter="accessible"
@@ -168,6 +171,7 @@
               </button>
             </div>
           </fieldset>
+          <p class="muted route-policy-note">昇降の少なさを優先する参考案内です。実際の最短距離を保証しません。屋内優先では屋根付き通路も考慮します。</p>
           <label class="route-preview-option"
             ><input type="checkbox" id="allow-inferred" checked />
             未確認の接続を含む参考ルート</label

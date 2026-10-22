@@ -6,7 +6,8 @@ import { AStarPathfinder } from "../pathfinding/AStar.js";
 
 export interface AuditFinding {
   code: "room-contained" | "room-overlap" | "room-coincident" | "unjoined-junction" |
-    "floor-components" | "route-unreachable" | "route-floor-detour";
+    "floor-components" | "route-unreachable" | "route-floor-detour" |
+    "view-group-pending" | "view-group-disconnected" | "view-level-height" | "unmeasured-vertical";
   buildingId: string;
   floorId?: string;
   roomIds?: string[];
@@ -97,16 +98,17 @@ function permitted(edge: NavEdge, mode: RouteFilterType) {
   return !edge.blocked && (mode !== "accessible" || edge.isAccessible && edge.type !== "stairs");
 }
 
-/** Independent integer-cost reference: minimum registered floor changes, without drawing lengths. */
+/** Independent integer-cost reference: known floor changes plus unmeasured vertical links. */
 export function minimumFloorChanges(data: CampusData, start: string, mode: RouteFilterType = "shortest") {
   const indices = new Map<string, number>(data.buildings.flatMap(b => b.floors.map(f => [`${b.id}/${f.level}`, f.stackIndex ?? f.level] as const)));
   const nodes = new Map(data.navigation.nodes.map(n => [n.id, n]));
   const adjacent = new Map([...nodes.keys()].map(id => [id, [] as Array<[string, number]>]));
   for (const edge of data.navigation.edges.filter(e => permitted(e, mode))) {
     const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
-    const cost = a.buildingId && a.buildingId === b.buildingId
+    const cost = edge.floorChanges ?? (a.buildingId && a.buildingId === b.buildingId
       ? Math.abs((indices.get(`${a.buildingId}/${a.floor}`) ?? a.floor ?? 0) -
-        (indices.get(`${b.buildingId}/${b.floor}`) ?? b.floor ?? 0)) : 0;
+        (indices.get(`${b.buildingId}/${b.floor}`) ?? b.floor ?? 0)) :
+      edge.type === "stairs" || edge.type === "elevator" ? 1 : 0);
     adjacent.get(a.id)!.push([b.id, cost]);
     if (edge.bidirectional !== false) adjacent.get(b.id)!.push([a.id, cost]);
   }
@@ -134,7 +136,7 @@ export function auditRoutes(data: CampusData, mode: RouteFilterType = "shortest"
         checkedPairs++;
         if (!route) findings.push({ code: "route-unreachable", buildingId: building.id,
           roomIds: [a.id, b.id], detail: `No registered route in ${mode} mode.` });
-        else if (route.floorChanges > minimum.get(b.nodeId!)!) findings.push({
+        else if (route.floorChanges + (route.verticalMovements?.unmeasured ?? 0) > minimum.get(b.nodeId!)!) findings.push({
           code: "route-floor-detour", buildingId: building.id, roomIds: [a.id, b.id],
           nodeIds: route.pathNodes.map(n => n.id),
           detail: `${route.floorChanges} floor changes; a route with ${minimum.get(b.nodeId!)} is registered (${mode}).`,
@@ -143,4 +145,45 @@ export function auditRoutes(data: CampusData, mode: RouteFilterType = "shortest"
     }
   }
   return { findings, checkedPairs, mode };
+}
+
+/** Declared groups and unknown heights remain visible without inventing bridges or floor numbers. */
+export function auditConnections(data: CampusData): AuditFinding[] {
+  const findings: AuditFinding[] = [];
+  const nodes = new Map(data.navigation.nodes.map(n => [n.id, n]));
+  for (const edge of data.navigation.edges) {
+    const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
+    if ((edge.type === "stairs" || edge.type === "elevator") && edge.floorChanges === undefined &&
+      (!a.buildingId || a.buildingId !== b.buildingId))
+      findings.push({ code: "unmeasured-vertical", buildingId: a.buildingId ?? b.buildingId ?? "campus",
+        nodeIds: [a.id, b.id], detail: "A vertical connection has no confirmed floor-change count; guidance identifies the facility without claiming level travel." });
+  }
+  for (const group of data.viewGroups ?? []) {
+    const context = { buildingId: group.buildingIds[0] };
+    if (group.status === "pending") {
+      findings.push({ ...context, code: "view-group-pending", detail: `${group.name}: floor plans and connection-level mappings remain pending; membership does not create routes.` });
+      continue;
+    }
+    const adjacent = new Map(group.buildingIds.map(id => [id, new Set<string>()]));
+    for (const e of data.navigation.edges) {
+      const a = nodes.get(e.from)!.buildingId, b = nodes.get(e.to)!.buildingId;
+      if (!e.blocked && a && b && adjacent.has(a) && adjacent.has(b) && (e.cover === "indoor" || e.cover === "covered" || e.isIndoor)) {
+        adjacent.get(a)!.add(b); adjacent.get(b)!.add(a);
+      }
+    }
+    const seen = new Set([group.buildingIds[0]]), queue = [...seen];
+    for (let i = 0; i < queue.length; i++) for (const next of adjacent.get(queue[i])!)
+      if (!seen.has(next)) { seen.add(next); queue.push(next); }
+    if (seen.size !== group.buildingIds.length) findings.push({ ...context, code: "view-group-disconnected",
+      detail: `${group.name}: active indoor/covered connections do not join all members; confirm missing connections or closures.` });
+    for (const level of group.levels) {
+      const heights = level.floors.map(ref => {
+        const b = data.buildings.find(b => b.id === ref.buildingId)!;
+        return b.origin[1] + b.floors.find(f => f.id === ref.floorId)!.elevation;
+      });
+      if (Math.max(...heights) - Math.min(...heights) > 1e-6) findings.push({ ...context, code: "view-level-height",
+        detail: `${group.name}/${level.label}: mapped floors have different drawing elevations; confirm alignment or an intentional ramp/step.` });
+    }
+  }
+  return findings;
 }

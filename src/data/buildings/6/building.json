@@ -22,7 +22,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f1/stairs-left"
+      "from": "b6/f1/stairs-left",
+      "routingCost": 0.371145,
+      "cover": "indoor"
     },
     {
       "to": "b6/f3/stairs-left",
@@ -30,7 +32,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f2/stairs-left"
+      "from": "b6/f2/stairs-left",
+      "routingCost": 0.371145,
+      "cover": "indoor"
     },
     {
       "to": "b6/f3/stairs-right",
@@ -38,7 +42,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f2/stairs-right"
+      "from": "b6/f2/stairs-right",
+      "routingCost": 2.111292,
+      "cover": "indoor"
     },
     {
       "to": "b6/f4/stairs-left",
@@ -46,7 +52,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f3/stairs-left"
+      "from": "b6/f3/stairs-left",
+      "routingCost": 0.371145,
+      "cover": "indoor"
     },
     {
       "to": "b6/f4/stairs-right",
@@ -54,7 +62,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f3/stairs-right"
+      "from": "b6/f3/stairs-right",
+      "routingCost": 0.651358,
+      "cover": "indoor"
     },
     {
       "to": "b6/f4/stairs-courtyard",
@@ -62,7 +72,9 @@
       "verification": "inferred",
       "isIndoor": true,
       "isAccessible": false,
-      "from": "b6/f3/stairs-courtyard"
+      "from": "b6/f3/stairs-courtyard",
+      "routingCost": 0.475298,
+      "cover": "indoor"
     }
   ]
 }

@@ -134,6 +134,7 @@ test("campus connections compile and route between buildings; steps retain build
       from: "b3/f1/nw",
       to: "b99/f1/nw",
       type: "outdoor",
+      routingCost: 20,
       verification: "inferred",
       isIndoor: false,
       isAccessible: true,

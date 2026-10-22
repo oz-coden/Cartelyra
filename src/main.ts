@@ -2,13 +2,14 @@ import "./style.css";
 import { campusData } from "./data/load";
 import overviewJson from "./data/overview.json";
 import type { CampusOverview } from "./data/schema";
+import { displayFloors } from "./data/display";
 import {
   buildingCatalog,
   placeContext,
   placeIndex,
   placeRouteNotice,
 } from "./data/places";
-import type { Place, RouteFilterType, RouteResult } from "./types/campus";
+import type { CampusData, Place, RouteFilterType, RouteResult } from "./types/campus";
 import { AStarPathfinder } from "./pathfinding/AStar";
 import { ThemeManager } from "./ui/ThemeManager";
 import { SearchPanel } from "./ui/SearchPanel";
@@ -23,7 +24,7 @@ import type { ThreeView } from "./scene/ThreeView";
 
 type View = "campus" | "floor" | "3d";
 type ThreeFactory = (
-  data: typeof campusData,
+  data: CampusData,
   container: HTMLElement,
 ) => Promise<ThreeView>;
 const createThreeView: ThreeFactory = async (data, container) => {
@@ -35,40 +36,40 @@ export class UniviewApp {
   private loading3D?: Promise<ThreeView>;
   private viewRequest = 0;
   private theme = new ThemeManager();
-  private places = placeIndex(campusData, overviewJson as CampusOverview);
+  private places: Place[];
   private selection = new SelectionState();
   private display3D = new ThreeDisplayState();
-  private location = new LocationState(
-    buildingCatalog(campusData, overviewJson as CampusOverview),
-  );
-  private search = new SearchPanel(this.places, this.selection);
+  private location: LocationState;
+  private search: SearchPanel;
   private floors = new FloorControl(this.display3D);
   private guide = new StepGuide();
-  private pathfinder = new AStarPathfinder(campusData);
-  private map = new FloorMap(
-    document.getElementById("map-canvas")!,
-    campusData,
-    overviewJson as CampusOverview,
-  );
-  private popover = new SelectionPopover(
-    document.getElementById("room-tooltip")!,
-    document.getElementById("map-stage")!,
-    () => document.getElementById(
-      this.view === "3d" ? "canvas-container" : "map-canvas",
-    )!,
-    () => {
-      const id = this.selection.selected?.id;
-      if (!id) return null;
-      return this.view === "3d"
-        ? this.three?.getPlaceAnchor(id) ?? null
-        : this.map.getPlaceAnchor(id);
-    },
-  );
+  private pathfinder: AStarPathfinder;
+  private map: FloorMap;
+  private popover: SelectionPopover;
   private view: View = "floor";
   private category = "all";
   private result: RouteResult | null = null;
   private toastTimer?: number;
-  constructor(private threeFactory: ThreeFactory = createThreeView) {
+  constructor(private threeFactory: ThreeFactory = createThreeView,
+    private data: CampusData = campusData,
+    overview: CampusOverview = overviewJson as CampusOverview) {
+    this.places = placeIndex(data, overview);
+    this.location = new LocationState(buildingCatalog(data, overview), data.viewGroups);
+    this.search = new SearchPanel(this.places, this.selection);
+    this.pathfinder = new AStarPathfinder(data);
+    this.map = new FloorMap(document.getElementById("map-canvas")!, data, overview);
+    this.popover = new SelectionPopover(document.getElementById("room-tooltip")!, document.getElementById("map-stage")!,
+      () => document.getElementById(this.view === "3d" ? "canvas-container" : "map-canvas")!,
+      () => {
+        const id = this.selection.selected?.id;
+        return !id ? null : this.view === "3d" ? this.three?.getPlaceAnchor(id) ?? null : this.map.getPlaceAnchor(id);
+      });
+    document.getElementById("show-connected")!.addEventListener("change", e => {
+      this.location.grouped = (e.target as HTMLInputElement).checked;
+      this.applyLocation();
+      if (this.view === "3d") this.three?.reset();
+    });
+    this.floors.onGroupLevelChange = id => { this.location.selectGroupLevel(id); this.applyLocation(); };
     const select = document.getElementById(
       "building-select",
     ) as HTMLSelectElement;
@@ -198,8 +199,14 @@ export class UniviewApp {
       ?.floors.length
       ? `${building.data.floors.length} フロア登録済み / 出入口・利用条件は現地未確認`
       : "配置のみ登録 / フロア・設備・経路は準備中";
-    this.floors.render(building?.data?.floors ?? [], this.location.floorLevel);
-    this.map.setLocation(building, floor);
+    const group = this.location.declaredGroup;
+    document.getElementById("group-display-option")!.classList.toggle("hidden", !group || group.status !== "ready");
+    (document.getElementById("show-connected") as HTMLInputElement).checked = this.location.grouped;
+    document.getElementById("group-status")!.textContent = group
+      ? group.status === "pending" ? `${group.name}：連絡棟の館内図・接続階は準備中` : `${group.name} / ${this.location.group ? "連絡棟を表示" : "単棟表示"}` : "";
+    if (this.location.group) this.floors.renderGroup(this.location.group, this.location.groupLevel?.id);
+    else this.floors.render(building?.data?.floors ?? [], this.location.floorLevel);
+    this.map.setLocation(building, floor, this.location.scope);
     this.search.setContext(building?.id, floor?.level);
     this.hideDetails();
     this.renderFacilities();
@@ -217,15 +224,15 @@ export class UniviewApp {
       );
     const list = document.getElementById("facility-list")!;
     list.replaceChildren();
+    const shown = displayFloors(this.data, this.location.scope);
     const places = this.places.filter(
       (p) =>
-        p.buildingId === this.location.buildingId &&
-        p.floorLevel === this.location.floorLevel &&
+        shown.some(({ building, floor }) => building.id === p.buildingId && floor.level === p.floorLevel) &&
         (this.category === "all" || p.kind === this.category),
     );
     for (const place of places) {
       const button = document.createElement("button");
-      button.textContent = place.name;
+      button.textContent = this.location.group ? `${place.buildingName} ${place.name}` : place.name;
       const state = document.createElement("small");
       state.textContent = place.approachRoomId
         ? "手前の部屋まで案内"
@@ -248,6 +255,7 @@ export class UniviewApp {
       this.location.buildingId,
       this.location.floorLevel,
       this.display3D.showAll,
+      this.location.scope,
     );
     this.three.explode.setExplodeRatio(this.display3D.gapRatio);
   }
@@ -255,7 +263,7 @@ export class UniviewApp {
     if (this.three) return Promise.resolve(this.three);
     if (!this.loading3D)
       this.loading3D = this.threeFactory(
-        campusData,
+        this.data,
         document.getElementById("canvas-container")!,
       )
         .then((view) => {
@@ -383,6 +391,7 @@ export class UniviewApp {
     if (place.scope === "campus") {
       if (this.view !== "campus") void this.setView("campus");
     } else {
+      const previousScope = this.location.scope.key;
       const buildingChanged = this.location.buildingId !== place.buildingId;
       if (
         buildingChanged ||
@@ -392,7 +401,7 @@ export class UniviewApp {
         this.location.selectFloor(place.floorLevel);
         this.applyLocation();
       }
-      if (buildingChanged && this.view === "3d") this.three?.reset();
+      if (previousScope !== this.location.scope.key && this.view === "3d") this.three?.reset();
       if (this.view === "campus") void this.setView("floor");
     }
     if (details) this.showDetails(place);

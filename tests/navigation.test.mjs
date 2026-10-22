@@ -160,7 +160,7 @@ test('all 34 routable rooms connect in all four modes; costs agree with independ
       if (!ids.has(edge.from) || !ids.has(edge.to)) continue;
       if (edge.blocked || (mode==='accessible' && (!edge.isAccessible || edge.type==='stairs'))) continue;
       const a=ids.get(edge.from),b=ids.get(edge.to);
-      let cost=edge.distance ?? Math.hypot(...nodes[a].position.map((v,i) => v-nodes[b].position[i]));
+      let cost=edge.routingCost;
       if (mode==='indoor' && !edge.isIndoor) cost*=4.5;
       if (mode==='stairs' && edge.type==='elevator') cost+=35;
       matrix[a][b]=Math.min(matrix[a][b],cost);
@@ -174,7 +174,7 @@ test('all 34 routable rooms connect in all four modes; costs agree with independ
       for(let i=1;i<result.pathNodes.length;i++){
         const x=result.pathNodes[i-1],y=result.pathNodes[i];
         const edge=campus.navigation.edges.find(e => (e.from===x.id&&e.to===y.id)||(e.bidirectional!==false&&e.from===y.id&&e.to===x.id));
-        let distance=edge.distance??Math.hypot(...x.position.map((v,i)=>v-y.position[i]));
+        let distance=edge.routingCost;
         if(mode==='indoor'&&!edge.isIndoor)distance*=4.5;
         if(mode==='stairs'&&edge.type==='elevator')distance+=35;
         cost+=distance;

@@ -28,6 +28,22 @@ export function validateSources(
   const check = (condition: unknown, message: string) => {
     if (!condition) errors.push(message);
   };
+  const metadata = (edge: { routingCost?: number; cover?: string; floorChanges?: number; isIndoor?: boolean;
+    blocked?: boolean; bidirectional?: boolean }, context: string) => {
+    if (manifest.coordinateUnit === "schematic")
+      check(Number.isFinite(edge.routingCost) && edge.routingCost! >= 0, `Missing/invalid reference routing cost ${context}`);
+    else if (edge.routingCost !== undefined)
+      check(Number.isFinite(edge.routingCost) && edge.routingCost >= 0, `Invalid reference routing cost ${context}`);
+    if (edge.cover !== undefined) {
+      check(["indoor", "covered", "open", "unknown"].includes(edge.cover), `Invalid weather cover ${context}`);
+      if (edge.isIndoor !== undefined)
+        check(edge.isIndoor === (edge.cover === "indoor"), `Weather cover conflicts with indoor flag ${context}`);
+    }
+    if (edge.floorChanges !== undefined)
+      check(Number.isInteger(edge.floorChanges) && edge.floorChanges >= 0, `Invalid explicit floor changes ${context}`);
+    for (const flag of ["blocked", "bidirectional"] as const)
+      check(edge[flag] === undefined || typeof edge[flag] === "boolean", `Invalid ${flag} flag ${context}`);
+  };
   const polygon = (p: Point2[], context: string): boolean => {
     const valid = Array.isArray(p) && p.length >= 3 && p.every(finitePoint);
     check(
@@ -246,6 +262,7 @@ export function validateSources(
     const seen = new Set<string>(),
       adjacent = new Map<string, Set<string>>();
     for (const edge of qualifiedEdges) {
+      metadata(edge, `${edge.from} -> ${edge.to}`);
       const key =
         edge.bidirectional === false
           ? `${edge.from}>${edge.to}`
@@ -284,6 +301,8 @@ export function validateSources(
           `Invalid edge distance ${edge.from}`,
         );
       if (!a || !b) continue;
+      if (edge.floorChanges !== undefined)
+        check(edge.floorChanges === Math.abs(a.floor.stackIndex - b.floor.stackIndex), `Explicit floor changes conflict with floor order ${edge.from}`);
       for (const [from, to] of [
         [edge.from, edge.to],
         [edge.to, edge.from],
@@ -351,6 +370,7 @@ export function validateSources(
   }
   const campusEdges = new Set<string>();
   for (const edge of manifest.connections ?? []) {
+    metadata(edge, `${edge.from} -> ${edge.to}`);
     const a = allNodes.get(edge.from),
       b = allNodes.get(edge.to);
     check(a && b, `Missing campus edge endpoint ${edge.from} -> ${edge.to}`);
@@ -443,6 +463,7 @@ export function validateSources(
     }
     const seen = new Set<string>(), adjacent = new Map<string, Set<string>>();
     for (const edge of outdoor.edges) {
+      metadata(edge, `outdoor/${edge.from} -> ${edge.to}`);
       const a = nodes.get(edge.from), b = nodes.get(edge.to);
       check(a && b, `Missing outdoor edge endpoint ${edge.from} -> ${edge.to}`);
       check(edge.from !== edge.to, `Outdoor self edge ${edge.from}`);
@@ -466,6 +487,7 @@ export function validateSources(
     }
     const linked = new Set<string>();
     for (const link of outdoor.links) {
+      metadata(link, `entrance/${link.from} -> ${link.to}`);
       const outside = nodes.get(link.from), inside = allNodes.get(link.to);
       check(outside && inside, `Missing outdoor entrance endpoint ${link.from} -> ${link.to}`);
       check(!linked.has(link.to), `Duplicate outdoor entrance binding ${link.to}`);
@@ -484,6 +506,34 @@ export function validateSources(
           if (!reached.has(next)) { reached.add(next); queue.push(next); }
       for (const node of outdoor.nodes)
         check(reached.has(node.id), `Disconnected outdoor node ${node.id}`);
+    }
+  }
+  const groups = manifest.viewGroups ?? [];
+  check(unique(groups.map(g => g.id)), "Duplicate view group IDs");
+  check(unique(groups.flatMap(g => g.buildingIds)), "Building belongs to multiple view groups");
+  for (const group of groups) {
+    const ctx = `view group/${group.id}`;
+    check(typeof group.id === "string" && !!group.id && typeof group.name === "string" && !!group.name, `Invalid ${ctx} identity`);
+    check(["pending", "ready"].includes(group.status), `Invalid ${ctx} status`);
+    check(["diagram", "inferred", "verified"].includes(group.verification), `Invalid ${ctx} verification`);
+    check(group.buildingIds.length >= 2 && unique(group.buildingIds), `Invalid ${ctx} members`);
+    for (const id of group.buildingIds) {
+      check(overview.buildings.some(b => b.id === id) || buildings.some(b => b.id === id), `Unknown ${ctx} building ${id}`);
+      if (group.status === "ready") check(buildings.some(b => b.id === id), `Ready ${ctx} missing building data ${id}`);
+    }
+    check(unique(group.levels.map(l => l.id)), `Duplicate ${ctx} level IDs`);
+    const assigned = group.levels.flatMap(l => l.floors.map(f => `${f.buildingId}/${f.floorId}`));
+    check(unique(assigned), `Duplicate ${ctx} floor assignment`);
+    for (const level of group.levels) {
+      check(!!level.id && !!level.label && level.floors.length > 0, `Invalid ${ctx} display level`);
+      for (const ref of level.floors)
+        check(group.buildingIds.includes(ref.buildingId) && floors.some(f => f.buildingId === ref.buildingId && f.id === ref.floorId),
+          `Unknown ${ctx} floor ${ref.buildingId}/${ref.floorId}`);
+    }
+    if (group.status === "ready") {
+      check(group.levels.length > 0, `Ready ${ctx} needs display levels`);
+      for (const floor of floors.filter(f => group.buildingIds.includes(f.buildingId)))
+        check(assigned.includes(`${floor.buildingId}/${floor.id}`), `Ready ${ctx} missing floor assignment ${floor.buildingId}/${floor.id}`);
     }
   }
   return errors;

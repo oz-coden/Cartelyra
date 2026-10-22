@@ -67,16 +67,15 @@ export function compileCampus(
     for (const link of outdoor.links) {
       const outside = outdoor.nodes.find((n) => n.id === link.from)!;
       nodes.find((n) => n.id === link.to)!.overviewPosition = outside.position;
-      // Explicit transition cost prevents unrelated indoor/overview coordinate frames
-      // from creating an artificial straight-line distance between the two maps.
       edges.push({ ...link, from: qualify(link.from), type: "outdoor",
-        isIndoor: false, distance: 1 });
+        isIndoor: link.cover === "indoor", routingCost: link.routingCost ?? 1, distance: 1 });
     }
   }
   return {
     campusName: manifest.campusName,
     coordinateUnit: manifest.coordinateUnit,
     buildings: runtimeBuildings,
+    viewGroups: manifest.viewGroups,
     navigation: { nodes, edges },
   };
 }

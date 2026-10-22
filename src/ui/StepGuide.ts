@@ -51,7 +51,7 @@ export class StepGuide {
         ["step-card-text", step.instruction],
         [
           "step-card-footer",
-          `${typeLabel}${step.distance > 0 ? ` / ${step.distance}m` : ""}`,
+          `${typeLabel}${step.cover === "covered" ? " / 屋根付き" : ""}${step.distance > 0 ? ` / ${step.distance}m` : ""}`,
         ],
       ]) {
         const part = document.createElement("span");

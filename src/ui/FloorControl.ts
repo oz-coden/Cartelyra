@@ -1,8 +1,9 @@
 import { ThreeDisplayState } from "./ThreeDisplayState.js";
-import type { Floor } from "../types/campus";
+import type { BuildingViewGroup, Floor } from "../types/campus";
 
 export class FloorControl {
   public onFloorChange: ((floor: number) => void) | null = null;
+  public onGroupLevelChange: ((id: string) => void) | null = null;
   public onExplodeChange: ((ratio: number) => void) | null = null;
   public onShowAllChange: ((all: boolean) => void) | null = null;
   constructor(private display: ThreeDisplayState = new ThreeDisplayState()) {
@@ -36,6 +37,7 @@ export class FloorControl {
   }
   public render(floors: Floor[], level: number | null) {
     const container = document.getElementById("floor-buttons")!;
+    container.querySelectorAll("[data-group-level]").forEach(b => b.remove());
     for (const button of container.querySelectorAll<HTMLButtonElement>(
       "button",
     ))
@@ -64,6 +66,25 @@ export class FloorControl {
       button.setAttribute("aria-pressed", String(floor.level === level));
       if (container.children[index] !== button)
         container.insertBefore(button, container.children[index] ?? null);
+      index++;
+    }
+  }
+  public renderGroup(group: BuildingViewGroup, levelId?: string) {
+    const container = document.getElementById("floor-buttons")!;
+    for (const button of container.querySelectorAll<HTMLButtonElement>("button"))
+      if (!group.levels.some(l => l.id === button.dataset.groupLevel)) button.remove();
+    document.getElementById("explode-level-badge")!.textContent = group.levels.find(l => l.id === levelId)?.label ?? "未登録";
+    let index = 0;
+    for (const level of [...group.levels].reverse()) {
+      let button = [...container.querySelectorAll<HTMLButtonElement>("button")].find(b => b.dataset.groupLevel === level.id);
+      if (!button) {
+        button = document.createElement("button");
+        button.type = "button"; button.className = "floor-btn"; button.dataset.groupLevel = level.id;
+        button.addEventListener("click", () => this.onGroupLevelChange?.(level.id));
+      }
+      button.textContent = level.label; button.classList.toggle("active", level.id === levelId);
+      button.setAttribute("aria-pressed", String(level.id === levelId));
+      if (container.children[index] !== button) container.insertBefore(button, container.children[index] ?? null);
       index++;
     }
   }

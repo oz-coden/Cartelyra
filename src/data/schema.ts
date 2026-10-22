@@ -5,6 +5,8 @@ import type {
   Point2,
   RoomCategory,
   Verification,
+  WeatherCover,
+  BuildingViewGroup,
 } from "../types/campus";
 
 export interface FloorSource {
@@ -52,6 +54,9 @@ export interface SourceEdge {
   bidirectional?: boolean;
   blocked?: boolean;
   distance?: number;
+  routingCost?: number;
+  cover?: WeatherCover;
+  floorChanges?: number;
   instruction?: string;
   reverseInstruction?: string;
 }
@@ -73,6 +78,7 @@ export interface CampusSource {
   coordinateUnit: "schematic" | "meters";
   buildingIds: string[];
   connections?: SourceEdge[]; // Explicit links between buildings, using qualified node IDs.
+  viewGroups?: BuildingViewGroup[];
   outdoor?: {
     sourceId: string;
     positionSourceId?: string;
@@ -90,6 +96,9 @@ export interface CampusSource {
       to: string; // Qualified indoor entrance node ID.
       verification: Verification;
       isAccessible: boolean;
+      routingCost?: number;
+      cover?: WeatherCover;
+      floorChanges?: number;
     }>;
   };
 }

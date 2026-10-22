@@ -2,6 +2,31 @@ export type RoomCategory =
   "lecture" | "lab" | "office" | "facility" | "lounge" | "restroom" | "unknown";
 export type Point2 = [number, number];
 export type Verification = "diagram" | "inferred" | "verified";
+export type WeatherCover = "indoor" | "covered" | "open" | "unknown";
+
+/** Display membership never creates a navigation connection. Floor mappings are explicit. */
+export interface BuildingViewGroup {
+  id: string;
+  name: string;
+  buildingIds: string[];
+  status: "pending" | "ready";
+  verification: Verification;
+  notes?: string[];
+  levels: Array<{
+    id: string;
+    label: string;
+    floors: Array<{ buildingId: string; floorId: string }>;
+  }>;
+}
+
+export interface DisplayScope {
+  key: string;
+  label: string;
+  buildingIds: string[];
+  floors: Array<{ buildingId: string; floorId: string }>;
+  group?: BuildingViewGroup;
+  levelId?: string;
+}
 export interface FloorFeature {
   id: string;
   label: string;
@@ -134,7 +159,10 @@ export type NavEdgeType = "walk" | "stairs" | "elevator" | "bridge" | "outdoor";
 export interface NavEdge {
   from: string;
   to: string;
-  distance?: number; // If omitted, auto-calculated from Euclidean distance
+  distance?: number; // Measured-map length; only measured coordinates allow a Euclidean fallback.
+  routingCost?: number; // Dimensionless reference cost, independent of drawing coordinates.
+  cover?: WeatherCover;
+  floorChanges?: number; // Explicit physical floor transitions, including cross-building links.
   type: NavEdgeType;
   isIndoor: boolean;
   isAccessible: boolean; // True for flat walk/elevator/ramp; False for stairs
@@ -150,6 +178,7 @@ export interface CampusData {
   campusName: string;
   coordinateUnit?: "meters" | "schematic";
   buildings: Building[];
+  viewGroups?: BuildingViewGroup[];
   outdoorStructures?: Array<{
     id: string;
     name: string;
@@ -174,6 +203,7 @@ export interface RouteStep {
   buildingId?: string;
   edgeType?: NavEdgeType;
   distance: number;
+  cover?: WeatherCover;
 }
 
 export interface RouteResult {
@@ -185,4 +215,6 @@ export interface RouteResult {
   steps: RouteStep[];
   distanceUnit: "meters" | "schematic";
   inferredConnections: number;
+  routingCost?: number;
+  verticalMovements?: { stairs: number; elevators: number; unmeasured: number };
 }

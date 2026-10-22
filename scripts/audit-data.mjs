@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import { readData } from './read-data.mjs';
 import { validateSources } from '../.checks/data/validate.js';
 import { compileCampus } from '../.checks/data/compile.js';
-import { auditGeometry, auditRoutes } from '../.checks/data/audit.js';
+import { auditConnections, auditGeometry, auditRoutes } from '../.checks/data/audit.js';
 
 try {
   const args = process.argv.slice(2);
@@ -16,8 +16,9 @@ try {
   const source = await readData();
   const errors = validateSources(source.manifest, source.buildings, source.floors, source.sources, source.overview);
   if (errors.length) throw new Error(errors.join('\n'));
-  const routes = auditRoutes(compileCampus(source.manifest, source.buildings, source.floors), mode);
-  const findings = [...auditGeometry(source.floors), ...routes.findings];
+  const data = compileCampus(source.manifest, source.buildings, source.floors);
+  const routes = auditRoutes(data, mode);
+  const findings = [...auditGeometry(source.floors), ...auditConnections(data), ...routes.findings];
   const report = { buildings: source.buildings.length, floors: source.floors.length,
     rooms: source.floors.reduce((sum, f) => sum + f.rooms.length, 0),
     checkedPairs: routes.checkedPairs, mode, findings };

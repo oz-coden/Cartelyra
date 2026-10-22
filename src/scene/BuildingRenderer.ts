@@ -61,6 +61,7 @@ export class BuildingRenderer {
       floorGroup.userData = {
         type: "floor",
         buildingId: bldg.id,
+        floorId: floor.id,
         level: floor.level,
         baseElevation: floor.elevation,
         stackIndex: floor.stackIndex ?? floor.level - 1,

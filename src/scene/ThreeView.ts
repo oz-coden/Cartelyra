@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import type { CampusData, RouteResult, RouteStep } from "../types/campus";
+import type { CampusData, DisplayScope, NavNode, RouteResult, RouteStep } from "../types/campus";
 import type { ScreenPoint } from "../ui/SelectionPopover";
 import type { SceneHost } from "./SceneManager";
 import { SceneManager } from "./SceneManager";
@@ -19,6 +19,8 @@ export class ThreeView {
   private all = false;
   private active = true;
   private dark = false;
+  private scope?: DisplayScope;
+  private connections = new THREE.Group();
   public explode: ExplodeController;
   public picker: RaycastPicker;
   public onViewChange: (() => void) | null = null;
@@ -32,9 +34,12 @@ export class ThreeView {
     this.scene.onFrame = () => this.onViewChange?.();
     this.buildings = new BuildingRenderer(data);
     this.scene.scene.add(this.buildings.rootGroup);
+    this.connections.userData.type = "building-connections";
+    this.scene.scene.add(this.connections);
     this.explode = new ExplodeController(this.buildings);
     this.explode.onUpdateCallback = () => {
       this.routes.forEach((r) => r.updatePositions());
+      this.renderConnections();
       this.onViewChange?.();
     };
     this.picker = new RaycastPicker(
@@ -48,15 +53,17 @@ export class ThreeView {
     buildingId: string | null,
     floor: number | null,
     all: boolean,
+    scope?: DisplayScope,
   ) {
     const changed =
       this.buildingId !== buildingId ||
       this.floor !== floor ||
-      this.all !== all;
+      this.all !== all || JSON.stringify(this.scope) !== JSON.stringify(scope);
     this.buildingId = buildingId;
     this.floor = floor;
     this.all = all;
-    this.explode.setLocation(buildingId, floor, all);
+    this.scope = scope;
+    this.explode.setLocation(buildingId, floor, all, scope);
     if (changed) {
       this.renderRoute(this.result);
     }
@@ -92,14 +99,29 @@ export class ThreeView {
       segment = [];
     };
     for (const node of result?.pathNodes ?? []) {
-      if (
-        node.buildingId === this.buildingId &&
-        (this.all || node.floor === this.floor)
-      )
+      if (this.nodeVisible(node))
         segment.push(node);
       else flush();
     }
     flush();
+  }
+  private nodeVisible(node: NavNode) {
+    const group = this.buildings.floorGroups.get(`${node.buildingId}_f${node.floor}`);
+    return !!group?.visible && !!group.parent?.visible;
+  }
+  private renderConnections() {
+    for (const object of [...this.connections.children]) {
+      if (object instanceof THREE.Line) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); }
+      this.connections.remove(object);
+    }
+    const nodes = new Map(this.data.navigation.nodes.map(n => [n.id, n]));
+    for (const edge of this.data.navigation.edges) {
+      const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
+      if (edge.blocked || !a.buildingId || !b.buildingId || a.buildingId === b.buildingId ||
+        !this.nodeVisible(a) || !this.nodeVisible(b)) continue;
+      const geometry = new THREE.BufferGeometry().setFromPoints([a, b].map(n => this.buildings.getNodeWorldPosition(n).add(new THREE.Vector3(0, .2, 0))));
+      this.connections.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x8a99af })));
+    }
   }
   public getPlaceAnchor(id: string): ScreenPoint | null {
     const mesh = this.buildings.placeMeshes.find(
@@ -142,11 +164,9 @@ export class ThreeView {
   }
   public reset() {
     this.scene.resize();
-    const building = this.data.buildings.find((b) => b.id === this.buildingId);
-    if (!building) return;
     const box = new THREE.Box3();
     for (const group of this.buildings.floorGroups.values())
-      if (group.visible && group.userData.buildingId === building.id)
+      if (group.visible && group.parent?.visible)
         box.union(new THREE.Box3().setFromObject(group));
     if (box.isEmpty()) return;
     const center = box.getCenter(new THREE.Vector3()),

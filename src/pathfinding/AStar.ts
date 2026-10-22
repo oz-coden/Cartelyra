@@ -1,213 +1,58 @@
-import type {
-  CampusData,
-  NavNode,
-  NavEdge,
-  RouteFilterType,
-  RouteResult,
-  RouteStep,
-} from "../types/campus";
+import type { CampusData, NavNode, RouteFilterType, RouteResult } from "../types/campus";
+import { RoutePolicy, type SearchCost, type Traversal } from "./RoutePolicy.js";
+import { RouteBuilder } from "./RouteBuilder.js";
 
-interface GraphEdge {
-  targetId: string;
-  distance: number;
-  edge: NavEdge;
-  reversed: boolean;
-  floorChanges: number;
-  buildingChanges: number;
-}
-
-interface SearchCost { floorChanges: number; buildingChanges: number; distance: number; }
-
-/** Exact non-negative cost search. h=0 remains valid even with explicit distances and preference costs. */
+/** Exact non-negative search with h=0, including lexicographic reference-map preferences. */
 export class AStarPathfinder {
   private nodes = new Map<string, NavNode>();
-  private adjacency = new Map<string, GraphEdge[]>();
-
-  constructor(private data: CampusData) {
-    const floorIndices = new Map<string, number>(data.buildings.flatMap(b => b.floors.map(f =>
-      [`${b.id}/${f.level}`, f.stackIndex ?? f.level] as const)));
+  private adjacency = new Map<string, Traversal[]>();
+  private policy: RoutePolicy;
+  private builder: RouteBuilder;
+  constructor(data: CampusData) {
+    this.policy = new RoutePolicy(data);
+    this.builder = new RouteBuilder(data);
     for (const node of data.navigation.nodes) {
-      if (this.nodes.has(node.id))
-        throw new Error(`Duplicate navigation node: ${node.id}`);
-      this.nodes.set(node.id, node);
-      this.adjacency.set(node.id, []);
+      if (this.nodes.has(node.id)) throw new Error(`Duplicate navigation node: ${node.id}`);
+      this.nodes.set(node.id, node); this.adjacency.set(node.id, []);
     }
     for (const edge of data.navigation.edges) {
-      const a = this.nodes.get(edge.from),
-        b = this.nodes.get(edge.to);
-      if (!a || !b)
-        throw new Error(`Unknown edge endpoint: ${edge.from} -> ${edge.to}`);
-      const distance =
-        edge.distance ??
-        Math.hypot(...a.position.map((p, i) => p - b.position[i]));
-      if (!Number.isFinite(distance) || distance < 0)
-        throw new Error(`Invalid edge distance: ${edge.from}`);
+      const a = this.nodes.get(edge.from), b = this.nodes.get(edge.to);
+      if (!a || !b) throw new Error(`Unknown edge endpoint: ${edge.from} -> ${edge.to}`);
+      const link = this.policy.traversal(edge, a, b);
       if (edge.blocked) continue;
-      const floorChanges = a.buildingId && a.buildingId === b.buildingId
-        ? Math.abs((floorIndices.get(`${a.buildingId}/${a.floor}`) ?? a.floor ?? 0) -
-          (floorIndices.get(`${b.buildingId}/${b.floor}`) ?? b.floor ?? 0)) : 0;
-      const buildingChanges = a.buildingId !== b.buildingId ? 1 : 0;
-      this.adjacency
-        .get(a.id)!
-        .push({ targetId: b.id, distance, edge, reversed: false, floorChanges, buildingChanges });
-      if (edge.bidirectional !== false)
-        this.adjacency
-          .get(b.id)!
-          .push({ targetId: a.id, distance, edge, reversed: true, floorChanges, buildingChanges });
+      this.adjacency.get(a.id)!.push(link);
+      if (edge.bidirectional !== false) this.adjacency.get(b.id)!.push({ ...link, targetId: a.id, reversed: true });
     }
   }
-
-  public getNode(id: string) {
-    return this.nodes.get(id);
-  }
-  public getAllNodes() {
-    return [...this.nodes.values()];
-  }
-
-  public findPath(
-    startId: string,
-    goalId: string,
-    filter: RouteFilterType = "shortest",
-    allowInferred = true,
-  ): RouteResult | null {
-    if (!this.nodes.has(startId) || !this.nodes.has(goalId)) return null;
-    const open = new Set([startId]),
-      costs = new Map<string, SearchCost>([[startId, { floorChanges: 0, buildingChanges: 0, distance: 0 }]]);
-    // Drawing lengths are not calibrated distances. Prefer fewer floor changes
-    // before comparing schematic lengths; measured maps retain distance costs.
-    const preferFloors = this.data.coordinateUnit === "schematic";
-    // Indoor and overview drawing units are independent. For two places in the
-    // same building, avoid artificial outdoor shortcuts when floor changes tie.
-    // Gate/cross-building routes still allow registered building passageways.
-    const preferInside = preferFloors && !!this.nodes.get(startId)!.buildingId &&
-      this.nodes.get(startId)!.buildingId === this.nodes.get(goalId)!.buildingId;
-    const precedes = (a: SearchCost, b: SearchCost) => {
-      if (preferFloors && a.floorChanges !== b.floorChanges) return a.floorChanges < b.floorChanges;
-      if (preferInside && a.buildingChanges !== b.buildingChanges) return a.buildingChanges < b.buildingChanges;
-      return a.distance < b.distance;
-    };
-    const previous = new Map<string, { from: string; link: GraphEdge }>();
+  public getNode(id: string) { return this.nodes.get(id); }
+  public getAllNodes() { return [...this.nodes.values()]; }
+  public findPath(startId: string, goalId: string, filter: RouteFilterType = "shortest", allowInferred = true): RouteResult | null {
+    const start = this.nodes.get(startId), goal = this.nodes.get(goalId);
+    if (!start || !goal) return null;
+    const compare = this.policy.comparator(start, goal);
+    const open = new Set([startId]);
+    const costs = new Map<string, SearchCost>([[startId, { vertical: 0, boundaries: 0, cost: 0 }]]);
+    const previous = new Map<string, { from: string; link: Traversal }>();
     while (open.size) {
-      const current = [...open].reduce((a, b) =>
-        precedes(costs.get(b)!, costs.get(a)!) ? b : a,
-      );
+      const current = [...open].reduce((a, b) => compare(costs.get(b)!, costs.get(a)!) < 0 ? b : a);
       open.delete(current);
-      if (current === goalId)
-        return this.reconstruct(startId, goalId, previous);
+      if (current === goalId) {
+        const path = [goal], links: Traversal[] = [];
+        for (let id = goalId; id !== startId;) {
+          const p = previous.get(id)!; links.unshift(p.link); id = p.from; path.unshift(this.nodes.get(id)!);
+        }
+        return this.builder.build(path, links, costs.get(goalId)!.cost);
+      }
       for (const link of this.adjacency.get(current)!) {
-        const edge = link.edge;
-        if (!allowInferred && edge.verification !== "verified") continue;
-        if (
-          filter === "accessible" &&
-          (!edge.isAccessible || edge.type === "stairs")
-        )
-          continue;
-        // Within the floor-change preference, shortest has no facility penalties.
-        let cost = link.distance;
-        if (filter === "indoor" && !edge.isIndoor) cost *= 4.5;
-        if (filter === "stairs" && edge.type === "elevator") cost += 35;
-        const currentCost = costs.get(current)!;
-        const nextCost = { distance: currentCost.distance + cost,
-          floorChanges: currentCost.floorChanges + link.floorChanges,
-          buildingChanges: currentCost.buildingChanges + link.buildingChanges };
-        const previousCost = costs.get(link.targetId);
-        if (!previousCost || precedes(nextCost, previousCost)) {
-          costs.set(link.targetId, nextCost);
-          previous.set(link.targetId, { from: current, link });
-          open.add(link.targetId);
+        if (!this.policy.permitted(link.edge, filter, allowInferred)) continue;
+        const cost = costs.get(current)!;
+        const next = { vertical: cost.vertical + link.floorChanges + link.unmeasuredVertical,
+          boundaries: cost.boundaries + link.boundaryChanges, cost: cost.cost + this.policy.cost(link, filter) };
+        if (!costs.has(link.targetId) || compare(next, costs.get(link.targetId)!) < 0) {
+          costs.set(link.targetId, next); previous.set(link.targetId, { from: current, link }); open.add(link.targetId);
         }
       }
     }
     return null;
-  }
-
-  private floorInfo(node: NavNode) {
-    return this.data.buildings
-      .find((b) => b.id === node.buildingId)
-      ?.floors.find((f) => f.level === node.floor);
-  }
-
-  private reconstruct(
-    start: string,
-    goal: string,
-    previous: Map<string, { from: string; link: GraphEdge }>,
-  ): RouteResult {
-    const pathNodes = [this.nodes.get(goal)!],
-      links: GraphEdge[] = [];
-    let id = goal;
-    while (id !== start) {
-      const p = previous.get(id)!;
-      links.unshift(p.link);
-      id = p.from;
-      pathNodes.unshift(this.nodes.get(id)!);
-    }
-    let floorChanges = 0;
-    for (let i = 1; i < pathNodes.length; i++) {
-      const a = this.floorInfo(pathNodes[i - 1]),
-        b = this.floorInfo(pathNodes[i]);
-      if (a && b && pathNodes[i - 1].buildingId === pathNodes[i].buildingId)
-        floorChanges += Math.abs(
-          (a.stackIndex ?? a.level) - (b.stackIndex ?? b.level),
-        );
-    }
-    const totalDistance = links.reduce((sum, link) => sum + link.distance, 0);
-    const distanceUnit = this.data.coordinateUnit ?? "meters";
-    const steps: RouteStep[] = [
-      {
-        stepNumber: 1,
-        instruction: `「${pathNodes[0].name}」から出発`,
-        nodeId: start,
-        position: pathNodes[0].position,
-        floor: pathNodes[0].floor,
-        buildingId: pathNodes[0].buildingId,
-        distance: 0,
-      },
-    ];
-    links.forEach((link, i) => {
-      const to = pathNodes[i + 1];
-      const floor = `${this.data.buildings.find((b) => b.id === to.buildingId)?.name ?? ""} ${this.floorInfo(to)?.label ?? String(to.floor)}`;
-      let instruction = link.reversed
-        ? link.edge.reverseInstruction
-        : link.edge.instruction;
-      if (!instruction) {
-        if (pathNodes[i].buildingId && !to.buildingId)
-          instruction = `「${pathNodes[i].name}」から屋外へ出る`;
-        else if (!pathNodes[i].buildingId && to.buildingId)
-          instruction = `${floor} の「${to.name}」から建物に入る`;
-        else if (pathNodes[i].buildingId !== to.buildingId)
-          instruction = `${floor} の「${to.name}」へ移動`;
-        else if (link.edge.type === "stairs" || link.edge.type === "elevator") {
-          instruction = `${link.edge.type === "stairs" ? "階段" : "EV"}で ${floor} へ移動`;
-        } else if (i === links.length - 1) instruction = `「${to.name}」に到着`;
-        else instruction = `${to.name} へ進む`;
-      }
-      steps.push({
-        stepNumber: i + 2,
-        instruction,
-        nodeId: to.id,
-        position: to.position,
-        floor: to.floor,
-        buildingId: to.buildingId,
-        edgeType: link.edge.type,
-        distance:
-          distanceUnit === "meters" ? Math.round(link.distance * 10) / 10 : 0,
-      });
-    });
-    if (!links.length)
-      steps[0].instruction = `「${pathNodes[0].name}」に到着しています`;
-    return {
-      pathNodes,
-      totalDistance: Math.round(totalDistance * 10) / 10,
-      estimatedMinutes:
-        distanceUnit === "meters" && links.length
-          ? Math.round((totalDistance / 80 + floorChanges * 0.5) * 10) / 10
-          : 0,
-      floorChanges,
-      steps,
-      distanceUnit,
-      inferredConnections: links.filter(
-        (l) => l.edge.verification !== "verified",
-      ).length,
-    };
   }
 }
