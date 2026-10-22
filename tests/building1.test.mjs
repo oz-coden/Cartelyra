@@ -5,7 +5,7 @@ import { compileCampus } from "../.checks/data/compile.js";
 import { placeIndex, searchPlaces, placeRouteNotice } from "../.checks/data/places.js";
 import { validateSources } from "../.checks/data/validate.js";
 import { AStarPathfinder } from "../.checks/pathfinding/AStar.js";
-import { pointInInterior } from "../.checks/data/geometry.js";
+import { pointInInterior, bounds } from "../.checks/data/geometry.js";
 
 const source = await readData();
 const campus = compileCampus(source.manifest, source.buildings, source.floors);
@@ -84,7 +84,7 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
 
 
 test("Building 1 provisional approaches stop at front rooms and use the B107/B109 gap for B108", () => {
-  for (const [id, front] of [["1-516-2", "1-516"], ["1-B111-1", "1-B111"], ["1-B113-1", "1-B113"]]) {
+  for (const [id, front] of [["1-516-1", "1-516"], ["1-516-2", "1-516"], ["1-B111-1", "1-B111"], ["1-B113-1", "1-B113"]]) {
     const place = places.find((p) => p.id === id), approach = places.find((p) => p.id === front);
     assert.equal(place.approachRoomId, front);
     assert.equal(place.nodeId, approach.nodeId);
@@ -93,7 +93,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
     const route = finder.findPath("b1/f1/entry-top", place.nodeId);
     assert.equal(route.pathNodes.at(-1).id, approach.nodeId);
   }
-  assert.equal(places.filter((p) => p.approachRoomId).length, 3);
+  assert.equal(places.filter((p) => p.approachRoomId).length, 4);
   const basement = floors.find((f) => f.id === "b1");
   const b108 = places.find((p) => p.id === "1-B108");
   const route = finder.findPath("b1/b1/room-B109", b108.nodeId);
@@ -112,4 +112,27 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
     assert.match(place.description, /暫定.*現地調査で見直す/);
     assert.equal(finder.findPath("b1/f1/entry-top", place.nodeId).pathNodes.at(-1).id, place.nodeId);
   }
+});
+
+
+test("Building 1 5F left rooms share a boundary and small rooms occupy 514 corners without overlapping it", () => {
+  const fifth = floors.find((f) => f.id === "f5");
+  const room = (id) => fifth.rooms.find((r) => r.id === id);
+  const main = room("1-514"), upper = room("1-516-1");
+  const cornerTop = room("1-515"), cornerBottom = room("1-512");
+  const box = (r) => bounds(r.polygon);
+  const top = (r) => box(r).z - box(r).d / 2;
+  const bottom = (r) => box(r).z + box(r).d / 2;
+  const right = (r) => box(r).x + box(r).w / 2;
+  assert.equal(top(main), bottom(upper), "514 touches 516-1 without an intervening corridor");
+  assert.equal(top(cornerTop), top(main));
+  assert.equal(bottom(cornerBottom), bottom(main));
+  for (const corner of [cornerTop, cornerBottom]) {
+    assert.equal(right(corner), right(main));
+    const b = box(corner);
+    assert.ok(!pointInInterior([b.x, b.z], main.polygon), "small corner room is a notch, not an overlapping room");
+  }
+  assert.ok(!upper.entrance);
+  assert.equal(upper.approachRoomId, "1-516");
+  assert.ok(!fifth.navigation.nodes.some((n) => n.id === "room-516-1"));
 });

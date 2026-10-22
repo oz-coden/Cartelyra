@@ -22,7 +22,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Area | Current coverage |
 | --- | --- |
 | Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. An outdoor reference route connects Building 3’s Building 8-facing entrance, West Gate and Building 20 |
-| Building 1 | B1–8F; 139 areas: 136 with direct corridor-side reference routes and three via named front rooms, 23 WCs, two stair cores and two elevators. Two 1F entrances; provisional access and field checks remain documented |
+| Building 1 | B1–8F; 139 areas: 135 with direct corridor-side reference routes and four via named front rooms, 23 WCs, two stair cores and two elevators. Two 1F entrances; provisional access and field checks remain documented |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
@@ -112,7 +112,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 対象 | 現在の状態 |
 | --- | --- |
 | キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。3号館の8号館側〜西門〜20号館の屋外参考経路を登録 |
-| 1号館 | B1〜8F・139区画。136区画へ直接、奥の3区画は指定した手前の部屋の通路側まで参考案内。WC 23か所・階段2系統・EV2基・1F出入口2か所。暫定的な進入関係と現地確認事項を記録 |
+| 1号館 | B1〜8F・139区画。135区画へ直接、奥の4区画は指定した手前の部屋の通路側まで参考案内。WC 23か所・階段2系統・EV2基・1F出入口2か所。暫定的な進入関係と現地確認事項を記録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
