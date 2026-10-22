@@ -12,7 +12,7 @@
     "1Fと2Fの階段・EVの対応は未確認のため階間を接続しない。1F内と2〜5F内を別々の経路区画として登録。",
     "1Fの19号館側の2出入口を屋外参考経路へ接続。3F出入口は外部接続を保留し、他棟との連絡接続は未登録。図面と実方位の正確な対応は未確認。",
     "女子・男子のロッカー室とシャワー室は同一枠内の2番号を模式的に分割。シャワー室は対応するロッカー室の通路側まで暫定案内し、室内の通り抜けは表示しない。",
-    "図面右上・右中央の近接した2開口を出入口1にまとめ、右下を出入口3として登録。どちらも19号館側の地上通路へ参考接続する。プール・レスリング場を横断する共用通路は設けない。"
+    "図面右上・右中央の近接した2開口を出入口1にまとめ、右下を出入口2として登録。どちらも19号館側の地上通路へ参考接続する。プール・レスリング場を横断する共用通路は設けない。"
   ],
   "outline": [
     [0, 0],
@@ -182,7 +182,7 @@
     },
     {
       "id": "entrance-lower",
-      "label": "出入口3（19号館側）",
+      "label": "出入口2（19号館側）",
       "type": "entrance",
       "polygon": [
         [94, 122],
@@ -342,7 +342,7 @@
       {"id": "hall-16", "name": "1F 通路", "position": [80, 102.0], "type": "corridor"},
       {"id": "entrance-upper", "name": "出入口1（19号館側）", "position": [96, 50], "type": "facility_entrance"},
       {"id": "hall-17", "name": "1F 通路", "position": [82, 50], "type": "corridor"},
-      {"id": "entrance-lower", "name": "出入口3（19号館側）", "position": [96, 124], "type": "facility_entrance"}
+      {"id": "entrance-lower", "name": "出入口2（19号館側）", "position": [96, 124], "type": "facility_entrance"}
     ],
     "edges": [
       {"to": "hall-1", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "from": "room-114", "routingCost": 0.370636},
