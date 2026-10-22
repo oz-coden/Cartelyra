@@ -44,6 +44,83 @@ export function pointInInterior(point: Point2, polygon: Point2[]): boolean {
   return true;
 }
 
+function horizontalIntervals(polygon: Point2[], y: number): Array<[number, number]> {
+  const xs: number[] = [];
+  polygon.forEach((a, i) => {
+    const b = polygon[(i + 1) % polygon.length];
+    if ((a[1] > y) !== (b[1] > y))
+      xs.push(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]));
+  });
+  xs.sort((a, b) => a - b);
+  const intervals: Array<[number, number]> = [];
+  for (let i = 0; i + 1 < xs.length; i += 2) intervals.push([xs[i], xs[i + 1]]);
+  return intervals;
+}
+
+/** Points shared by two closed segments, including endpoints of collinear overlap. */
+export function segmentIntersections(a: Point2, b: Point2, c: Point2, d: Point2): Point2[] {
+  const dx = b[0] - a[0], dy = b[1] - a[1], ex = d[0] - c[0], ey = d[1] - c[1];
+  const denominator = dx * ey - dy * ex;
+  if (Math.abs(denominator) > 1e-10) {
+    const t = ((c[0] - a[0]) * ey - (c[1] - a[1]) * ex) / denominator;
+    const u = ((c[0] - a[0]) * dy - (c[1] - a[1]) * dx) / denominator;
+    return t >= -1e-8 && t <= 1 + 1e-8 && u >= -1e-8 && u <= 1 + 1e-8
+      ? [[a[0] + t * dx, a[1] + t * dy]] : [];
+  }
+  const on = (p: Point2, a: Point2, b: Point2) =>
+    Math.abs((p[0] - a[0]) * (b[1] - a[1]) - (p[1] - a[1]) * (b[0] - a[0])) < 1e-8 &&
+    p[0] >= Math.min(a[0], b[0]) - 1e-8 && p[0] <= Math.max(a[0], b[0]) + 1e-8 &&
+    p[1] >= Math.min(a[1], b[1]) - 1e-8 && p[1] <= Math.max(a[1], b[1]) + 1e-8;
+  return [a, b, c, d].filter((p, i, all) => on(p, a, b) && on(p, c, d) &&
+    !all.slice(0, i).some(q => Math.hypot(q[0] - p[0], q[1] - p[1]) < 1e-8));
+}
+
+export function polygonArea(polygon: Point2[]): number {
+  return Math.abs(polygon.reduce((area, a, i) => {
+    const b = polygon[(i + 1) % polygon.length];
+    return area + a[0] * b[1] - b[0] * a[1];
+  }, 0)) / 2;
+}
+
+/** Integrate intersecting scanline intervals between vertices and edge crossings. */
+export function polygonOverlapArea(a: Point2[], b: Point2[]): number {
+  const ys = [...a, ...b].map(p => p[1]);
+  a.forEach((p, i) => b.forEach((q, j) => {
+    ys.push(...segmentIntersections(p, a[(i + 1) % a.length], q, b[(j + 1) % b.length]).map(p => p[1]));
+  }));
+  const cuts = [...new Set(ys)].sort((a, b) => a - b);
+  let area = 0;
+  for (let i = 1; i < cuts.length; i++) {
+    const y = (cuts[i - 1] + cuts[i]) / 2;
+    for (const [left, right] of horizontalIntervals(a, y))
+      for (const [otherLeft, otherRight] of horizontalIntervals(b, y))
+        area += Math.max(0, Math.min(right, otherRight) - Math.max(left, otherLeft)) * (cuts[i] - cuts[i - 1]);
+  }
+  return area;
+}
+
+/** Keep labels and selection anchors inside concave rooms as well as rectangles. */
+export function interiorPoint(polygon: Point2[]): Point2 {
+  const box = bounds(polygon), center: Point2 = [box.x, box.z];
+  if (pointInInterior(center, polygon)) return center;
+  const ys = [...new Set(polygon.map(p => p[1]))].sort((a, b) => a - b);
+  let best: Point2 | undefined, clearance = -1;
+  for (let i = 1; i < ys.length; i++) {
+    const y = (ys[i - 1] + ys[i]) / 2;
+    for (const [left, right] of horizontalIntervals(polygon, y)) {
+      const p: Point2 = [(left + right) / 2, y];
+      const distance = Math.min(...polygon.map((a, i) => {
+        const b = polygon[(i + 1) % polygon.length], dx = b[0] - a[0], dy = b[1] - a[1];
+        const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+        return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
+      }));
+      if (distance > clearance) { clearance = distance; best = p; }
+    }
+  }
+  if (!best) throw new Error("Cannot place a label inside a zero-area polygon");
+  return best;
+}
+
 /** Test every interval cut by polygon edges, so narrow obstacles cannot be skipped. */
 export function segmentIsWalkable(a: Point2, b: Point2, outline: Point2[], obstacles: Point2[][]): boolean {
   const cuts = [0, 1], dx = b[0] - a[0], dz = b[1] - a[1];

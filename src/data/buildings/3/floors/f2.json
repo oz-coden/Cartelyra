@@ -337,7 +337,7 @@
       {
         "id": "room-201",
         "name": "3-201 入口（推定）",
-        "position": [50.0, 20],
+        "position": [50, 20],
         "type": "room_entrance"
       },
       {
@@ -355,7 +355,7 @@
       {
         "id": "room-204",
         "name": "3-204 入口（推定）",
-        "position": [85.0, 20],
+        "position": [85, 20],
         "type": "room_entrance"
       },
       {
@@ -544,6 +544,14 @@
       },
       {
         "from": "nw",
+        "to": "west-209",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west-209",
         "to": "west",
         "type": "walk",
         "verification": "diagram",
@@ -552,6 +560,14 @@
       },
       {
         "from": "west",
+        "to": "west-208",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west-208",
         "to": "sw",
         "type": "walk",
         "verification": "diagram",
@@ -623,26 +639,10 @@
         "isAccessible": true
       },
       {
-        "from": "west-209",
-        "to": "west",
-        "type": "walk",
-        "verification": "diagram",
-        "isIndoor": true,
-        "isAccessible": true
-      },
-      {
         "from": "room-208",
         "to": "west-208",
         "type": "walk",
         "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true
-      },
-      {
-        "from": "west-208",
-        "to": "west",
-        "type": "walk",
-        "verification": "diagram",
         "isIndoor": true,
         "isAccessible": true
       },

@@ -428,6 +428,14 @@
       },
       {
         "from": "sw",
+        "to": "west-south",
+        "type": "walk",
+        "verification": "diagram",
+        "isIndoor": true,
+        "isAccessible": true
+      },
+      {
+        "from": "west-south",
         "to": "s36",
         "type": "walk",
         "verification": "diagram",
@@ -585,14 +593,6 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "aed-approach"
-      },
-      {
-        "from": "west-south",
-        "to": "sw",
-        "type": "walk",
-        "verification": "diagram",
-        "isIndoor": true,
-        "isAccessible": true
       },
       {
         "to": "entrance-south-hall",

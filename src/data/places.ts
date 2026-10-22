@@ -1,6 +1,6 @@
 import type { Building, CampusData, Place } from "../types/campus";
 import type { CampusOverview } from "./schema";
-import { bounds, worldToLocal } from "./geometry.js";
+import { bounds, interiorPoint, worldToLocal } from "./geometry.js";
 
 export interface BuildingEntry {
   id: string;
@@ -57,7 +57,7 @@ export function placeIndex(
           nodeId: approach?.entranceNodeId ?? room.entranceNodeId,
           approachRoomId: approach?.id,
           approachRoomName: approach?.name,
-          position: [room.box.x, room.box.z],
+          position: room.polygon ? interiorPoint(room.polygon) : [room.box.x, room.box.z],
           polygon: room.polygon,
           aliases: [room.id, ...room.aliases],
           description: room.description,

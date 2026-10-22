@@ -9,7 +9,7 @@ import {
   FloorFeature,
 } from "../types/campus";
 import { featurePlaceId } from "../data/places";
-import { bounds, worldToLocal } from "../data/geometry";
+import { bounds, interiorPoint, worldToLocal } from "../data/geometry";
 
 export interface RoomMeshRecord {
   mesh: THREE.Mesh;
@@ -182,6 +182,8 @@ export class BuildingRenderer {
     };
 
     roomMesh.userData.placeId = room.id;
+    const labelPoint = room.polygon ? interiorPoint(room.polygon) : [x, z];
+    roomMesh.userData.labelAnchor = [labelPoint[0] - x, room.polygon ? h : h / 2, labelPoint[1] - z];
     this.placeMeshes.push(roomMesh);
     this.placeMaterials.set(room.id, {
       mesh: roomMesh,
@@ -202,7 +204,7 @@ export class BuildingRenderer {
 
     // Floating text label sprite
     const labelSprite = this.createTextLabelSprite(room.mapLabel ?? room.id, baseColor);
-    labelSprite.position.set(x, h + 0.8, z);
+    labelSprite.position.set(labelPoint[0], h + 0.8, labelPoint[1]);
     const labelWidth = Math.min(10, w * 0.9, d * 2);
     labelSprite.scale.set(labelWidth, labelWidth / 4, 1);
     roomGroup.add(labelSprite);

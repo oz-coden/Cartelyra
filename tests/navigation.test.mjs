@@ -152,11 +152,12 @@ test('unknown endpoints, same-point routes and invalid edge data', () => {
 });
 
 test('all 34 routable rooms connect in all four modes; costs agree with independent Floyd–Warshall', () => {
-  const nodes = campus.navigation.nodes, rooms = campus.buildings[0].floors.flatMap(f => f.rooms).filter(r => r.entranceNodeId);
+  const nodes = campus.navigation.nodes.filter(n => n.buildingId === 'b3'), rooms = campus.buildings[0].floors.flatMap(f => f.rooms).filter(r => r.entranceNodeId);
   const ids = new Map(nodes.map((n,i) => [n.id,i])), count = nodes.length;
   for (const mode of ['shortest','accessible','indoor','stairs']) {
     const matrix = Array.from({length:count},(_,i) => Array.from({length:count},(_,j) => i===j ? 0 : Infinity));
     for (const edge of campus.navigation.edges) {
+      if (!ids.has(edge.from) || !ids.has(edge.to)) continue;
       if (edge.blocked || (mode==='accessible' && (!edge.isAccessible || edge.type==='stairs'))) continue;
       const a=ids.get(edge.from),b=ids.get(edge.to);
       let cost=edge.distance ?? Math.hypot(...nodes[a].position.map((v,i) => v-nodes[b].position[i]));

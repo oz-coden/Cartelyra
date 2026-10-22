@@ -489,49 +489,49 @@
       {
         "id": "hall-26",
         "name": "1F 通路",
-        "position": [28, -4.0],
+        "position": [28, -4],
         "type": "corridor"
       },
       {
         "id": "wc-upper-m",
         "name": "男性用トイレ",
-        "position": [16, -4.0],
+        "position": [16, -4],
         "type": "facility_entrance"
       },
       {
         "id": "wc-upper-w",
         "name": "女性用トイレ",
-        "position": [16, 8.0],
+        "position": [16, 8],
         "type": "facility_entrance"
       },
       {
         "id": "wc-upper-multi",
         "name": "多目的トイレ",
-        "position": [23, 0.0],
+        "position": [23, 0],
         "type": "facility_entrance"
       },
       {
         "id": "hall-27",
         "name": "1F 通路",
-        "position": [3.0, 76],
+        "position": [3, 76],
         "type": "corridor"
       },
       {
         "id": "wc-lower-m",
         "name": "男性用トイレ",
-        "position": [3.0, 82],
+        "position": [3, 82],
         "type": "facility_entrance"
       },
       {
         "id": "hall-28",
         "name": "1F 通路",
-        "position": [9.0, 76],
+        "position": [9, 76],
         "type": "corridor"
       },
       {
         "id": "wc-lower-w",
         "name": "女性用トイレ",
-        "position": [9.0, 82],
+        "position": [9, 82],
         "type": "facility_entrance"
       },
       {
@@ -543,7 +543,7 @@
       {
         "id": "wc-lower-multi",
         "name": "多目的トイレ",
-        "position": [15.0, 82],
+        "position": [15, 82],
         "type": "facility_entrance"
       },
       {
@@ -562,6 +562,12 @@
         "id": "hall-entry-top",
         "name": "1F 入口ホール通路",
         "position": [41.5, 0],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-junction-46",
+        "name": "1F 通路交差点",
+        "position": [55, 49],
         "type": "corridor"
       }
     ],
@@ -735,12 +741,20 @@
         "from": "hall-4"
       },
       {
-        "to": "hall-6",
+        "to": "hall-junction-46",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-24"
+      },
+      {
+        "to": "hall-6",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-junction-46"
       },
       {
         "to": "hall-9",
@@ -759,12 +773,20 @@
         "from": "hall-9"
       },
       {
-        "to": "hall-13",
+        "to": "hall-junction-46",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-9"
+      },
+      {
+        "to": "hall-13",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-junction-46"
       },
       {
         "to": "hall-23",

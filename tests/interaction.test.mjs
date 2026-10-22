@@ -442,3 +442,27 @@ test("3D route markers distinguish global endpoints, transfers and isolated visi
     assert.equal(markers().length, 0);
   } finally { await server.close(); }
 });
+
+test("3D concave-room labels and bubbles share an interior anchor through floor expansion", async () => {
+  const { server, view, host, data } = await setupThree();
+  try {
+    const { pointInInterior } = await server.ssrLoadModule('/src/data/geometry.ts');
+    view.setLocation('b6',1,true);
+    let mesh;
+    host.scene.traverse(o=>{if(o.userData.placeId==='6-111')mesh=o;});
+    assert.ok(mesh);
+    const room=data.buildings.find(b=>b.id==='b6').floors.find(f=>f.level===1).rooms.find(r=>r.id==='6-111');
+    const local=new THREE.Vector3().fromArray(mesh.userData.labelAnchor).add(mesh.position);
+    assert.ok(pointInInterior([local.x,local.z],room.polygon));
+    const sprite=mesh.parent.children.find(o=>o.isSprite);
+    assert.equal(sprite.position.x,local.x);assert.equal(sprite.position.z,local.z);
+    for(const gap of [0,1]){
+      view.explode.setExplodeRatio(gap);host.scene.updateMatrixWorld(true);
+      const world=mesh.localToWorld(new THREE.Vector3().fromArray(mesh.userData.labelAnchor));
+      host.camera.position.copy(world).add(new THREE.Vector3(0,100,0));
+      host.camera.up.set(0,0,-1);host.camera.lookAt(world);host.camera.updateMatrixWorld(true);
+      const anchor=view.getPlaceAnchor('6-111');
+      assert.ok(anchor);assert.ok(Math.abs(anchor.x-500)<1e-6);assert.ok(Math.abs(anchor.y-350)<1e-6);
+    }
+  } finally { await server.close(); }
+});

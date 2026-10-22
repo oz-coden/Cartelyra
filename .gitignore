@@ -25,3 +25,6 @@ dist-ssr
 
 # Compiled validation/test tools
 .checks/
+
+# Local diagnostic output
+/audit-report.json

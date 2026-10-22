@@ -11,6 +11,7 @@
   "include": [
     "src/data/compile.ts",
     "src/data/validate.ts",
+    "src/data/audit.ts",
     "src/pathfinding/AStar.ts",
     "src/data/places.ts",
     "src/ui/*.ts"

@@ -40,7 +40,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 5. Select a route-step card to switch to its building and floor, or to the campus map for outdoor steps. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
 6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
 
-“最短” (shortest) minimizes distance in the registered schematic coordinates; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
+On schematic maps, routes first minimize floor changes, then compare drawing lengths using the selected preference. “最短” (shortest) uses unweighted drawing lengths within that floor-change preference; it does not guarantee the shortest actual route. “階段を避ける” (avoid stairs) simply excludes stair connections and does not guarantee wheelchair accessibility.
 
 Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. The outdoor reference route joins Building 3’s Building 8-facing entrance to Building 20’s rightmost entrance on the lower side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 3’s New East Gate-facing entrance and the other two Building 20 entrances currently connect to indoor routes only. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
 
@@ -68,10 +68,13 @@ cd Uniview
 npm ci
 npm run dev           # Start the development server
 npm run validate:data # Validate map data
+npm run audit:data    # Report geometry and route review candidates
 npm test              # Run automated tests
 npm run build         # Validate, type-check and generate static files
 npm run preview       # Preview the build locally
 ```
+
+`audit:data` reports room containment/overlap, unjoined walk intersections, same-floor separation and avoidable floor changes. Review candidates do not fail validation or builds, so intentional nested rooms remain allowed. Use `npm run audit:data -- --json audit-report.json` to save the details.
 
 The GitHub Pages workflow runs regression tests before building and publishing; a failed test stops deployment.
 
@@ -131,7 +134,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 5. 道順カードを選ぶと、その棟・階へ切り替わります。屋外の道順ではキャンパス図へ切り替わります。3Dでは「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
 6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
-「最短」は登録座標上の距離を最小化して経路を探します。ただし座標は模式図のため、実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
+模式図では、昇降回数を最小化してから、選択した条件で図上の長さを比較します。「最短」はその範囲で図上の長さを最小化します。同階の経路がない場合は、他階を経由する案内も可能です。実際の最短距離を保証するものではありません。「階段を避ける」機能は、単に階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
 
 部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。屋外参考経路は、3号館の8号館側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面下側・右端出入口へ接続しています。3号館の新東門側と20号館の残り2か所の出入口は、現在は館内経路のみ接続しています。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
 
@@ -159,10 +162,13 @@ cd Uniview
 npm ci
 npm run dev           # 開発サーバーを起動
 npm run validate:data # 地図データを検証
+npm run audit:data    # 配置・接続・経路の確認候補を報告
 npm test             # 自動テストを実行
 npm run build        # 検証・型検査・静的ファイル生成
 npm run preview      # ビルド結果をローカルで確認
 ```
+
+部屋の包含・重なり、通路の交差点、同階の分離、不自然な階移動は `audit:data` で報告します。意図した入れ子構造も扱えるように、確認候補だけでは検証・ビルドを失敗させません。`npm run audit:data -- --json audit-report.json` で詳細を保存できます。
 
 GitHub Pagesの公開ワークフローは、ビルド・公開前に回帰テストを実行します。テストが失敗した場合は公開を停止します。
 

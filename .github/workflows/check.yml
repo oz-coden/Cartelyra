@@ -16,3 +16,9 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - run: npm run audit:data -- --json audit-report.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: campus-audit
+          path: audit-report.json
+          retention-days: 7

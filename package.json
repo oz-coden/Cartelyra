@@ -8,6 +8,7 @@
     "build": "npm run validate:data && tsc && vite build",
     "preview": "vite preview",
     "validate:data": "tsc -p tsconfig.tools.json && node scripts/validate-data.mjs",
+    "audit:data": "tsc -p tsconfig.tools.json && node scripts/audit-data.mjs",
     "test": "tsc -p tsconfig.tools.json && node --test tests/*.test.mjs"
   },
   "dependencies": {

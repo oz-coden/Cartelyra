@@ -110,8 +110,9 @@ export class ThreeView {
       if (!parent.visible) return null;
     mesh.updateWorldMatrix(true, false);
     const box = new THREE.Box3().setFromObject(mesh);
-    const point = box.getCenter(new THREE.Vector3());
-    point.y = box.max.y;
+    const point = mesh.userData.labelAnchor
+      ? mesh.localToWorld(new THREE.Vector3().fromArray(mesh.userData.labelAnchor))
+      : box.getCenter(new THREE.Vector3()).setY(box.max.y);
     this.scene.camera.updateMatrixWorld();
     point.project(this.scene.camera);
     if (
