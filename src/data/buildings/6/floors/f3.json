@@ -10,7 +10,8 @@
     "掲示案内図の室番号・用途・隣接関係を共通の描画ルールで簡略化した模式図。寸法・階高は未測定。図面の上下左右は実方位とは未対応。",
     "参考案内は通路側の代表点まで。階段の連続性・扉位置・開放時間・利用条件は現地未確認。個人名・研究テーマは表示名と検索用別名に収録しない。",
     "灰色の無記名区画は用途未確認の設備区画として表示し、歩行経路には使わない。光庭は4Fの表記を根拠に区別する。",
-    "3F右側の6-308と階段2は、左側の廊下との同階接続を未登録。参考案内は他階を経由する場合がある。灰色区画の実際の用途と通行可能な接続は確認待ち。"
+    "3F右側の6-308と階段2は、左側の廊下との同階接続を未登録。参考案内は他階を経由する場合がある。灰色区画の実際の用途と通行可能な接続は確認待ち。",
+    "6-306・6-306-1の左辺を6-305に隣接させ、その間の通路を除く。6-305は上辺から、6-306-1は6-305より上側で廊下に面する左辺から案内する。6-306は6-306-1の通路側を終点とする。"
   ],
   "outline": [
     [0, 0],
@@ -213,12 +214,12 @@
       ],
       "category": "facility",
       "polygon": [
-        [24, 74],
+        [20, 74],
         [40, 74],
         [40, 82],
-        [24, 82]
+        [20, 82]
       ],
-      "description": "通路側の代表点までの参考案内。正確な扉位置・用途・利用条件は現地未確認。",
+      "description": "6-305と隣接する前室。上側の共用通路に面する左辺の代表点まで参考案内。6-306への進入元として登録。扉位置・利用条件は現地未確認。",
       "entrance": "room-306-1"
     },
     {
@@ -230,13 +231,13 @@
       ],
       "category": "lab",
       "polygon": [
-        [24, 82],
+        [20, 82],
         [40, 82],
         [40, 100],
-        [24, 100]
+        [20, 100]
       ],
-      "description": "通路側の代表点までの参考案内。正確な扉位置・用途・利用条件は現地未確認。",
-      "entrance": "room-306"
+      "description": "6-306-1前室を進入元とする暫定案内。6-306-1の通路側まで案内し、前室内の通り抜けは表示しない。正確な扉位置・室間の接続・利用条件は現地未確認。",
+      "approachRoomId": "6-306-1"
     },
     {
       "id": "6-307",
@@ -287,12 +288,6 @@
         "id": "hall-1",
         "name": "3F 通路",
         "position": [54, 22],
-        "type": "corridor"
-      },
-      {
-        "id": "hall-2",
-        "name": "3F 通路",
-        "position": [22, 94],
         "type": "corridor"
       },
       {
@@ -404,33 +399,15 @@
         "type": "room_entrance"
       },
       {
-        "id": "hall-13",
-        "name": "3F 通路",
-        "position": [22, 90],
-        "type": "corridor"
-      },
-      {
         "id": "room-305",
         "name": "6-305 植物生理・遺伝育種学実験室4",
-        "position": [20, 90],
+        "position": [10, 80],
         "type": "room_entrance"
-      },
-      {
-        "id": "hall-14",
-        "name": "3F 通路",
-        "position": [22, 78],
-        "type": "corridor"
       },
       {
         "id": "room-306-1",
         "name": "6-306-1 前室",
-        "position": [24, 78],
-        "type": "room_entrance"
-      },
-      {
-        "id": "room-306",
-        "name": "6-306 応用物理学共通実験室",
-        "position": [24, 90],
+        "position": [20, 76],
         "type": "room_entrance"
       },
       {
@@ -444,6 +421,30 @@
         "name": "6-308 情報システム部",
         "position": [100, 90],
         "type": "room_entrance"
+      },
+      {
+        "id": "hall-lower-turn",
+        "name": "3F 通路",
+        "position": [22, 72],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-lower-left",
+        "name": "3F 通路",
+        "position": [16, 72],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-front-room",
+        "name": "3F 通路",
+        "position": [16, 76],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-305",
+        "name": "3F 通路",
+        "position": [10, 76],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -510,30 +511,6 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "room-301"
-      },
-      {
-        "to": "hall-13",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "room-305"
-      },
-      {
-        "to": "hall-14",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "room-306-1"
-      },
-      {
-        "to": "hall-13",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "room-306"
       },
       {
         "to": "hall-4",
@@ -608,30 +585,6 @@
         "from": "hall-8"
       },
       {
-        "to": "hall-14",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-9"
-      },
-      {
-        "to": "hall-13",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-14"
-      },
-      {
-        "to": "hall-2",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-13"
-      },
-      {
         "to": "hall-4",
         "type": "walk",
         "verification": "inferred",
@@ -654,6 +607,54 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-6"
+      },
+      {
+        "to": "hall-lower-turn",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-9"
+      },
+      {
+        "to": "hall-lower-left",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-lower-turn"
+      },
+      {
+        "to": "hall-front-room",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-lower-left"
+      },
+      {
+        "to": "room-306-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-front-room"
+      },
+      {
+        "to": "hall-305",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-front-room"
+      },
+      {
+        "to": "room-305",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-305"
       }
     ]
   }
