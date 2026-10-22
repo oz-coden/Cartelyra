@@ -13,7 +13,8 @@
       "新東門から3号館1Fを通り抜けて5・6号館側へ進む動線と、2・3号館間を回る屋外の動線を登録。東門も1号館前の通路に接続する。入口の向き・通行関係を模式的に記録し、正確な位置・段差・開放時間・通行条件は現地照合待ち。 東門から2号館東側を通り、3号館・新東門側へ直接抜ける屋外通路も参考登録。",
       "17号館1Fの出入口1・2は19号館側の地上通路へ参考接続。近接する上側2開口を一つの案内地点にまとめる。3F出入口の外部接続は保留。代表点は正確な扉位置を示さず、段差・開放時間・利用条件は現地確認待ち。",
       "routingCostは実距離を表さない暫定評価値。室内は初期登録時の床面積と建物配置の面積比、屋外は初期登録時の図上の長さを参考に固定し、描画座標の変更では再計算しない。屋根の有無は現地確認後に更新する。",
-      "連絡橋は6号館側から西門付近を経て12号館・17号館間へ続き、階段で23号館側の地上通路へ接続する。6号館側は階段と別経路のスロープを登録。地上通路と橋は別層とし、図上の交差だけでは接続しない。12号館・17号館間のスロープは未確認のため登録しない。高さ・段数・勾配・幅員・屋根・通行条件は現地照合待ち。"
+      "連絡橋は6号館側から西門付近を経て12号館・17号館間へ続き、階段で23号館側の地上通路へ接続する。6号館側は階段と別経路のスロープを登録。地上通路と橋は別層とし、図上の交差だけでは接続しない。12号館・17号館間のスロープは未確認のため登録しない。高さ・段数・勾配・幅員・屋根・通行条件は現地照合待ち。",
+      "19号館1Fの購買部側出入口は南側の17号館・12号館間に面する外周代表点から地上通路へ参考接続。正確な扉位置・段差・開放時間・通行条件は現地確認待ち。左側通路の外部出入口と1FのEV乗降は未登録のまま保持する。"
     ],
     "nodes": [
       {
@@ -348,6 +349,18 @@
         "name": "12号館・17号館間 連絡橋の階段前",
         "position": [40.5, 25.5],
         "layer": "bridge"
+      },
+      {
+        "id": "b19-shop-approach",
+        "name": "19号館南側 17号館・12号館間の地上通路",
+        "position": [40.5, 18.98125],
+        "layer": "ground"
+      },
+      {
+        "id": "b19-shop-door",
+        "name": "19号館 購買部側出入口前（南側）",
+        "position": [40.5, 17.58173076923077],
+        "layer": "ground"
       }
     ],
     "edges": [
@@ -462,14 +475,25 @@
         "cover": "unknown"
       },
       {
-        "to": "b17-entrance-3-approach",
+        "to": "b19-shop-approach",
         "type": "outdoor",
         "verification": "inferred",
         "isIndoor": false,
         "isAccessible": true,
         "widthClass": "unknown",
         "from": "b12-east",
-        "routingCost": 10.753359,
+        "routingCost": 5.751797,
+        "cover": "unknown"
+      },
+      {
+        "to": "b17-entrance-3-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b19-shop-approach",
+        "routingCost": 5.001562,
         "cover": "unknown"
       },
       {
@@ -991,6 +1015,17 @@
         "from": "bridge-b12-top",
         "instruction": "12号館・17号館間の階段を下り、23号館側の地上通路へ進む",
         "reverseInstruction": "12号館・17号館間の階段を上り、連絡橋へ進む"
+      },
+      {
+        "to": "b19-shop-door",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 1.399519,
+        "cover": "unknown",
+        "from": "b19-shop-approach"
       }
     ],
     "links": [
@@ -1073,6 +1108,14 @@
         "routingCost": 1,
         "cover": "unknown",
         "from": "b23-entrance-2"
+      },
+      {
+        "to": "b19/f1/entrance-shop",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "from": "b19-shop-door"
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

@@ -57,9 +57,9 @@ test('Building 19 reaches every registered place via inferred stairs while prese
   assert.ok(finder.findPath('b19/f2/room-216','b19/f3/room-305','accessible'));
   assert.equal(finder.findPath('b19/f1/room-104','b19/f1/room-101').floorChanges,2);
   assert.equal(finder.findPath('b19/f1/room-104','b19/f1/room-101','accessible'),null);
-  assert.equal(finder.findPath('b19/f1/room-101','b3/f1/entrance-north'),null);
+  assert.ok(finder.findPath('b19/f1/room-101','b3/f1/entrance-north'));
   assert.equal(places.filter(p=>p.kind==='entrance').length,1);
-  assert.ok(!source.manifest.outdoor.links.some(l=>l.to.startsWith('b19/')));
+  assert.equal(source.manifest.outdoor.links.filter(l=>l.to.startsWith('b19/')).length,1);
 });
 
 test('Building 19 left-side rooms share a corridor and the shop entrance stays on the separate lower corridor',()=>{
@@ -141,4 +141,23 @@ test('Building 19 concave and public room selection uses the shared shape in the
   const service=children.find(el=>el.getAttribute('points')===obstacle.polygon.map(p=>p.join(',')).join(' '));
   assert.ok(children.indexOf(service)>children.indexOf(document.querySelector('[data-place="19-B18"]')),
     'a public zone must not paint over its non-selectable service obstacle');
+});
+
+
+test('the south-side shop entrance connects to the ground path between Buildings 17 and 12 without exposing a 1F EV stop',()=>{
+  const o=source.manifest.outdoor,door=o.nodes.find(n=>n.id==='b19-shop-door'),approach=o.nodes.find(n=>n.id==='b19-shop-approach');
+  assert.equal(door.layer,'ground');assert.equal(approach.layer,'ground');
+  assert.ok(door.position[0]>38.75&&door.position[0]<42.375);
+  assert.ok(door.position[1]<approach.position[1]);
+  const linked=o.links.filter(l=>l.to.startsWith('b19/'));assert.equal(linked.length,1);assert.equal(linked[0].to,'b19/f1/entrance-shop');
+  const split=o.edges.filter(e=>e.from==='b12-east'&&e.to==='b19-shop-approach'||e.from==='b19-shop-approach'&&e.to==='b17-entrance-3-approach');
+  assert.equal(split.length,2);assert.ok(Math.abs(split.reduce((n,e)=>n+e.routingCost,0)-10.753359)<1e-9);
+  for(const gate of ['east-gate','new-east-gate','west-gate'])for(const mode of ['shortest','accessible','indoor','stairs'])for(const [a,b]of[[`campus/outdoor/${gate}`,'b19/f1/room-101'],['b19/f1/room-101',`campus/outdoor/${gate}`]]){
+    const r=finder.findPath(a,b,mode);assert.ok(r,`${a} -> ${b} ${mode}`);
+    assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+    assert.ok(r.pathNodes.some(n=>n.id==='b19/f1/entrance-shop'));
+    assert.ok(r.pathNodes.filter(n=>!n.buildingId).every(n=>n.outdoorLayer==='ground'));
+    assert.equal(finder.findPath(a,b,mode,false),null);
+  }
+  for(const dest of ['b19/f1/room-104','b19/f1/room-107','b19/b1/room-B20','b19/f2/room-216','b19/f3/room-305'])assert.equal(finder.findPath('campus/outdoor/west-gate',dest,'accessible'),null,dest);
 });

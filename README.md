@@ -21,14 +21,14 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 
 | Area | Current coverage |
 | --- | --- |
-| Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. Outdoor reference routes connect Buildings 1, 3, 5, 17, 20 and 23 with East Gate, New East Gate and West Gate |
+| Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. Outdoor reference routes connect Buildings 1, 3, 5, 17, 19, 20 and 23 with East Gate, New East Gate and West Gate |
 | Building 1 | B1–8F; 139 areas: 135 with direct corridor-side reference routes and four via named front rooms, 23 WCs, two stair cores and two elevators. Two 1F entrances; provisional access and field checks remain documented |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 6 | 1F–4F; 68 areas: 66 direct corridor approaches and two via named front rooms, four WCs and inferred stairs. Entrances on 1F and 2F; inner-room approaches remain provisional. The 3F right wing may require a reference route via another floor |
 | Building 17 | 1F–5F; 154 areas (151 direct approaches and three provisional front-room endpoints), 16 WCs, inferred stairs/elevators and three entrance places. Two 1F entrances connect to the Building 19-facing outdoor path; the 3F external connection is pending. The 1F section and 2F–5F section remain separate until their stair/EV correspondence is confirmed |
-| Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; no outdoor connection |
+| Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; the shop entrance connects outdoors on the south side near the gap between Buildings 17 and 12 |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches and 31 provisional front-room endpoints. 28 WCs, three EV cores, inferred stairs and two 1F entrance places facing Buildings 15 and 20, both connected to outdoor reference routes |
 | WCs and facilities | 111 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, 16 in Building 17, ten in Building 19, nine in Building 20, 28 in Building 23), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
@@ -61,7 +61,7 @@ Editing a floor’s JSON updates the floor plan, 3D view, search, facility list 
 
 The [outdoor reference and field-survey guide](docs/outdoor-survey.md) records the aerial source, drawing rules, unresolved positions and how to estimate distances from timed walks.
 
-See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 transcription checks](docs/building-5-review.md), [Building 6 transcription checks](docs/building-6-review.md), [Building 17 transcription checks](docs/building-17-review.md), [Building 19 transcription checks](docs/building-19-review.md), [Building 20 transcription checks](docs/building-20-review.md) and [Building 23 transcription checks](docs/building-23-review.md) for unresolved labels and connectivity. Building 1 has indoor reference routes using stairs or elevators, with two 1F entrances connected to outdoor reference routes. Building 5 connects to the campus network through its external-stair 2F entrance. Stair avoidance cannot reach other floors in Buildings 5 and 6 because no elevator is registered. Building 6 has indoor reference routes only; its grey areas and the 3F right-wing connection require field checks. Building 19 has indoor routes only; its 1F left/right corridor connection is unconfirmed, and elevator routing connects B1, 2F and 3F without boarding or alighting on 1F. The shop-side entrance is registered indoors; the left-side entrance needs field verification.
+See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 transcription checks](docs/building-5-review.md), [Building 6 transcription checks](docs/building-6-review.md), [Building 17 transcription checks](docs/building-17-review.md), [Building 19 transcription checks](docs/building-19-review.md), [Building 20 transcription checks](docs/building-20-review.md) and [Building 23 transcription checks](docs/building-23-review.md) for unresolved labels and connectivity. Building 1 has indoor reference routes using stairs or elevators, with two 1F entrances connected to outdoor reference routes. Building 5 connects to the campus network through its external-stair 2F entrance. Stair avoidance cannot reach other floors in Buildings 5 and 6 because no elevator is registered. Building 6 has indoor reference routes only; its grey areas and the 3F right-wing connection require field checks. Building 19 connects outdoors through its south-side shop entrance near the gap between Buildings 17 and 12; its 1F left/right corridor connection is unconfirmed, and elevator routing connects B1, 2F and 3F without boarding or alighting on 1F. The shop-side entrance connects to the ground reference path; the left-side entrance needs field verification.
 
 Building 17 has routes within 1F and within 2F–5F. Nearby 1F openings are represented by one entrance place; the two 1F entrance places connect to the outdoor path facing Building 19. The 3F entrance remains unconnected outdoors. No link between those sections is assumed from ambiguous stair/EV positions. Pool showers and 17-540 use provisional front-room endpoints; the central unlabelled area is non-traversable without claiming an atrium or roof structure.
 
@@ -126,14 +126,14 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。1・3・5・17・20・23号館と東門・新東門・西門の屋外参考経路を登録 |
+| キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。1・3・5・17・19・20・23号館と東門・新東門・西門の屋外参考経路を登録 |
 | 1号館 | B1〜8F・139区画。135区画へ直接、奥の4区画は指定した手前の部屋の通路側まで参考案内。WC 23か所・階段2系統・EV2基・1F出入口2か所。暫定的な進入関係と現地確認事項を記録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 6号館 | 1〜4F・68区画。66区画へ直接、奥の2区画は指定した手前の部屋まで参考案内。WC 4か所・階段・1Fと2Fの出入口。3F右側へは他階を経由する参考経路となる場合あり |
 | 17号館 | 1〜5F・154区画。151区画へ直接、奥の3区画は指定した手前の部屋まで暫定案内。WC 16か所・階段・EV・出入口3か所。1Fの2出入口を19号館側の屋外通路へ参考接続。3Fの外部接続は保留。1Fと2〜5Fは階段・EVの対応確認まで別々に案内 |
-| 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。屋外未接続 |
+| 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。購買部側出入口を南側の17・12号館間の屋外通路へ参考接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、31区画は手前の部屋まで暫定案内。WC 28か所・EV3系統・階段・1F出入口2か所（15号館側・20号館側）を屋外参考経路へ接続 |
 | WC・設備 | WC 111か所（1号館23・3号館17・5号館4・6号館4・17号館16・19号館10・20号館9・23号館28）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
@@ -166,7 +166,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 空中写真の出典、独自の描画ルール、未確定の位置と歩行時間からの距離推定は、[屋外配置と現地計測](docs/outdoor-survey.md)にまとめています。
 
-室番号・室名と接続の確認項目は、[1号館の図面登録と確認項目](docs/building-1-review.md)、[5号館の図面登録と確認項目](docs/building-5-review.md)、[6号館の図面登録と確認項目](docs/building-6-review.md)、[17号館の図面登録と確認項目](docs/building-17-review.md)、[19号館の図面登録と確認項目](docs/building-19-review.md)、[20号館の図面登録と確認項目](docs/building-20-review.md)と[23号館の図面登録と確認項目](docs/building-23-review.md)を参照してください。1号館は階段・EVで館内を参考案内し、1Fの2出入口を屋外参考経路へ接続します。5号館は外階段から入る2F出入口を屋外参考経路へ接続します。5号館・6号館はEV未登録のため、階段を避ける条件では別の階へ案内できません。6号館は屋外未接続で、灰色区画と3F右側への進入関係は現地確認待ちです。19号館も館内経路のみで、1Fの左右通路の接続は未確認、EVは1Fで乗降せずB1・2F・3F間を案内します。購買部側出入口は館内へ接続し、左側通路の出入口は現地確認待ちです。
+室番号・室名と接続の確認項目は、[1号館の図面登録と確認項目](docs/building-1-review.md)、[5号館の図面登録と確認項目](docs/building-5-review.md)、[6号館の図面登録と確認項目](docs/building-6-review.md)、[17号館の図面登録と確認項目](docs/building-17-review.md)、[19号館の図面登録と確認項目](docs/building-19-review.md)、[20号館の図面登録と確認項目](docs/building-20-review.md)と[23号館の図面登録と確認項目](docs/building-23-review.md)を参照してください。1号館は階段・EVで館内を参考案内し、1Fの2出入口を屋外参考経路へ接続します。5号館は外階段から入る2F出入口を屋外参考経路へ接続します。5号館・6号館はEV未登録のため、階段を避ける条件では別の階へ案内できません。6号館は屋外未接続で、灰色区画と3F右側への進入関係は現地確認待ちです。19号館は南側の17・12号館間に面する購買部側出入口から屋外へ参考接続し、1Fの左右通路の接続は未確認、EVは1Fで乗降せずB1・2F・3F間を案内します。購買部側出入口は館内と屋外の地上通路へ接続し、左側通路の出入口は現地確認待ちです。
 
 17号館は1F内と2〜5F内を別々に参考案内します。1Fの近接する2開口を一つの案内地点にまとめ、2か所の出入口を19号館側の屋外通路へ参考接続します。3F出入口は屋外未接続です。階段・EVの対応が不明なため、両者を推測で接続しません。プールのシャワー室と17-540は手前の部屋までの暫定案内とし、中央の無記名区画は構造を断定せず非通行区画としています。
 
