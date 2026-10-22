@@ -71,6 +71,10 @@ export interface BuildingSource {
   rotation: number;
   floorIds: string[];
   connections: SourceEdge[]; // Qualified node IDs, e.g. b3/f1/stair2.
+  navigationComponents?: Array<{
+    nodeId: string; // One qualified representative per intentionally separate component.
+    description: string;
+  }>;
 }
 
 export interface CampusSource {

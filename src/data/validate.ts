@@ -361,17 +361,37 @@ export function validateSources(
     const nodeIds = [...allNodes.keys()].filter((id) =>
       id.startsWith(`${building.id}/`),
     );
-    if (nodeIds.length) {
-      const reached = new Set([nodeIds[0]]),
-        queue = [nodeIds[0]];
+    const components = new Map<string, number>();
+    let componentCount = 0;
+    for (const id of nodeIds) {
+      if (components.has(id)) continue;
+      const queue = [id];components.set(id, componentCount);
       for (let i = 0; i < queue.length; i++)
         for (const next of adjacent.get(queue[i]) ?? [])
-          if (!reached.has(next)) {
-            reached.add(next);
-            queue.push(next);
+          if (!components.has(next)) {
+            components.set(next, componentCount);queue.push(next);
           }
+      componentCount++;
+    }
+    if (building.navigationComponents !== undefined) {
+      const declarations = building.navigationComponents;
+      check(Array.isArray(declarations) && declarations.length === componentCount,
+        `${building.id}: navigationComponents must describe every separate component`);
+      if (Array.isArray(declarations)) {
+        const represented = new Set<number>();
+        for (const entry of declarations) {
+          const component = entry && components.get(entry.nodeId);
+          check(component !== undefined && !represented.has(component) &&
+            typeof entry?.description === "string" && entry.description.trim().length > 0,
+            `${building.id}: invalid or duplicate navigation component ${entry?.nodeId}`);
+          if (component !== undefined) represented.add(component);
+        }
+        check(represented.size === componentCount,
+          `${building.id}: unreported disconnected navigation component`);
+      }
+    } else {
       for (const id of nodeIds)
-        check(reached.has(id), `Disconnected navigation node ${id}`);
+        check(components.get(id) === 0, `Disconnected navigation node ${id}`);
     }
   }
   const campusEdges = new Set<string>();

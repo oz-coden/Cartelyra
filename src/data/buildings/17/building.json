@@ -1,0 +1,237 @@
+{
+  "id": "b17",
+  "name": "17号館",
+  "code": "17",
+  "color": "#567b9f",
+  "origin": [1000, 0, 0],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5"
+  ],
+  "connections": [
+    {
+      "from": "b17/f2/stairs-northwest",
+      "to": "b17/f3/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/stairs-inner-upper",
+      "to": "b17/f3/stairs-inner-upper",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/stairs-east",
+      "to": "b17/f3/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/stairs-inner-lower",
+      "to": "b17/f3/stairs-inner-lower",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/stairs-southwest",
+      "to": "b17/f3/stairs-southwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/ev-east",
+      "to": "b17/f3/ev-east",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f2/ev-southwest",
+      "to": "b17/f3/ev-southwest",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/stairs-northwest",
+      "to": "b17/f4/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/stairs-inner-upper",
+      "to": "b17/f4/stairs-inner-upper",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/stairs-east",
+      "to": "b17/f4/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/stairs-inner-lower",
+      "to": "b17/f4/stairs-inner-lower",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/stairs-southwest",
+      "to": "b17/f4/stairs-southwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/ev-east",
+      "to": "b17/f4/ev-east",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f3/ev-southwest",
+      "to": "b17/f4/ev-southwest",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/stairs-northwest",
+      "to": "b17/f5/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/stairs-inner-upper",
+      "to": "b17/f5/stairs-inner-upper",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/stairs-east",
+      "to": "b17/f5/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/stairs-inner-lower",
+      "to": "b17/f5/stairs-inner-lower",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/stairs-southwest",
+      "to": "b17/f5/stairs-southwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/ev-east",
+      "to": "b17/f5/ev-east",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    },
+    {
+      "from": "b17/f4/ev-southwest",
+      "to": "b17/f5/ev-southwest",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.648612,
+      "cover": "indoor"
+    }
+  ],
+  "navigationComponents": [
+    {
+      "nodeId": "b17/f1/hall-1",
+      "description": "1Fの館内経路。2Fの階段・EVとの対応が未確認のため、上階へ接続しない。"
+    },
+    {
+      "nodeId": "b17/f2/hall-1",
+      "description": "2〜5Fの館内経路。同位置の階段・EVを仮接続し、1Fとの対応は現地確認待ち。"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import { AStarPathfinder } from "../pathfinding/AStar.js";
 
 export interface AuditFinding {
   code: "room-contained" | "room-overlap" | "room-coincident" | "unjoined-junction" |
-    "floor-components" | "route-unreachable" | "route-floor-detour" |
+    "floor-components" | "building-components" | "route-unreachable" | "route-floor-detour" |
     "view-group-pending" | "view-group-disconnected" | "view-level-height" | "unmeasured-vertical";
   buildingId: string;
   floorId?: string;
@@ -151,6 +151,23 @@ export function auditRoutes(data: CampusData, mode: RouteFilterType = "shortest"
 export function auditConnections(data: CampusData): AuditFinding[] {
   const findings: AuditFinding[] = [];
   const nodes = new Map(data.navigation.nodes.map(n => [n.id, n]));
+  for (const building of data.buildings) {
+    const local = data.navigation.nodes.filter(n => n.buildingId === building.id);
+    const adjacent = new Map(local.map(n => [n.id, [] as string[]]));
+    for (const e of data.navigation.edges) {
+      if (e.blocked || !adjacent.has(e.from) || !adjacent.has(e.to)) continue;
+      adjacent.get(e.from)!.push(e.to);adjacent.get(e.to)!.push(e.from);
+    }
+    const remaining = new Set(adjacent.keys()), representatives: string[] = [];
+    while (remaining.size) {
+      const first = remaining.values().next().value!;
+      const queue = [first];representatives.push(first);remaining.delete(first);
+      for (let i = 0; i < queue.length; i++) for (const next of adjacent.get(queue[i])!)
+        if (remaining.delete(next)) queue.push(next);
+    }
+    if (representatives.length > 1) findings.push({code: "building-components", buildingId: building.id,
+      nodeIds: representatives, detail: `${representatives.length} separate within-building navigation components; check pending links or required outdoor transfers.`});
+  }
   for (const edge of data.navigation.edges) {
     const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
     if ((edge.type === "stairs" || edge.type === "elevator") && edge.floorChanges === undefined &&
