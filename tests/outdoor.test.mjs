@@ -14,7 +14,7 @@ const compile = (s) => compileCampus(s.manifest, s.buildings, s.floors);
 const validate = (s) => validateSources(s.manifest, s.buildings, s.floors, s.sources, s.overview);
 const campus = compile(source), places = placeIndex(campus, source.overview);
 
-test("Building 3 has distinct Building 8/New East Gate-facing entrances; the outdoor route joins the Building 8 side to Building 20 via West Gate", () => {
+test("Building 3 has distinct Building 8/New East Gate-facing entrances and reaches Building 20 via West Gate", () => {
   const entries = places.filter((p) => p.buildingId === "b3" && p.kind === "entrance");
   assert.deepEqual(entries.map((p) => p.featureId), ["entrance-north", "entrance-south"]);
   const finder = new AStarPathfinder(campus);
@@ -23,7 +23,8 @@ test("Building 3 has distinct Building 8/New East Gate-facing entrances; the out
       const route = finder.findPath(a, b, mode);
       assert.ok(route, `${a} -> ${b} ${mode}`);
       const ids = route.pathNodes.map((n) => n.id);
-      for (const id of ["b3/f1/entrance-north", "campus/outdoor/west-gate", "b20/f1/entrance-right"])
+      assert.ok(ids.some(id=>["b3/f1/entrance-north","b3/f1/entrance-south"].includes(id)));
+      for (const id of ["campus/outdoor/west-gate", "b20/f1/entrance-right"])
         assert.ok(ids.includes(id), id);
       assert.equal(route.floorChanges, 6);
       assert.equal(route.distanceUnit, "schematic");
@@ -41,8 +42,63 @@ test("Building 3 has distinct Building 8/New East Gate-facing entrances; the out
   const west = places.find((p) => p.id === "campus/gate/west");
   assert.equal(west.nodeId, "campus/outdoor/west-gate");
   assert.ok(finder.findPath(west.nodeId, "b20/f1/room-113"));
-  for (const p of places.filter((p) => p.kind === "gate" && p !== west)) assert.equal(p.nodeId, undefined);
+  for (const id of ["east", "new-east"])
+    assert.ok(places.find(p => p.id === `campus/gate/${id}`).nodeId);
+  assert.equal(places.find(p => p.id === "campus/gate/main").nodeId,undefined);
   assert.ok(finder.findPath("b3/f1/entrance-south", "b3/f1/entrance-north"));
+});
+
+test("Building 1 entrances face Building 2 and East Gate and connect to the campus network", () => {
+  const finder = new AStarPathfinder(campus);
+  const links=source.manifest.outdoor.links;
+  assert.equal(links.find(l=>l.to==='b1/f1/entry-top').from,'b1-b2-door');
+  assert.equal(links.find(l=>l.to==='b1/f1/entry-right').from,'b1-lobby-door');
+  const footprint=source.overview.buildings.find(b=>b.id==='b1').polygon;
+  const [nw,ne,se]=footprint;
+  const node=id=>source.manifest.outdoor.nodes.find(n=>n.id===id).position;
+  assert.deepEqual(node('b1-b2-door'),[(nw[0]+ne[0])/2,(nw[1]+ne[1])/2]);
+  assert.deepEqual(node('b1-lobby-door'),[(ne[0]+se[0])/2,(ne[1]+se[1])/2]);
+  for(const mode of ['shortest','accessible','indoor','stairs']) for(const gate of ['east','new-east','west']){
+    const place=places.find(p=>p.id===`campus/gate/${gate}`);
+    for(const [a,b]of[[place.nodeId,'b1/f8/room-804'],['b1/f8/room-804',place.nodeId]]){
+      const route=finder.findPath(a,b,mode);assert.ok(route,`${gate}: ${mode}`);
+      assert.ok(route.pathNodes.some(n=>!n.buildingId));
+      assert.ok(route.steps.every(s=>!/undefined|NaN/.test(s.instruction)));
+      assert.equal(finder.findPath(a,b,mode,false),null);
+    }
+  }
+  assert.equal(finder.findPath('b1/f1/entry-top','b6/f1/entry-left'),null);
+});
+
+test("Building 5 uses an explicit external stair to its 2F Building 7-facing entrance near Building 3", () => {
+  const finder=new AStarPathfinder(campus),id='b5/f2/entrance-side';
+  const landing=source.manifest.outdoor.nodes.find(n=>n.id==='b5-2f-door');
+  const [,,east,west]=source.overview.buildings.find(b=>b.id==='b5').polygon;
+  const fraction=(east[0]-landing.position[0])/(east[0]-west[0]);
+  assert.ok(fraction>0&&fraction<.25,'the representative point is near the Building 3 end of the Building 7-facing wall');
+  for(const [a,b]of[['b3/f1/room-103',id],[id,'b3/f1/room-103']]){
+    const route=finder.findPath(a,b);assert.ok(route);
+    assert.ok(route.steps.some(s=>s.edgeType==='stairs'&&s.instruction.includes('外階段')));
+    assert.ok(route.pathNodes.some(n=>n.id===id&&n.floor===2));
+    assert.equal(finder.findPath(a,b,'accessible'),null);
+  }
+});
+
+test("New East Gate supports both the Building 3 passageway and the outdoor route between Buildings 2 and 3", () => {
+  const gate='campus/outdoor/new-east-gate',dest='b5/f2/entrance-side';
+  const bypassClosed=structuredClone(campus);
+  bypassClosed.navigation.edges.find(e=>e.from==='campus/outdoor/b3-b2-west'&&e.to==='campus/outdoor/b3-b2-mid').blocked=true;
+  const passage=new AStarPathfinder(bypassClosed).findPath(gate,dest);
+  assert.ok(passage);
+  for(const id of ['b3/f1/entrance-south','b3/f1/entrance-north'])assert.ok(passage.pathNodes.some(n=>n.id===id));
+  assert.equal(passage.pathNodes.filter(n=>n.buildingId==='b3').every(n=>n.floor===1),true);
+  const passageClosed=structuredClone(campus);
+  passageClosed.navigation.edges.find(e=>e.from==='campus/outdoor/b3-south'&&e.to==='b3/f1/entrance-south').blocked=true;
+  const bypass=new AStarPathfinder(passageClosed).findPath(gate,dest);
+  assert.ok(bypass.pathNodes.some(n=>n.id==='campus/outdoor/b3-b2-mid'));
+  assert.ok(!bypass.pathNodes.some(n=>n.buildingId==='b3'));
+  const third=source.floors.find(f=>f.buildingId==='b3'&&f.id==='f1');
+  assert.ok(third.features.filter(f=>f.type==='entrance').every(f=>f.description.includes('自動ドア')));
 });
 
 test("Outdoor costs and topology are independent of arbitrary indoor 3D origins and floor numbers", () => {

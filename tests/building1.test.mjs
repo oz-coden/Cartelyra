@@ -63,7 +63,7 @@ test("Building 1 reaches registered corridor endpoints by stairs and EV without 
   }
   assert.equal(places.filter((p) => p.kind === "room").length, 139);
   assert.ok(places.filter((p) => p.kind === "room").every((p) => p.nodeId));
-  assert.equal(finder.findPath(entry, "b3/f1/room-103"), null);
+  assert.ok(finder.findPath(entry, "b3/f1/room-103"));
   assert.equal(finder.findPath("b1/b1/ev-1", "b1/f1/ev-1", "accessible").floorChanges, 1);
 });
 
@@ -75,6 +75,10 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   assert.equal(entries.length, 2);
   assert.ok(entries.every((p) => p.floorLevel === 1));
   assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 1);
+  const top = entries.find(p => p.featureId === "entry-top");
+  assert.match(top.description,/2号館側.*ドア/);
+  assert.doesNotMatch([top.description,...top.aliases].join(" "),/自動/);
+  assert.match(entries.find(p => p.featureId === "entry-right").description,/東門側.*南東面/);
   const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top");
   assert.equal(pointInInterior(firstNode.position, first.outline), false);
   const route = finder.findPath("b1/f1/entry-top", "b1/f1/room-101");

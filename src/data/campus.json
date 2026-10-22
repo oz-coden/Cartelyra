@@ -8,7 +8,9 @@
     "notes": [
       "通路の接続関係を模式的な参考図から登録し、位置と向きを国土地理院の空中写真に合わせて概略調整。撮影年月は不明。実距離・所要時間は未校正。",
       "3号館の8号館側出入口から西門、12号館・17号館と道路の間の地上通路、13号館と17号館の間の大通りを経て20号館へ接続。立体交差の上側へは接続しない。",
-      "樹木・屋根・日陰で見えない部分と出入口は代表点を推定。道幅は定性的な参考情報のみで、経路選択の重みには未使用。段差・開放時間・通行条件は未確認。"
+      "樹木・屋根・日陰で見えない部分と出入口は代表点を推定。道幅は定性的な参考情報のみで、経路選択の重みには未使用。段差・開放時間・通行条件は未確認。",
+      "1号館は1-106側を2号館側、窓口ロビー側を東門側の代表点に接続。5号館は7号館に面する側の3号館寄りから外階段で2Fへ入る。",
+      "新東門から3号館1Fを通り抜けて5・6号館側へ進む動線と、2・3号館間を回る屋外の動線を登録。東門も1号館前の通路に接続する。入口の向き・通行関係を模式的に記録し、正確な位置・段差・開放時間・通行条件は現地照合待ち。"
     ],
     "nodes": [
       {
@@ -44,7 +46,7 @@
       {
         "id": "b7-north-east",
         "name": "7号館・6号館間の曲がり角",
-        "position": [56.0, 18.875],
+        "position": [56, 18.875],
         "layer": "ground"
       },
       {
@@ -56,7 +58,7 @@
       {
         "id": "west-gate",
         "name": "西門",
-        "position": [53.75, 20.0],
+        "position": [53.75, 20],
         "layer": "ground",
         "gateId": "west"
       },
@@ -93,7 +95,7 @@
       {
         "id": "avenue-turn",
         "name": "大通りの13号館角",
-        "position": [22.875, 35.0],
+        "position": [22.875, 35],
         "layer": "ground"
       },
       {
@@ -111,7 +113,111 @@
       {
         "id": "b20-south-east",
         "name": "20号館 図面下側・右端出入口前",
-        "position": [14.5, 40.0],
+        "position": [14.5, 40],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b2-door",
+        "name": "1号館 1-106側出入口前（2号館側）",
+        "position": [82.1875, 42],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b2-approach",
+        "name": "1号館・2号館間の通路",
+        "position": [82.1875, 40],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-lobby-door",
+        "name": "1号館 窓口ロビー側出入口前（東門側）",
+        "position": [86.625, 47.125],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-lobby-approach",
+        "name": "1号館 窓口ロビー前の通路",
+        "position": [89, 47.75],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-east-turn",
+        "name": "1号館 東門側の曲がり角",
+        "position": [90, 46.25],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b2-east",
+        "name": "1号館・2号館間 東門側の分岐",
+        "position": [89.5, 41.75],
+        "layer": "ground"
+      },
+      {
+        "id": "east-gate-approach",
+        "name": "東門前の通路",
+        "position": [94, 43],
+        "layer": "ground"
+      },
+      {
+        "id": "east-gate",
+        "name": "東門",
+        "position": [96.375, 42.375],
+        "layer": "ground",
+        "gateId": "east"
+      },
+      {
+        "id": "b2-west-turn",
+        "name": "2号館・8号館側の曲がり角",
+        "position": [76.5, 38.75],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-b2-west",
+        "name": "2号館・3号館間 8号館側の分岐",
+        "position": [76.5, 32],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-b2-mid",
+        "name": "2号館・3号館間の通路",
+        "position": [82.5, 31.625],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-b2-east",
+        "name": "2号館・3号館間 新東門側の曲がり角",
+        "position": [89.75, 32.25],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-south",
+        "name": "3号館 新東門側出入口前",
+        "position": [89.325, 26.475],
+        "layer": "ground"
+      },
+      {
+        "id": "b3-new-east-approach",
+        "name": "3号館 新東門側の通路",
+        "position": [91.75, 27.25],
+        "layer": "ground"
+      },
+      {
+        "id": "new-east-gate",
+        "name": "新東門",
+        "position": [96.875, 28.75],
+        "layer": "ground",
+        "gateId": "new-east"
+      },
+      {
+        "id": "b5-stair-foot",
+        "name": "5号館・3号館側 外階段前",
+        "position": [73.975, 19.38],
+        "layer": "ground"
+      },
+      {
+        "id": "b5-2f-door",
+        "name": "5号館 2F外階段側出入口前（7号館側）",
+        "position": [73.86, 16.785],
         "layer": "ground"
       }
     ],
@@ -135,7 +241,7 @@
         "from": "b3-front"
       },
       {
-        "to": "b7-east-south",
+        "to": "b5-stair-foot",
         "type": "outdoor",
         "verification": "inferred",
         "isIndoor": false,
@@ -259,6 +365,161 @@
         "isAccessible": true,
         "widthClass": "unknown",
         "from": "avenue-west"
+      },
+      {
+        "from": "b5-stair-foot",
+        "to": "b7-east-south",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-front",
+        "to": "b3-b2-west",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-b2-west",
+        "to": "b2-west-turn",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b2-west-turn",
+        "to": "b1-b2-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-b2-approach",
+        "to": "b1-b2-door",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-b2-approach",
+        "to": "b1-b2-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-b2-east",
+        "to": "b1-east-turn",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-east-turn",
+        "to": "b1-lobby-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-lobby-approach",
+        "to": "b1-lobby-door",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b1-b2-east",
+        "to": "east-gate-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "east-gate-approach",
+        "to": "east-gate",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-b2-west",
+        "to": "b3-b2-mid",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-b2-mid",
+        "to": "b3-b2-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-b2-east",
+        "to": "b3-new-east-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-new-east-approach",
+        "to": "b3-south",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b3-new-east-approach",
+        "to": "new-east-gate",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b5-stair-foot",
+        "to": "b5-2f-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "widthClass": "unknown",
+        "instruction": "5号館の外階段を上り、2Fの外階段側出入口へ進む",
+        "reverseInstruction": "5号館2Fの外階段を下り、7号館側の通路へ進む"
       }
     ],
     "links": [
@@ -273,6 +534,30 @@
         "verification": "inferred",
         "isAccessible": true,
         "from": "b20-south-east"
+      },
+      {
+        "from": "b1-b2-door",
+        "to": "b1/f1/entry-top",
+        "verification": "inferred",
+        "isAccessible": true
+      },
+      {
+        "from": "b1-lobby-door",
+        "to": "b1/f1/entry-right",
+        "verification": "inferred",
+        "isAccessible": true
+      },
+      {
+        "from": "b3-south",
+        "to": "b3/f1/entrance-south",
+        "verification": "inferred",
+        "isAccessible": true
+      },
+      {
+        "from": "b5-2f-door",
+        "to": "b5/f2/entrance-side",
+        "verification": "inferred",
+        "isAccessible": false
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

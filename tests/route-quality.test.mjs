@@ -68,3 +68,20 @@ test('schematic floor preference preserves constraints, required transfers and m
   graph.navigation.edges[0].blocked=false;graph.navigation.edges[0].verification='inferred';
   assert.equal(new AStarPathfinder(graph).findPath('a','b','shortest',false).floorChanges,2);
 });
+
+test('same-building schematic guidance avoids scale-driven outdoor shortcuts but permits necessary outdoor paths and passageways', () => {
+  const graph={campusName:'Test',coordinateUnit:'schematic',buildings:[{id:'test',floors:[{level:1,stackIndex:0,label:'1F'}]}],navigation:{
+    nodes:[{id:'a',name:'A',type:'corridor',buildingId:'test',floor:1,position:[0,0,0]},
+      {id:'b',name:'B',type:'corridor',buildingId:'test',floor:1,position:[0,0,0]},
+      ...['x','y'].map(id=>({id,name:id,type:'outdoor',position:[0,0,0]}))],
+    edges:[['a','b',100,true],['a','x',1,false],['x','y',200,false],['y','b',1,false]].map(([from,to,distance,isIndoor])=>
+      ({from,to,distance,isIndoor,type:isIndoor?'walk':'outdoor',isAccessible:true,verification:'verified'}))}};
+  const outdoors=graph.navigation.edges.find(e=>e.from==='x');outdoors.distance=1;
+  assert.equal(new AStarPathfinder(graph).findPath('a','b').totalDistance,100);
+  assert.equal(new AStarPathfinder({...graph,coordinateUnit:'meters'}).findPath('a','b').totalDistance,3);
+  graph.navigation.edges[0].blocked=true;
+  assert.equal(new AStarPathfinder(graph).findPath('a','b').totalDistance,3,'outdoor-only connections remain usable');
+  graph.navigation.edges[0].blocked=false;outdoors.distance=200;
+  const passage=new AStarPathfinder(graph).findPath('x','y');
+  assert.deepEqual(passage.pathNodes.map(n=>n.id),['x','a','b','y'],'gate-to-gate travel may use a registered building passageway');
+});

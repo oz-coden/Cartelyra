@@ -99,9 +99,10 @@
       "entrance": "entrance-side",
       "aliases": [
         "2F入口",
-        "外階段入口"
+        "外階段入口",
+        "7号館側出入口"
       ],
-      "description": "2Fの図面右側、外階段に面した建物出入口。屋外から入る階は2F。正確な扉位置・屋外側の経路は未確認。"
+      "description": "7号館に面する側の3号館寄りにある外階段側出入口の代表点。外階段から入る階は2F。屋外参考経路に接続し、階段を避ける条件では屋外と接続しない。正確な扉位置・段差・利用条件は現地確認待ち。"
     }
   ],
   "rooms": [
@@ -232,25 +233,25 @@
       {
         "id": "room-203",
         "name": "5-203 教授室",
-        "position": [20, 113.0],
+        "position": [20, 113],
         "type": "room_entrance"
       },
       {
         "id": "hall-113p0",
         "name": "2F 通路",
-        "position": [16, 113.0],
+        "position": [16, 113],
         "type": "corridor"
       },
       {
         "id": "room-204",
         "name": "5-204 教授室",
-        "position": [20, 120.0],
+        "position": [20, 120],
         "type": "room_entrance"
       },
       {
         "id": "hall-120p0",
         "name": "2F 通路",
-        "position": [16, 120.0],
+        "position": [16, 120],
         "type": "corridor"
       },
       {

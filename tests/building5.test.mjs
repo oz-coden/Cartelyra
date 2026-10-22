@@ -64,7 +64,8 @@ test("Building 5 enters on 2F; its external stairs do not become a fictitious in
     if (place.nodeId !== entries[0].nodeId)
       assert.equal(finder.findPath(entries[0].nodeId, place.nodeId, "shortest", false), null);
   }
-  assert.equal(finder.findPath("b3/f1/room-103", entries[0].nodeId), null);
+  assert.ok(finder.findPath("b3/f1/room-103", entries[0].nodeId));
+  assert.equal(finder.findPath("b3/f1/room-103", entries[0].nodeId, "accessible"), null);
 });
 
 test("Building 5 inner-room guidance ends at explicit provisional front rooms without traversing them", () => {
