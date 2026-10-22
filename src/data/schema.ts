@@ -129,6 +129,8 @@ export interface CampusOverview {
     imageryDate: string | null;
     attribution: { label: string; url: string };
   };
+  // Visual landmarks only; routable street segments must also be authored in outdoor.edges.
+  contextRoads?: Array<{ id: string; name: string; sourceId: string; points: Point2[] }>;
   buildings: Array<{ id: string; name: string; polygon: Point2[] }>;
   gates: Array<{
     id: string;

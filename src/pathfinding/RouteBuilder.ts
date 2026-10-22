@@ -14,6 +14,7 @@ export class RouteBuilder {
     const totalDistance = links.reduce((sum, l) => sum + l.length, 0);
     const verticalMovements = {
       stairs: links.filter(l => l.edge.type === "stairs").length,
+      ramps: links.filter(l => l.edge.type === "ramp").length,
       elevators: links.filter(l => l.edge.type === "elevator").length,
       unmeasured: links.reduce((sum, l) => sum + l.unmeasuredVertical, 0),
     };
@@ -26,8 +27,8 @@ export class RouteBuilder {
       const floor = this.floorNames.get(`${to.buildingId}/${to.floor}`) ?? to.name;
       let instruction = link.reversed ? link.edge.reverseInstruction : link.edge.instruction;
       if (!instruction) {
-        if (link.edge.type === "stairs" || link.edge.type === "elevator")
-          instruction = `${link.edge.type === "stairs" ? "階段" : "EV"}で「${floor}」へ移動`;
+        if (link.edge.type === "stairs" || link.edge.type === "ramp" || link.edge.type === "elevator")
+          instruction = `${link.edge.type === "stairs" ? "階段" : link.edge.type === "ramp" ? "スロープ" : "EV"}で「${floor}」へ移動`;
         else if (from.buildingId && !to.buildingId) instruction = `「${from.name}」から屋外へ出る`;
         else if (!from.buildingId && to.buildingId) instruction = `${floor} の「${to.name}」から建物に入る`;
         else if (from.buildingId !== to.buildingId) instruction = `${edgeCover(link.edge) === "covered" ? "屋根付き連絡通路" : "連絡通路"}で ${floor} の「${to.name}」へ移動`;

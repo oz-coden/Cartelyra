@@ -38,7 +38,7 @@ test('external stairs are visible in both directions without fabricating outdoor
   const panel=new SearchPanel([]),finder=new AStarPathfinder(data);
   for(const [a,b]of [['campus/outdoor/new-east-gate','b5/f2/entrance-side'],['b5/f2/entrance-side','campus/outdoor/new-east-gate']]){
     const r=finder.findPath(a,b);assert.ok(r);assert.equal(r.floorChanges,0);
-    assert.deepEqual(r.verticalMovements,{stairs:1,elevators:0,unmeasured:1});
+    assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
     panel.updateSummary(r);assert.match(document.getElementById('summary-vertical').textContent,/階段あり.*昇降量未確認/);
     assert.equal(minimumFloorChanges(data,a).get(b),1);
     assert.ok(r.pathNodes.filter(n=>!n.buildingId).every(n=>n.floor===undefined));

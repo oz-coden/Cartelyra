@@ -40,7 +40,7 @@ export class RoutePolicy {
     const bIndex = this.indices.get(`${b.buildingId}/${b.floor}`);
     const known = edge.floorChanges ?? (a.buildingId && a.buildingId === b.buildingId && aIndex !== undefined && bIndex !== undefined
       ? Math.abs(aIndex - bIndex) : undefined);
-    const vertical = edge.type === "stairs" || edge.type === "elevator";
+    const vertical = edge.type === "stairs" || edge.type === "ramp" || edge.type === "elevator";
     return { edge, targetId: b.id, reversed: false, length,
       floorChanges: known ?? 0, unmeasuredVertical: vertical && known === undefined ? 1 : 0,
       boundaryChanges: this.domain(a) !== this.domain(b) ? 1 : 0 };

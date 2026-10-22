@@ -284,7 +284,7 @@ export function validateSources(
       check(a && b, `Missing edge endpoint ${edge.from} -> ${edge.to}`);
       check(edge.from !== edge.to, `Self edge ${edge.from}`);
       check(
-        ["walk", "stairs", "elevator", "bridge", "outdoor"].includes(edge.type),
+        ["walk", "stairs", "ramp", "elevator", "bridge", "outdoor"].includes(edge.type),
         `Invalid edge type ${edge.from}`,
       );
       check(
@@ -342,7 +342,7 @@ export function validateSources(
         }
       } else {
         check(
-          ["stairs", "elevator", "bridge", "outdoor"].includes(edge.type),
+          ["stairs", "ramp", "elevator", "bridge", "outdoor"].includes(edge.type),
           `Cross-floor walk edge ${edge.from}`,
         );
         if (edge.type === "stairs" || edge.type === "elevator") {
@@ -450,6 +450,14 @@ export function validateSources(
     "Duplicate overview building ID",
   );
   overview.buildings.forEach((b) => polygon(b.polygon, `overview/${b.id}`));
+  check(unique((overview.contextRoads ?? []).map(r => r.id)), "Duplicate context road IDs");
+  for (const road of overview.contextRoads ?? []) {
+    check(typeof road.id === "string" && !!road.id && typeof road.name === "string" && !!road.name,
+      "Invalid context road identity");
+    check(sourceIds.has(road.sourceId), `Unknown context road source ${road.id}`);
+    check(Array.isArray(road.points) && road.points.length >= 2 && road.points.every(finitePoint),
+      `Invalid context road points ${road.id}`);
+  }
   check(unique(overview.gates.map((g) => g.id)), "Duplicate gate IDs");
   check(
     unique([...placeIds, ...overview.gates.map((g) => `campus/gate/${g.id}`)]),
@@ -496,7 +504,7 @@ export function validateSources(
       const key = edge.bidirectional === false ? `${edge.from}>${edge.to}` : [edge.from, edge.to].sort().join("|");
       check(!seen.has(key), `Duplicate outdoor edge ${key}`);
       seen.add(key);
-      check(["outdoor", "bridge", "stairs", "elevator"].includes(edge.type), `Invalid outdoor edge type ${edge.from}`);
+      check(["outdoor", "bridge", "stairs", "ramp", "elevator"].includes(edge.type), `Invalid outdoor edge type ${edge.from}`);
       check(["inferred", "diagram", "verified"].includes(edge.verification), `Invalid outdoor verification ${edge.from}`);
       check(edge.isIndoor === false && typeof edge.isAccessible === "boolean" &&
         (edge.type !== "stairs" || !edge.isAccessible), `Invalid outdoor flags ${edge.from}`);
@@ -504,7 +512,7 @@ export function validateSources(
       if (edge.distance !== undefined)
         check(Number.isFinite(edge.distance) && edge.distance > 0, `Invalid outdoor distance ${edge.from}`);
       if (!a || !b) continue;
-      check(a.layer === b.layer || ["stairs", "elevator"].includes(edge.type), `Outdoor layer transfer needs explicit vertical connection ${edge.from}`);
+      check(a.layer === b.layer || ["stairs", "ramp", "elevator"].includes(edge.type), `Outdoor layer transfer needs explicit vertical connection ${edge.from}`);
       if (a.layer === "ground" && b.layer === "ground" && finitePoint(a.position) && finitePoint(b.position))
         check(segmentIsWalkable(a.position, b.position, area, obstacles), `Outdoor edge crosses building ${edge.from} -> ${edge.to}`);
       for (const [from, to] of [[edge.from, edge.to], [edge.to, edge.from]]) {

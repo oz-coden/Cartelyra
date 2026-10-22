@@ -21,7 +21,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 
 | Area | Current coverage |
 | --- | --- |
-| Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. Outdoor reference routes connect Buildings 1, 3, 5, 17 and 20 with East Gate, New East Gate and West Gate |
+| Campus | 30 buildings and four gates can be selected. A north-up overview uses simplified building shapes interpreted from aerial photos. Outdoor reference routes connect Buildings 1, 3, 5, 17, 20 and 23 with East Gate, New East Gate and West Gate |
 | Building 1 | B1–8F; 139 areas: 135 with direct corridor-side reference routes and four via named front rooms, 23 WCs, two stair cores and two elevators. Two 1F entrances; provisional access and field checks remain documented |
 | Building 3 | Schematic plans for B2, B1, 1F, 2F, 3F and 4F; Building 8-facing and New East Gate-facing entrances on 1F |
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
@@ -30,7 +30,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Building 17 | 1F–5F; 154 areas (151 direct approaches and three provisional front-room endpoints), 16 WCs, inferred stairs/elevators and three entrance places. Two 1F entrances connect to the Building 19-facing outdoor path; the 3F external connection is pending. The 1F section and 2F–5F section remain separate until their stair/EV correspondence is confirmed |
 | Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; no outdoor connection |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
-| Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches and 31 provisional front-room endpoints. 28 WCs, three EV cores, inferred stairs and two 1F entrance places facing Buildings 15 and 20; no outdoor connection |
+| Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches and 31 provisional front-room endpoints. 28 WCs, three EV cores, inferred stairs and two 1F entrance places facing Buildings 15 and 20, both connected to outdoor reference routes |
 | WCs and facilities | 111 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, 16 in Building 17, ten in Building 19, nine in Building 20, 28 in Building 23), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
@@ -43,9 +43,11 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 5. Select a route-step card to switch to its building and floor, or to the campus map for outdoor steps. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
 6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
 
-On schematic maps, routes first minimize vertical travel, then compare explicitly registered reference costs using the selected preference. Unknown outdoor stair/elevator transitions also count toward this preference. For endpoints in the same building or connected display group, equal-vertical-travel routes prefer fewer exits and re-entries. Reference costs are independent of drawing scale, position and rotation; they are not measured distances. “標準” (standard) does not guarantee the shortest actual route. Indoor preference distinguishes indoor, roofed and exposed/unknown connections. “階段を避ける” (avoid stairs) excludes stair connections and does not guarantee wheelchair accessibility. The summary identifies stairs and elevators even when the number of floor changes is unknown.
+On schematic maps, routes first minimize vertical travel, then compare explicitly registered reference costs using the selected preference. Unknown outdoor stair/ramp/elevator transitions also count toward this preference. For endpoints in the same building or connected display group, equal-vertical-travel routes prefer fewer exits and re-entries. Reference costs are independent of drawing scale, position and rotation; they are not measured distances. “標準” (standard) does not guarantee the shortest actual route. Indoor preference distinguishes indoor, roofed and exposed/unknown connections. “階段を避ける” (avoid stairs) excludes stair connections and does not guarantee wheelchair accessibility. The summary identifies stairs, ramps and elevators even when the number of floor changes is unknown.
 
-Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. Explicitly registered public circulation areas, such as Building 19’s B1 dining room, hall and lounge, allow reference paths through their interiors; they use teal dashed zones in the floor plan and low zones in 3D. The outdoor reference route joins Building 3’s Building 8-facing entrance to Building 20’s rightmost entrance on the lower side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 1 connects through its Building 2-facing and East Gate-facing entrances. Building 5 connects through external stairs to its 2F entrance on the Building 7-facing side near Building 3; stair avoidance excludes this outdoor connection. New East Gate supports both the Building 3 1F passageway and the outdoor path between Buildings 2 and 3. East Gate connects to the path in front of Building 1. The other two Building 20 entrances, Building 6 entrances and Main Gate remain unconnected outdoors. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
+Routes stop at representative points on the corridor side of rooms; they do not locate individual doors. For inner rooms, the map data explicitly names a front room where guidance ends. The selection bubble, route summary and steps identify this limit; no route traverses the front room. Explicitly registered public circulation areas, such as Building 19’s B1 dining room, hall and lounge, allow reference paths through their interiors; they use teal dashed zones in the floor plan and low zones in 3D. The outdoor reference route joins Building 3’s Building 8-facing entrance to Building 20’s rightmost entrance on the lower side of its floor plan, via West Gate and the avenue between Buildings 13 and 17. Building 1 connects through its Building 2-facing and East Gate-facing entrances. Building 5 connects through external stairs to its 2F entrance on the Building 7-facing side near Building 3; stair avoidance excludes this outdoor connection. New East Gate supports both the Building 3 1F passageway and the outdoor path between Buildings 2 and 3. East Gate connects to the path in front of Building 1 and directly to the Building 3 side along the east side of Building 2. The other two Building 20 entrances, Building 6 entrances and Main Gate remain unconnected outdoors. Outdoor segments appear on the campus map; indoor segments appear on their respective floor plans. Path widths are qualitative reference data and do not yet affect route selection. Ground paths do not connect to an elevated crossing unless an explicit transfer is registered.
+
+Building 23’s two entrances connect through the ground path between Buildings 17 and 23. An elevated bridge runs from the Building 6 side near West Gate to the gap between Buildings 12 and 17, where stairs join the Building 23-side ground path. The Building 6 approach offers separate stair and ramp connections; the 12/17-side connection is stairs only. Stair avoidance therefore uses the existing ground detour for the complete journey. Blue lines show the bridge, orange lines show vertical connections, and faint background lines show surrounding roads simplified from aerial photos. Road landmarks do not create routing connections; walking routes along streets require explicit graph edges. Heights, ramp gradients, pedestrian access and crossing locations remain unverified.
 
 A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Selecting a place within the current building or connected display group retains the 3D camera; selecting a place outside that display scope fits the new scope into view while preserving the floor display mode and spacing. Green/red 3D pins mark the actual route endpoints, while purple diamonds mark transitions to another floor or the outdoor route. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
@@ -63,7 +65,7 @@ See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 tr
 
 Building 17 has routes within 1F and within 2F–5F. Nearby 1F openings are represented by one entrance place; the two 1F entrance places connect to the outdoor path facing Building 19. The 3F entrance remains unconnected outdoors. No link between those sections is assumed from ambiguous stair/EV positions. Pool showers and 17-540 use provisional front-room endpoints; the central unlabelled area is non-traversable without claiming an atrium or roof structure.
 
-Building 23 has indoor reference routes from B2 to 8F. 23-B203 and 23-107 use provisional front-room endpoints at 23-B202 and 23-105 respectively, and the B2 lower stair has no public boarding link. 23-B203 retains its room number without an assigned use name; 23-225 is the hot-water and ice-making room. The 1F entrance places face Building 15 (entrance 1) and Building 20 (entrance 2); their outdoor path connections remain unregistered.
+Building 23 has indoor reference routes from B2 to 8F. 23-B203 and 23-107 use provisional front-room endpoints at 23-B202 and 23-105 respectively, and the B2 lower stair has no public boarding link. 23-B203 retains its room number without an assigned use name; 23-225 is the hot-water and ice-making room. The 1F entrance places face Building 15 (entrance 1) and Building 20 (entrance 2); both connect through the ground path between Buildings 17 and 23.
 
 Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, adding more outdoor routes and buildings, and creating an editor with floor-plan underlays.
 
@@ -124,7 +126,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 | 対象 | 現在の状態 |
 | --- | --- |
-| キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。1・3・5・17・20号館と東門・新東門・西門の屋外参考経路を登録 |
+| キャンパス全体 | 30棟と4か所の門を選択可能。空中写真を参考に外形を簡略化し、北を上に配置。1・3・5・17・20・23号館と東門・新東門・西門の屋外参考経路を登録 |
 | 1号館 | B1〜8F・139区画。135区画へ直接、奥の4区画は指定した手前の部屋の通路側まで参考案内。WC 23か所・階段2系統・EV2基・1F出入口2か所。暫定的な進入関係と現地確認事項を記録 |
 | 3号館 | B2・B1・1F・2F・3F・4Fの模式図。1Fに8号館側・新東門側の出入口 |
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
@@ -133,7 +135,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 17号館 | 1〜5F・154区画。151区画へ直接、奥の3区画は指定した手前の部屋まで暫定案内。WC 16か所・階段・EV・出入口3か所。1Fの2出入口を19号館側の屋外通路へ参考接続。3Fの外部接続は保留。1Fと2〜5Fは階段・EVの対応確認まで別々に案内 |
 | 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。屋外未接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
-| 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、31区画は手前の部屋まで暫定案内。WC 28か所・EV3系統・階段・1F出入口2か所（15号館側・20号館側）。屋外未接続 |
+| 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、31区画は手前の部屋まで暫定案内。WC 28か所・EV3系統・階段・1F出入口2か所（15号館側・20号館側）を屋外参考経路へ接続 |
 | WC・設備 | WC 111か所（1号館23・3号館17・5号館4・6号館4・17号館16・19号館10・20号館9・23号館28）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
@@ -146,9 +148,11 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 5. 道順カードを選ぶと、その棟・階へ切り替わります。屋外の道順ではキャンパス図へ切り替わります。3Dでは「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
 6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
-模式図では、昇降の少なさを優先してから、選択した条件で登録済みの参考評価値を比較します。昇降量が不明な屋外の階段・EVも昇降のある接続として扱います。同じ棟または連絡棟群の中では、昇降が同じなら不要な出入りを避けます。参考評価値は描画の縮尺・位置・回転とは独立し、実距離を表しません。「標準」は実際の最短距離を保証しません。屋内優先では、屋内・屋根付き・屋外または未確認の接続を区別します。同階の接続がない場合は他階経由も可能です。概要には、昇降量が未確認でも階段やEVの利用を表示します。「階段を避ける」は階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
+模式図では、昇降の少なさを優先してから、選択した条件で登録済みの参考評価値を比較します。昇降量が不明な屋外の階段・スロープ・EVも昇降のある接続として扱います。同じ棟または連絡棟群の中では、昇降が同じなら不要な出入りを避けます。参考評価値は描画の縮尺・位置・回転とは独立し、実距離を表しません。「標準」は実際の最短距離を保証しません。屋内優先では、屋内・屋根付き・屋外または未確認の接続を区別します。同階の接続がない場合は他階経由も可能です。概要には、昇降量が未確認でも階段・スロープ・EVの利用を表示します。「階段を避ける」は階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。
 
-部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。19号館B1の食堂・ホール・ラウンジのように、明示登録された公開の通行区画は区画内を通る参考経路を使います。平面図では青緑の破線、3Dでは低い区画で表示します。屋外参考経路は、3号館の8号館側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面下側・右端出入口へ接続しています。1号館の2号館側・東門側出入口、5号館の7号館側・3号館寄りの外階段から2F出入口へも参考接続します。5号館の屋外接続は階段回避では使いません。新東門からは3号館1Fの通り抜けと2・3号館間の屋外迂回路を使え、東門は1号館前の通路へ接続します。20号館の残り2か所・6号館の出入口・正門は屋外未接続です。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
+部屋への案内は通路側の代表点までで、個々の扉の位置を示すものではありません。奥の部屋はデータで指定した手前の部屋まで案内し、その範囲を吹き出し・経路概要・道順に表示します。手前の部屋の室内を通り抜ける経路は作成しません。19号館B1の食堂・ホール・ラウンジのように、明示登録された公開の通行区画は区画内を通る参考経路を使います。平面図では青緑の破線、3Dでは低い区画で表示します。屋外参考経路は、3号館の8号館側出入口から西門、13号館と17号館の間の大通りを経て、20号館の図面下側・右端出入口へ接続しています。1号館の2号館側・東門側出入口、5号館の7号館側・3号館寄りの外階段から2F出入口へも参考接続します。5号館の屋外接続は階段回避では使いません。新東門からは3号館1Fの通り抜けと2・3号館間の屋外迂回路を使え、東門は1号館前の通路と2号館東側を通って3号館側へ抜ける直通路へ接続します。20号館の残り2か所・6号館の出入口・正門は屋外未接続です。屋外区間はキャンパス図、館内区間は各階の図に表示します。道幅は定性的な参考情報として保持し、経路の優先度にはまだ反映しません。立体交差は、明示した階層間の接続がない限り地上の道と接続しません。
+
+23号館の両出入口は、17号館・23号館間の地上通路へ参考接続します。6号館側から西門付近を経て12号館・17号館間へ続く連絡橋と、23号館側の地上通路へ降りる階段を登録します。6号館側は階段・スロープの別経路がありますが、12・17号館側は階段だけを登録するため、全区間の階段回避は既存の地上迂回路を使います。青線は連絡橋、橙線は昇降接続、薄い背景線は空中写真から簡略化した周辺道路です。背景の道路線から経路は生成せず、道路沿いの歩行区間も経路データに明示して接続します。高低差・勾配・歩道・横断位置・通行条件は現地確認待ちです。
 
 選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。同じ棟または表示中の連絡棟群の場所を選択した場合は3Dカメラを維持し、その範囲外の場所を選択した場合は階の表示モードと間隔を保って、新しい表示範囲を収めます。3Dの緑・赤のピンは実際の出発地・目的地を示し、紫のひし形は別の階や屋外への中継地点を示します。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
@@ -166,7 +170,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 17号館は1F内と2〜5F内を別々に参考案内します。1Fの近接する2開口を一つの案内地点にまとめ、2か所の出入口を19号館側の屋外通路へ参考接続します。3F出入口は屋外未接続です。階段・EVの対応が不明なため、両者を推測で接続しません。プールのシャワー室と17-540は手前の部屋までの暫定案内とし、中央の無記名区画は構造を断定せず非通行区画としています。
 
-23号館はB2〜8Fを館内参考案内します。23-B203は23-B202、23-107は23-105の通路側まで暫定案内します。B2下側階段は共用通路への乗降未登録です。23-B203は用途名を付けず室番号だけを保持し、23-225は給湯・製氷室として登録します。1F出入口1は15号館側、出入口2は20号館側に面し、屋外通路は接続未登録です。
+23号館はB2〜8Fを館内参考案内します。23-B203は23-B202、23-107は23-105の通路側まで暫定案内します。B2下側階段は共用通路への乗降未登録です。23-B203は用途名を付けず室番号だけを保持し、23-225は給湯・製氷室として登録します。1F出入口1は15号館側、出入口2は20号館側に面し、17号館・23号館間の地上通路から両出入口へ参考接続します。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路の拡充・他棟の登録、図面を下敷きにした編集ツールがあります。
 

@@ -155,7 +155,7 @@ export interface NavNode {
   isPreset?: boolean;
 }
 
-export type NavEdgeType = "walk" | "stairs" | "elevator" | "bridge" | "outdoor";
+export type NavEdgeType = "walk" | "stairs" | "ramp" | "elevator" | "bridge" | "outdoor";
 
 export interface NavEdge {
   from: string;
@@ -217,5 +217,5 @@ export interface RouteResult {
   distanceUnit: "meters" | "schematic";
   inferredConnections: number;
   routingCost?: number;
-  verticalMovements?: { stairs: number; elevators: number; unmeasured: number };
+  verticalMovements?: { stairs: number; ramps: number; elevators: number; unmeasured: number };
 }

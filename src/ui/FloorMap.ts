@@ -475,7 +475,7 @@ export class FloorMap {
       ? "空中写真を参考にした概略図・北が上"
       : "建物配置の模式図";
     document.getElementById("map-legend")!.textContent =
-      "水色：フロア登録済み　灰：フロア未登録　破線：屋外参考経路　紫：選択中の経路";
+      "水色：フロア登録済み　灰：フロア未登録　薄線：周辺道路　破線：地上参考経路　青線：連絡橋　橙線：階段・スロープ　紫：選択中の経路";
     const caption = document.getElementById("map-caption")!;
     caption.textContent = this.overview.notes?.join(" ") ??
       "建物を選ぶと館内図を表示。屋外の経路・実寸・方位は未校正です。";
@@ -494,12 +494,20 @@ export class FloorMap {
       }));
       this.label("北", [x, y - 2], "map-label map-north-label");
     }
+    for (const road of this.overview.contextRoads ?? [])
+      this.svg.append(element("polyline", {
+        points: points(road.points), class: "map-context-road", "data-road": road.id,
+        "aria-hidden": "true",
+      }));
     const outdoorNodes = new Map(this.campus.navigation.nodes.map((n) => [n.id, n]));
     for (const edge of this.campus.navigation.edges) {
       const a = outdoorNodes.get(edge.from), b = outdoorNodes.get(edge.to);
       if (!a?.buildingId && !b?.buildingId && a?.overviewPosition && b?.overviewPosition && !edge.blocked)
         this.svg.append(element("polyline", {
-          points: points([a.overviewPosition, b.overviewPosition]), class: "map-outdoor-path",
+          points: points([a.overviewPosition, b.overviewPosition]),
+          class: `map-outdoor-path${["stairs", "ramp", "elevator"].includes(edge.type) ? " map-outdoor-transition" : a.outdoorLayer === "bridge" && b.outdoorLayer === "bridge" ? " map-outdoor-bridge" : ""}`,
+          "data-from": a.id, "data-to": b.id, "data-edge-type": edge.type,
+          "data-from-layer": a.outdoorLayer ?? "ground", "data-to-layer": b.outdoorLayer ?? "ground",
         }));
     }
     const catalog = buildingCatalog(this.campus, this.overview);

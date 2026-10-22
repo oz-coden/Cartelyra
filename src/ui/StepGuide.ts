@@ -90,6 +90,8 @@ export class StepGuide {
     switch (type) {
       case "stairs":
         return "🪜";
+      case "ramp":
+        return "↗";
       case "elevator":
         return "🛗";
       case "bridge":
@@ -111,6 +113,8 @@ export class StepGuide {
     switch (type) {
       case "stairs":
         return "階段移動";
+      case "ramp":
+        return "スロープ";
       case "elevator":
         return "エレベーター";
       case "bridge":

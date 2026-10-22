@@ -108,7 +108,7 @@ export function minimumFloorChanges(data: CampusData, start: string, mode: Route
     const cost = edge.floorChanges ?? (a.buildingId && a.buildingId === b.buildingId
       ? Math.abs((indices.get(`${a.buildingId}/${a.floor}`) ?? a.floor ?? 0) -
         (indices.get(`${b.buildingId}/${b.floor}`) ?? b.floor ?? 0)) :
-      edge.type === "stairs" || edge.type === "elevator" ? 1 : 0);
+      edge.type === "stairs" || edge.type === "ramp" || edge.type === "elevator" ? 1 : 0);
     adjacent.get(a.id)!.push([b.id, cost]);
     if (edge.bidirectional !== false) adjacent.get(b.id)!.push([a.id, cost]);
   }
@@ -170,7 +170,7 @@ export function auditConnections(data: CampusData): AuditFinding[] {
   }
   for (const edge of data.navigation.edges) {
     const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
-    if ((edge.type === "stairs" || edge.type === "elevator") && edge.floorChanges === undefined &&
+    if ((edge.type === "stairs" || edge.type === "ramp" || edge.type === "elevator") && edge.floorChanges === undefined &&
       (!a.buildingId || a.buildingId !== b.buildingId))
       findings.push({ code: "unmeasured-vertical", buildingId: a.buildingId ?? b.buildingId ?? "campus",
         nodeIds: [a.id, b.id], detail: "A vertical connection has no confirmed floor-change count; guidance identifies the facility without claiming level travel." });

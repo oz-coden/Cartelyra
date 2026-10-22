@@ -126,7 +126,9 @@ test("Outdoor authoring rejects shortcuts through buildings, false layer transfe
   const closed = structuredClone(source);
   closed.manifest.outdoor.edges.find((e) => e.to === "west-gate").blocked = true;
   assert.deepEqual(validate(closed), []);
-  assert.equal(new AStarPathfinder(compile(closed)).findPath("b3/f1/room-103", "b20/f1/room-113"), null);
+  const alternative = new AStarPathfinder(compile(closed)).findPath("b3/f1/room-103", "b20/f1/room-113");
+  assert.ok(alternative.steps.some(s => s.edgeType === "stairs"));
+  assert.equal(new AStarPathfinder(compile(closed)).findPath("b3/f1/room-103", "b20/f1/room-113", "accessible"), null);
 });
 
 test("Overview renders outdoor route segments while indoor plans keep their own coordinates", async () => {

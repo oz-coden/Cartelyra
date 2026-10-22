@@ -43,9 +43,9 @@ test('all registered Building 23 approaches use the minimum floor changes includ
     if(p.nodeId!==entry)assert.equal(finder.findPath(entry,p.nodeId,mode,false),null);
   }
   assert.equal(finder.findPath('b23/b1/ev-1','b23/f1/ev-1','accessible').floorChanges,1);
-  assert.equal(finder.findPath(entry,'campus/outdoor/west-gate'),null);
+  assert.ok(finder.findPath(entry,'campus/outdoor/west-gate'));
   assert.equal(finder.findPath(entry,'b19/f1/room-101'),null);
-  assert.ok(!source.manifest.outdoor.links.some(e=>e.to.startsWith('b23/')));
+  assert.equal(source.manifest.outdoor.links.filter(e=>e.to.startsWith('b23/')).length,2);
   assert.equal(places.filter(p=>p.kind==='entrance').length,2);
   assert.ok(places.filter(p=>p.kind==='entrance').every(p=>p.floorLevel===1));
 });

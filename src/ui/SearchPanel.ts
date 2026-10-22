@@ -248,6 +248,7 @@ export class SearchPanel {
     document.getElementById("summary-vertical")!.textContent = [
       ...(result.floorChanges ? [`${result.floorChanges} フロア移動`] : []),
       ...(movement?.stairs ? ["階段あり"] : []),
+      ...(movement?.ramps ? ["スロープあり"] : []),
       ...(movement?.elevators ? ["EVあり"] : []),
       ...(movement?.unmeasured ? ["昇降量未確認"] : []),
     ].join(" / ") || "階移動なし";
