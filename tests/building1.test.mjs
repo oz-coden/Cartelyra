@@ -43,7 +43,7 @@ test("Building 1 preserves nine floor layouts, occupied centres and corrected la
 });
 
 test("Building 1 reaches registered corridor endpoints by stairs and EV without bridging unknown areas", () => {
-  const entry = "b1/f1/entry-top-left";
+  const entry = "b1/f1/entry-top";
   for (const place of places.filter((p) => p.nodeId)) {
     for (const mode of ["shortest", "indoor", "stairs", "accessible"]) {
       const route = finder.findPath(entry, place.nodeId, mode);
@@ -72,12 +72,12 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   assert.ok(!first.rooms.some((r) => r.id === "1-106"));
   assert.ok(!first.rooms.some((r) => pointInInterior([55, 0], r.polygon)));
   const entries = places.filter((p) => p.kind === "entrance");
-  assert.equal(entries.length, 3);
+  assert.equal(entries.length, 2);
   assert.ok(entries.every((p) => p.floorLevel === 1));
-  assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 2);
-  const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top-left");
+  assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 1);
+  const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top");
   assert.equal(pointInInterior(firstNode.position, first.outline), false);
-  const route = finder.findPath("b1/f1/entry-top-left", "b1/f1/room-101");
+  const route = finder.findPath("b1/f1/entry-top", "b1/f1/room-101");
   assert.ok(route.pathNodes.some((n) => n.position[2] < 0));
   assert.ok(source.buildings.find((b) => b.id === "b1").connections.every((e) => e.verification === "inferred"));
 });
@@ -90,7 +90,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
     assert.equal(place.nodeId, approach.nodeId);
     assert.match(place.description, /暫定推定/);
     assert.match(placeRouteNotice(place), new RegExp(front));
-    const route = finder.findPath("b1/f1/entry-top-left", place.nodeId);
+    const route = finder.findPath("b1/f1/entry-top", place.nodeId);
     assert.equal(route.pathNodes.at(-1).id, approach.nodeId);
   }
   assert.equal(places.filter((p) => p.approachRoomId).length, 3);
@@ -110,6 +110,6 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
   assert.notEqual(left.nodeId, right.nodeId);
   for (const place of [left, right]) {
     assert.match(place.description, /暫定.*現地調査で見直す/);
-    assert.equal(finder.findPath("b1/f1/entry-top-left", place.nodeId).pathNodes.at(-1).id, place.nodeId);
+    assert.equal(finder.findPath("b1/f1/entry-top", place.nodeId).pathNodes.at(-1).id, place.nodeId);
   }
 });

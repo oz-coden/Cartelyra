@@ -9,7 +9,8 @@
   "notes": [
     "掲示案内図から室番号と通路の接続関係を読み取り、共通の描画ルールで簡略化した模式図。寸法・階高は未測定。",
     "扉は通路側の代表点。階段の連続性・EVの停止階・開放時間・利用条件は現地未確認で、参考接続として登録。図面の上下左右は実方位とは未対応。",
-    "1-106は通行可能な入口空間として扱い、室ポリゴンを設けない。1-106側出入口の別名で検索可能。車路は歩行経路に含めない。"
+    "1-106は通行可能な入口空間として扱い、室ポリゴンを設けない。1-106側出入口の別名で検索可能。車路は歩行経路に含めない。",
+    "1-106側の並列した自動ドア2か所は同じ入口ホールに通じるため、案内上の出入口を1つに集約し、両者の間に代表点を置く。窓口ロビー側と合わせて1Fの案内用出入口は2か所。"
   ],
   "outline": [
     [-12, 70],
@@ -166,39 +167,22 @@
       "entrance": "wc-lower-multi"
     },
     {
-      "id": "entry-top-left",
-      "label": "1-106側出入口1",
+      "id": "entry-top",
+      "label": "1-106側出入口",
       "type": "entrance",
       "polygon": [
-        [26, -10],
-        [30, -10],
-        [30, -8],
-        [26, -8]
+        [39.5, -10],
+        [43.5, -10],
+        [43.5, -8],
+        [39.5, -8]
       ],
-      "description": "掲示図上側の出入口記号。1-106は開いた入口ホールとして扱い、窓口ロビーへ接続。屋外経路は未登録。",
-      "entrance": "entry-top-left",
+      "description": "1-106側に並ぶ自動ドア2か所を、案内上は1つの出入口に集約。入口ホールから窓口ロビーへ接続する模式的な代表点。屋外経路は未登録。",
+      "entrance": "entry-top",
       "aliases": [
         "1-106",
         "106",
-        "入口ホール"
-      ]
-    },
-    {
-      "id": "entry-top-right",
-      "label": "1-106側出入口2",
-      "type": "entrance",
-      "polygon": [
-        [53, -10],
-        [57, -10],
-        [57, -8],
-        [53, -8]
-      ],
-      "description": "掲示図上側の出入口記号。1-106は開いた入口ホールとして扱い、窓口ロビーへ接続。屋外経路は未登録。",
-      "entrance": "entry-top-right",
-      "aliases": [
-        "1-106",
-        "106",
-        "入口ホール"
+        "入口ホール",
+        "自動ドア"
       ]
     },
     {
@@ -317,12 +301,6 @@
         "type": "corridor"
       },
       {
-        "id": "hall-2",
-        "name": "1F 通路",
-        "position": [28, -10],
-        "type": "corridor"
-      },
-      {
         "id": "hall-3",
         "name": "1F 通路",
         "position": [28, 8],
@@ -332,12 +310,6 @@
         "id": "hall-4",
         "name": "1F 通路",
         "position": [55, 8],
-        "type": "corridor"
-      },
-      {
-        "id": "hall-5",
-        "name": "1F 通路",
-        "position": [55, -10],
         "type": "corridor"
       },
       {
@@ -575,22 +547,22 @@
         "type": "facility_entrance"
       },
       {
-        "id": "entry-top-left",
-        "name": "1-106側出入口1",
-        "position": [28, -10],
-        "type": "facility_entrance"
-      },
-      {
-        "id": "entry-top-right",
-        "name": "1-106側出入口2",
-        "position": [55, -10],
-        "type": "facility_entrance"
-      },
-      {
         "id": "entry-right",
         "name": "窓口ロビー側出入口",
         "position": [106, 76],
         "type": "facility_entrance"
+      },
+      {
+        "id": "entry-top",
+        "name": "1-106側出入口",
+        "position": [41.5, -10],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-entry-top",
+        "name": "1F 入口ホール通路",
+        "position": [41.5, 0],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -715,44 +687,12 @@
         "from": "wc-lower-multi"
       },
       {
-        "to": "hall-2",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "entry-top-left"
-      },
-      {
-        "to": "hall-5",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "entry-top-right"
-      },
-      {
         "to": "hall-12",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
         "from": "entry-right"
-      },
-      {
-        "to": "hall-1",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-0"
-      },
-      {
-        "to": "hall-26",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-2"
       },
       {
         "to": "hall-0",
@@ -777,14 +717,6 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-3"
-      },
-      {
-        "to": "hall-1",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "hall-5"
       },
       {
         "to": "hall-4",
@@ -993,6 +925,30 @@
         "isIndoor": true,
         "isAccessible": true,
         "from": "hall-29"
+      },
+      {
+        "to": "hall-entry-top",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "entry-top"
+      },
+      {
+        "to": "hall-entry-top",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-0"
+      },
+      {
+        "to": "hall-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-entry-top"
       }
     ]
   }
