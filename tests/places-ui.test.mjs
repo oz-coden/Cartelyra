@@ -315,6 +315,17 @@ test("WC search supports keyboard choice, route results, editing and pick-mode r
   assert.equal(mode, "none");
 });
 
+test("explicit building and floor queries do not match longer numbers or basement labels", () => {
+  assert.deepEqual(searchPlaces(places, "3号館 B202").map(p=>p.id), ["3-B202"]);
+  assert.deepEqual(searchPlaces(places, "２３号館 B202").map(p=>p.id), ["23-B202"]);
+  for(const level of [2,-2]){
+    const matches=searchPlaces(places, `23号館 ${level===2?'2F':'B2F'}`);
+    assert.ok(matches.length>0);
+    assert.ok(matches.every(p=>p.buildingId==='b23'&&p.floorLevel===level));
+  }
+  assert.ok(searchPlaces(places, "1号館").every(p=>p.buildingId==='b1'));
+});
+
 test("unlinked rooms can be named as endpoints without inventing navigation nodes", () => {
   const { document, window } = dom(),
     panel = new SearchPanel(places);
@@ -327,7 +338,7 @@ test("unlinked rooms can be named as endpoints without inventing navigation node
   };
   panel.setStart("b3/f1/room-103", "展示ホール");
   const input = document.getElementById("input-dest");
-  input.value = "B202";
+  input.value = "3号館 B202";
   input.dispatchEvent(new window.Event("input"));
   document.querySelector("#suggestions-dest button").click();
   assert.equal(focus.roomId, "3-B202");

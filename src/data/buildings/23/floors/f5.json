@@ -1,0 +1,991 @@
+{
+  "buildingId": "b23",
+  "id": "f5",
+  "level": 5,
+  "label": "5F",
+  "stackIndex": 6,
+  "elevation": 42,
+  "sourceId": "b23-f5-f6",
+  "notes": [
+    "掲示案内図の室番号・一般的用途・隣接関係を独自の描画ルールで模式的に整理。寸法・階高は実測値ではない。",
+    "研究室・教授室は一般的な用途だけを表示し、個人名・研究テーマは収録しない。",
+    "同位置の階段・EV記号を隣接階へ仮接続。扉位置・停止階・開放時間・利用条件は現地確認待ち。B2の下側階段は共用通路への接続を登録しない。",
+    "1Fの複数の開口は左右各1か所の出入口に集約。実方位と屋外・他棟の接続先は未確認で、屋外経路は補完しない。",
+    "通路に面しない小区画は指定した手前の部屋まで暫定案内し、室内の通り抜けは表示しない。灰色の室番号のみの区画は用途未確認。"
+  ],
+  "outline": [
+    [16, 0],
+    [36, 0],
+    [36, 12],
+    [44, 12],
+    [44, 0],
+    [64, 0],
+    [64, 12],
+    [72, 12],
+    [72, 0],
+    [90, 0],
+    [90, 16],
+    [94, 16],
+    [94, 250],
+    [90, 250],
+    [90, 260],
+    [38, 260],
+    [38, 100],
+    [0, 100],
+    [0, 16],
+    [16, 16]
+  ],
+  "voids": [],
+  "features": [
+    {
+      "id": "stairs-top",
+      "label": "階段1（図面上側）",
+      "type": "stairs",
+      "polygon": [
+        [16, 0],
+        [36, 0],
+        [36, 14],
+        [16, 14]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "stairs-top"
+    },
+    {
+      "id": "stairs-core",
+      "label": "階段2（WC側）",
+      "type": "stairs",
+      "polygon": [
+        [44, 52],
+        [52, 52],
+        [52, 70],
+        [44, 70]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "stairs-core"
+    },
+    {
+      "id": "stairs-bottom",
+      "label": "階段3（図面下側）",
+      "type": "stairs",
+      "polygon": [
+        [38, 250],
+        [58, 250],
+        [58, 260],
+        [38, 260]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "stairs-bottom"
+    },
+    {
+      "id": "wc-male",
+      "label": "男性用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [44, 24],
+        [52, 24],
+        [52, 52],
+        [44, 52]
+      ],
+      "restroomType": "male",
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "wc-male"
+    },
+    {
+      "id": "wc-female",
+      "label": "女性用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [52, 24],
+        [60, 24],
+        [60, 52],
+        [52, 52]
+      ],
+      "restroomType": "female",
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "wc-female"
+    },
+    {
+      "id": "core-service",
+      "label": "設備区画",
+      "type": "service",
+      "polygon": [
+        [52, 52],
+        [60, 52],
+        [60, 60],
+        [52, 60]
+      ]
+    },
+    {
+      "id": "wc-multi",
+      "label": "多目的トイレ",
+      "type": "restroom",
+      "polygon": [
+        [52, 60],
+        [60, 60],
+        [60, 70],
+        [52, 70]
+      ],
+      "restroomType": "multipurpose",
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "wc-multi"
+    },
+    {
+      "id": "ev-1",
+      "label": "エレベーター1",
+      "type": "elevator",
+      "polygon": [
+        [44, 78],
+        [52, 78],
+        [52, 86],
+        [44, 86]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "ev-1"
+    },
+    {
+      "id": "ev-service",
+      "label": "設備区画",
+      "type": "service",
+      "polygon": [
+        [52, 78],
+        [60, 78],
+        [60, 86],
+        [52, 86]
+      ]
+    },
+    {
+      "id": "ev-2",
+      "label": "エレベーター2",
+      "type": "elevator",
+      "polygon": [
+        [44, 90],
+        [52, 90],
+        [52, 98],
+        [44, 98]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "ev-2"
+    },
+    {
+      "id": "ev-3",
+      "label": "エレベーター3",
+      "type": "elevator",
+      "polygon": [
+        [52, 90],
+        [60, 90],
+        [60, 98],
+        [52, 98]
+      ],
+      "description": "掲示図の設備記号に基づく代表点。正確な扉位置・段差・利用条件は現地未確認。",
+      "entrance": "ev-3"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "23-506",
+      "name": "23-506",
+      "aliases": [
+        "506"
+      ],
+      "category": "unknown",
+      "polygon": [
+        [72, 0],
+        [90, 0],
+        [90, 14],
+        [72, 14]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-506"
+    },
+    {
+      "id": "23-503",
+      "name": "23-503 研究室",
+      "aliases": [
+        "503"
+      ],
+      "category": "lab",
+      "polygon": [
+        [18, 20],
+        [38, 20],
+        [38, 48],
+        [18, 48]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-503"
+    },
+    {
+      "id": "23-503-1",
+      "name": "23-503-1 研究室",
+      "aliases": [
+        "503-1"
+      ],
+      "category": "lab",
+      "polygon": [
+        [0, 20],
+        [18, 20],
+        [18, 48],
+        [0, 48]
+      ],
+      "description": "通路に直接面しない小区画。進入元は暫定推定で、指定した手前の部屋の通路側まで案内する。室内の通り抜けは表示せず、現地調査で見直す。",
+      "approachRoomId": "23-503"
+    },
+    {
+      "id": "23-502",
+      "name": "23-502 研究室",
+      "aliases": [
+        "502"
+      ],
+      "category": "lab",
+      "polygon": [
+        [0, 48],
+        [38, 48],
+        [38, 74],
+        [0, 74]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-502"
+    },
+    {
+      "id": "23-501",
+      "name": "23-501 研究室",
+      "aliases": [
+        "501"
+      ],
+      "category": "lab",
+      "polygon": [
+        [0, 74],
+        [38, 74],
+        [38, 100],
+        [0, 100]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-501"
+    },
+    {
+      "id": "23-504",
+      "name": "23-504 コピー室",
+      "aliases": [
+        "504"
+      ],
+      "category": "facility",
+      "polygon": [
+        [44, 8],
+        [53, 8],
+        [53, 14],
+        [44, 14]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-504"
+    },
+    {
+      "id": "23-504-1",
+      "name": "23-504-1 研究室",
+      "aliases": [
+        "504-1"
+      ],
+      "category": "lab",
+      "polygon": [
+        [44, 0],
+        [53, 0],
+        [53, 8],
+        [44, 8]
+      ],
+      "description": "通路に直接面しない小区画。進入元は暫定推定で、指定した手前の部屋の通路側まで案内する。室内の通り抜けは表示せず、現地調査で見直す。",
+      "approachRoomId": "23-504"
+    },
+    {
+      "id": "23-505",
+      "name": "23-505 研究室",
+      "aliases": [
+        "505"
+      ],
+      "category": "lab",
+      "polygon": [
+        [53, 0],
+        [64, 0],
+        [64, 14],
+        [53, 14]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-505"
+    },
+    {
+      "id": "23-507",
+      "name": "23-507 研究室",
+      "aliases": [
+        "507"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 20],
+        [94, 20],
+        [94, 50],
+        [70, 50]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-507"
+    },
+    {
+      "id": "23-508",
+      "name": "23-508 教授室",
+      "aliases": [
+        "508"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 50],
+        [94, 50],
+        [94, 56],
+        [70, 56]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-508"
+    },
+    {
+      "id": "23-509",
+      "name": "23-509 教授室",
+      "aliases": [
+        "509"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 56],
+        [94, 56],
+        [94, 62],
+        [70, 62]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-509"
+    },
+    {
+      "id": "23-510",
+      "name": "23-510 教授室",
+      "aliases": [
+        "510"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 62],
+        [94, 62],
+        [94, 68],
+        [70, 68]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-510"
+    },
+    {
+      "id": "23-511",
+      "name": "23-511 教授室",
+      "aliases": [
+        "511"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 68],
+        [94, 68],
+        [94, 74],
+        [70, 74]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-511"
+    },
+    {
+      "id": "23-512",
+      "name": "23-512 教授室",
+      "aliases": [
+        "512"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 74],
+        [94, 74],
+        [94, 80],
+        [70, 80]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-512"
+    },
+    {
+      "id": "23-513",
+      "name": "23-513 教授室",
+      "aliases": [
+        "513"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 80],
+        [94, 80],
+        [94, 86],
+        [70, 86]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-513"
+    },
+    {
+      "id": "23-514",
+      "name": "23-514 教授室",
+      "aliases": [
+        "514"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 86],
+        [94, 86],
+        [94, 92],
+        [70, 92]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-514"
+    },
+    {
+      "id": "23-515",
+      "name": "23-515 教授室",
+      "aliases": [
+        "515"
+      ],
+      "category": "office",
+      "polygon": [
+        [70, 92],
+        [94, 92],
+        [94, 98],
+        [70, 98]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-515"
+    },
+    {
+      "id": "23-516",
+      "name": "23-516 電気電子情報工学科第2実験室",
+      "aliases": [
+        "516"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 98],
+        [94, 98],
+        [94, 150],
+        [70, 150]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-516"
+    },
+    {
+      "id": "23-517",
+      "name": "23-517 工学研究科演習室1",
+      "aliases": [
+        "517"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 150],
+        [94, 150],
+        [94, 164],
+        [70, 164]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-517"
+    },
+    {
+      "id": "23-518",
+      "name": "23-518 工学研究科演習室2",
+      "aliases": [
+        "518"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 164],
+        [94, 164],
+        [94, 178],
+        [70, 178]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-518"
+    },
+    {
+      "id": "23-519",
+      "name": "23-519 工学研究科演習室3",
+      "aliases": [
+        "519"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 178],
+        [94, 178],
+        [94, 192],
+        [70, 192]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-519"
+    },
+    {
+      "id": "23-520",
+      "name": "23-520 工学研究科演習室4",
+      "aliases": [
+        "520"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 192],
+        [94, 192],
+        [94, 204],
+        [70, 204]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-520"
+    },
+    {
+      "id": "23-521",
+      "name": "23-521 工学研究科演習室5",
+      "aliases": [
+        "521"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 204],
+        [94, 204],
+        [94, 216],
+        [70, 216]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-521"
+    },
+    {
+      "id": "23-522",
+      "name": "23-522 工学研究科演習室6",
+      "aliases": [
+        "522"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 216],
+        [94, 216],
+        [94, 228],
+        [70, 228]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-522"
+    },
+    {
+      "id": "23-523",
+      "name": "23-523 工学研究科演習室7",
+      "aliases": [
+        "523"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 228],
+        [94, 228],
+        [94, 240],
+        [70, 240]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-523"
+    },
+    {
+      "id": "23-524",
+      "name": "23-524 工学研究科機器保全室兼資料室",
+      "aliases": [
+        "524"
+      ],
+      "category": "lab",
+      "polygon": [
+        [70, 240],
+        [94, 240],
+        [94, 250],
+        [70, 250]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-524"
+    },
+    {
+      "id": "23-535",
+      "name": "23-535 電気電子情報工学科第2実験準備室",
+      "aliases": [
+        "535"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 100],
+        [58, 100],
+        [58, 124],
+        [38, 124]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-535"
+    },
+    {
+      "id": "23-534",
+      "name": "23-534 研究室",
+      "aliases": [
+        "534"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 124],
+        [58, 124],
+        [58, 132],
+        [38, 132]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-534"
+    },
+    {
+      "id": "23-533",
+      "name": "23-533 研究室",
+      "aliases": [
+        "533"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 132],
+        [58, 132],
+        [58, 144],
+        [38, 144]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-533"
+    },
+    {
+      "id": "23-531",
+      "name": "23-531 教授室",
+      "aliases": [
+        "531"
+      ],
+      "category": "office",
+      "polygon": [
+        [38, 156],
+        [58, 156],
+        [58, 170],
+        [38, 170]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-531"
+    },
+    {
+      "id": "23-530",
+      "name": "23-530 研究室",
+      "aliases": [
+        "530"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 170],
+        [58, 170],
+        [58, 192],
+        [38, 192]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-530"
+    },
+    {
+      "id": "23-529",
+      "name": "23-529 研究室",
+      "aliases": [
+        "529"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 192],
+        [58, 192],
+        [58, 210],
+        [38, 210]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-529"
+    },
+    {
+      "id": "23-528",
+      "name": "23-528 研究室",
+      "aliases": [
+        "528"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 210],
+        [58, 210],
+        [58, 224],
+        [38, 224]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-528"
+    },
+    {
+      "id": "23-527",
+      "name": "23-527 工学研究科演習室8",
+      "aliases": [
+        "527"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 224],
+        [58, 224],
+        [58, 236],
+        [38, 236]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-527"
+    },
+    {
+      "id": "23-526",
+      "name": "23-526 工学研究科演習室9",
+      "aliases": [
+        "526"
+      ],
+      "category": "lab",
+      "polygon": [
+        [38, 236],
+        [58, 236],
+        [58, 250],
+        [38, 250]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-526"
+    },
+    {
+      "id": "23-532",
+      "name": "23-532 研究室",
+      "aliases": [
+        "532"
+      ],
+      "category": "lab",
+      "polygon": [
+        [48, 144],
+        [58, 144],
+        [58, 156],
+        [48, 156]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-532"
+    },
+    {
+      "id": "23-532-1",
+      "name": "23-532-1 教授室",
+      "aliases": [
+        "532-1"
+      ],
+      "category": "office",
+      "polygon": [
+        [38, 144],
+        [48, 144],
+        [48, 156],
+        [38, 156]
+      ],
+      "description": "通路に直接面しない小区画。進入元は暫定推定で、指定した手前の部屋の通路側まで案内する。室内の通り抜けは表示せず、現地調査で見直す。",
+      "approachRoomId": "23-532"
+    },
+    {
+      "id": "23-525",
+      "name": "23-525",
+      "aliases": [
+        "525"
+      ],
+      "category": "unknown",
+      "polygon": [
+        [76, 250],
+        [90, 250],
+        [90, 260],
+        [76, 260]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-525"
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {"id": "stairs-top", "name": "階段1（図面上側）", "position": [30, 14], "type": "stairs"},
+      {"id": "stairs-core", "name": "階段2（WC側）", "position": [44, 62], "type": "stairs"},
+      {"id": "stairs-bottom", "name": "階段3（図面下側）", "position": [58, 255], "type": "stairs"},
+      {"id": "wc-male", "name": "男性用トイレ", "position": [44, 38], "type": "facility_entrance"},
+      {"id": "wc-female", "name": "女性用トイレ", "position": [60, 38], "type": "facility_entrance"},
+      {"id": "wc-multi", "name": "多目的トイレ", "position": [60, 65], "type": "facility_entrance"},
+      {"id": "ev-1", "name": "エレベーター1", "position": [44, 82], "type": "elevator"},
+      {"id": "ev-2", "name": "エレベーター2", "position": [48, 98], "type": "elevator"},
+      {"id": "ev-3", "name": "エレベーター3", "position": [56, 98], "type": "elevator"},
+      {"id": "room-506", "name": "23-506", "position": [81.0, 14], "type": "room_entrance"},
+      {"id": "room-503", "name": "23-503 研究室", "position": [38, 34], "type": "room_entrance"},
+      {"id": "room-502", "name": "23-502 研究室", "position": [38, 61.0], "type": "room_entrance"},
+      {"id": "room-501", "name": "23-501 研究室", "position": [38, 87.0], "type": "room_entrance"},
+      {"id": "room-504", "name": "23-504 コピー室", "position": [48.5, 14], "type": "room_entrance"},
+      {"id": "room-505", "name": "23-505 研究室", "position": [58.5, 14], "type": "room_entrance"},
+      {"id": "room-507", "name": "23-507 研究室", "position": [70, 35.0], "type": "room_entrance"},
+      {"id": "room-508", "name": "23-508 教授室", "position": [70, 53.0], "type": "room_entrance"},
+      {"id": "room-509", "name": "23-509 教授室", "position": [70, 59.0], "type": "room_entrance"},
+      {"id": "room-510", "name": "23-510 教授室", "position": [70, 65.0], "type": "room_entrance"},
+      {"id": "room-511", "name": "23-511 教授室", "position": [70, 71.0], "type": "room_entrance"},
+      {"id": "room-512", "name": "23-512 教授室", "position": [70, 77.0], "type": "room_entrance"},
+      {"id": "room-513", "name": "23-513 教授室", "position": [70, 83.0], "type": "room_entrance"},
+      {"id": "room-514", "name": "23-514 教授室", "position": [70, 89.0], "type": "room_entrance"},
+      {"id": "room-515", "name": "23-515 教授室", "position": [70, 95.0], "type": "room_entrance"},
+      {"id": "room-516", "name": "23-516 電気電子情報工学科第2実験室", "position": [70, 124.0], "type": "room_entrance"},
+      {"id": "room-517", "name": "23-517 工学研究科演習室1", "position": [70, 157.0], "type": "room_entrance"},
+      {"id": "room-518", "name": "23-518 工学研究科演習室2", "position": [70, 171.0], "type": "room_entrance"},
+      {"id": "room-519", "name": "23-519 工学研究科演習室3", "position": [70, 185.0], "type": "room_entrance"},
+      {"id": "room-520", "name": "23-520 工学研究科演習室4", "position": [70, 198.0], "type": "room_entrance"},
+      {"id": "room-521", "name": "23-521 工学研究科演習室5", "position": [70, 210.0], "type": "room_entrance"},
+      {"id": "room-522", "name": "23-522 工学研究科演習室6", "position": [70, 222.0], "type": "room_entrance"},
+      {"id": "room-523", "name": "23-523 工学研究科演習室7", "position": [70, 234.0], "type": "room_entrance"},
+      {"id": "room-524", "name": "23-524 工学研究科機器保全室兼資料室", "position": [70, 245.0], "type": "room_entrance"},
+      {"id": "room-535", "name": "23-535 電気電子情報工学科第2実験準備室", "position": [58, 112.0], "type": "room_entrance"},
+      {"id": "room-534", "name": "23-534 研究室", "position": [58, 128.0], "type": "room_entrance"},
+      {"id": "room-533", "name": "23-533 研究室", "position": [58, 138.0], "type": "room_entrance"},
+      {"id": "room-531", "name": "23-531 教授室", "position": [58, 163.0], "type": "room_entrance"},
+      {"id": "room-530", "name": "23-530 研究室", "position": [58, 181.0], "type": "room_entrance"},
+      {"id": "room-529", "name": "23-529 研究室", "position": [58, 201.0], "type": "room_entrance"},
+      {"id": "room-528", "name": "23-528 研究室", "position": [58, 217.0], "type": "room_entrance"},
+      {"id": "room-527", "name": "23-527 工学研究科演習室8", "position": [58, 230.0], "type": "room_entrance"},
+      {"id": "room-526", "name": "23-526 工学研究科演習室9", "position": [58, 243.0], "type": "room_entrance"},
+      {"id": "room-532", "name": "23-532 研究室", "position": [58, 150.0], "type": "room_entrance"},
+      {"id": "room-525", "name": "23-525", "position": [76, 255], "type": "room_entrance"},
+      {"id": "hall-45", "name": "5F 通路", "position": [30, 17], "type": "corridor"},
+      {"id": "hall-46", "name": "5F 通路", "position": [41, 17], "type": "corridor"},
+      {"id": "hall-47", "name": "5F 通路", "position": [48.5, 17], "type": "corridor"},
+      {"id": "hall-48", "name": "5F 通路", "position": [58.5, 17], "type": "corridor"},
+      {"id": "hall-49", "name": "5F 通路", "position": [64, 17], "type": "corridor"},
+      {"id": "hall-50", "name": "5F 通路", "position": [81.0, 17], "type": "corridor"},
+      {"id": "hall-51", "name": "5F 通路", "position": [82, 17], "type": "corridor"},
+      {"id": "hall-52", "name": "5F 通路", "position": [41, 34], "type": "corridor"},
+      {"id": "hall-53", "name": "5F 通路", "position": [41, 38], "type": "corridor"},
+      {"id": "hall-54", "name": "5F 通路", "position": [41, 61.0], "type": "corridor"},
+      {"id": "hall-55", "name": "5F 通路", "position": [41, 62], "type": "corridor"},
+      {"id": "hall-56", "name": "5F 通路", "position": [41, 74], "type": "corridor"},
+      {"id": "hall-57", "name": "5F 通路", "position": [41, 82], "type": "corridor"},
+      {"id": "hall-58", "name": "5F 通路", "position": [41, 87.0], "type": "corridor"},
+      {"id": "hall-59", "name": "5F 通路", "position": [41, 88], "type": "corridor"},
+      {"id": "hall-60", "name": "5F 通路", "position": [41, 99], "type": "corridor"},
+      {"id": "hall-61", "name": "5F 通路", "position": [64, 35.0], "type": "corridor"},
+      {"id": "hall-62", "name": "5F 通路", "position": [64, 38], "type": "corridor"},
+      {"id": "hall-63", "name": "5F 通路", "position": [64, 53.0], "type": "corridor"},
+      {"id": "hall-64", "name": "5F 通路", "position": [64, 59.0], "type": "corridor"},
+      {"id": "hall-65", "name": "5F 通路", "position": [64, 65], "type": "corridor"},
+      {"id": "hall-66", "name": "5F 通路", "position": [64, 71.0], "type": "corridor"},
+      {"id": "hall-67", "name": "5F 通路", "position": [64, 74], "type": "corridor"},
+      {"id": "hall-68", "name": "5F 通路", "position": [64, 77.0], "type": "corridor"},
+      {"id": "hall-69", "name": "5F 通路", "position": [64, 83.0], "type": "corridor"},
+      {"id": "hall-70", "name": "5F 通路", "position": [64, 88], "type": "corridor"},
+      {"id": "hall-71", "name": "5F 通路", "position": [64, 89.0], "type": "corridor"},
+      {"id": "hall-72", "name": "5F 通路", "position": [64, 95.0], "type": "corridor"},
+      {"id": "hall-73", "name": "5F 通路", "position": [64, 99], "type": "corridor"},
+      {"id": "hall-74", "name": "5F 通路", "position": [64, 112.0], "type": "corridor"},
+      {"id": "hall-75", "name": "5F 通路", "position": [64, 124.0], "type": "corridor"},
+      {"id": "hall-76", "name": "5F 通路", "position": [64, 128.0], "type": "corridor"},
+      {"id": "hall-77", "name": "5F 通路", "position": [64, 138.0], "type": "corridor"},
+      {"id": "hall-78", "name": "5F 通路", "position": [64, 150.0], "type": "corridor"},
+      {"id": "hall-79", "name": "5F 通路", "position": [64, 157.0], "type": "corridor"},
+      {"id": "hall-80", "name": "5F 通路", "position": [64, 163.0], "type": "corridor"},
+      {"id": "hall-81", "name": "5F 通路", "position": [64, 171.0], "type": "corridor"},
+      {"id": "hall-82", "name": "5F 通路", "position": [64, 181.0], "type": "corridor"},
+      {"id": "hall-83", "name": "5F 通路", "position": [64, 185.0], "type": "corridor"},
+      {"id": "hall-84", "name": "5F 通路", "position": [64, 198.0], "type": "corridor"},
+      {"id": "hall-85", "name": "5F 通路", "position": [64, 201.0], "type": "corridor"},
+      {"id": "hall-86", "name": "5F 通路", "position": [64, 210.0], "type": "corridor"},
+      {"id": "hall-87", "name": "5F 通路", "position": [64, 217.0], "type": "corridor"},
+      {"id": "hall-88", "name": "5F 通路", "position": [64, 222.0], "type": "corridor"},
+      {"id": "hall-89", "name": "5F 通路", "position": [64, 230.0], "type": "corridor"},
+      {"id": "hall-90", "name": "5F 通路", "position": [64, 234.0], "type": "corridor"},
+      {"id": "hall-91", "name": "5F 通路", "position": [64, 243.0], "type": "corridor"},
+      {"id": "hall-92", "name": "5F 通路", "position": [64, 245.0], "type": "corridor"},
+      {"id": "hall-93", "name": "5F 通路", "position": [64, 255], "type": "corridor"},
+      {"id": "hall-94", "name": "5F 通路", "position": [48, 99], "type": "corridor"},
+      {"id": "hall-95", "name": "5F 通路", "position": [56, 99], "type": "corridor"}
+    ],
+    "edges": [
+      {"from": "hall-45", "to": "hall-46", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.825},
+      {"from": "hall-46", "to": "hall-47", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.5625},
+      {"from": "hall-47", "to": "hall-48", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.75},
+      {"from": "hall-48", "to": "hall-49", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.4125},
+      {"from": "hall-49", "to": "hall-50", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.275},
+      {"from": "hall-50", "to": "hall-51", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "hall-46", "to": "hall-52", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.275},
+      {"from": "hall-52", "to": "hall-53", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "hall-53", "to": "hall-54", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.725},
+      {"from": "hall-54", "to": "hall-55", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "hall-55", "to": "hall-56", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.9},
+      {"from": "hall-56", "to": "hall-57", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.6},
+      {"from": "hall-57", "to": "hall-58", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.375},
+      {"from": "hall-58", "to": "hall-59", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "hall-59", "to": "hall-60", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.825},
+      {"from": "hall-49", "to": "hall-61", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.35},
+      {"from": "hall-61", "to": "hall-62", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "hall-62", "to": "hall-63", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.125},
+      {"from": "hall-63", "to": "hall-64", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-64", "to": "hall-65", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-65", "to": "hall-66", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-66", "to": "hall-67", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "hall-67", "to": "hall-68", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "hall-68", "to": "hall-69", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-69", "to": "hall-70", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.375},
+      {"from": "hall-70", "to": "hall-71", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "hall-71", "to": "hall-72", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-72", "to": "hall-73", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "hall-73", "to": "hall-74", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.975},
+      {"from": "hall-74", "to": "hall-75", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.9},
+      {"from": "hall-75", "to": "hall-76", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "hall-76", "to": "hall-77", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.75},
+      {"from": "hall-77", "to": "hall-78", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.9},
+      {"from": "hall-78", "to": "hall-79", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.525},
+      {"from": "hall-79", "to": "hall-80", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "hall-80", "to": "hall-81", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.6},
+      {"from": "hall-81", "to": "hall-82", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.75},
+      {"from": "hall-82", "to": "hall-83", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "hall-83", "to": "hall-84", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.975},
+      {"from": "hall-84", "to": "hall-85", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "hall-85", "to": "hall-86", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.675},
+      {"from": "hall-86", "to": "hall-87", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.525},
+      {"from": "hall-87", "to": "hall-88", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.375},
+      {"from": "hall-88", "to": "hall-89", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.6},
+      {"from": "hall-89", "to": "hall-90", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "hall-90", "to": "hall-91", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.675},
+      {"from": "hall-91", "to": "hall-92", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.15},
+      {"from": "hall-92", "to": "hall-93", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.75},
+      {"from": "hall-56", "to": "hall-67", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.725},
+      {"from": "hall-59", "to": "hall-70", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 1.725},
+      {"from": "hall-60", "to": "hall-94", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.525},
+      {"from": "hall-94", "to": "hall-95", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.6},
+      {"from": "hall-95", "to": "hall-73", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.6},
+      {"from": "stairs-top", "to": "hall-45", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "stairs-core", "to": "hall-55", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "stairs-bottom", "to": "hall-93", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "wc-male", "to": "hall-53", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "wc-female", "to": "hall-62", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "wc-multi", "to": "hall-65", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.3},
+      {"from": "ev-1", "to": "hall-57", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "ev-2", "to": "hall-94", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "ev-3", "to": "hall-95", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.075},
+      {"from": "room-506", "to": "hall-50", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-503", "to": "hall-52", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-502", "to": "hall-54", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-501", "to": "hall-58", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-504", "to": "hall-47", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-505", "to": "hall-48", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.225},
+      {"from": "room-507", "to": "hall-61", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-508", "to": "hall-63", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-509", "to": "hall-64", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-510", "to": "hall-65", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-511", "to": "hall-66", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-512", "to": "hall-68", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-513", "to": "hall-69", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-514", "to": "hall-71", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-515", "to": "hall-72", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-516", "to": "hall-75", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-517", "to": "hall-79", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-518", "to": "hall-81", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-519", "to": "hall-83", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-520", "to": "hall-84", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-521", "to": "hall-86", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-522", "to": "hall-88", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-523", "to": "hall-90", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-524", "to": "hall-92", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-535", "to": "hall-74", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-534", "to": "hall-76", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-533", "to": "hall-77", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-531", "to": "hall-80", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-530", "to": "hall-82", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-529", "to": "hall-85", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-528", "to": "hall-87", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-527", "to": "hall-89", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-526", "to": "hall-91", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-532", "to": "hall-78", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.45},
+      {"from": "room-525", "to": "hall-93", "type": "walk", "verification": "inferred", "isIndoor": true, "isAccessible": true, "cover": "indoor", "routingCost": 0.9}
+    ]
+  }
+}

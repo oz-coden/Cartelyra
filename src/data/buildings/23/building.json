@@ -1,0 +1,576 @@
+{
+  "id": "b23",
+  "name": "23号館",
+  "code": "23",
+  "color": "#5c7fa2",
+  "origin": [
+    1200,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "b2",
+    "b1",
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8"
+  ],
+  "connections": [
+    {
+      "from": "b23/b2/stairs-top",
+      "to": "b23/b1/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b2/stairs-core",
+      "to": "b23/b1/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b2/ev-1",
+      "to": "b23/b1/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b2/ev-2",
+      "to": "b23/b1/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b2/ev-3",
+      "to": "b23/b1/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/stairs-top",
+      "to": "b23/f1/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/stairs-core",
+      "to": "b23/f1/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/stairs-bottom",
+      "to": "b23/f1/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/ev-1",
+      "to": "b23/f1/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/ev-2",
+      "to": "b23/f1/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/b1/ev-3",
+      "to": "b23/f1/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/stairs-top",
+      "to": "b23/f2/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/stairs-core",
+      "to": "b23/f2/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/stairs-bottom",
+      "to": "b23/f2/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/stairs-middle",
+      "to": "b23/f2/stairs-middle",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/ev-1",
+      "to": "b23/f2/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/ev-2",
+      "to": "b23/f2/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f1/ev-3",
+      "to": "b23/f2/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/stairs-top",
+      "to": "b23/f3/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/stairs-core",
+      "to": "b23/f3/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/stairs-bottom",
+      "to": "b23/f3/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/stairs-middle",
+      "to": "b23/f3/stairs-middle",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/ev-1",
+      "to": "b23/f3/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/ev-2",
+      "to": "b23/f3/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f2/ev-3",
+      "to": "b23/f3/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/stairs-top",
+      "to": "b23/f4/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/stairs-core",
+      "to": "b23/f4/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/stairs-bottom",
+      "to": "b23/f4/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/ev-1",
+      "to": "b23/f4/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/ev-2",
+      "to": "b23/f4/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f3/ev-3",
+      "to": "b23/f4/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/stairs-top",
+      "to": "b23/f5/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/stairs-core",
+      "to": "b23/f5/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/stairs-bottom",
+      "to": "b23/f5/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/ev-1",
+      "to": "b23/f5/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/ev-2",
+      "to": "b23/f5/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f4/ev-3",
+      "to": "b23/f5/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/stairs-top",
+      "to": "b23/f6/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/stairs-core",
+      "to": "b23/f6/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/stairs-bottom",
+      "to": "b23/f6/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/ev-1",
+      "to": "b23/f6/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/ev-2",
+      "to": "b23/f6/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f5/ev-3",
+      "to": "b23/f6/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/stairs-top",
+      "to": "b23/f7/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/stairs-core",
+      "to": "b23/f7/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/stairs-bottom",
+      "to": "b23/f7/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/ev-1",
+      "to": "b23/f7/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/ev-2",
+      "to": "b23/f7/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f6/ev-3",
+      "to": "b23/f7/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/stairs-top",
+      "to": "b23/f8/stairs-top",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/stairs-core",
+      "to": "b23/f8/stairs-core",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/stairs-bottom",
+      "to": "b23/f8/stairs-bottom",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/ev-1",
+      "to": "b23/f8/ev-1",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/ev-2",
+      "to": "b23/f8/ev-2",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    },
+    {
+      "from": "b23/f7/ev-3",
+      "to": "b23/f8/ev-3",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.525,
+      "cover": "indoor"
+    }
+  ]
+}

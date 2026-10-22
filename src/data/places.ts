@@ -166,7 +166,13 @@ export function searchPlaces(
           ...place.aliases,
         ].join(" "),
       );
-      return terms.every((term) => text.includes(term));
+      return terms.every((term) => {
+        if (/^\d+号館$/.test(term))
+          return normalizeSearch(place.buildingName ?? "") === term;
+        if (/^b?\d+f$/.test(term))
+          return normalizeSearch(place.floorLabel ?? "") === term;
+        return text.includes(term);
+      });
     })
     .sort((a, b) => {
       const rank = (p: Place) =>
