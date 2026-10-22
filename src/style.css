@@ -414,6 +414,10 @@ body[data-view="3d"] .three-only {
   stroke: var(--surface);
   stroke-width: 0.4;
 }
+.map-public-area polygon {
+  fill: #346d80;
+  stroke-dasharray: 1.5 1;
+}
 .map-room,
 .map-place {
   cursor: pointer;

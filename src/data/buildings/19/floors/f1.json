@@ -1,0 +1,339 @@
+{
+  "buildingId": "b19",
+  "id": "f1",
+  "level": 1,
+  "label": "1F",
+  "stackIndex": 1,
+  "elevation": 7,
+  "sourceId": "b19-b1-f1",
+  "notes": [
+    "掲示案内図を基にした模式図。座標・寸法・階高は表示用で、実寸ではない。",
+    "通路側の代表点までの参考案内。接続は推定で、扉位置・段差・利用条件は現地未確認。",
+    "図面の上下左右は実方位とは未対応。屋外との出入口の対応は未登録。",
+    "電子計算機室の通路側入口は特定できず、19-107は経路未登録。左右の通路を横断する接続は設けないため、階段間の参考経路は他階を経由する場合がある。",
+    "1FのEV記号・停止位置は確認できず、EV設備と1Fに接続するEV経路は未登録。"
+  ],
+  "outline": [
+    [0, 0],
+    [174, 0],
+    [184, 36],
+    [172, 54],
+    [0, 54]
+  ],
+  "voids": [],
+  "features": [
+    {
+      "id": "service-left",
+      "label": "用途未確認",
+      "type": "service",
+      "polygon": [
+        [0, 8],
+        [25, 8],
+        [25, 30],
+        [0, 30]
+      ]
+    },
+    {
+      "id": "service-central",
+      "label": "用途未確認",
+      "type": "service",
+      "polygon": [
+        [63, 8],
+        [115, 8],
+        [115, 16],
+        [80, 16],
+        [80, 32],
+        [63, 32]
+      ]
+    },
+    {
+      "id": "service-top",
+      "label": "用途未確認",
+      "type": "service",
+      "polygon": [
+        [72, 0],
+        [168, 0],
+        [168, 8],
+        [72, 8]
+      ]
+    },
+    {
+      "id": "stairs-left",
+      "label": "階段1",
+      "type": "stairs",
+      "polygon": [
+        [0, 43],
+        [7, 43],
+        [7, 54],
+        [0, 54]
+      ],
+      "description": "図面左側の階段。同位置の記号を隣接階へ仮接続。屋内外の区分・利用条件は未確認。",
+      "entrance": "stairs-left"
+    },
+    {
+      "id": "stairs-right",
+      "label": "階段2",
+      "type": "stairs",
+      "polygon": [
+        [173, 34],
+        [178, 34],
+        [178, 44],
+        [173, 44]
+      ],
+      "description": "図面右側の階段。同位置の記号を隣接階へ仮接続。屋内外の区分・利用条件は未確認。",
+      "entrance": "stairs-right"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "19-104",
+      "name": "19-104 メンテナンスルーム",
+      "aliases": [
+        "104"
+      ],
+      "category": "facility",
+      "polygon": [
+        [8, 32],
+        [25, 32],
+        [25, 54],
+        [8, 54]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-104"
+    },
+    {
+      "id": "19-107",
+      "name": "19-107 電子計算機室",
+      "aliases": [
+        "107"
+      ],
+      "category": "facility",
+      "polygon": [
+        [25, 8],
+        [63, 8],
+        [63, 54],
+        [25, 54]
+      ],
+      "description": "通路側の入口を掲示図から特定できないため経路未登録。室名と区画のみを表示し、室内を横断する通路は作らない。"
+    },
+    {
+      "id": "19-101",
+      "name": "19-101 生協購買部",
+      "aliases": [
+        "101"
+      ],
+      "category": "facility",
+      "polygon": [
+        [63, 32],
+        [80, 32],
+        [80, 16],
+        [115, 16],
+        [115, 8],
+        [150, 8],
+        [150, 18],
+        [164, 18],
+        [164, 40],
+        [112, 40],
+        [112, 54],
+        [63, 54]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-101"
+    },
+    {
+      "id": "19-115",
+      "name": "19-115 セキュリティ控室",
+      "aliases": [
+        "115"
+      ],
+      "category": "office",
+      "polygon": [
+        [164, 24],
+        [174, 24],
+        [176, 32],
+        [173, 34],
+        [164, 34]
+      ],
+      "description": "通路側の代表点までの参考案内。正確な扉位置・利用条件は現地未確認。",
+      "entrance": "room-115"
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {
+        "id": "room-104",
+        "name": "19-104 メンテナンスルーム",
+        "position": [8, 38],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-1",
+        "name": "1F 通路",
+        "position": [7.5, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-2",
+        "name": "1F 通路",
+        "position": [7.5, 47],
+        "type": "corridor"
+      },
+      {
+        "id": "stairs-left",
+        "name": "階段1",
+        "position": [7, 47],
+        "type": "stairs"
+      },
+      {
+        "id": "room-101",
+        "name": "19-101 生協購買部",
+        "position": [135, 40],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-3",
+        "name": "1F 通路",
+        "position": [135, 47],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-4",
+        "name": "1F 通路",
+        "position": [168, 47],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-5",
+        "name": "1F 通路",
+        "position": [168, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-6",
+        "name": "1F 通路",
+        "position": [173, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "stairs-right",
+        "name": "階段2",
+        "position": [173, 38],
+        "type": "stairs"
+      },
+      {
+        "id": "room-115",
+        "name": "19-115 セキュリティ控室",
+        "position": [167, 34],
+        "type": "room_entrance"
+      },
+      {
+        "id": "hall-7",
+        "name": "1F 通路",
+        "position": [167, 47],
+        "type": "corridor"
+      }
+    ],
+    "edges": [
+      {
+        "to": "hall-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "room-104",
+        "routingCost": 0.048636
+      },
+      {
+        "to": "hall-2",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "hall-1",
+        "routingCost": 0.875454
+      },
+      {
+        "to": "hall-2",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "stairs-left",
+        "routingCost": 0.048636
+      },
+      {
+        "to": "hall-3",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "room-101",
+        "routingCost": 0.680909
+      },
+      {
+        "to": "hall-7",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "hall-3",
+        "routingCost": 3.112725
+      },
+      {
+        "to": "hall-4",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "hall-7",
+        "routingCost": 0.097273
+      },
+      {
+        "to": "hall-5",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "hall-4",
+        "routingCost": 0.875454
+      },
+      {
+        "to": "hall-6",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "hall-5",
+        "routingCost": 0.486363
+      },
+      {
+        "to": "hall-6",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "stairs-right",
+        "routingCost": 0.0
+      },
+      {
+        "to": "hall-7",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "cover": "indoor",
+        "from": "room-115",
+        "routingCost": 1.264544
+      }
+    ]
+  }
+}

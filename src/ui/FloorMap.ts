@@ -218,7 +218,7 @@ export class FloorMap {
       .getElementById("map-zoom-out")!
       .addEventListener("click", () => this.zoom(1.25));
   }
-  private label(text: string, p: Point2, className = "map-label") {
+  private label(text: string, p: Point2, className = "map-label", maxWidth?: number) {
     this.layer.append(
       element(
         "text",
@@ -228,6 +228,9 @@ export class FloorMap {
           class: className,
           "text-anchor": "middle",
           "dominant-baseline": "middle",
+          ...(maxWidth === undefined ? {} : {
+            style: `font-size:${Math.min(2.6, maxWidth / (text.length + 1))}px`,
+          }),
         },
         text,
       ),
@@ -260,7 +263,10 @@ export class FloorMap {
     const level = this.scope.group?.levels.find(l => l.id === this.scope.levelId)?.label ?? this.floor?.label;
     const shown = displayFloors(this.campus, this.scope);
     document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟の模式図" : "掲示図に基づく模式図";
-    document.getElementById("map-legend")!.textContent = "青：部屋　緑：WC　水色：EV　黄：階段　破線：連絡通路　紫：参考ルート";
+    document.getElementById("map-legend")!.textContent = "青：部屋　" +
+      (shown.some(({ floor }) => floor.rooms.some(r => r.passThrough === true))
+        ? "青緑・破線：通行区画　" : "") +
+      "緑：WC　水色：EV　黄：階段　破線：連絡通路　紫：参考ルート";
     document.getElementById("map-heading")!.textContent = `${name}${level ? ` / ${level}` : ""}`;
     this.svg.setAttribute("aria-label", `${name} ${level ?? "フロア未登録"} 平面図（模式図）`);
     document.getElementById("map-caption")!.textContent = shown.length
@@ -302,25 +308,6 @@ export class FloorMap {
       const b = bounds(hole);
       this.label("吹抜", [b.x, b.z], "map-label map-void-label");
     }
-    for (const feature of floor.features ?? []) {
-      if (
-        this.places.some(
-          (p) =>
-            p.buildingId === building.id &&
-            p.floorLevel === floor.level &&
-            p.featureId === feature.id,
-        )
-      )
-        continue;
-      this.layer.append(
-        element("polygon", {
-          points: points(feature.polygon),
-          class: "map-feature",
-        }),
-      );
-      const b = bounds(feature.polygon);
-      this.label(feature.label, [b.x, b.z], "map-label map-feature-label");
-    }
     for (const place of this.places.filter(
       (p) =>
         p.buildingId === building.id &&
@@ -351,6 +338,7 @@ export class FloorMap {
       const room = place.kind === "room"
         ? floor.rooms.find((r) => r.id === place.roomId)
         : undefined;
+      if (room?.passThrough === true) group.classList.add("map-public-area");
       const label =
         place.kind === "room"
           ? room?.mapLabel ?? place.roomId!
@@ -390,6 +378,26 @@ export class FloorMap {
         () => this.onPlaceSelect?.(place),
       );
       this.layer.append(group);
+    }
+    // Keep non-selectable obstacles visible over public circulation zones.
+    for (const feature of floor.features ?? []) {
+      if (
+        this.places.some(
+          (p) =>
+            p.buildingId === building.id &&
+            p.floorLevel === floor.level &&
+            p.featureId === feature.id,
+        )
+      )
+        continue;
+      this.layer.append(
+        element("polygon", {
+          points: points(feature.polygon),
+          class: "map-feature",
+        }),
+      );
+      const b = bounds(feature.polygon);
+      this.label(feature.label, [b.x, b.z], "map-label map-feature-label", b.w);
     }
   }
   private renderConnections() {

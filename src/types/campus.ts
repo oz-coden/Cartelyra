@@ -92,6 +92,7 @@ export interface Room {
   box: RoomBox;
   entranceNodeId?: string;
   approachRoomId?: string; // Guide only to this room's corridor side, without entering it.
+  passThrough?: boolean; // Explicit public circulation area, drawn as a low zone in 3D.
   polygon?: Point2[];
   verification?: Verification;
   floorLevel: number;

@@ -1,0 +1,86 @@
+{
+  "id": "b19",
+  "name": "19号館",
+  "code": "19",
+  "color": "#4b7f9c",
+  "origin": [780, 0, 0],
+  "rotation": 0,
+  "floorIds": [
+    "b1",
+    "f1",
+    "f2",
+    "f3"
+  ],
+  "connections": [
+    {
+      "from": "b19/b1/stairs-left",
+      "to": "b19/f1/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/b1/stairs-right",
+      "to": "b19/f1/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/f1/stairs-left",
+      "to": "b19/f2/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/f1/stairs-right",
+      "to": "b19/f2/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/f2/stairs-left",
+      "to": "b19/f3/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/f2/stairs-right",
+      "to": "b19/f3/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    },
+    {
+      "from": "b19/f2/ev-left",
+      "to": "b19/f3/ev-left",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.680909,
+      "cover": "indoor"
+    }
+  ]
+}

@@ -30,6 +30,7 @@ export interface FloorSource {
     polygon: Point2[];
     entrance?: string;
     approachRoomId?: string;
+    passThrough?: boolean; // Explicit public circulation area; never inferred from category.
     description?: string;
   }>;
   navigation: {

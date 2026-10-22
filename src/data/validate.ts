@@ -178,6 +178,11 @@ export function validateSources(
         `${ctx}: duplicate navigation node IDs`,
       );
       for (const room of floor.rooms) {
+        check(room.passThrough === undefined || typeof room.passThrough === "boolean",
+          `${room.id}: passThrough must be a boolean`);
+        if (room.passThrough === true)
+          check(room.entrance && !room.approachRoomId,
+            `${room.id}: public circulation area requires its own registered approach`);
         if (room.approachRoomId !== undefined) {
           const approach = floor.rooms.find((r) => r.id === room.approachRoomId);
           check(
@@ -315,7 +320,7 @@ export function validateSources(
         const floor = a.floor;
         const obstacles = [
           ...floor.voids,
-          ...floor.rooms.map((r) => r.polygon),
+          ...floor.rooms.filter((r) => r.passThrough !== true).map((r) => r.polygon),
           ...floor.features
             .filter((f) => ["restroom", "service", "pit", "stairs", "elevator"].includes(f.type))
             .map((f) => f.polygon),
