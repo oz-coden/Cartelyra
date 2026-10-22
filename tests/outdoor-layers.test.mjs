@@ -95,3 +95,26 @@ test('context roads are landmarks only and cannot create walkable graph connecti
   assert.match(document.getElementById('map-legend').textContent,/薄線：周辺道路.*青線：連絡橋/);
   assert.ok(document.querySelector('.map-context-roads').compareDocumentPosition(document.querySelector('.map-outdoor-path'))&4);
 });
+
+test('the Building 19 shop approach reaches the 17/12 bridge corner by explicit stairs, with a ramp detour for stair avoidance',()=>{
+  const start='b19/f1/entrance-shop',end=id('bridge-b12-corner'),foot=id('b19-bridge-stair-foot'),finder=new AStarPathfinder(data);
+  for(const mode of ['shortest','indoor','stairs'])for(const [a,b]of[[start,end],[end,start]]){
+    const r=finder.findPath(a,b,mode);assert.ok(r);
+    assert.ok(r.pathNodes.some(n=>n.id===foot));
+    assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
+    assert.equal(r.floorChanges,0);
+    assert.match(r.steps.find(s=>s.edgeType==='stairs').instruction,/19号館側.*階段|階段.*19号館側/);
+    assert.ok(!r.pathNodes.some(n=>n.id===id('bridge-b6-landing')));
+    assert.equal(finder.findPath(a,b,mode,false),null);
+  }
+  const accessible=finder.findPath(start,end,'accessible');assert.ok(accessible);
+  assert.ok(accessible.steps.every(s=>s.edgeType!=='stairs'));
+  assert.ok(accessible.pathNodes.some(n=>n.id===id('bridge-ramp-foot')));
+  assert.ok(!accessible.pathNodes.some(n=>n.id===foot));
+  assert.equal(accessible.verticalMovements.ramps,1);
+  const closed=structuredClone(data);disable(closed,'bridge-ramp-foot','bridge-b6-landing');
+  assert.equal(new AStarPathfinder(closed).findPath(start,end,'accessible'),null);
+  assert.ok(new AStarPathfinder(closed).findPath(start,end).pathNodes.some(n=>n.id===foot));
+  const stair=source.manifest.outdoor.edges.find(e=>e.from==='b19-bridge-stair-foot'&&e.to==='bridge-b12-corner');
+  assert.equal(stair.type,'stairs');assert.equal(stair.isAccessible,false);assert.equal(stair.verification,'inferred');assert.equal(stair.floorChanges,undefined);
+});
