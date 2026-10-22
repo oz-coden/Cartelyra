@@ -25,7 +25,7 @@ test('all registered room pairs obey filters and minimize schematic floor change
       }
     }
   }
-  assert.equal(pairs,288176);
+  assert.equal(pairs,290452);
 });
 
 test('known stair detours stay on 2F, and 1-B114 to 1-722 no longer overshoots 7F', () => {

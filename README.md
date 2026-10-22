@@ -30,7 +30,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Building 17 | 1F–5F; 154 areas (151 direct approaches and three provisional front-room endpoints), 16 WCs, inferred stairs/elevators and three entrance places. Two 1F entrances connect to the Building 19-facing outdoor path; the 3F external connection is pending. The 1F section and 2F–5F section remain separate until their stair/EV correspondence is confirmed |
 | Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; no outdoor connection |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
-| Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches, 29 provisional front-room endpoints and two areas with unresolved access. 28 WCs, three EV cores, inferred stairs and two 1F entrance places; no outdoor connection |
+| Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches and 31 provisional front-room endpoints. 28 WCs, three EV cores, inferred stairs and two 1F entrance places; no outdoor connection |
 | WCs and facilities | 111 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, 16 in Building 17, ten in Building 19, nine in Building 20, 28 in Building 23), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
@@ -63,7 +63,7 @@ See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 tr
 
 Building 17 has routes within 1F and within 2F–5F. Nearby 1F openings are represented by one entrance place; the two 1F entrance places connect to the outdoor path facing Building 19. The 3F entrance remains unconnected outdoors. No link between those sections is assumed from ambiguous stair/EV positions. Pool showers and 17-540 use provisional front-room endpoints; the central unlabelled area is non-traversable without claiming an atrium or roof structure.
 
-Building 23 has indoor reference routes from B2 to 8F. Access to 23-B203 and 23-107 is unresolved, and the B2 lower stair has no public boarding link. Small inner rooms use provisional front-room endpoints; 23-225 retains its room number while its name awaits transcription. The two 1F entrance places remain unconnected outdoors.
+Building 23 has indoor reference routes from B2 to 8F. 23-B203 and 23-107 use provisional front-room endpoints at 23-B202 and 23-105 respectively, and the B2 lower stair has no public boarding link. 23-B203 retains its room number without an assigned use name; 23-225 is the hot-water and ice-making room. The two 1F entrance places remain unconnected outdoors.
 
 Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, adding more outdoor routes and buildings, and creating an editor with floor-plan underlays.
 
@@ -133,7 +133,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 17号館 | 1〜5F・154区画。151区画へ直接、奥の3区画は指定した手前の部屋まで暫定案内。WC 16か所・階段・EV・出入口3か所。1Fの2出入口を19号館側の屋外通路へ参考接続。3Fの外部接続は保留。1Fと2〜5Fは階段・EVの対応確認まで別々に案内 |
 | 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。屋外未接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
-| 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、29区画は手前の部屋まで暫定案内。2区画は進入元未登録。WC 28か所・EV3系統・階段・1F出入口2か所。屋外未接続 |
+| 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、31区画は手前の部屋まで暫定案内。WC 28か所・EV3系統・階段・1F出入口2か所。屋外未接続 |
 | WC・設備 | WC 111か所（1号館23・3号館17・5号館4・6号館4・17号館16・19号館10・20号館9・23号館28）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
@@ -166,7 +166,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 17号館は1F内と2〜5F内を別々に参考案内します。1Fの近接する2開口を一つの案内地点にまとめ、2か所の出入口を19号館側の屋外通路へ参考接続します。3F出入口は屋外未接続です。階段・EVの対応が不明なため、両者を推測で接続しません。プールのシャワー室と17-540は手前の部屋までの暫定案内とし、中央の無記名区画は構造を断定せず非通行区画としています。
 
-23号館はB2〜8Fを館内参考案内します。23-B203・23-107は進入元未登録、B2下側階段は共用通路への乗降未登録です。奥の小区画は手前の部屋まで暫定案内し、23-225は室名の判読待ちとして室番号だけを保持します。1Fの2出入口は屋外未接続です。
+23号館はB2〜8Fを館内参考案内します。23-B203は23-B202、23-107は23-105の通路側まで暫定案内します。B2下側階段は共用通路への乗降未登録です。23-B203は用途名を付けず室番号だけを保持し、23-225は給湯・製氷室として登録します。1Fの2出入口は屋外未接続です。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路の拡充・他棟の登録、図面を下敷きにした編集ツールがあります。
 
