@@ -350,8 +350,9 @@ export function validateSources(
             a.node.type === edge.type && b.node.type === edge.type,
             `Vertical facility mismatch ${edge.from}`,
           );
+          const changes = Math.abs(a.floor.stackIndex - b.floor.stackIndex);
           check(
-            Math.abs(a.floor.stackIndex - b.floor.stackIndex) === 1,
+            changes === 1 || edge.type === "elevator" && edge.floorChanges === changes,
             `Vertical edge skips a floor ${edge.from}`,
           );
         }

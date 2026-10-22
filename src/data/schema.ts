@@ -57,7 +57,7 @@ export interface SourceEdge {
   distance?: number;
   routingCost?: number;
   cover?: WeatherCover;
-  floorChanges?: number;
+  floorChanges?: number; // Required for elevator links that pass unregistered intermediate stops.
   instruction?: string;
   reverseInstruction?: string;
 }

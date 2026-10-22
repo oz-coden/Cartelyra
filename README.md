@@ -27,7 +27,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 6 | 1F–4F; 68 areas: 66 direct corridor approaches and two via named front rooms, four WCs and inferred stairs. Entrances on 1F and 2F; inner-room approaches remain provisional. The 3F right wing may require a reference route via another floor |
-| Building 19 | B1–3F; 48 areas, 47 with reference routes, ten WCs and two inferred stair cores. Public dining/hall/lounge zones permit passage. The 1F computer-room entrance and elevator stop are unconfirmed; no outdoor connection |
+| Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; no outdoor connection |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | WCs and facilities | 67 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, ten in Building 19, nine in Building 20), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
@@ -57,7 +57,7 @@ Editing a floor’s JSON updates the floor plan, 3D view, search, facility list 
 
 The [outdoor reference and field-survey guide](docs/outdoor-survey.md) records the aerial source, drawing rules, unresolved positions and how to estimate distances from timed walks.
 
-See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 transcription checks](docs/building-5-review.md), [Building 6 transcription checks](docs/building-6-review.md), [Building 19 transcription checks](docs/building-19-review.md) and [Building 20 transcription checks](docs/building-20-review.md) for unresolved labels and connectivity. Building 1 has indoor reference routes using stairs or elevators, with two 1F entrances connected to outdoor reference routes. Building 5 connects to the campus network through its external-stair 2F entrance. Stair avoidance cannot reach other floors in Buildings 5 and 6 because no elevator is registered. Building 6 has indoor reference routes only; its grey areas and the 3F right-wing connection require field checks. Building 19 has indoor routes only; its 1F left/right corridor connection is unconfirmed, and elevator routing is registered only between 2F and 3F.
+See [Building 1 transcription checks](docs/building-1-review.md), [Building 5 transcription checks](docs/building-5-review.md), [Building 6 transcription checks](docs/building-6-review.md), [Building 19 transcription checks](docs/building-19-review.md) and [Building 20 transcription checks](docs/building-20-review.md) for unresolved labels and connectivity. Building 1 has indoor reference routes using stairs or elevators, with two 1F entrances connected to outdoor reference routes. Building 5 connects to the campus network through its external-stair 2F entrance. Stair avoidance cannot reach other floors in Buildings 5 and 6 because no elevator is registered. Building 6 has indoor reference routes only; its grey areas and the 3F right-wing connection require field checks. Building 19 has indoor routes only; its 1F left/right corridor connection is unconfirmed, and elevator routing connects B1, 2F and 3F without boarding or alighting on 1F. The shop-side entrance is registered indoors; the left-side entrance needs field verification.
 
 Future work includes comparing the map with the campus, verifying entrances/stairs/elevators, calibrating dimensions, adding more outdoor routes and buildings, and creating an editor with floor-plan underlays.
 
@@ -124,7 +124,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 6号館 | 1〜4F・68区画。66区画へ直接、奥の2区画は指定した手前の部屋まで参考案内。WC 4か所・階段・1Fと2Fの出入口。3F右側へは他階を経由する参考経路となる場合あり |
-| 19号館 | B1〜3F・48区画、うち47区画へ参考案内。WC 10か所・階段2系統。食堂・ホール・ラウンジは通行区画。1F電子計算機室の入口・EV停止位置は未確認、屋外未接続 |
+| 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。屋外未接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | WC・設備 | WC 67か所（1号館23・3号館17・5号館4・6号館4・19号館10・20号館9）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
@@ -154,7 +154,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 
 空中写真の出典、独自の描画ルール、未確定の位置と歩行時間からの距離推定は、[屋外配置と現地計測](docs/outdoor-survey.md)にまとめています。
 
-室番号・室名と接続の確認項目は、[1号館の図面登録と確認項目](docs/building-1-review.md)、[5号館の図面登録と確認項目](docs/building-5-review.md)、[6号館の図面登録と確認項目](docs/building-6-review.md)、[19号館の図面登録と確認項目](docs/building-19-review.md)と[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。1号館は階段・EVで館内を参考案内し、1Fの2出入口を屋外参考経路へ接続します。5号館は外階段から入る2F出入口を屋外参考経路へ接続します。5号館・6号館はEV未登録のため、階段を避ける条件では別の階へ案内できません。6号館は屋外未接続で、灰色区画と3F右側への進入関係は現地確認待ちです。19号館も館内経路のみで、1Fの左右通路の接続は未確認、EV経路は2F〜3Fだけを登録しています。
+室番号・室名と接続の確認項目は、[1号館の図面登録と確認項目](docs/building-1-review.md)、[5号館の図面登録と確認項目](docs/building-5-review.md)、[6号館の図面登録と確認項目](docs/building-6-review.md)、[19号館の図面登録と確認項目](docs/building-19-review.md)と[20号館の図面登録と確認項目](docs/building-20-review.md)を参照してください。1号館は階段・EVで館内を参考案内し、1Fの2出入口を屋外参考経路へ接続します。5号館は外階段から入る2F出入口を屋外参考経路へ接続します。5号館・6号館はEV未登録のため、階段を避ける条件では別の階へ案内できません。6号館は屋外未接続で、灰色区画と3F右側への進入関係は現地確認待ちです。19号館も館内経路のみで、1Fの左右通路の接続は未確認、EVは1Fで乗降せずB1・2F・3F間を案内します。購買部側出入口は館内へ接続し、左側通路の出入口は現地確認待ちです。
 
 今後の開発対象には、地図と現地の照合、入口・階段・EVの確認、実寸の校正、屋外経路の拡充・他棟の登録、図面を下敷きにした編集ツールがあります。
 

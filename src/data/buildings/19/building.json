@@ -81,6 +81,19 @@
       "isAccessible": true,
       "routingCost": 0.680909,
       "cover": "indoor"
+    },
+    {
+      "from": "b19/b1/ev-left",
+      "to": "b19/f2/ev-left",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "cover": "indoor",
+      "routingCost": 1.361818,
+      "floorChanges": 2,
+      "instruction": "EVで1Fを通過して「19号館 2F」へ移動（1Fでの乗降案内なし）",
+      "reverseInstruction": "EVで1Fを通過して「19号館 B1」へ移動（1Fでの乗降案内なし）"
     }
   ]
 }

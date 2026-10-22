@@ -21,14 +21,14 @@ test('Building 19 registers four floors, 48 areas and ten WCs without filling ab
   assert.deepEqual(validate(),[]);
   assert.deepEqual(building.floors.map(f=>[f.label,f.rooms.length]),[['B1',6],['1F',4],['2F',13],['3F',25]]);
   assert.equal(places.filter(p=>p.kind==='room').length,48);
-  assert.equal(places.filter(p=>p.kind==='room'&&p.nodeId).length,47);
+  assert.equal(places.filter(p=>p.kind==='room'&&p.nodeId).length,48);
   assert.equal(places.filter(p=>p.kind==='restroom').length,10);
   assert.deepEqual(building.floors.map(f=>f.features.filter(p=>p.type==='restroom').length),[3,0,5,2]);
   for(const id of ['19-301','19-307','19-211']) assert.ok(!places.some(p=>p.id===id));
   assert.equal(searchPlaces(places,'保健管理センター')[0].id,'19-health-center');
   assert.equal(searchPlaces(places,'ラックス')[0].id,'19-B20');
-  assert.equal(places.find(p=>p.id==='19-107').nodeId,undefined);
-  assert.match(places.find(p=>p.id==='19-107').description,/入口.*特定できない/);
+  assert.equal(places.find(p=>p.id==='19-107').nodeId,'b19/f1/room-107');
+  assert.match(places.find(p=>p.id==='19-107').description,/左側の通路/);
   assert.ok(places.filter(p=>p.name.endsWith('研究室')).every(p=>/^19-\d+ 研究室$/.test(p.name)));
 });
 
@@ -41,16 +41,49 @@ test('Building 19 reaches every registered place via inferred stairs while prese
     if(p.nodeId!==start) assert.equal(finder.findPath(start,p.nodeId,mode,false),null);
   }
   const evEdges=data.navigation.edges.filter(e=>e.type==='elevator'&&e.from.startsWith('b19/'));
-  assert.deepEqual(evEdges.map(e=>[e.from,e.to]),[['b19/f2/ev-left','b19/f3/ev-left']]);
+  assert.deepEqual(evEdges.map(e=>[e.from,e.to]),[['b19/f2/ev-left','b19/f3/ev-left'],['b19/b1/ev-left','b19/f2/ev-left']]);
   assert.deepEqual(places.filter(p=>p.kind==='elevator').map(p=>p.floorLevel).sort((a,b)=>a-b),[-1,2,3]);
-  assert.equal(finder.findPath('b19/b1/ev-left','b19/f2/ev-left','accessible'),null);
+  for(const [from,to,label] of [['b19/b1/ev-left','b19/f2/ev-left','2F'],['b19/f2/ev-left','b19/b1/ev-left','B1']]){
+    const r=finder.findPath(from,to,'accessible');assert.ok(r);assert.equal(r.floorChanges,2);
+    assert.ok(!r.pathNodes.some(n=>n.floor===1));
+    assert.match(r.steps.find(s=>s.edgeType==='elevator').instruction,new RegExp(`1Fを通過.*${label}`));
+  }
+  const upper=finder.findPath('b19/b1/room-B20','b19/f3/room-305','accessible');
+  assert.ok(upper);assert.equal(upper.floorChanges,3);assert.ok(upper.steps.every(s=>s.edgeType!=='stairs'));
+  for(const start of places.filter(p=>p.nodeId&&p.floorLevel!==1))
+    for(const end of places.filter(p=>p.nodeId&&p.floorLevel===1))
+      assert.equal(finder.findPath(start.nodeId,end.nodeId,'accessible'),null,`${start.id} -> ${end.id}: no public EV landing on 1F`);
   assert.equal(finder.findPath('b19/f1/room-101','b19/f2/room-216','accessible'),null);
   assert.ok(finder.findPath('b19/f2/room-216','b19/f3/room-305','accessible'));
   assert.equal(finder.findPath('b19/f1/room-104','b19/f1/room-101').floorChanges,2);
   assert.equal(finder.findPath('b19/f1/room-104','b19/f1/room-101','accessible'),null);
   assert.equal(finder.findPath('b19/f1/room-101','b3/f1/entrance-north'),null);
-  assert.equal(places.filter(p=>p.kind==='entrance').length,0);
+  assert.equal(places.filter(p=>p.kind==='entrance').length,1);
   assert.ok(!source.manifest.outdoor.links.some(l=>l.to.startsWith('b19/')));
+});
+
+test('Building 19 left-side rooms share a corridor and the shop entrance stays on the separate lower corridor',()=>{
+  const f=floors.find(f=>f.id==='f1'),node=id=>f.navigation.nodes.find(n=>n.id===id);
+  const r=finder.findPath('b19/f1/room-104','b19/f1/room-107','accessible');
+  assert.ok(r);assert.equal(r.floorChanges,0);assert.ok(r.pathNodes.every(n=>n.floor===1));
+  assert.equal(node('room-107').position[0],Math.min(...f.rooms.find(r=>r.id==='19-107').polygon.map(p=>p[0])));
+  const entrance=places.find(p=>p.kind==='entrance');
+  assert.equal(entrance.nodeId,'b19/f1/entrance-shop');
+  assert.ok(node('entrance-shop').position[1]>node('room-101').position[1]);
+  assert.equal(node('entrance-shop').position[0],node('room-101').position[0]);
+  assert.ok(finder.findPath(entrance.nodeId,'b19/f1/room-101','accessible'));
+  assert.equal(finder.findPath(entrance.nodeId,'b19/f1/room-107','accessible'),null);
+  assert.match(f.notes.join(' '),/左側通路の屋外出入口.*現地確認待ち/);
+});
+
+test('non-adjacent EV stops require an explicit floor count; stairs still cannot skip levels',()=>{
+  const s=structuredClone(source),connections=s.buildings.find(b=>b.id==='b19').connections;
+  const gap=connections.find(e=>e.type==='elevator'&&e.from==='b19/b1/ev-left');
+  delete gap.floorChanges;assert.ok(validate(s).some(e=>e.includes('Vertical edge skips a floor')));
+  gap.floorChanges=1;assert.ok(validate(s).some(e=>e.includes('Explicit floor changes conflict')));
+  gap.floorChanges=2;assert.deepEqual(validate(s),[]);
+  gap.from='b19/b1/stairs-left';gap.to='b19/f2/stairs-left';gap.type='stairs';gap.isAccessible=false;
+  assert.ok(validate(s).some(e=>e.includes('Vertical edge skips a floor')));
 });
 
 test('Building 19 shared public areas and connected corridors stay on the same floor',()=>{
@@ -100,7 +133,8 @@ test('Building 19 concave and public room selection uses the shared shape in the
     assert.equal(document.getElementById('map-legend').textContent.includes('通行区画'),f.rooms.some(r=>r.passThrough===true));
   }
   map.setLocation(entry,building.floors.find(f=>f.id==='f1'));
-  assert.ok(document.querySelector('[data-place="19-107"] .map-room-unlinked'));
+  assert.equal(document.querySelector('[data-place="19-107"] .map-room-unlinked'),null);
+  assert.ok(document.querySelector('[data-place="b19/f1/feature/entrance-shop"]'));
   const basement=building.floors.find(f=>f.id==='b1');map.setLocation(entry,basement);
   const obstacle=basement.features.find(f=>f.id==='service-bottom');
   const children=[...document.querySelector('.map-floor').children];
