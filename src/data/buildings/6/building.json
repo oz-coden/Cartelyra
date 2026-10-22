@@ -1,0 +1,76 @@
+{
+  "id": "b6",
+  "name": "6号館",
+  "code": "6",
+  "color": "#477fac",
+  "origin": [
+    560,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+  ],
+  "connections": [
+    {
+      "to": "b6/f2/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f1/stairs-left"
+    },
+    {
+      "to": "b6/f2/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f1/stairs-right"
+    },
+    {
+      "to": "b6/f3/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f2/stairs-left"
+    },
+    {
+      "to": "b6/f3/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f2/stairs-right"
+    },
+    {
+      "to": "b6/f4/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f3/stairs-left"
+    },
+    {
+      "to": "b6/f4/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f3/stairs-right"
+    },
+    {
+      "to": "b6/f4/stairs-courtyard",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "from": "b6/f3/stairs-courtyard"
+    }
+  ]
+}
