@@ -12,6 +12,21 @@ const floors = source.floors.filter((f) => f.buildingId === "b6");
 const places = placeIndex(campus).filter((p) => p.buildingId === "b6");
 const finder = new AStarPathfinder(campus);
 
+test("Building 6 omits the unconfirmed 1F right stair and keeps the 3F same-floor split", () => {
+  const first = floors.find(f => f.level === 1);
+  assert.ok(!first.features.some(f => f.id === "stairs-right"));
+  assert.ok(!first.navigation.nodes.some(n => n.id === "stairs-right"));
+  assert.ok(!places.some(p => p.floorLevel === 1 && p.featureId === "stairs-right"));
+  assert.ok(!source.buildings.find(b => b.id === "b6").connections.some(e =>
+    [e.from,e.to].includes("b6/f1/stairs-right")));
+  for (const level of [2,3,4]) assert.ok(finder.getNode(`b6/f${level}/stairs-right`));
+  const route = finder.findPath("b6/f1/room-118", "b6/f2/room-208-1");
+  assert.ok(route.pathNodes.some(n => n.id === "b6/f1/stairs-left"));
+  assert.equal(route.floorChanges,1);
+  assert.equal(finder.findPath("b6/f3/room-303", "b6/f3/room-308", "accessible"),null);
+  assert.match(first.notes.join(" "),/階内段差.*現地確認待ち/);
+});
+
 test("Building 6 preserves four floors, lettered room numbers, courtyards and generic research names", () => {
   assert.deepEqual(validateSources(source.manifest, source.buildings, source.floors, source.sources, source.overview), []);
   assert.deepEqual(campus.buildings.find((b) => b.id === "b6").floors.map((f) => f.rooms.length), [20, 13, 9, 26]);

@@ -25,14 +25,6 @@
       "from": "b6/f1/stairs-left"
     },
     {
-      "to": "b6/f2/stairs-right",
-      "type": "stairs",
-      "verification": "inferred",
-      "isIndoor": true,
-      "isAccessible": false,
-      "from": "b6/f1/stairs-right"
-    },
-    {
       "to": "b6/f3/stairs-left",
       "type": "stairs",
       "verification": "inferred",
