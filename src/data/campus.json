@@ -11,6 +11,7 @@
       "樹木・屋根・日陰で見えない部分と出入口は代表点を推定。道幅は定性的な参考情報のみで、経路選択の重みには未使用。段差・開放時間・通行条件は未確認。",
       "1号館は1-106側を2号館側、窓口ロビー側を東門側の代表点に接続。5号館は7号館に面する側の3号館寄りから外階段で2Fへ入る。",
       "新東門から3号館1Fを通り抜けて5・6号館側へ進む動線と、2・3号館間を回る屋外の動線を登録。東門も1号館前の通路に接続する。入口の向き・通行関係を模式的に記録し、正確な位置・段差・開放時間・通行条件は現地照合待ち。",
+      "17号館1Fの出入口1・3は19号館側の地上通路へ参考接続。近接する上側2開口を一つの案内地点にまとめる。3F出入口の外部接続は保留。代表点は正確な扉位置を示さず、段差・開放時間・利用条件は現地確認待ち。",
       "routingCostは実距離を表さない暫定評価値。室内は初期登録時の床面積と建物配置の面積比、屋外は初期登録時の図上の長さを参考に固定し、描画座標の変更では再計算しない。屋根の有無は現地確認後に更新する。"
     ],
     "nodes": [
@@ -220,6 +221,30 @@
         "name": "5号館 2F外階段側出入口前（7号館側）",
         "position": [73.86, 16.785],
         "layer": "ground"
+      },
+      {
+        "id": "b17-entrance-1",
+        "name": "17号館 出入口1前（19号館側）",
+        "position": [29.5, 20],
+        "layer": "ground"
+      },
+      {
+        "id": "b17-entrance-1-approach",
+        "name": "17号館 出入口1前の分岐",
+        "position": [29.5, 18.696154],
+        "layer": "ground"
+      },
+      {
+        "id": "b17-entrance-3",
+        "name": "17号館 出入口3前（19号館側）",
+        "position": [35.5, 20],
+        "layer": "ground"
+      },
+      {
+        "id": "b17-entrance-3-approach",
+        "name": "17号館 出入口3前の分岐",
+        "position": [35.5, 18.85625],
+        "layer": "ground"
       }
     ],
     "edges": [
@@ -334,14 +359,36 @@
         "cover": "unknown"
       },
       {
-        "to": "b17-east",
+        "to": "b17-entrance-3-approach",
         "type": "outdoor",
         "verification": "inferred",
         "isIndoor": false,
         "isAccessible": true,
         "widthClass": "unknown",
         "from": "b12-east",
-        "routingCost": 15.004687,
+        "routingCost": 10.753359,
+        "cover": "unknown"
+      },
+      {
+        "to": "b17-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b17-entrance-3-approach",
+        "routingCost": 4.251328,
+        "cover": "unknown"
+      },
+      {
+        "to": "b17-entrance-1-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b17-east",
+        "routingCost": 1.750828,
         "cover": "unknown"
       },
       {
@@ -351,8 +398,8 @@
         "isIndoor": false,
         "isAccessible": true,
         "widthClass": "unknown",
-        "from": "b17-east",
-        "routingCost": 8.128845,
+        "from": "b17-entrance-1-approach",
+        "routingCost": 6.378017,
         "cover": "unknown"
       },
       {
@@ -587,6 +634,28 @@
         "reverseInstruction": "5号館2Fの外階段を下り、7号館側の通路へ進む",
         "routingCost": 2.597547,
         "cover": "unknown"
+      },
+      {
+        "from": "b17-entrance-1-approach",
+        "to": "b17-entrance-1",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 1.303846,
+        "cover": "unknown"
+      },
+      {
+        "from": "b17-entrance-3-approach",
+        "to": "b17-entrance-3",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 1.14375,
+        "cover": "unknown"
       }
     ],
     "links": [
@@ -635,6 +704,22 @@
         "to": "b5/f2/entrance-side",
         "verification": "inferred",
         "isAccessible": false,
+        "routingCost": 1,
+        "cover": "unknown"
+      },
+      {
+        "from": "b17-entrance-1",
+        "to": "b17/f1/entrance-upper",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown"
+      },
+      {
+        "from": "b17-entrance-3",
+        "to": "b17/f1/entrance-lower",
+        "verification": "inferred",
+        "isAccessible": true,
         "routingCost": 1,
         "cover": "unknown"
       }
