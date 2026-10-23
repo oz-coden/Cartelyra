@@ -31,7 +31,9 @@
       "19号館の購買部側出入口付近の地上通路から、17号館・12号館間の連絡橋へ上がる階段を参考接続。23号館側の階段とは別の昇降地点として保持し、階段回避では使用しない。代表位置・段数・高低差・開放時間・利用条件は現地確認待ち。",
       "7号館2Fは8号館との直通連絡を設けず外階段で屋外へ接続。8号館2Fはマップホール側の屋根付き外階段で2号館側へ接続する。8号館南側の同じ中間踊り場へ1Fから上り、2Fから下りる。踊り場は架空の登録階ではなく屋外ノードで表し、昇降量は未測定のまま保持する。",
       "8号館南側から1・31号館間を通って正門へ参考接続。南側の道路へ直接接続しない。11号館側の地下通路は別層の終端として保持し、11・31号館の館内や道路上との接続は補完しない。",
-      "8号館1F・2FのEV脇から10号館側の中庭へ階段で接続。中庭は建物内の登録経路を介して到達し、外周道路や他棟の扉へ直接つながるとは扱わない。補足図 b7-b10-outdoor-reference と2023年参考PDFを位置の参考とし、寸法・昇降量・利用条件は未確認。"
+      "8号館1F・2FのEV脇から10号館側の中庭へ階段で接続。中庭から8号館沿いを北へ進み、7・8号館間の外階段前の屋外通路へ抜ける参考接続を登録する。他棟の扉への接続は補完しない。補足図 b7-b10-outdoor-reference と2023年参考PDFを位置の参考とし、寸法・昇降量・利用条件は未確認。",
+      "中庭の北側通路は補足図 b7-b10-courtyard-north-reference による模式接続。階段は確認されていないため歩行区間として登録し、屋根・実際の勾配・幅員・通行条件・正確な境界は現地確認待ち。表示座標を実距離として扱わない。",
+      "7号館2Fの外階段は屋外の階段下分岐から出入口前までをstairsとして登録し、館内の階段設備と出入口リンクでは重複計上しない。中庭からの通路はこの階段下分岐へ接続する。"
     ],
     "nodes": [
       {
@@ -570,7 +572,7 @@
       },
       {
         "id": "b7-2f-stair-foot",
-        "name": "7号館・8号館間 外階段前",
+        "name": "7・8号館間 外階段下・中庭側通路の分岐",
         "position": [
           70.2,
           24.5
@@ -692,6 +694,24 @@
         "position": [
           65,
           34.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b8-courtyard-north",
+        "name": "8号館 中庭側の北向き通路",
+        "position": [
+          68,
+          30
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-b8-courtyard-turn",
+        "name": "7・8号館間 中庭側の曲がり角",
+        "position": [
+          70,
+          27.7
         ],
         "layer": "ground"
       }
@@ -1408,14 +1428,16 @@
       },
       {
         "to": "b7-2f-door",
-        "type": "outdoor",
+        "type": "stairs",
         "verification": "inferred",
         "isIndoor": false,
-        "isAccessible": true,
-        "routingCost": 1,
+        "isAccessible": false,
+        "routingCost": 2,
         "cover": "unknown",
         "from": "b7-2f-stair-foot",
-        "widthClass": "unknown"
+        "widthClass": "unknown",
+        "instruction": "外階段を上って7号館2Fの出入口前へ進む",
+        "reverseInstruction": "7号館2Fの出入口前から外階段を下りて中庭側との分岐へ進む"
       },
       {
         "to": "b8-map-hall-door",
@@ -1543,6 +1565,45 @@
         "cover": "unknown",
         "from": "b8-courtyard-door",
         "widthClass": "unknown"
+      },
+      {
+        "from": "b7-b10-courtyard",
+        "to": "b8-courtyard-north",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 5,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "instruction": "中庭から8号館沿いの通路を北へ進む",
+        "reverseInstruction": "8号館沿いの通路から中庭へ進む"
+      },
+      {
+        "from": "b8-courtyard-north",
+        "to": "b7-b8-courtyard-turn",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "instruction": "8号館の中庭側に沿って7号館側へ進む",
+        "reverseInstruction": "8号館の中庭側に沿って中庭へ進む"
+      },
+      {
+        "from": "b7-b8-courtyard-turn",
+        "to": "b7-2f-stair-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "instruction": "7・8号館間の通路へ抜ける",
+        "reverseInstruction": "7・8号館間の通路から中庭側へ進む"
       }
     ],
     "links": [
@@ -1636,14 +1697,14 @@
       },
       {
         "from": "b7-2f-door",
-        "to": "b7/f2/stairs-outside",
-        "type": "stairs",
+        "to": "b7/f2/entrance-outside",
+        "type": "outdoor",
         "verification": "inferred",
-        "isAccessible": false,
-        "routingCost": 2,
+        "isAccessible": true,
+        "routingCost": 1,
         "cover": "unknown",
-        "instruction": "外階段を上って7号館2Fの出入口から建物に入る",
-        "reverseInstruction": "7号館2Fから外階段を下りて屋外へ出る"
+        "instruction": "8号館側出入口から7号館2Fへ入る",
+        "reverseInstruction": "7号館2Fの8号館側出入口から屋外へ出る"
       },
       {
         "from": "b8-map-hall-door",
