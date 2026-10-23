@@ -267,7 +267,7 @@ export class FloorMap {
     document.getElementById("map-legend")!.textContent = "青：部屋　" +
       (shown.some(({ floor }) => floor.rooms.some(r => r.passThrough === true))
         ? "青緑・破線：通行区画　" : "") +
-      "緑：WC　水色：EV　黄：階段　破線：連絡通路　紫：参考ルート";
+      "緑：WC　水色：EV　黄：階段　灰：連絡通路　紫：参考ルート";
     document.getElementById("map-heading")!.textContent = `${name}${level ? ` / ${level}` : ""}`;
     this.svg.setAttribute("aria-label", `${name} ${level ?? "フロア未登録"} 平面図（模式図）`);
     document.getElementById("map-caption")!.textContent = shown.length
@@ -278,6 +278,7 @@ export class FloorMap {
       this.label("資料の確認後に順次追加予定", [50, 45]);
       return;
     }
+    this.renderConnections();
     for (const { building, floor } of shown) {
       const angle = building.rotation ?? 0, c = Math.cos(angle), sn = Math.sin(angle);
       const group = element("g", { class: "map-floor", "data-building": building.id,
@@ -290,7 +291,6 @@ export class FloorMap {
       }
     }
     this.layer = this.svg;
-    this.renderConnections();
     this.svg.append(this.overlay);
     this.renderRoute();
     this.selectPlace(this.selected);
@@ -409,6 +409,16 @@ export class FloorMap {
       if (e.blocked || !a.buildingId || !b.buildingId || a.buildingId === b.buildingId ||
         !nodeInScope(this.campus, this.scope, a) || !nodeInScope(this.campus, this.scope, b)) continue;
       const vertical = ["stairs", "ramp", "elevator"].includes(e.type);
+      if (e.passageWidth !== undefined) {
+        const [p, q] = [this.local(a), this.local(b)], dx = q[0] - p[0], dz = q[1] - p[1];
+        const length = Math.hypot(dx, dz);
+        if (length < 1e-7) continue; // The two floor polygons already share their corridor boundary.
+        const nx = -dz / length * e.passageWidth / 2, nz = dx / length * e.passageWidth / 2;
+        this.svg.append(element("polygon", { points: points([[p[0]+nx,p[1]+nz], [q[0]+nx,q[1]+nz],
+          [q[0]-nx,q[1]-nz], [p[0]-nx,p[1]-nz]]), class: "map-passage",
+          "data-edge-type": e.type, "data-cover": e.cover ?? "unknown", "pointer-events": "none" }));
+        continue;
+      }
       this.svg.append(element("polyline", { points: points([this.local(a), this.local(b)]),
         class: `map-connection${vertical ? " map-connection-transition" : ""}`,
         "data-edge-type": e.type, "pointer-events": "none" }));
@@ -510,7 +520,7 @@ export class FloorMap {
     for (const edge of this.campus.navigation.edges) {
       const a = outdoorNodes.get(edge.from), b = outdoorNodes.get(edge.to);
       if (!a?.buildingId && !b?.buildingId && a?.overviewPosition && b?.overviewPosition && !edge.blocked)
-        this.svg.append(element("polyline", {
+      this.svg.append(element("polyline", {
           points: points([a.overviewPosition, b.overviewPosition]),
           class: `map-outdoor-path${["stairs", "ramp", "elevator"].includes(edge.type) ? " map-outdoor-transition" : a.outdoorLayer === "bridge" && b.outdoorLayer === "bridge" ? " map-outdoor-bridge" : ""}`,
           "data-from": a.id, "data-to": b.id, "data-edge-type": edge.type,

@@ -77,6 +77,7 @@ export class ThreeView {
     this.dark = dark;
     this.scene.setDarkTheme(dark);
     this.buildings.setDarkTheme(dark);
+    this.renderConnections();
     this.routes.forEach((r) => r.setDarkTheme(dark));
   }
   public renderRoute(result: RouteResult | null) {
@@ -111,7 +112,7 @@ export class ThreeView {
   }
   private renderConnections() {
     for (const object of [...this.connections.children]) {
-      if (object instanceof THREE.Line) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); }
+      if (object instanceof THREE.Line || object instanceof THREE.Mesh) { object.geometry.dispose(); (object.material as THREE.Material).dispose(); }
       this.connections.remove(object);
     }
     const nodes = new Map(this.data.navigation.nodes.map(n => [n.id, n]));
@@ -119,6 +120,19 @@ export class ThreeView {
       const a = nodes.get(edge.from)!, b = nodes.get(edge.to)!;
       if (edge.blocked || !a.buildingId || !b.buildingId || a.buildingId === b.buildingId ||
         !this.nodeVisible(a) || !this.nodeVisible(b)) continue;
+      if (edge.passageWidth !== undefined) {
+        const p = this.buildings.getNodeWorldPosition(a), q = this.buildings.getNodeWorldPosition(b);
+        const dx = q.x - p.x, dz = q.z - p.z, length = Math.hypot(dx, dz);
+        if (length < 1e-7) continue;
+        const nx = -dz / length * edge.passageWidth / 2, nz = dx / length * edge.passageWidth / 2;
+        const vertices = [p.x+nx,p.y,p.z+nz, q.x+nx,q.y,q.z+nz, q.x-nx,q.y,q.z-nz, p.x-nx,p.y,p.z-nz];
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setIndex([0, 2, 1, 0, 3, 2]); geometry.computeVertexNormals();
+        const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color: this.dark ? 0x354357 : 0xdde3eb, side: THREE.DoubleSide}));
+        mesh.userData.passage = true; mesh.userData.cover = edge.cover;
+        this.connections.add(mesh); continue;
+      }
       const geometry = new THREE.BufferGeometry().setFromPoints([a, b].map(n => this.buildings.getNodeWorldPosition(n).add(new THREE.Vector3(0, .2, 0))));
       this.connections.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x8a99af })));
     }

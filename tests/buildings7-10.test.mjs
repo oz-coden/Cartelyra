@@ -7,7 +7,7 @@ import {compileCampus} from '../.checks/data/compile.js';
 import {validateSources} from '../.checks/data/validate.js';
 import {auditGeometry,auditConnections,minimumFloorChanges} from '../.checks/data/audit.js';
 import {buildingCatalog,placeIndex,searchPlaces} from '../.checks/data/places.js';
-import {polygonOverlapArea,localToWorld} from '../.checks/data/geometry.js';
+import {polygonOverlapArea,localToWorld,segmentIsWalkable} from '../.checks/data/geometry.js';
 import {LocationState} from '../.checks/ui/LocationState.js';
 import {FloorMap} from '../.checks/ui/FloorMap.js';
 import {AStarPathfinder} from '../.checks/pathfinding/AStar.js';
@@ -21,15 +21,15 @@ test('Buildings 7–10 preserve observed floor numbers and room identifiers with
   assert.deepEqual(group.levels.map(l=>l.label),['1F','3F','4F','5F','6F']);
   assert.equal(group.levels.find(l=>l.id==='f5').floors.length,3);
   assert.deepEqual(data.buildings.find(b=>b.id==='b10').floors.map(f=>f.level),[1,3,4]);
-  assert.deepEqual(ids.map(id=>places.filter(p=>p.buildingId===id&&p.kind==='room').length),[23,47,57,20]);
+  assert.deepEqual(ids.map(id=>places.filter(p=>p.buildingId===id&&p.kind==='room').length),[23,46,57,20]);
   for(const f of floors){assert.equal(f.stackIndex,f.level-1);assert.ok(f.rooms.every(r=>r.category==='unknown'));
     assert.ok(f.rooms.every(r=>r.name===(r.mapLabel??r.id)));assert.equal(f.voids.length,0);}
   for(const id of ['7-62A','7-61A','8-42-A','8-51C','8-66A','8-68A','9-16B','9-314A','9-310','9-60','10-114'])
     assert.ok(places.find(p=>p.id===id),id);
   for(const id of ['9-48','9-55','9-57','8-55'])assert.ok(!places.some(p=>p.id===id),id);
-  const duplicate=searchPlaces(places,'8-54').filter(p=>p.kind==='room');assert.equal(duplicate.length,2);
-  assert.ok(duplicate.every(p=>p.description.includes('正式番号は要確認')));
-  assert.deepEqual(auditGeometry(floors),[]);
+  const duplicate=searchPlaces(places,'8-54').filter(p=>p.kind==='room');assert.equal(duplicate.length,1);
+  assert.equal(duplicate[0].id,'8-54');
+  assert.deepEqual(auditGeometry(floors).map(f=>[f.code,f.buildingId,f.floorId]),[['floor-components','b9','f1']]);
   for(const level of group.levels){
     const members=level.floors.map(ref=>{const b=data.buildings.find(b=>b.id===ref.buildingId),f=b.floors.find(f=>f.id===ref.floorId);
       return f.outline.map(p=>{const w=localToWorld(b,p,0);return[w[0],w[2]];});});
@@ -120,10 +120,47 @@ test('group SVG exposes five available levels, cross-wing routes and room-shaped
     assert.equal(document.querySelectorAll('.map-room').length,expected);
   }
   state.selectGroupLevel('f4');map.setLocation(state.building,state.floor,state.scope);
-  assert.equal(document.querySelectorAll('.map-connection-transition[data-edge-type="stairs"]').length,1);
+  assert.equal(document.querySelectorAll('.map-passage[data-edge-type="stairs"]').length,1);
   const r=finder.findPath('b7/f4/room-41','b9/f4/room-411');map.setRoute(r);assert.ok(document.querySelector('.map-route'));
   map.selectPlace('10-41');const room=floors.find(f=>f.buildingId==='b10'&&f.id==='f4').rooms.find(r=>r.id==='10-41');
   assert.equal(document.querySelector('.map-selection-outline').getAttribute('points'),room.polygon.map(p=>p.join(',')).join(' '));
   assert.equal(document.querySelector('#map-canvas svg').lastElementChild.getAttribute('class'),'map-emphasis');
   state.grouped=false;map.setLocation(state.building,state.floor,state.scope);assert.equal(document.querySelectorAll('.map-floor').length,1);
+});
+
+
+test('1F preserves the photo order and all observed stair/WC locations under one rotation',()=>{
+  const f=b=>floors.find(f=>f.buildingId===`b${b}`&&f.id==='f1');
+  const center=r=>r.polygon.reduce((a,p)=>[a[0]+p[0]/r.polygon.length,a[1]+p[1]/r.polygon.length],[0,0]);
+  const order=(b,ids,axis)=>{const values=ids.map(id=>center(f(b).rooms.find(r=>r.id===id))[axis]);
+    assert.ok(values.every((v,i)=>i===0||v>values[i-1]),ids.join(' -> '));};
+  order(9,['9-16B','9-16A','9-15','9-14','9-13','9-12','9-11'],0);
+  order(10,['10-14','10-15','10-16','10-17','10-18','10-19','10-110','10-111','10-112','10-113','10-114'],1);
+  order(10,['10-11','10-12','10-13'],1);order(8,['8-11','8-13','8-14','8-15'],1);
+  order(7,['7-12','7-11'],1);order(7,['7-16','7-17'],1);
+  assert.deepEqual([7,8,9,10].map(b=>f(b).features.filter(x=>x.type==='stairs').length),[3,4,0,3]);
+  assert.deepEqual([7,8,9,10].map(b=>f(b).features.filter(x=>x.type==='restroom').length),[2,1,0,1]);
+  for(const b of [7,8,9,10])for(const x of f(b).features.filter(x=>x.entrance))
+    assert.ok(finder.findPath('b8/f1/ev-west',`b${b}/f1/${x.entrance}`),x.id);
+});
+
+test('9–10 share real corridor boundaries and every 7–8 upper bridge has drawing width',()=>{
+  const nodes=new Map(data.navigation.nodes.map(n=>[n.id,n]));
+  for(const l of [1,3,4]){
+    const edges=data.navigation.edges.filter(e=>e.type==='bridge'&&e.from.startsWith(`b10/f${l}/port-nine`));assert.ok(edges.length);
+    for(const e of edges)assert.deepEqual(nodes.get(e.from).position,nodes.get(e.to).position);
+  }
+  for(const l of [3,4,5,6]){
+    const e=data.navigation.edges.find(e=>e.type==='bridge'&&e.from===`b7/f${l}/port-eight`);
+    assert.equal(e.cover,'covered');assert.equal(e.passageWidth,6);
+  }
+  const bad=structuredClone(s);bad.manifest.connections.find(e=>e.passageWidth).passageWidth=0;
+  assert.ok(validate(bad).some(e=>e.includes('Invalid passage drawing width')));
+});
+
+
+test('decimal shared-wall endpoints remain walkable after roundoff without admitting a crossing',()=>{
+  const outline=[[0,1.8],[102,1.8],[102,35],[0,35]];
+  assert.equal(segmentIsWalkable([2,4.6],[2,1.8],outline,[]),true);
+  assert.equal(segmentIsWalkable([2,4.6],[2,1.7],outline,[]),false);
 });

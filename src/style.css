@@ -822,3 +822,5 @@ body[data-view="3d"] .three-only {
     order: 0;
   }
 }
+
+.map-passage { fill: var(--slab); stroke: var(--muted); stroke-width: 0.4; }

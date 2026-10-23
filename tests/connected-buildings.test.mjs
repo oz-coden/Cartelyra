@@ -82,7 +82,9 @@ test('group SVG composes floor transforms, connected route segments and foregrou
 });
 
 test('the application keeps grouped floors, endpoints, camera and exploded connectors coherent',async()=>{
-  const {document,window}=await dom(),s=connectedCampus(),data=compile(s);
+  const {document,window}=await dom(),s=connectedCampus();
+  for(const e of s.manifest.connections)e.passageWidth=4;
+  const data=compile(s);
   const server=await createServer({server:{middlewareMode:true,hmr:false,ws:false},optimizeDeps:{noDiscovery:true,include:[]},appType:'custom'});
   try{
     const [{UniviewApp},{ThreeView}]=await Promise.all([server.ssrLoadModule('/src/main.ts'),server.ssrLoadModule('/src/scene/ThreeView.ts')]);
@@ -106,6 +108,9 @@ test('the application keeps grouped floors, endpoints, camera and exploded conne
     const floorGroups=()=>{const a=[];host.scene.traverse(o=>{if(o.userData.type==='floor')a.push(o);});return a;};
     assert.equal(floorGroups().filter(g=>g.visible).length,6);
     const connections=host.scene.children.find(o=>o.userData.type==='building-connections');assert.equal(connections.children.length,4);
+    assert.ok(connections.children.every(o=>o.isMesh&&o.userData.passage&&['covered','indoor'].includes(o.userData.cover)));
+    for(const mesh of connections.children){const box=new THREE.Box3().setFromObject(mesh);assert.ok(box.getSize(new THREE.Vector3()).z>=4);}
+    const original=connections.children[0];let disposed=false;original.geometry.addEventListener('dispose',()=>{disposed=true;});
     const search=(query)=>{const input=document.getElementById('input-dest');input.value=query;input.dispatchEvent(new window.Event('input'));document.querySelector('#suggestions-dest button').click();};
     const before=host.moves;search('a-0');assert.equal(host.moves,before,'search inside the group retains the camera');
     const gap=document.getElementById('explode-slider');gap.value='80';gap.dispatchEvent(new window.Event('input'));
@@ -113,7 +118,8 @@ test('the application keeps grouped floors, endpoints, camera and exploded conne
       const upper=floorGroups().find(g=>g.userData.buildingId===id&&g.userData.stackIndex===1);
       assert.ok(Math.abs(upper.position.y-15.2)<1e-8,'group members use a common explode index');
     }
-    assert.equal(connections.children.length,4);
+    assert.equal(connections.children.length,4);assert.ok(disposed);
+    assert.ok(connections.children.every(o=>o.isMesh&&o.userData.passage));
     const all=document.getElementById('show-all-floors');all.checked=false;all.dispatchEvent(new window.Event('change'));
     assert.equal(floorGroups().filter(g=>g.visible).length,3);assert.equal(connections.children.length,2);
     assert.ok(view.getPlaceAnchor('a-0'));

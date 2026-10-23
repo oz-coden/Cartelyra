@@ -46,6 +46,7 @@ export interface FloorSource {
 }
 
 export interface SourceEdge {
+  passageWidth?: number; // Schematic drawing width of a cross-building corridor; never a measured clearance.
   from: string;
   to: string;
   type: NavEdgeType;

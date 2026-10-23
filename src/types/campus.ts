@@ -158,6 +158,7 @@ export interface NavNode {
 export type NavEdgeType = "walk" | "stairs" | "ramp" | "elevator" | "bridge" | "outdoor";
 
 export interface NavEdge {
+  passageWidth?: number; // Schematic drawing width of a cross-building corridor; never a measured clearance.
   from: string;
   to: string;
   distance?: number; // Measured-map length; only measured coordinates allow a Euclidean fallback.

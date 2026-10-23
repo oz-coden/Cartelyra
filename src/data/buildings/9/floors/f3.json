@@ -616,7 +616,7 @@
       {
         "id": "port-ten",
         "name": "10号館への連絡地点",
-        "position": [8, 16],
+        "position": [0, 16],
         "type": "corridor"
       },
       {
@@ -1162,16 +1162,6 @@
         "from": "port-eight"
       },
       {
-        "to": "hall-7",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "port-ten"
-      },
-      {
         "to": "hall-4",
         "type": "walk",
         "verification": "inferred",
@@ -1370,6 +1360,16 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "stairs-southeast"
+      },
+      {
+        "to": "port-ten",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor",
+        "from": "hall-0"
       }
     ]
   }

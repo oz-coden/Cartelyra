@@ -29,11 +29,11 @@
   "navigationComponents": [
     {
       "nodeId": "b10/f1/hall-0",
-      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+      "description": "未登録2Fによる上下階の分離、または隣棟の共用通路で接続する区画。"
     },
     {
       "nodeId": "b10/f3/hall-0",
-      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+      "description": "未登録2Fによる上下階の分離、または隣棟の共用通路で接続する区画。"
     }
   ]
 }

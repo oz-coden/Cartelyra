@@ -32,7 +32,7 @@ export function validateSources(
     if (!condition) errors.push(message);
   };
   const metadata = (edge: { routingCost?: number; cover?: string; floorChanges?: number; isIndoor?: boolean;
-    blocked?: boolean; bidirectional?: boolean }, context: string) => {
+    blocked?: boolean; bidirectional?: boolean; passageWidth?: number }, context: string) => {
     if (manifest.coordinateUnit === "schematic")
       check(Number.isFinite(edge.routingCost) && edge.routingCost! >= 0, `Missing/invalid reference routing cost ${context}`);
     else if (edge.routingCost !== undefined)
@@ -42,6 +42,8 @@ export function validateSources(
       if (edge.isIndoor !== undefined)
         check(edge.isIndoor === (edge.cover === "indoor"), `Weather cover conflicts with indoor flag ${context}`);
     }
+    if (edge.passageWidth !== undefined)
+      check(Number.isFinite(edge.passageWidth) && edge.passageWidth > 0, `Invalid passage drawing width ${context}`);
     if (edge.floorChanges !== undefined)
       check(Number.isInteger(edge.floorChanges) && edge.floorChanges >= 0, `Invalid explicit floor changes ${context}`);
     for (const flag of ["blocked", "bidirectional"] as const)

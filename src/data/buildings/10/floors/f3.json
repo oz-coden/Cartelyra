@@ -16,7 +16,9 @@
     [0, 0.0],
     [44, 0.0],
     [44, 90.0],
-    [0, 90.0],
+    [15, 90],
+    [15, 119],
+    [0, 119],
     [0, 40.5],
     [-12, 40.5],
     [-12, 31.5],
@@ -225,7 +227,7 @@
       {
         "id": "port-nine",
         "name": "9号館への連絡地点",
-        "position": [10, 90.0],
+        "position": [15, 116],
         "type": "corridor"
       },
       {
@@ -263,6 +265,12 @@
         "name": "10-34",
         "position": [6, 85.5],
         "type": "room_entrance"
+      },
+      {
+        "id": "hall-nine-landing",
+        "name": "9号館側の通路",
+        "type": "corridor",
+        "position": [10, 116]
       }
     ],
     "edges": [
@@ -397,16 +405,6 @@
         "from": "hall-1"
       },
       {
-        "to": "hall-10",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "port-nine"
-      },
-      {
         "to": "hall-2",
         "type": "walk",
         "verification": "inferred",
@@ -465,6 +463,26 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "room-34"
+      },
+      {
+        "to": "hall-nine-landing",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3.9,
+        "cover": "indoor",
+        "from": "hall-10"
+      },
+      {
+        "to": "port-nine",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor",
+        "from": "hall-nine-landing"
       }
     ]
   }
