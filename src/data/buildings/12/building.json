@@ -1,0 +1,18 @@
+{
+  "id": "b12",
+  "name": "12号館",
+  "code": "12",
+  "color": "#4b7fa6",
+  "origin": [
+    1460,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f2",
+    "f3"
+  ],
+  "connections": []
+}
