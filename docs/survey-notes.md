@@ -264,6 +264,7 @@
 
 - **7-17**：広場側の代表点まで暫定案内。正確な扉位置・進入関係は現地確認待ち。 2023年作成の参考資料に記された用途を一般化して付記。現況・現用途は現地確認待ち。
 - **7-16**：通路側の代表点まで暫定案内。正確な扉位置・進入関係は現地確認待ち。 2023年作成の参考資料に記された用途を一般化して付記。現況・現用途は現地確認待ち。
+- **1Fの図面下側の開口候補**：出入口の存在が不確かなため、設備と案内先の登録から除外。出入口の有無・位置は現地確認待ち。中庭側出入口とは別の候補。
 - **2F/stairs-ten**：2Fの棟境界付近にある階段記号の推定接続。段数・高低差・利用条件は現地確認待ち。
 - **2F/entrance-five**：7-21と男性用WCの間から5号館側へ出る出入口。屋外の階段で地上通路へ接続。階段は屋外で1回だけ計上し、館内・出入口リンクでは重複計上しない。扉の正確な位置・段数・高低差・屋根・利用条件は現地照合待ち。
 - **2F/entrance-outside**：7号館2Fの8号館側出入口。外の進入路に階段区間があり、その階段下の分岐から中庭側の歩行通路へ接続する。
@@ -274,7 +275,7 @@
 
 - 注記4：7-62
 - 注記5：7-14、7-13、7-11、7-12、7-15、7-34、7-33、7-32、7-31、7-44、7-43、7-42、7-41、7-53、7-52、7-51、7-63、7-62A、7-61
-- 注記6：1F/wc-female、1F/wc-male、1F/stairs-center、1F/stairs-south、1F/stairs-west-exit、1F/entrance-east、1F/entrance-south、3F/stairs-west、3F/wc-west、3F/stairs-east、4F/stairs-west、4F/wc-west、4F/stairs-east、5F/stairs-west、5F/wc-west、5F/stairs-east、6F/unlabelled、6F/stairs-west、6F/wc-west、6F/stairs-east
+- 注記6：1F/wc-female、1F/wc-male、1F/stairs-center、1F/stairs-south、1F/entrance-courtyard、1F/entrance-east、3F/stairs-west、3F/wc-west、3F/stairs-east、4F/stairs-west、4F/wc-west、4F/stairs-east、5F/stairs-west、5F/wc-west、5F/stairs-east、6F/unlabelled、6F/stairs-west、6F/wc-west、6F/stairs-east
 - 注記7：7-21、7-22
 - 注記8：2F/wc-female、2F/wc-male、2F/stairs-west、2F/stairs-east
 
