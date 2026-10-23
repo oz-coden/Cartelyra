@@ -52,12 +52,23 @@ test("Building 3 has distinct Building 8/New East Gate-facing entrances and reac
 test("Building 1 entrances face Building 2 and East Gate and connect to the campus network", () => {
   const finder = new AStarPathfinder(campus);
   const links=source.manifest.outdoor.links;
-  assert.equal(links.find(l=>l.to==='b1/f1/entry-top').from,'b1-b2-door');
+  assert.equal(links.find(l=>l.to==='b1/f1/entry-top-left').from,'b1-b2-door-left');
   assert.equal(links.find(l=>l.to==='b1/f1/entry-right').from,'b1-lobby-door');
   const footprint=source.overview.buildings.find(b=>b.id==='b1').polygon;
   const [nw,ne,se]=footprint;
   const node=id=>source.manifest.outdoor.nodes.find(n=>n.id===id).position;
-  assert.deepEqual(node('b1-b2-door'),[(nw[0]+ne[0])/2,(nw[1]+ne[1])/2]);
+  for (const [side,x] of [['left',28],['right',55]]) {
+    const id=`b1/f1/entry-top-${side}`, outdoor=`b1-b2-door-${side}`,t=(x-8)/62;
+    assert.equal(links.find(l=>l.to===id).from,outdoor);
+    assert.deepEqual(node(outdoor),nw.map((v,i)=>v+t*(ne[i]-v)));
+    for (const mode of ['shortest','accessible','indoor','stairs']) for (const [a,b] of [[id,'campus/outdoor/east-gate'],['campus/outdoor/east-gate',id]]) {
+      const route=finder.findPath(a,b,mode);assert.ok(route);
+      assert.ok(route.pathNodes.some(n=>n.id===`campus/outdoor/${outdoor}`));
+      assert.equal(route.floorChanges,0);
+      assert.ok(route.steps.every(s=>s.edgeType!=='stairs'));
+      assert.equal(finder.findPath(a,b,mode,false),null);
+    }
+  }
   assert.deepEqual(node('b1-lobby-door'),[(ne[0]+se[0])/2,(ne[1]+se[1])/2]);
   for(const mode of ['shortest','accessible','indoor','stairs']) for(const gate of ['east','new-east','west']){
     const place=places.find(p=>p.id===`campus/gate/${gate}`);
@@ -68,7 +79,7 @@ test("Building 1 entrances face Building 2 and East Gate and connect to the camp
       assert.equal(finder.findPath(a,b,mode,false),null);
     }
   }
-  assert.equal(finder.findPath('b1/f1/entry-top','b6/f1/entry-left'),null);
+  assert.equal(finder.findPath('b1/f1/entry-top-left','b6/f1/entry-left'),null);
 });
 
 test("Building 5 uses an explicit external stair to its 2F Building 7-facing entrance near Building 3", () => {

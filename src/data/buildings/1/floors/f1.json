@@ -152,17 +152,37 @@
       "entrance": "wc-lower-multi"
     },
     {
-      "id": "entry-top",
-      "label": "1-106側出入口",
+      "id": "entry-top-left",
+      "label": "1-106側出入口1",
       "type": "entrance",
       "polygon": [
-        [39.5, -10],
-        [43.5, -10],
-        [43.5, -8],
-        [39.5, -8]
+        [26, -10],
+        [30, -10],
+        [30, -8],
+        [26, -8]
       ],
       "description": "2号館側。",
-      "entrance": "entry-top",
+      "entrance": "entry-top-left",
+      "aliases": [
+        "1-106",
+        "106",
+        "入口ホール",
+        "ドア",
+        "2号館側出入口"
+      ]
+    },
+    {
+      "id": "entry-top-right",
+      "label": "1-106側出入口2",
+      "type": "entrance",
+      "polygon": [
+        [53, -10],
+        [57, -10],
+        [57, -8],
+        [53, -8]
+      ],
+      "description": "2号館側。",
+      "entrance": "entry-top-right",
       "aliases": [
         "1-106",
         "106",
@@ -537,9 +557,15 @@
         "type": "facility_entrance"
       },
       {
-        "id": "entry-top",
-        "name": "1-106側出入口",
-        "position": [41.5, -10],
+        "id": "entry-top-left",
+        "name": "1-106側出入口1",
+        "position": [28, -10],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "entry-top-right",
+        "name": "1-106側出入口2",
+        "position": [55, -10],
         "type": "facility_entrance"
       },
       {
@@ -1000,16 +1026,6 @@
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "from": "entry-top",
-        "routingCost": 0.846515,
-        "cover": "indoor"
-      },
-      {
-        "to": "hall-entry-top",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
         "from": "hall-0",
         "routingCost": 1.142795,
         "cover": "indoor"
@@ -1103,6 +1119,26 @@
         "routingCost": 0.211629,
         "cover": "indoor",
         "from": "hall-18"
+      },
+      {
+        "from": "entry-top-left",
+        "to": "hall-26",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.507909,
+        "cover": "indoor"
+      },
+      {
+        "from": "entry-top-right",
+        "to": "hall-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.846515,
+        "cover": "indoor"
       }
     ]
   }

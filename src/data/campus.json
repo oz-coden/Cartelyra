@@ -175,11 +175,20 @@
         "layer": "ground"
       },
       {
-        "id": "b1-b2-door",
-        "name": "1号館 1-106側出入口前（2号館側）",
+        "id": "b1-b2-door-left",
+        "name": "1号館 1-106側出入口1前（2号館側）",
         "position": [
-          82.1875,
-          42
+          80.3024193548387,
+          41.51209677419355
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b2-door-right",
+        "name": "1号館 1-106側出入口2前（2号館側）",
+        "position": [
+          84.92943548387098,
+          42.70967741935484
         ],
         "layer": "ground"
       },
@@ -956,7 +965,18 @@
       },
       {
         "from": "b1-b2-approach",
-        "to": "b1-b2-door",
+        "to": "b1-b2-door-left",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 2.0,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-approach",
+        "to": "b1-b2-door-right",
         "type": "outdoor",
         "verification": "inferred",
         "isIndoor": false,
@@ -1608,8 +1628,16 @@
         "cover": "unknown"
       },
       {
-        "from": "b1-b2-door",
-        "to": "b1/f1/entry-top",
+        "from": "b1-b2-door-left",
+        "to": "b1/f1/entry-top-left",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-door-right",
+        "to": "b1/f1/entry-top-right",
         "verification": "inferred",
         "isAccessible": true,
         "routingCost": 1,

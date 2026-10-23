@@ -44,7 +44,7 @@ test("Building 1 preserves nine floor layouts, occupied centres and corrected la
 });
 
 test("Building 1 reaches registered corridor endpoints by stairs and EV without bridging unknown areas", () => {
-  const entry = "b1/f1/entry-top";
+  const entry = "b1/f1/entry-top-left";
   for (const place of places.filter((p) => p.nodeId)) {
     for (const mode of ["shortest", "indoor", "stairs", "accessible"]) {
       const route = finder.findPath(entry, place.nodeId, mode);
@@ -73,17 +73,33 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   assert.ok(!first.rooms.some((r) => r.id === "1-106"));
   assert.ok(!first.rooms.some((r) => pointInInterior([55, 0], r.polygon)));
   const entries = places.filter((p) => p.kind === "entrance");
-  assert.equal(entries.length, 2);
+  assert.equal(entries.length, 3);
   assert.ok(entries.every((p) => p.floorLevel === 1));
-  assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 1);
-  const top = entries.find(p => p.featureId === "entry-top");
+  assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 2);
+  const top = entries.find(p => p.featureId === "entry-top-left");
   assert.match(top.description,/2号館側/);
   assert.doesNotMatch([top.description,...top.aliases].join(" "),/自動/);
   assert.match(entries.find(p => p.featureId === "entry-right").description,/東門側/);
-  const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top");
+  const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top-left");
   assert.equal(pointInInterior(firstNode.position, first.outline), false);
-  const route = finder.findPath("b1/f1/entry-top", "b1/f1/room-101");
+  const route = finder.findPath("b1/f1/entry-top-left", "b1/f1/room-101");
   assert.ok(route.pathNodes.some((n) => n.position[2] < 0));
+  for (const [id, position] of [["entry-top-left", [28, -10]], ["entry-top-right", [55, -10]]]) {
+    const entry = entries.find(p => p.featureId === id);
+    assert.ok(entry);
+    assert.deepEqual(first.navigation.nodes.find(n => n.id === id).position, position);
+    assert.doesNotMatch([entry.description, ...entry.aliases].join(" "), /自動/);
+    for (const mode of ["shortest", "accessible", "indoor", "stairs"]) {
+      for (const [a,b] of [[entry.nodeId,"b1/f1/room-101"],["b1/f1/room-101",entry.nodeId]]) {
+        const route = finder.findPath(a,b,mode);
+        assert.ok(route);
+        assert.ok(route.pathNodes.every(n => n.buildingId === "b1"));
+        assert.equal(route.floorChanges,0);
+        assert.ok(route.steps.every(s => s.edgeType !== "stairs"));
+      }
+    }
+  }
+  assert.notEqual(entries.find(p=>p.featureId==="entry-top-left").nodeId, entries.find(p=>p.featureId==="entry-top-right").nodeId);
   assert.ok(source.buildings.find((b) => b.id === "b1").connections.every((e) => e.verification === "inferred"));
 });
 
@@ -95,7 +111,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
     assert.equal(place.nodeId, approach.nodeId);
     assert.ok(surveyNotes.includes(place.id));
     assert.match(placeRouteNotice(place), new RegExp(front));
-    const route = finder.findPath("b1/f1/entry-top", place.nodeId);
+    const route = finder.findPath("b1/f1/entry-top-left", place.nodeId);
     assert.equal(route.pathNodes.at(-1).id, approach.nodeId);
   }
   assert.equal(places.filter((p) => p.approachRoomId).length, 4);
@@ -115,7 +131,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
   assert.notEqual(left.nodeId, right.nodeId);
   for (const place of [left, right]) {
     assert.ok(notesFor("b1").includes(place.id));
-    assert.equal(finder.findPath("b1/f1/entry-top", place.nodeId).pathNodes.at(-1).id, place.nodeId);
+    assert.equal(finder.findPath("b1/f1/entry-top-left", place.nodeId).pathNodes.at(-1).id, place.nodeId);
   }
 });
 

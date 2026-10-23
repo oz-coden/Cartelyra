@@ -64,7 +64,7 @@ test("Building 6 reaches all registered room destinations by inferred stairs and
   }
   assert.ok(places.filter((p) => p.kind === "room").every((p) => p.nodeId));
   assert.equal(places.find((p) => p.featureId === "stairs-lab").nodeId, undefined);
-  assert.equal(finder.findPath(entry.nodeId, "b1/f1/entry-top"), null);
+  assert.equal(finder.findPath(entry.nodeId, "b1/f1/entry-top-left"), null);
 });
 
 test("Building 6 avoids unknown grey areas and keeps the 3F right wing separate from its left corridor", () => {
