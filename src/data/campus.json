@@ -39,29 +39,11 @@
         "layer": "ground"
       },
       {
-        "id": "b3-turn",
-        "name": "3号館前の曲がり角",
+        "id": "b5-path-junction",
+        "name": "5号館側の分岐",
         "position": [
-          76.875,
-          19.5
-        ],
-        "layer": "ground"
-      },
-      {
-        "id": "b7-east-south",
-        "name": "7号館・5号館間の通路",
-        "position": [
-          58.75,
-          19.846724
-        ],
-        "layer": "ground"
-      },
-      {
-        "id": "b7-east",
-        "name": "7号館前の通路",
-        "position": [
-          57.5,
-          19.885043
+          73.975,
+          22.128947
         ],
         "layer": "ground"
       },
@@ -70,16 +52,7 @@
         "name": "7号館・6号館間の曲がり角",
         "position": [
           56,
-          19.931026
-        ],
-        "layer": "ground"
-      },
-      {
-        "id": "west-gate-south",
-        "name": "西門 7号館側の通路",
-        "position": [
-          54.875,
-          19.375
+          20.236842
         ],
         "layer": "ground"
       },
@@ -94,29 +67,11 @@
         "gateId": "west"
       },
       {
-        "id": "west-gate-north",
-        "name": "西門 12号館側の通路",
-        "position": [
-          52.875,
-          19.932724
-        ],
-        "layer": "ground"
-      },
-      {
-        "id": "b12-east-south",
-        "name": "12号館・6号館間の曲がり角",
-        "position": [
-          52.25,
-          19.88467
-        ],
-        "layer": "ground"
-      },
-      {
         "id": "b12-east",
         "name": "12号館前の地上通路",
         "position": [
           46.25,
-          19.423349
+          19.632653
         ],
         "layer": "ground"
       },
@@ -125,7 +80,7 @@
         "name": "17号館・19号館間の地上通路",
         "position": [
           31.25,
-          18.725045
+          18.897959
         ],
         "layer": "ground"
       },
@@ -279,7 +234,7 @@
         "name": "2号館・3号館間の通路",
         "position": [
           82.5,
-          31.625
+          32.113208
         ],
         "layer": "ground"
       },
@@ -352,7 +307,7 @@
         "name": "17号館 出入口1前の分岐",
         "position": [
           29.5,
-          18.676574
+          18.812245
         ],
         "layer": "ground"
       },
@@ -370,7 +325,7 @@
         "name": "17号館 出入口2前の分岐",
         "position": [
           35.5,
-          18.842761
+          19.106122
         ],
         "layer": "ground"
       },
@@ -532,7 +487,7 @@
         "name": "19号館南側 17号館・12号館間の地上通路",
         "position": [
           40.5,
-          18.98125
+          19.35102
         ],
         "layer": "ground"
       },
@@ -574,10 +529,10 @@
       },
       {
         "id": "b7-b8-approach",
-        "name": "7・8号館間の通路",
+        "name": "7・8号館側の分岐",
         "position": [
           71,
-          23.5
+          21.815789
         ],
         "layer": "ground"
       },
@@ -722,105 +677,6 @@
         "cover": "unknown"
       },
       {
-        "to": "b3-turn",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b3-front",
-        "routingCost": 3.064413,
-        "cover": "unknown"
-      },
-      {
-        "to": "b5-stair-foot",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b3-turn",
-        "routingCost": 2.902482,
-        "cover": "unknown"
-      },
-      {
-        "to": "b7-east",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b7-east-south",
-        "routingCost": 1.600781,
-        "cover": "unknown"
-      },
-      {
-        "to": "b7-north-east",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b7-east",
-        "routingCost": 1.736555,
-        "cover": "unknown"
-      },
-      {
-        "to": "west-gate-south",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b7-north-east",
-        "routingCost": 1.231107,
-        "cover": "unknown"
-      },
-      {
-        "to": "west-gate",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "west-gate-south",
-        "routingCost": 1.286954,
-        "cover": "unknown"
-      },
-      {
-        "to": "west-gate-north",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "west-gate",
-        "routingCost": 0.951972,
-        "cover": "unknown"
-      },
-      {
-        "to": "b12-east-south",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "west-gate-north",
-        "routingCost": 0.637377,
-        "cover": "unknown"
-      },
-      {
-        "to": "b12-east",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b12-east-south",
-        "routingCost": 6.011707,
-        "cover": "unknown"
-      },
-      {
         "to": "b19-shop-approach",
         "type": "outdoor",
         "verification": "inferred",
@@ -917,17 +773,6 @@
         "widthClass": "unknown",
         "from": "avenue-west",
         "routingCost": 1.681703,
-        "cover": "unknown"
-      },
-      {
-        "from": "b5-stair-foot",
-        "to": "b7-east-south",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 15.238029,
         "cover": "unknown"
       },
       {
@@ -1409,17 +1254,6 @@
         "from": "b19-bridge-stair-foot"
       },
       {
-        "to": "b7-b8-approach",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "routingCost": 6,
-        "cover": "unknown",
-        "from": "b3-front",
-        "widthClass": "unknown"
-      },
-      {
         "to": "b7-2f-stair-foot",
         "type": "outdoor",
         "verification": "inferred",
@@ -1608,6 +1442,72 @@
         "widthClass": "unknown",
         "instruction": "7・8号館間の通路へ抜ける",
         "reverseInstruction": "7・8号館間の通路から中庭側へ"
+      },
+      {
+        "to": "b5-path-junction",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b3-front",
+        "routingCost": 3.253846,
+        "cover": "unknown"
+      },
+      {
+        "to": "b7-b8-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b5-path-junction",
+        "routingCost": 2.746154,
+        "cover": "unknown"
+      },
+      {
+        "to": "b7-north-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-b8-approach",
+        "routingCost": 18.54226,
+        "cover": "unknown"
+      },
+      {
+        "to": "west-gate",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-north-east",
+        "routingCost": 2.518061,
+        "cover": "unknown"
+      },
+      {
+        "to": "b12-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "west-gate",
+        "routingCost": 7.601056,
+        "cover": "unknown"
+      },
+      {
+        "to": "b5-stair-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b5-path-junction",
+        "routingCost": 2.713049,
+        "cover": "unknown"
       }
     ],
     "links": [
