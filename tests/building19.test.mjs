@@ -155,7 +155,8 @@ test('the south-side shop entrance connects to the ground path between Buildings
   assert.equal(split.length,2);assert.ok(Math.abs(split.reduce((n,e)=>n+e.routingCost,0)-10.753359)<1e-9);
   for(const gate of ['east-gate','new-east-gate','west-gate'])for(const mode of ['shortest','accessible','indoor','stairs'])for(const [a,b]of[[`campus/outdoor/${gate}`,'b19/f1/room-101'],['b19/f1/room-101',`campus/outdoor/${gate}`]]){
     const r=finder.findPath(a,b,mode);assert.ok(r,`${a} -> ${b} ${mode}`);
-    assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+    if(mode!=='indoor')assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+    assert.ok(!r.pathNodes.some(n=>n.buildingId==='b19'&&n.floor!==1),'the shop approach never uses a Building 19 vertical transfer');
     assert.ok(r.pathNodes.some(n=>n.id==='b19/f1/entrance-shop'));
     assert.ok(r.pathNodes.filter(n=>!n.buildingId).every(n=>n.outdoorLayer==='ground'));
     assert.equal(finder.findPath(a,b,mode,false),null);

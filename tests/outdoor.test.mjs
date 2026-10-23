@@ -63,7 +63,7 @@ test("Building 1 entrances face Building 2 and East Gate and connect to the camp
     assert.deepEqual(node(outdoor),nw.map((v,i)=>v+t*(ne[i]-v)));
     for (const mode of ['shortest','accessible','indoor','stairs']) for (const [a,b] of [[id,'campus/outdoor/east-gate'],['campus/outdoor/east-gate',id]]) {
       const route=finder.findPath(a,b,mode);assert.ok(route);
-      assert.ok(route.pathNodes.some(n=>n.id===`campus/outdoor/${outdoor}`));
+      assert.ok(route.pathNodes.some(n=>source.manifest.outdoor.links.some(l=>l.to.startsWith('b1/f1/')&&n.id===`campus/outdoor/${l.from}`)));
       assert.equal(route.floorChanges,0);
       assert.ok(route.steps.every(s=>s.edgeType!=='stairs'));
       assert.equal(finder.findPath(a,b,mode,false),null);

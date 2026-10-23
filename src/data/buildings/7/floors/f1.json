@@ -13,7 +13,9 @@
     [9, 33.4],
     [9, 1],
     [123.2, 1],
-    [123.2, 41],
+    [123.2, 37.6],
+    [116, 37.6],
+    [116, 41],
     [40, 41],
     [40, 61]
   ],
@@ -70,18 +72,6 @@
       "entrance": "stairs-south"
     },
     {
-      "id": "stairs-west-exit",
-      "label": "階段",
-      "type": "stairs",
-      "polygon": [
-        [116, 41],
-        [116, 37.6],
-        [123.2, 37.6],
-        [123.2, 41]
-      ],
-      "entrance": "stairs-west-exit"
-    },
-    {
       "id": "entrance-east",
       "label": "出入口1（図面右側）",
       "type": "entrance",
@@ -104,6 +94,20 @@
         [123.2, 7]
       ],
       "entrance": "entrance-south"
+    },
+    {
+      "id": "entrance-courtyard",
+      "label": "中庭側出入口",
+      "type": "entrance",
+      "polygon": [
+        [118, 35.6],
+        [120, 35.6],
+        [120, 37.6],
+        [118, 37.6]
+      ],
+      "entrance": "entrance-courtyard",
+      "description": "屋外に階段あり。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -502,10 +506,10 @@
         "type": "stairs"
       },
       {
-        "id": "stairs-west-exit",
-        "name": "階段",
+        "id": "entrance-courtyard",
+        "name": "中庭側出入口",
         "position": [119, 37.6],
-        "type": "stairs"
+        "type": "facility_entrance"
       },
       {
         "id": "entrance-east",
@@ -1005,7 +1009,7 @@
         "isAccessible": true,
         "routingCost": 0.0,
         "cover": "indoor",
-        "from": "stairs-west-exit"
+        "from": "entrance-courtyard"
       },
       {
         "to": "hall-34",

@@ -80,3 +80,29 @@ test('ground walking segments meet only at explicit shared routing junctions',()
     assert.deepEqual(segmentIntersections(nodes.get(a.from).position,nodes.get(a.to).position,nodes.get(b.from).position,nodes.get(b.to).position),[],`${a.from}/${a.to} meets ${b.from}/${b.to} without a shared junction`);
   }
 });
+
+test('Building 1 parallel entrance approaches have separate junctions and remain independent of the through path',async()=>{
+  const {document,window}=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));
+  globalThis.document=document;globalThis.window=window;
+  const map=new FloorMap(document.getElementById('map-canvas'),data,source.overview);map.showOverview(true);
+  const vectors=[],junctions=[];
+  for (const side of ['left','right']) {
+    const junction=out(`b1-b2-approach-${side}`),door=out(`b1-b2-door-${side}`);
+    const edge=document.querySelector(`[data-from="${junction}"][data-to="${door}"]`);assert.ok(edge);
+    const [a,b]=edge.getAttribute('points').trim().split(/\s+/).map(p=>p.split(',').map(Number));
+    vectors.push([b[0]-a[0],b[1]-a[1]]);junctions.push(a);
+    assert.ok(b[1]>a[1]);
+    for(const mode of ['shortest','accessible','indoor','stairs']) for(const [from,to] of [[junction,`b1/f1/entry-top-${side}`],[`b1/f1/entry-top-${side}`,junction]]) {
+      const route=finder.findPath(from,to,mode);assert.ok(route);
+      assert.ok(route.pathNodes.some(n=>n.id===door));assert.equal(route.verticalMovements.stairs,0);
+    }
+  }
+  assert.notDeepEqual(junctions[0],junctions[1]);
+  assert.ok(Math.abs(vectors[0][0]*vectors[1][1]-vectors[0][1]*vectors[1][0])<1e-8,'the branches are parallel');
+  const positions=new Map(data.navigation.nodes.map(n=>[n.id,n.overviewPosition]));
+  assertStraight(['b2-west-turn','b1-b2-approach-left','b1-b2-approach-right','b1-b2-east'].map(id=>positions.get(out(id))));
+  const closed=structuredClone(data);closed.navigation.edges.find(e=>e.from===out('b1-b2-approach-left')&&e.to===out('b1-b2-door-left')).blocked=true;
+  const pf=new AStarPathfinder(closed),a=out('b2-west-turn'),b=out('b1-b2-east');
+  assert.deepEqual(pf.findPath(a,b,'accessible').pathNodes,finder.findPath(a,b,'accessible').pathNodes);
+  assert.ok(pf.findPath(out('b1-b2-approach-right'),'b1/f1/entry-top-right','accessible'));
+});

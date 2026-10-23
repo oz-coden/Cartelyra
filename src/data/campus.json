@@ -148,15 +148,6 @@
         "layer": "ground"
       },
       {
-        "id": "b1-b2-approach",
-        "name": "1号館・2号館間の通路",
-        "position": [
-          82.1875,
-          40
-        ],
-        "layer": "ground"
-      },
-      {
         "id": "b1-lobby-door",
         "name": "1号館 窓口ロビー側出入口前（東門側）",
         "position": [
@@ -689,6 +680,105 @@
           21.82391304347826
         ],
         "layer": "ground"
+      },
+      {
+        "id": "b1-b2-approach-left",
+        "name": "1号館 出入口1前の分岐",
+        "position": [
+          80.3024193548387,
+          39.627481389578165
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b2-approach-right",
+        "name": "1号館 出入口2前の分岐",
+        "position": [
+          84.92943548387098,
+          40.69525434243177
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-upper-door",
+        "name": "10号館2F 中庭側出入口1前",
+        "position": [
+          62.525,
+          29.35
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-upper-foot",
+        "name": "10号館 中庭側外階段1下",
+        "position": [
+          63.425,
+          29.580000000000002
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-upper-junction",
+        "name": "中庭 10号館出入口1側の分岐",
+        "position": [
+          69.20198757763974,
+          29.580000000000002
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-lower-door",
+        "name": "10号館2F 中庭側出入口2前",
+        "position": [
+          60.483333333333334,
+          37.225
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-lower-foot",
+        "name": "10号館 中庭側外階段2下",
+        "position": [
+          61.38333333333333,
+          37.455
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b10-courtyard-lower-junction",
+        "name": "中庭 10号館出入口2側の分岐",
+        "position": [
+          67.19655279503105,
+          37.455
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-courtyard-door",
+        "name": "7号館1F 中庭側出入口前",
+        "position": [
+          68.57793345008757,
+          27.23248686514886
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-courtyard-foot",
+        "name": "7号館1F 中庭側外階段前",
+        "position": [
+          68.37793345008757,
+          28.23248686514886
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-courtyard-junction",
+        "name": "中庭 7号館1F側の分岐",
+        "position": [
+          69.54514309645278,
+          28.23248686514886
+        ],
+        "layer": "ground"
       }
     ],
     "edges": [
@@ -822,50 +912,6 @@
         "isAccessible": true,
         "widthClass": "unknown",
         "routingCost": 6.75,
-        "cover": "unknown"
-      },
-      {
-        "from": "b2-west-turn",
-        "to": "b1-b2-approach",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 5.823243,
-        "cover": "unknown"
-      },
-      {
-        "from": "b1-b2-approach",
-        "to": "b1-b2-door-left",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 2.0,
-        "cover": "unknown"
-      },
-      {
-        "from": "b1-b2-approach",
-        "to": "b1-b2-door-right",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 2.0,
-        "cover": "unknown"
-      },
-      {
-        "from": "b1-b2-approach",
-        "to": "b1-b2-east",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 7.518986,
         "cover": "unknown"
       },
       {
@@ -1445,19 +1491,6 @@
         "reverseInstruction": "8号館沿いの通路から中庭へ"
       },
       {
-        "from": "b8-courtyard-north",
-        "to": "b7-b8-courtyard-turn",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "routingCost": 3,
-        "cover": "unknown",
-        "widthClass": "unknown",
-        "instruction": "8号館の中庭側に沿って7号館側へ",
-        "reverseInstruction": "8号館の中庭側に沿って中庭へ"
-      },
-      {
         "from": "b7-b8-courtyard-turn",
         "to": "b7-2f-stair-foot",
         "type": "outdoor",
@@ -1570,6 +1603,177 @@
         "widthClass": "unknown",
         "instruction": "外階段を上って7号館2Fへ",
         "reverseInstruction": "外階段を下りて5号館側の通路へ"
+      },
+      {
+        "from": "b2-west-turn",
+        "to": "b1-b2-approach-left",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 3.902519,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-approach-left",
+        "to": "b1-b2-approach-right",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 4.748824,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-approach-right",
+        "to": "b1-b2-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 4.690886,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-approach-left",
+        "to": "b1-b2-door-left",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 2.0,
+        "cover": "unknown"
+      },
+      {
+        "from": "b1-b2-approach-right",
+        "to": "b1-b2-door-right",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 2.0,
+        "cover": "unknown"
+      },
+      {
+        "from": "b8-courtyard-north",
+        "to": "b10-courtyard-upper-junction",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 0.547826,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b7-b10-courtyard",
+        "to": "b10-courtyard-lower-junction",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 2,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b10-courtyard-upper-junction",
+        "to": "b10-courtyard-upper-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b10-courtyard-upper-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b10-courtyard-upper-foot",
+        "widthClass": "unknown",
+        "instruction": "外階段を上って10号館2Fの出入口1へ",
+        "reverseInstruction": "出入口1の外階段を下りて中庭へ"
+      },
+      {
+        "from": "b10-courtyard-lower-junction",
+        "to": "b10-courtyard-lower-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b10-courtyard-lower-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b10-courtyard-lower-foot",
+        "widthClass": "unknown",
+        "instruction": "外階段を上って10号館2Fの出入口2へ",
+        "reverseInstruction": "出入口2の外階段を下りて中庭へ"
+      },
+      {
+        "from": "b10-courtyard-upper-junction",
+        "to": "b7-courtyard-junction",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 1.757626,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b7-courtyard-junction",
+        "to": "b7-b8-courtyard-turn",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 0.694548,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "from": "b7-courtyard-junction",
+        "to": "b7-courtyard-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b7-courtyard-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b7-courtyard-foot",
+        "widthClass": "unknown",
+        "instruction": "外階段で7号館1Fへ",
+        "reverseInstruction": "外階段で中庭へ"
       }
     ],
     "links": [
@@ -1742,6 +1946,39 @@
         "cover": "unknown",
         "instruction": "5号館側出入口から7号館2Fへ入る",
         "reverseInstruction": "7号館2Fの5号館側出入口から屋外へ出る"
+      },
+      {
+        "from": "b10-courtyard-upper-door",
+        "to": "b10/f2/entrance-courtyard-upper",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "instruction": "中庭側出入口1から10号館2Fへ入る",
+        "reverseInstruction": "10号館2Fの中庭側出入口1から屋外へ出る"
+      },
+      {
+        "from": "b10-courtyard-lower-door",
+        "to": "b10/f2/entrance-courtyard-lower",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "instruction": "中庭側出入口2から10号館2Fへ入る",
+        "reverseInstruction": "10号館2Fの中庭側出入口2から屋外へ出る"
+      },
+      {
+        "from": "b7-courtyard-door",
+        "to": "b7/f1/entrance-courtyard",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "instruction": "中庭側出入口から7号館1Fへ入る",
+        "reverseInstruction": "7号館1Fの中庭側出入口から屋外へ出る"
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

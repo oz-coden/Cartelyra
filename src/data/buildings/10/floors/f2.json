@@ -44,6 +44,34 @@
         [-12, 40.5]
       ],
       "entrance": "stairs-west"
+    },
+    {
+      "id": "entrance-courtyard-upper",
+      "label": "中庭側出入口1",
+      "type": "entrance",
+      "polygon": [
+        [48, 11],
+        [50, 11],
+        [50, 13],
+        [48, 13]
+      ],
+      "entrance": "entrance-courtyard-upper",
+      "description": "屋外に階段あり。",
+      "mapLabel": "出入口"
+    },
+    {
+      "id": "entrance-courtyard-lower",
+      "label": "中庭側出入口2",
+      "type": "entrance",
+      "polygon": [
+        [48, 81],
+        [50, 81],
+        [50, 83],
+        [48, 83]
+      ],
+      "entrance": "entrance-courtyard-lower",
+      "description": "屋外に階段あり。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -253,6 +281,48 @@
         "name": "階段（図面左側）",
         "position": [0, 36],
         "type": "stairs"
+      },
+      {
+        "id": "hall-courtyard-upper",
+        "name": "通路の分岐",
+        "position": [47, 12],
+        "type": "corridor"
+      },
+      {
+        "id": "entrance-courtyard-upper",
+        "name": "中庭側出入口1",
+        "position": [50, 12],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-courtyard-lower",
+        "name": "通路の分岐",
+        "position": [47, 82],
+        "type": "corridor"
+      },
+      {
+        "id": "entrance-courtyard-lower",
+        "name": "中庭側出入口2",
+        "position": [50, 82],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-courtyard-top",
+        "name": "通路の分岐",
+        "position": [47, 2.7],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-courtyard-bottom",
+        "name": "通路の分岐",
+        "position": [47, 88],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-courtyard-west",
+        "name": "通路の分岐",
+        "position": [10, 88],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -315,16 +385,6 @@
         "routingCost": 2.7,
         "cover": "indoor",
         "from": "hall-9"
-      },
-      {
-        "to": "hall-11",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 5.7,
-        "cover": "indoor",
-        "from": "hall-10"
       },
       {
         "to": "hall-12",
@@ -465,6 +525,96 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "stairs-west"
+      },
+      {
+        "to": "hall-courtyard-west",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor",
+        "from": "hall-10"
+      },
+      {
+        "to": "hall-11",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 4.2,
+        "cover": "indoor",
+        "from": "hall-courtyard-west"
+      },
+      {
+        "to": "hall-courtyard-top",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 5.55,
+        "cover": "indoor",
+        "from": "hall-5"
+      },
+      {
+        "to": "hall-courtyard-upper",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.395,
+        "cover": "indoor",
+        "from": "hall-courtyard-top"
+      },
+      {
+        "to": "hall-courtyard-lower",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 10.5,
+        "cover": "indoor",
+        "from": "hall-courtyard-upper"
+      },
+      {
+        "to": "hall-courtyard-bottom",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor",
+        "from": "hall-courtyard-lower"
+      },
+      {
+        "to": "hall-courtyard-west",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 5.55,
+        "cover": "indoor",
+        "from": "hall-courtyard-bottom"
+      },
+      {
+        "to": "entrance-courtyard-upper",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor",
+        "from": "hall-courtyard-upper"
+      },
+      {
+        "to": "entrance-courtyard-lower",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor",
+        "from": "hall-courtyard-lower"
       }
     ]
   }

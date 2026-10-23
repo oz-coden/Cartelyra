@@ -88,7 +88,8 @@ test('the two Building 19-facing entrances reach the campus independently while 
         for(const [a,b] of [['b17/f1/room-109',target],[target,'b17/f1/room-109']]){
           const r=active.findPath(a,b,mode);assert.ok(r,`${link.to}: ${mode} ${a} -> ${b}`);
           assert.ok(r.pathNodes.some(n=>n.id===link.to));
-          assert.equal(r.floorChanges,0);
+          if(mode!=='indoor')assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+          // Indoor preference may use the explicitly registered 7–10 covered network.
           assert.ok(r.steps.every(s=>!/undefined|NaN/.test(s.instruction)));
           assert.equal(active.findPath(a,b,mode,false),null);
         }

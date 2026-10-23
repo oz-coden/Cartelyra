@@ -56,7 +56,7 @@ test('every group place connects to the Building 8 elevator reference point whil
   }
   assert.ok(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate'));
   assert.equal(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate','accessible'),null);
-  assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,7);
+  assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,10);
   assert.ok(!auditConnections(data).some(f=>f.code==='view-group-disconnected'&&f.buildingId==='b7'));
 });
 
@@ -151,7 +151,7 @@ test('1F preserves the photo order and all observed stair/WC locations under one
   order(10,['10-14','10-15','10-16','10-17','10-18','10-19','10-110','10-111','10-112','10-113','10-114'],1);
   order(10,['10-11','10-12','10-13'],1);order(8,['8-11','8-13','8-14','8-15'],1);
   order(7,['7-12','7-11'],1);order(7,['7-16','7-17'],1);
-  assert.deepEqual([7,8,9,10].map(b=>f(b).features.filter(x=>x.type==='stairs').length),[3,4,0,3]);
+  assert.deepEqual([7,8,9,10].map(b=>f(b).features.filter(x=>x.type==='stairs').length),[2,4,0,3]);
   assert.deepEqual([7,8,9,10].map(b=>f(b).features.filter(x=>x.type==='restroom').length),[2,1,0,1]);
   for(const b of [7,8,9,10])for(const x of f(b).features.filter(x=>x.entrance))
     assert.ok(finder.findPath('b8/f1/ev-west',`b${b}/f1/${x.entrance}`),x.id);
