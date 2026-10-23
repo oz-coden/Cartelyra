@@ -601,6 +601,16 @@ export function validateSources(
         check(group.buildingIds.includes(ref.buildingId) && floors.some(f => f.buildingId === ref.buildingId && f.id === ref.floorId),
           `Unknown ${ctx} floor ${ref.buildingId}/${ref.floorId}`);
     }
+    for (const id of group.buildingIds) {
+      let previous = -Infinity;
+      for (const level of group.levels) for (const ref of level.floors.filter(f => f.buildingId === id)) {
+        const floor = floors.find(f => f.buildingId === id && f.id === ref.floorId);
+        if (floor) {
+          check(floor.stackIndex > previous, `Invalid ${ctx} floor order for ${id}`);
+          previous = floor.stackIndex;
+        }
+      }
+    }
     if (group.status === "ready") {
       check(group.levels.length > 0, `Ready ${ctx} needs display levels`);
       for (const floor of floors.filter(f => group.buildingIds.includes(f.buildingId)))

@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -53,12 +54,12 @@ test('all registered Building 23 approaches use the minimum floor changes includ
 test('provisional inner approaches preserve basement corridor routes without inventing stair boarding',()=>{
   assert.deepEqual(places.filter(p=>p.kind==='room'&&!p.nodeId).map(p=>p.id).sort(),[]);
   for(const id of ['23-107','23-B203']){
-    const p=places.find(p=>p.id===id);assert.match(p.description,/暫定推定/);
+    const p=places.find(p=>p.id===id);assert.ok(surveyNotes.includes(p.id));
     assert.ok(!data.navigation.nodes.some(n=>n.id===`b23/${p.floorLevel===1?'f1':'b2'}/room-${id.slice(3)}`));
   }
   const basement=building.floors.find(f=>f.level===-2),stairs=places.find(p=>p.featureId==='stairs-bottom'&&p.floorLevel===-2);
   assert.equal(stairs.nodeId,undefined);
-  assert.match(stairs.description,/倉庫/);
+  assert.match(notesFor("b23"),/倉庫/);
   assert.ok(!source.buildings.find(b=>b.id==='b23').connections.some(e=>e.from==='b23/b2/stairs-bottom'||e.to==='b23/b2/stairs-bottom'));
   assert.ok(basement.rooms.find(r=>r.id==='23-B211').entranceNodeId);
   for(const p of places.filter(p=>p.kind==='room'&&p.nodeId&&p.floorLevel===-2)){
@@ -71,7 +72,7 @@ test('inner rooms retain explicit provisional front endpoints instead of travers
   for(const [id,front] of [['23-B203','23-B202'],['23-107','23-105'],['23-B212','23-B211'],['23-B213','23-B211'],['23-B214','23-B211'],['23-110','23-109'],['23-213','23-212'],['23-409-1','23-409'],['23-425-1','23-425'],['23-430-1','23-430'],['23-503-1','23-503'],['23-504-1','23-504'],['23-705-1','23-705'],['23-711-1','23-711'],['23-807-1','23-807'],['23-829-1','23-829']]){
     const p=places.find(p=>p.id===id),a=places.find(p=>p.id===front);
     assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,a.nodeId);
-    assert.match(p.description,/暫定/);assert.ok(placeRouteNotice(p).includes(front));
+    assert.ok(surveyNotes.includes(p.id));assert.ok(placeRouteNotice(p).includes(front));
   }
   for(const p of places.filter(p=>p.approachRoomId))assert.ok(!data.navigation.nodes.some(n=>n.id===`b23/${p.floorLevel<0?'b'+(-p.floorLevel):'f'+p.floorLevel}/room-${p.id.slice(3)}`));
   assert.ok(floors.flatMap(f=>f.rooms).every(r=>r.passThrough!==true));

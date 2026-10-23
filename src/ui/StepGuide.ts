@@ -26,7 +26,7 @@ export class StepGuide {
       return;
     }
 
-    this.stepCountBadge.textContent = `全 ${steps.length} ステップ`;
+    this.stepCountBadge.textContent = `${steps.length} 区間`;
     this.stepList.innerHTML = "";
 
     steps.forEach((step, index) => {

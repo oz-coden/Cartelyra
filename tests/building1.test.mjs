@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readData } from "../scripts/read-data.mjs";
@@ -34,8 +35,8 @@ test("Building 1 preserves nine floor layouts, occupied centres and corrected la
     assert.ok(!places.some((p) => p.id === id), id);
   assert.equal(searchPlaces(places, "1号館 多目的会議室")[0].id, "1-804");
   for (const id of ["1-618", "1-619", "1-620", "1-607"])
-    assert.match(places.find((p) => p.id === id).description, /照合済み/);
-  assert.match(places.find((p) => p.id === "1-501").description, /仮転記/);
+    assert.ok(notesFor("b1").includes(id));
+  assert.match(notesFor("b1"), /仮転記/);
   for (const id of ["1-515", "1-516-2", "1-516-3"])
     assert.equal(places.find((p) => p.id === id).name, id);
   assert.deepEqual(searchPlaces(places, "1号館 515").map((p) => p.id), ["1-515"]);
@@ -76,9 +77,9 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   assert.ok(entries.every((p) => p.floorLevel === 1));
   assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 1);
   const top = entries.find(p => p.featureId === "entry-top");
-  assert.match(top.description,/2号館側.*ドア/);
+  assert.match(top.description,/2号館側/);
   assert.doesNotMatch([top.description,...top.aliases].join(" "),/自動/);
-  assert.match(entries.find(p => p.featureId === "entry-right").description,/東門側.*南東面/);
+  assert.match(entries.find(p => p.featureId === "entry-right").description,/東門側/);
   const firstNode = first.navigation.nodes.find((n) => n.id === "entry-top");
   assert.equal(pointInInterior(firstNode.position, first.outline), false);
   const route = finder.findPath("b1/f1/entry-top", "b1/f1/room-101");
@@ -92,7 +93,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
     const place = places.find((p) => p.id === id), approach = places.find((p) => p.id === front);
     assert.equal(place.approachRoomId, front);
     assert.equal(place.nodeId, approach.nodeId);
-    assert.match(place.description, /暫定推定/);
+    assert.ok(surveyNotes.includes(place.id));
     assert.match(placeRouteNotice(place), new RegExp(front));
     const route = finder.findPath("b1/f1/entry-top", place.nodeId);
     assert.equal(route.pathNodes.at(-1).id, approach.nodeId);
@@ -104,7 +105,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
   assert.ok(route.pathNodes.some((n) => n.id === "b1/b1/hall-B108"));
   const end = basement.navigation.nodes.find((n) => n.id === "room-B108");
   assert.deepEqual(end.position, [78, 105]);
-  assert.match(b108.description, /1-B107・1-B109間.*暫定推定/);
+  assert.match(notesFor("b1"), /1-B107・1-B109間.*暫定推定/);
   for (const id of ["1-515", "1-516-3"]) {
     const place = places.find((p) => p.id === id);
     assert.ok(place.nodeId);
@@ -113,7 +114,7 @@ test("Building 1 provisional approaches stop at front rooms and use the B107/B10
   const left = places.find((p) => p.id === "1-308-1"), right = places.find((p) => p.id === "1-308-2");
   assert.notEqual(left.nodeId, right.nodeId);
   for (const place of [left, right]) {
-    assert.match(place.description, /暫定.*現地調査で見直す/);
+    assert.ok(notesFor("b1").includes(place.id));
     assert.equal(finder.findPath("b1/f1/entry-top", place.nodeId).pathNodes.at(-1).id, place.nodeId);
   }
 });

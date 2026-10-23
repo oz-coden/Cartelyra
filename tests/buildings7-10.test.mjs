@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -110,7 +111,7 @@ test('same-level stairs between Buildings 7 and 10 remain explicit, directional 
 test('provisional inner rooms retain front endpoints and the numbered circulation area does not expose its service zone',()=>{
   for(const [id,front]of[['7-61A','7-61'],['8-61A','8-61'],['8-66A','8-66'],['8-67A','8-67']]){
     const p=places.find(p=>p.id===id),q=places.find(p=>p.id===front);
-    assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,q.nodeId);assert.match(p.description,/暫定/);
+    assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,q.nodeId);assert.ok(surveyNotes.includes(p.id));
   }
   const f=floors.find(f=>f.buildingId==='b10'&&f.id==='f3');assert.equal(f.rooms.find(r=>r.id==='10-33').passThrough,true);
   assert.equal(f.voids.length,1);
@@ -182,7 +183,7 @@ test('7-16 uses the corridor and 7-17 approaches through the provisional plaza w
   const floor=floors.find(f=>f.buildingId==='b7'&&f.id==='f1');
   assert.ok(!floor.features.some(f=>f.id==='unlabelled-northwest'));
   assert.ok(floor.navigation.edges.filter(e=>[e.from,e.to].includes('plaza-approach')).every(e=>e.cover==='covered'&&!e.isIndoor));
-  assert.ok(floor.notes.some(n=>n.includes('広場')&&n.includes('現地確認待ち')));
+  assert.match(notesFor('b7'),/広場.*現地確認待ち/);
   for(const id of ['7-16','7-17']){
     const p=places.find(p=>p.id===id);assert.equal(p.approachRoomId,undefined);
     assert.notEqual(p.nodeId,places.find(p=>p.id==='7-14').nodeId);
@@ -196,14 +197,14 @@ test('7-16 uses the corridor and 7-17 approaches through the provisional plaza w
 test('2023 use labels remain historical and generalized while 2024 room boundaries take priority',()=>{
   assert.equal(floors.reduce((n,f)=>n+f.rooms.filter(r=>r.name!==r.id).length,0),156);
   for(const [id,name]of [['7-21','講義室'],['7-22','パソコン演習室'],['8-20','マップホール'],['10-201','学生食堂'],['10-13','卓球場'],['9-214','図書室']]){
-    const p=places.find(p=>p.id===id);assert.ok(p.name.includes(name),id);assert.match(p.description,/2023.*現地確認待ち/);
+    const p=places.find(p=>p.id===id);assert.ok(p.name.includes(name),id);assert.match(surveyNotes,/2023.*現地確認待ち/);
   }
   for(const id of ['8-55','8-31','8-46-1','9-61','7-62-1','10-41A'])assert.ok(!places.some(p=>p.id===id),id);
   for(const id of ['8-54','8-32','8-51A','8-51C','9-60','9-313A','9-313B','7-61A'])assert.ok(places.some(p=>p.id===id),id);
   const text=JSON.stringify(floors.flatMap(f=>f.rooms));assert.ok(!/細谷浩史|松隈洋|安室知|丸山泰明|曽我部昌史|4020|4030/.test(text));
   assert.match(places.find(p=>p.id==='10-33').name,/食堂.*飲食スペース/);
   assert.equal(searchPlaces(places,'10号館 3F 食堂')[0].id,'10-33');
-  assert.match(places.find(p=>p.id==='10-201').description,/2Fに食堂があることは現地情報/);
+  assert.match(notesFor('b10'),/2Fに食堂があることは現地情報/);
   assert.equal(searchPlaces(places,'8号館 マップホール')[0].id,'8-20');
   assert.ok(floors.filter(f=>f.level===2).every(f=>f.sourceId==='b7-b10-reference-2023'));
 });

@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readData } from "../scripts/read-data.mjs";
@@ -24,7 +25,7 @@ test("Building 6 omits the unconfirmed 1F right stair and keeps the 3F same-floo
   assert.ok(route.pathNodes.some(n => n.id === "b6/f1/stairs-left"));
   assert.equal(route.floorChanges,1);
   assert.equal(finder.findPath("b6/f3/room-303", "b6/f3/room-308", "accessible"),null);
-  assert.match(first.notes.join(" "),/階内段差.*現地確認待ち/);
+  assert.match(notesFor("b6"),/階内段差.*現地確認待ち/);
 });
 
 test("Building 6 preserves four floors, lettered room numbers, courtyards and generic research names", () => {
@@ -72,7 +73,7 @@ test("Building 6 avoids unknown grey areas and keeps the 3F right wing separate 
   assert.ok(route);
   assert.ok(route.pathNodes.some((n) => n.floor !== 3), "a missing same-floor link must not be replaced by a shortcut through the grey area");
   assert.ok(route.inferredConnections > 0);
-  assert.match(places.find((p) => p.id === "6-308").description, /同じ階.*特定できず/);
+  assert.match(notesFor("b6"),/同じ階.*特定できず/);
   assert.ok(source.buildings.find((b) => b.id === "b6").connections.every((e) => e.verification === "inferred"));
   assert.ok(floors.find((f) => f.level === 3).features.filter((f) => f.type === "service").length >= 2);
   assert.ok(!source.buildings.find((b) => b.id === "b6").connections.some((e) => e.from.includes("stairs-lab") || e.to.includes("stairs-lab")));

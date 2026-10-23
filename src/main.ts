@@ -52,7 +52,7 @@ export class UniviewApp {
   private toastTimer?: number;
   constructor(private threeFactory: ThreeFactory = createThreeView,
     private data: CampusData = campusData,
-    overview: CampusOverview = overviewJson as CampusOverview) {
+    overview: CampusOverview = overviewJson as unknown as CampusOverview) {
     this.places = placeIndex(data, overview);
     this.location = new LocationState(buildingCatalog(data, overview), data.viewGroups);
     this.search = new SearchPanel(this.places, this.selection);
@@ -103,6 +103,7 @@ export class UniviewApp {
       this.searchRoute(a, b, filter, inferred);
     this.search.onRouteClear = () => {
       this.result = null;
+      this.search.setStatus();
       this.map.setRoute(null);
       this.three?.renderRoute(null);
       this.guide.hide();
@@ -197,8 +198,8 @@ export class UniviewApp {
       floor = this.location.floor;
     document.getElementById("building-status")!.textContent = building?.data
       ?.floors.length
-      ? `${building.data.floors.length} フロア登録済み / 出入口・利用条件は現地未確認`
-      : "配置のみ登録 / フロア・設備・経路は準備中";
+      ? `${building.data.floors.length} フロア`
+      : "フロア未登録";
     const group = this.location.declaredGroup;
     document.getElementById("group-display-option")!.classList.toggle("hidden", !group || group.status !== "ready");
     (document.getElementById("show-connected") as HTMLInputElement).checked = this.location.grouped;
@@ -338,6 +339,7 @@ export class UniviewApp {
     filter: RouteFilterType,
     inferred: boolean,
   ) {
+    this.search.setStatus();
     const endpoints = [a, b].map((id) =>
       this.places.find((p) => p.id === id) ??
       this.places.find((p) => p.nodeId === id && !p.approachRoomId),
@@ -351,6 +353,16 @@ export class UniviewApp {
           filter,
           inferred,
         );
+    if (!this.result && !unavailable.length && filter === "accessible") {
+      this.result = this.pathfinder.findPath(endpoints[0]?.nodeId ?? a, endpoints[1]?.nodeId ?? b,
+        "shortest", inferred, "fewest-stairs");
+      if (this.result) {
+        const count = this.result.verticalMovements?.stairs ?? 0;
+        this.search.setStatus(count
+          ? `階段なしの経路はありません。階段が最少の経路を表示中（${count}区間）。`
+          : "階段回避に対応する経路は未登録です。代替経路を表示中。", "warning");
+      }
+    }
     if (this.result) {
       window.clearTimeout(this.toastTimer);
       document.getElementById("toast")!.classList.add("hidden");
@@ -361,12 +373,12 @@ export class UniviewApp {
       if (this.result.endpointNotes.length) {
         const start = endpoints[0], dest = endpoints[1];
         if (this.result.steps.length === 1)
-          this.result.steps[0].instruction = `出発地と目的地の案内地点は同じです。${this.result.endpointNotes.join(" ")}`;
+          this.result.steps[0].instruction = `案内地点は同じです。${this.result.endpointNotes.join(" ")}`;
         else {
           if (start?.approachRoomName)
-            this.result.steps[0].instruction = `「${start.name}」の案内地点（${start.approachRoomName}の通路側）から出発`;
+            this.result.steps[0].instruction = `${start.name}（${start.approachRoomId}入口）から出発`;
           if (dest?.approachRoomName)
-            this.result.steps[this.result.steps.length - 1].instruction = `「${dest.name}」の案内地点（${dest.approachRoomName}の通路側）に到着。室内への案内は行いません。`;
+            this.result.steps[this.result.steps.length - 1].instruction = `${dest.name}（${dest.approachRoomId}入口）に到着`;
         }
       }
     }
@@ -375,17 +387,11 @@ export class UniviewApp {
     if (!this.result) {
       this.search.hideSummary();
       this.guide.hide();
-      this.toast(
+      this.search.setStatus(
         unavailable.length
-          ? `${unavailable.map((p) => `${p.name}の${p.scope === "campus" ? "屋外経路" : "入口・接続"}は未登録です`).join("。")}。出発地・目的地は保存しました。`
-          : filter === "accessible" && this.pathfinder.findPath(
-              endpoints[0]?.nodeId ?? a, endpoints[1]?.nodeId ?? b, "shortest", inferred,
-            )
-            ? "階段を避けて接続する経路がありません。標準モードで経路を確認できます。"
-            : inferred
-            ? "この条件で接続する経路は未登録です。"
-            : "現地確認済みの接続だけでは経路がつながりません。参考ルートを有効にすると推定経路を確認できます。",
-        6500,
+          ? `${unavailable.map((p) => `${p.name}の接続は未登録です`).join("。")}。`
+          : inferred ? "この条件でつながる経路は未登録です。"
+            : "確認済みの接続だけではつながりません。参考ルートを有効にしてください。",
       );
       return;
     }
@@ -429,7 +435,7 @@ export class UniviewApp {
     this.highlightSelected();
     document.getElementById("tooltip-title")!.textContent = place.name;
     document.getElementById("tooltip-desc")!.textContent =
-      `${placeContext(place)} / ${place.description ?? (place.nodeId ? "通路側の案内地点は推定位置・利用条件未確認" : "入口の接続先が未確認のため経路未登録")} ${placeRouteNotice(place)}`.trim();
+      [placeContext(place), place.description, placeRouteNotice(place), place.nodeId ? "" : "経路未登録"].filter(Boolean).join(" / ");
     this.popover.show();
   }
   private hideDetails() {

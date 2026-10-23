@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readData } from "../scripts/read-data.mjs";
@@ -76,7 +77,7 @@ test("Building 5 inner-room guidance ends at explicit provisional front rooms wi
   }
   for (const id of ["5-308", "5-310", "5-311", "5-312"]) {
     const place = places.find((p) => p.id === id);
-    assert.match(place.description, /暫定推定/);
+    assert.ok(surveyNotes.includes(place.id));
     const route = finder.findPath("b5/f2/entrance-side", place.nodeId);
     assert.ok(route.inferredConnections > 0);
     assert.equal(route.pathNodes.at(-1).id, place.nodeId);

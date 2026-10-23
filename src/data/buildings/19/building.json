@@ -92,8 +92,8 @@
       "cover": "indoor",
       "routingCost": 1.361818,
       "floorChanges": 2,
-      "instruction": "EVで1Fを通過して「19号館 2F」へ移動（1Fでの乗降案内なし）",
-      "reverseInstruction": "EVで1Fを通過して「19号館 B1」へ移動（1Fでの乗降案内なし）"
+      "instruction": "EVで1Fを通過し、19号館2Fへ",
+      "reverseInstruction": "EVで1Fを通過し、19号館B1へ"
     }
   ]
 }

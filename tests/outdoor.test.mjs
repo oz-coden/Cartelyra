@@ -30,7 +30,7 @@ test("Building 3 has distinct Building 8/New East Gate-facing entrances and reac
       assert.equal(route.distanceUnit, "schematic");
       assert.equal(route.estimatedMinutes, 0);
       assert.ok(route.steps.some((s) => s.instruction.includes("屋外へ出る")));
-      assert.ok(route.steps.some((s) => s.instruction.includes("建物に入る")));
+      assert.ok(route.steps.some((s) => s.instruction.includes("へ入る")));
       assert.ok(route.steps.every((s) => !/undefined|NaN/.test(s.instruction)));
       for (const n of route.pathNodes.filter((n) => !n.buildingId)) {
         assert.equal(n.floor, undefined);
@@ -158,7 +158,7 @@ test("Overview renders outdoor route segments while indoor plans keep their own 
   const panel = new SearchPanel(places); panel.updateSummary(route);
   assert.equal(document.getElementById("summary-distance").textContent, "未測定");
   assert.equal(document.getElementById("summary-time").textContent, "未測定");
-  assert.match(document.getElementById("route-confidence").textContent, /屋外区間はキャンパス図/);
+  assert.match(document.getElementById("route-confidence").textContent, /屋外はキャンパス図/);
   map.showOverview(true); map.setRoute(null);
   assert.equal(document.querySelectorAll(".map-route,.map-route-marker").length, 0);
 });

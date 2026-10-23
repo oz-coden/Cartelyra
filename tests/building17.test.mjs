@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -106,7 +107,7 @@ test('pool showers and the recessed 5F room stop at explicit provisional front r
   for(const [id,front] of [['17-108A','17-107A'],['17-108B','17-107B'],['17-540','17-539']]){
     const p=places.find(p=>p.id===id),a=places.find(p=>p.id===front);
     assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,a.nodeId);
-    assert.match(p.description,/暫定/);
+    assert.ok(surveyNotes.includes(p.id));
     assert.ok(!data.navigation.nodes.some(n=>n.id===`b17/f${p.floorLevel}/room-${id.slice(3)}`));
   }
   assert.equal(places.filter(p=>p.approachRoomId).length,3);

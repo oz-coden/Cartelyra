@@ -6,11 +6,7 @@
   "stackIndex": 1,
   "elevation": 12,
   "sourceId": "b3-f3-b1",
-  "notes": [
-    "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
-    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
-    "屋外階段・屋外の通路は館内図の案内対象外。"
-  ],
+  "notes": [],
   "outline": [
     [0, 0],
     [110, 0],
@@ -92,8 +88,7 @@
         [0, 20]
       ],
       "restroomType": "female",
-      "entrance": "wc-w-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-w-entrance"
     },
     {
       "id": "wc-m",
@@ -108,8 +103,7 @@
         [12, 20]
       ],
       "restroomType": "male",
-      "entrance": "wc-m-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-m-entrance"
     },
     {
       "id": "wc-a",
@@ -122,8 +116,7 @@
         [21, 20]
       ],
       "restroomType": "multipurpose",
-      "entrance": "wc-a-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-a-entrance"
     },
     {
       "id": "ev",

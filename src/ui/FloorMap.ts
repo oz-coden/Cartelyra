@@ -263,16 +263,16 @@ export class FloorMap {
     const name = this.scope.label;
     const level = this.scope.group?.levels.find(l => l.id === this.scope.levelId)?.label ?? this.floor?.label;
     const shown = displayFloors(this.campus, this.scope);
-    document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟の模式図" : "掲示図に基づく模式図";
+    document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟" : "館内図";
     document.getElementById("map-legend")!.textContent = "青：部屋　" +
       (shown.some(({ floor }) => floor.rooms.some(r => r.passThrough === true))
-        ? "青緑・破線：通行区画　" : "") +
-      "緑：WC　水色：EV　黄：階段　灰：連絡通路　紫：参考ルート";
+        ? "青緑：共用区画　" : "") +
+      "緑：WC　水色：EV　黄：階段　紫：経路";
     document.getElementById("map-heading")!.textContent = `${name}${level ? ` / ${level}` : ""}`;
     this.svg.setAttribute("aria-label", `${name} ${level ?? "フロア未登録"} 平面図（模式図）`);
     document.getElementById("map-caption")!.textContent = shown.length
-      ? [...(this.scope.group?.notes ?? []), ...shown.flatMap(({ floor }) => floor.notes ?? [])].join(" ")
-      : "この建物のフロア・設備・経路は未登録です。建物配置はキャンパス表示で確認できます。";
+      ? "模式図・距離未測定"
+      : "フロア未登録";
     if (!shown.length) {
       this.label("フロア未登録", [50, 35], "map-label empty-label");
       this.label("資料の確認後に順次追加予定", [50, 45]);
@@ -486,13 +486,12 @@ export class FloorMap {
       : "横浜キャンパス 建物配置の模式図");
     document.getElementById("map-heading")!.textContent = "横浜キャンパス";
     document.getElementById("map-subtitle")!.textContent = this.overview.reference
-      ? "空中写真を参考にした概略図・北が上"
-      : "建物配置の模式図";
+      ? "北が上"
+      : "建物配置";
     document.getElementById("map-legend")!.textContent =
-      "水色：フロア登録済み　灰：フロア未登録　薄線：周辺道路　破線：地上参考経路　青線：連絡橋　紫点線：地下通路　橙線：階段・スロープ　紫：選択中の経路";
+      "水色：館内図あり　灰：未登録　細線：道路　破線：通路　青：橋　紫点線：地下　橙：階段・スロープ　紫：経路";
     const caption = document.getElementById("map-caption")!;
-    caption.textContent = this.overview.notes?.join(" ") ??
-      "建物を選ぶと館内図を表示。屋外の経路・実寸・方位は未校正です。";
+    caption.textContent = "建物を選ぶと館内図へ。";
     if (this.overview.reference) {
       const attribution = document.createElement("a");
       attribution.textContent = `出典：${this.overview.reference.attribution.label}`;

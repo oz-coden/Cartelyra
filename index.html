@@ -171,11 +171,12 @@
               </button>
             </div>
           </fieldset>
-          <p class="muted route-policy-note">昇降の少なさを優先する参考案内です。実際の最短距離を保証しません。屋内優先では屋根付き通路も考慮します。</p>
+          <p class="muted route-policy-note">距離・所要時間は未測定。</p>
           <label class="route-preview-option"
             ><input type="checkbox" id="allow-inferred" checked />
-            未確認の接続を含む参考ルート</label
+            参考ルートを含む</label
           >
+          <p id="route-status" class="route-status hidden" role="status" aria-live="polite"></p>
           <div
             id="route-summary-panel"
             class="route-summary hidden"
@@ -210,13 +211,13 @@
         <details class="panel-section data-notice">
           <summary>マップの登録状況・注意事項</summary>
           <p>
-            館内図・参考経路は3号館B2〜4F・20号館1〜4Fに対応しています。案内は通路側の代表点までで、奥の部屋は指定した手前の部屋までです。他の棟は配置のみ登録しています。
+            模式図です。距離・所要時間は未測定。奥の部屋は手前の入口まで案内します。
           </p>
           <p>
-            掲示図から作成した模式図です。経路は階移動の少ないものを優先します。出入口・WC・階段・EVの接続や利用条件は現地未確認です。縮尺・階高は表示用のため、距離と所要時間は未測定です。
+            <a href="https://github.com/oz-coden/Uniview/blob/main/docs/survey-notes.md" target="_blank" rel="noopener noreferrer">資料・調査記録</a>
           </p>
           <p>
-            「階段を避ける」は登録された接続の絞り込みです。段差・扉幅・車椅子での通行可否は未確認です。多目的トイレの表示も利用可能な経路を保証しません。
+            階段回避は車椅子での通行可否を保証しません。
           </p>
           <a
             href="https://www.kanagawa-u.ac.jp/aboutus/information/facilities/yokohama/"
@@ -291,7 +292,7 @@
           aria-label="道順案内"
         >
           <div class="step-guide-header">
-            <h2>ステップ別道順 <span id="guide-step-count"></span></h2>
+            <h2>道順 <span id="guide-step-count"></span></h2>
             <button id="btn-close-guide" aria-label="道順案内を閉じる">
               ×
             </button>

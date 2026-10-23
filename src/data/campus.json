@@ -18,23 +18,7 @@
   ],
   "outdoor": {
     "sourceId": "campus-path-reference",
-    "notes": [
-      "通路の接続関係を模式的な参考図から登録し、位置と向きを国土地理院の空中写真に合わせて概略調整。撮影年月は不明。実距離・所要時間は未校正。",
-      "3号館の8号館側出入口から西門、12号館・17号館と道路の間の地上通路、13号館と17号館の間の大通りを経て20号館へ接続。23号館は17号館との間の地上通路から15号館側・20号館側の両出入口へ接続する。",
-      "樹木・屋根・日陰で見えない部分と出入口は代表点を推定。道幅は定性的な参考情報のみで、経路選択の重みには未使用。段差・開放時間・通行条件は未確認。",
-      "1号館は1-106側を2号館側、窓口ロビー側を東門側の代表点に接続。5号館は7号館に面する側の3号館寄りから外階段で2Fへ入る。",
-      "新東門から3号館1Fを通り抜けて5・6号館側へ進む動線と、2・3号館間を回る屋外の動線を登録。東門も1号館前の通路に接続する。入口の向き・通行関係を模式的に記録し、正確な位置・段差・開放時間・通行条件は現地照合待ち。 東門から2号館東側を通り、3号館・新東門側へ直接抜ける屋外通路も参考登録。",
-      "17号館1Fの出入口1・2は19号館側の地上通路へ参考接続。近接する上側2開口を一つの案内地点にまとめる。3F出入口の外部接続は保留。代表点は正確な扉位置を示さず、段差・開放時間・利用条件は現地確認待ち。",
-      "routingCostは実距離を表さない暫定評価値。室内は初期登録時の床面積と建物配置の面積比、屋外は初期登録時の図上の長さを参考に固定し、描画座標の変更では再計算しない。屋根の有無は現地確認後に更新する。",
-      "連絡橋は6号館側から西門付近を経て12号館・17号館間へ続き、階段で23号館側の地上通路へ接続する。6号館側は階段と別経路のスロープを登録。地上通路と橋は別層とし、図上の交差だけでは接続しない。12号館・17号館間のスロープは未確認のため登録しない。高さ・段数・勾配・幅員・屋根・通行条件は現地照合待ち。",
-      "19号館1Fの購買部側出入口は南側の17号館・12号館間に面する外周代表点から地上通路へ参考接続。正確な扉位置・段差・開放時間・通行条件は現地確認待ち。左側通路の外部出入口と1FのEV乗降は未登録のまま保持する。",
-      "19号館の購買部側出入口付近の地上通路から、17号館・12号館間の連絡橋へ上がる階段を参考接続。23号館側の階段とは別の昇降地点として保持し、階段回避では使用しない。代表位置・段数・高低差・開放時間・利用条件は現地確認待ち。",
-      "7号館2Fは8号館との直通連絡を設けず外階段で屋外へ接続。8号館2Fはマップホール側の屋根付き外階段で2号館側へ接続する。8号館南側の同じ中間踊り場へ1Fから上り、2Fから下りる。踊り場は架空の登録階ではなく屋外ノードで表し、昇降量は未測定のまま保持する。",
-      "8号館南側から1・31号館間を通って正門へ参考接続。南側の道路へ直接接続しない。11号館側の地下通路は別層の終端として保持し、11・31号館の館内や道路上との接続は補完しない。",
-      "8号館1F・2FのEV脇から10号館側の中庭へ階段で接続。中庭から8号館沿いを北へ進み、7・8号館間の外階段前の屋外通路へ抜ける参考接続を登録する。他棟の扉への接続は補完しない。補足図 b7-b10-outdoor-reference と2023年参考PDFを位置の参考とし、寸法・昇降量・利用条件は未確認。",
-      "中庭の北側通路は補足図 b7-b10-courtyard-north-reference による模式接続。階段は確認されていないため歩行区間として登録し、屋根・実際の勾配・幅員・通行条件・正確な境界は現地確認待ち。表示座標を実距離として扱わない。",
-      "7号館2Fの外階段は屋外の階段下分岐から出入口前までをstairsとして登録し、館内の階段設備と出入口リンクでは重複計上しない。中庭からの通路はこの階段下分岐へ接続する。"
-    ],
+    "notes": [],
     "nodes": [
       {
         "id": "b3-north",
@@ -68,7 +52,7 @@
         "name": "7号館・5号館間の通路",
         "position": [
           58.75,
-          18.75
+          19.846724
         ],
         "layer": "ground"
       },
@@ -77,7 +61,7 @@
         "name": "7号館前の通路",
         "position": [
           57.5,
-          19.75
+          19.885043
         ],
         "layer": "ground"
       },
@@ -86,7 +70,7 @@
         "name": "7号館・6号館間の曲がり角",
         "position": [
           56,
-          18.875
+          19.931026
         ],
         "layer": "ground"
       },
@@ -114,7 +98,7 @@
         "name": "西門 12号館側の通路",
         "position": [
           52.875,
-          19.625
+          19.932724
         ],
         "layer": "ground"
       },
@@ -123,16 +107,16 @@
         "name": "12号館・6号館間の曲がり角",
         "position": [
           52.25,
-          19.5
+          19.88467
         ],
         "layer": "ground"
       },
       {
         "id": "b12-east",
-        "name": "12号館前の地上通路（立体交差の下）",
+        "name": "12号館前の地上通路",
         "position": [
           46.25,
-          19.125
+          19.423349
         ],
         "layer": "ground"
       },
@@ -141,7 +125,7 @@
         "name": "17号館・19号館間の地上通路",
         "position": [
           31.25,
-          18.75
+          18.725045
         ],
         "layer": "ground"
       },
@@ -359,7 +343,7 @@
         "name": "17号館 出入口1前の分岐",
         "position": [
           29.5,
-          18.696154
+          18.676574
         ],
         "layer": "ground"
       },
@@ -377,7 +361,7 @@
         "name": "17号館 出入口2前の分岐",
         "position": [
           35.5,
-          18.85625
+          18.842761
         ],
         "layer": "ground"
       },
@@ -385,7 +369,7 @@
         "id": "b23-north-west",
         "name": "17号館・23号館間 20号館側の分岐",
         "position": [
-          29.5,
+          28.5,
           33.5
         ],
         "layer": "ground"
@@ -404,7 +388,7 @@
         "name": "17号館・23号館間 15号館側の分岐",
         "position": [
           40.5,
-          33
+          33.5
         ],
         "layer": "ground"
       },
@@ -448,7 +432,7 @@
         "id": "b23-east-turn",
         "name": "23号館 出入口1前の曲がり角",
         "position": [
-          39.75,
+          40.5,
           49
         ],
         "layer": "ground"
@@ -509,7 +493,7 @@
       },
       {
         "id": "bridge-west-gate",
-        "name": "西門付近の連絡橋上（地上通路と別層）",
+        "name": "西門付近の連絡橋",
         "position": [
           53.75,
           20
@@ -563,7 +547,7 @@
       },
       {
         "id": "b7-2f-door",
-        "name": "7号館2F 外階段出入口前",
+        "name": "7号館2F 出入口前",
         "position": [
           69.5,
           25.8125
@@ -572,7 +556,7 @@
       },
       {
         "id": "b7-2f-stair-foot",
-        "name": "7・8号館間 外階段下・中庭側通路の分岐",
+        "name": "7号館 外階段下",
         "position": [
           70.2,
           24.5
@@ -581,7 +565,7 @@
       },
       {
         "id": "b7-b8-approach",
-        "name": "7号館外階段と3号館側の通路",
+        "name": "7・8号館間の通路",
         "position": [
           71,
           23.5
@@ -599,7 +583,7 @@
       },
       {
         "id": "b8-south-landing",
-        "name": "8号館 1F・2F間の屋外踊り場（25号館側）",
+        "name": "8号館 屋外踊り場",
         "position": [
           67.8125,
           46.8125
@@ -608,7 +592,7 @@
       },
       {
         "id": "b8-south-path",
-        "name": "8号館南側 正門方面・地下通路の分岐",
+        "name": "8号館南側の分岐",
         "position": [
           67.5,
           49.5
@@ -629,7 +613,7 @@
         "name": "1号館・31号館間 西側の曲がり角",
         "position": [
           76.5,
-          49.4
+          49.948276
         ],
         "layer": "ground"
       },
@@ -638,7 +622,7 @@
         "name": "1号館・31号館間の通路",
         "position": [
           86,
-          51.6
+          52.077586
         ],
         "layer": "ground"
       },
@@ -672,7 +656,7 @@
       },
       {
         "id": "b8-tunnel-b11-side",
-        "name": "11号館側の地下通路（先の接続は確認待ち）",
+        "name": "11号館側の地下通路",
         "position": [
           67.5,
           56
@@ -681,7 +665,7 @@
       },
       {
         "id": "b8-courtyard-door",
-        "name": "8号館 EV脇の中庭側出入口前",
+        "name": "8号館 中庭側出入口前",
         "position": [
           68.94375,
           35.30625
@@ -690,27 +674,27 @@
       },
       {
         "id": "b7-b10-courtyard",
-        "name": "7〜10号館に囲まれた中庭",
+        "name": "中庭東側",
         "position": [
-          65,
-          34.5
+          67.74375,
+          35.30625
         ],
         "layer": "ground"
       },
       {
         "id": "b8-courtyard-north",
-        "name": "8号館 中庭側の北向き通路",
+        "name": "8号館 中庭沿い",
         "position": [
-          68,
+          69.095031,
           30
         ],
         "layer": "ground"
       },
       {
         "id": "b7-b8-courtyard-turn",
-        "name": "7・8号館間 中庭側の曲がり角",
+        "name": "中庭北側の角",
         "position": [
-          70,
+          69.680745,
           27.7
         ],
         "layer": "ground"
@@ -1110,8 +1094,8 @@
         "isIndoor": false,
         "isAccessible": false,
         "widthClass": "unknown",
-        "instruction": "5号館の外階段を上り、2Fの外階段側出入口へ進む",
-        "reverseInstruction": "5号館2Fの外階段を下り、7号館側の通路へ進む",
+        "instruction": "5号館の外階段を上り、2Fの外階段側出入口へ",
+        "reverseInstruction": "5号館2Fの外階段を下り、7号館側の通路へ",
         "routingCost": 2.597547,
         "cover": "unknown"
       },
@@ -1301,8 +1285,8 @@
         "routingCost": 3.201562,
         "cover": "unknown",
         "from": "bridge-b6-foot",
-        "instruction": "6号館側の階段を上り、西門付近の連絡橋へ進む",
-        "reverseInstruction": "西門付近の連絡橋から階段を下り、6号館側の通路へ進む"
+        "instruction": "6号館側の階段を上り、西門付近の連絡橋へ",
+        "reverseInstruction": "西門付近の連絡橋から階段を下り、6号館側の通路へ"
       },
       {
         "to": "bridge-b6-landing",
@@ -1314,8 +1298,8 @@
         "routingCost": 3.212865,
         "cover": "unknown",
         "from": "bridge-ramp-foot",
-        "instruction": "6号館側のスロープから西門付近の連絡橋へ進む",
-        "reverseInstruction": "西門付近の連絡橋からスロープで6号館側の通路へ進む"
+        "instruction": "6号館側のスロープから西門付近の連絡橋へ",
+        "reverseInstruction": "西門付近の連絡橋からスロープで6号館側の通路へ"
       },
       {
         "to": "bridge-west-gate",
@@ -1327,8 +1311,8 @@
         "routingCost": 1.030776,
         "cover": "unknown",
         "from": "bridge-b6-landing",
-        "instruction": "連絡橋上を進む（地上通路へは接続しない）",
-        "reverseInstruction": "連絡橋上を進む（地上通路へは接続しない）"
+        "instruction": "連絡橋を進む",
+        "reverseInstruction": "連絡橋を進む"
       },
       {
         "to": "bridge-b12-corner",
@@ -1340,8 +1324,8 @@
         "routingCost": 13.259431,
         "cover": "unknown",
         "from": "bridge-west-gate",
-        "instruction": "連絡橋上を進む（地上通路へは接続しない）",
-        "reverseInstruction": "連絡橋上を進む（地上通路へは接続しない）"
+        "instruction": "連絡橋を進む",
+        "reverseInstruction": "連絡橋を進む"
       },
       {
         "to": "bridge-b12-top",
@@ -1353,8 +1337,8 @@
         "routingCost": 5.0,
         "cover": "unknown",
         "from": "bridge-b12-corner",
-        "instruction": "連絡橋上を進む（地上通路へは接続しない）",
-        "reverseInstruction": "連絡橋上を進む（地上通路へは接続しない）"
+        "instruction": "連絡橋を進む",
+        "reverseInstruction": "連絡橋を進む"
       },
       {
         "to": "bridge-b12-foot",
@@ -1366,8 +1350,8 @@
         "routingCost": 6.25,
         "cover": "unknown",
         "from": "bridge-b12-top",
-        "instruction": "12号館・17号館間の階段を下り、23号館側の地上通路へ進む",
-        "reverseInstruction": "12号館・17号館間の階段を上り、連絡橋へ進む"
+        "instruction": "12号館・17号館間の階段を下り、23号館側の地上通路へ",
+        "reverseInstruction": "12号館・17号館間の階段を上り、連絡橋へ"
       },
       {
         "to": "b19-shop-door",
@@ -1400,8 +1384,8 @@
         "widthClass": "unknown",
         "routingCost": 1,
         "cover": "unknown",
-        "instruction": "19号館側の階段を上り、17号館・12号館間の連絡橋へ進む",
-        "reverseInstruction": "17号館・12号館間の連絡橋から19号館側の階段を下り、購買部側出入口付近の地上通路へ進む",
+        "instruction": "19号館側の階段を上り、17号館・12号館間の連絡橋へ",
+        "reverseInstruction": "19号館側の階段を下り、購買部へ",
         "from": "b19-bridge-stair-foot"
       },
       {
@@ -1436,8 +1420,8 @@
         "cover": "unknown",
         "from": "b7-2f-stair-foot",
         "widthClass": "unknown",
-        "instruction": "外階段を上って7号館2Fの出入口前へ進む",
-        "reverseInstruction": "7号館2Fの出入口前から外階段を下りて中庭側との分岐へ進む"
+        "instruction": "外階段を上って7号館2Fの出入口前へ",
+        "reverseInstruction": "外階段を下りて中庭側へ"
       },
       {
         "to": "b8-map-hall-door",
@@ -1448,8 +1432,8 @@
         "routingCost": 3,
         "cover": "covered",
         "from": "b3-b2-west",
-        "instruction": "2号館側の屋根付き外階段を上ってマップホール側出入口へ進む",
-        "reverseInstruction": "マップホール側の屋根付き外階段を下りて2号館側の屋外通路へ進む",
+        "instruction": "屋根付き外階段を上ってマップホールへ",
+        "reverseInstruction": "屋根付き外階段を下りて2号館側へ",
         "widthClass": "unknown"
       },
       {
@@ -1538,7 +1522,7 @@
         "routingCost": 0,
         "cover": "unknown",
         "from": "b8-south-path",
-        "instruction": "11号館側の地下通路へ進む",
+        "instruction": "11号館側の地下通路へ",
         "reverseInstruction": "地下通路口から8号館南側の通路へ戻る",
         "widthClass": "unknown"
       },
@@ -1551,7 +1535,7 @@
         "routingCost": 6,
         "cover": "covered",
         "from": "b8-tunnel-mouth",
-        "instruction": "道路の下の地下通路を11号館側へ進む（先の接続は未登録）",
+        "instruction": "地下通路で11号館側へ",
         "reverseInstruction": "地下通路を8号館側へ戻る",
         "widthClass": "unknown"
       },
@@ -1576,8 +1560,8 @@
         "routingCost": 5,
         "cover": "unknown",
         "widthClass": "unknown",
-        "instruction": "中庭から8号館沿いの通路を北へ進む",
-        "reverseInstruction": "8号館沿いの通路から中庭へ進む"
+        "instruction": "中庭から8号館沿いの通路を北へ",
+        "reverseInstruction": "8号館沿いの通路から中庭へ"
       },
       {
         "from": "b8-courtyard-north",
@@ -1589,8 +1573,8 @@
         "routingCost": 3,
         "cover": "unknown",
         "widthClass": "unknown",
-        "instruction": "8号館の中庭側に沿って7号館側へ進む",
-        "reverseInstruction": "8号館の中庭側に沿って中庭へ進む"
+        "instruction": "8号館の中庭側に沿って7号館側へ",
+        "reverseInstruction": "8号館の中庭側に沿って中庭へ"
       },
       {
         "from": "b7-b8-courtyard-turn",
@@ -1603,7 +1587,7 @@
         "cover": "unknown",
         "widthClass": "unknown",
         "instruction": "7・8号館間の通路へ抜ける",
-        "reverseInstruction": "7・8号館間の通路から中庭側へ進む"
+        "reverseInstruction": "7・8号館間の通路から中庭側へ"
       }
     ],
     "links": [
@@ -1723,7 +1707,7 @@
         "routingCost": 1.5,
         "cover": "unknown",
         "instruction": "出入口から8号館1Fの階段側へ入る",
-        "reverseInstruction": "中間の踊り場から25号館側の屋外通路へ出る"
+        "reverseInstruction": "踊り場から25号館側へ出る"
       },
       {
         "from": "b8-south-landing",
@@ -1734,7 +1718,7 @@
         "routingCost": 1.5,
         "cover": "unknown",
         "instruction": "出入口から8号館2Fの階段側へ入る",
-        "reverseInstruction": "中間の踊り場から25号館側の屋外通路へ出る"
+        "reverseInstruction": "踊り場から25号館側へ出る"
       },
       {
         "from": "b8-courtyard-door",
@@ -1773,14 +1757,7 @@
       ],
       "status": "ready",
       "verification": "inferred",
-      "notes": [
-        "7〜10号館を連絡棟として一体表示。2024年の掲示写真を配置・区画・室番号の優先資料とし、2023年作成の参考PDFから2Fと一般的用途を補足する。",
-        "1〜4Fは4棟、5・6Fは7〜9号館を表示する。10号館の5・6Fは未登録。",
-        "寸法・階高・実方位は未校正。測量前の独自の仮配置であり、原図の輪郭・縮尺・配色は再現しない。",
-        "7・10号館の2〜4F境界は高低差未確認の段差接続。7・8号館直通は3F以上のみ。2Fの7号館から他棟へは階段が必要で、3F以上の階段回避は8・9号館側の連絡通路を使う。",
-        "8号館は1〜6FのEVと1〜3Fの共用階段を仮接続する。7号館2Fの外階段、8号館のマップホール側・中間踊り場・中庭側から屋外へ参考接続する。各設備の段数・正確な位置・利用条件は現地確認待ち。",
-        "用途名は旧資料の履歴情報。個人名・内線番号・研究テーマは収録せず、現在の用途・利用条件は要確認。"
-      ],
+      "notes": [],
       "levels": [
         {
           "id": "f1",
@@ -2026,8 +2003,8 @@
       "isAccessible": false,
       "routingCost": 2,
       "cover": "covered",
-      "instruction": "7号館と10号館の3Fをつなぐ階段・段差を通り、10号館側へ進む",
-      "reverseInstruction": "10号館と7号館の3Fをつなぐ階段・段差を通り、7号館側へ進む",
+      "instruction": "階段で10号館側へ（3F）",
+      "reverseInstruction": "階段で7号館側へ（3F）",
       "from": "b7/f3/stairs-ten",
       "passageWidth": 6
     },
@@ -2051,8 +2028,8 @@
       "isAccessible": false,
       "routingCost": 2,
       "cover": "covered",
-      "instruction": "7号館と10号館の4Fをつなぐ階段・段差を通り、10号館側へ進む",
-      "reverseInstruction": "10号館と7号館の4Fをつなぐ階段・段差を通り、7号館側へ進む",
+      "instruction": "階段で10号館側へ（4F）",
+      "reverseInstruction": "階段で7号館側へ（4F）",
       "from": "b7/f4/stairs-ten",
       "passageWidth": 6
     },
@@ -2186,8 +2163,8 @@
       "cover": "covered",
       "from": "b7/f2/stairs-ten",
       "passageWidth": 6,
-      "instruction": "7号館と10号館の2Fをつなぐ階段・段差を通り、10号館側へ進む",
-      "reverseInstruction": "10号館と7号館の2Fをつなぐ階段・段差を通り、7号館側へ進む"
+      "instruction": "階段で10号館側へ（2F）",
+      "reverseInstruction": "階段で7号館側へ（2F）"
     }
   ]
 }

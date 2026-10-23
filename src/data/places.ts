@@ -144,7 +144,7 @@ export const placeDisplayName = (place: Place) =>
   `${place.name}（${placeContext(place)}）`;
 export const placeRouteNotice = (place: Place) =>
   place.approachRoomName
-    ? `${place.name}は「${place.approachRoomName}」の通路側まで案内します。室内の通り抜けは案内しません。`
+    ? `${place.approachRoomId}の入口まで。`
     : "";
 export const normalizeSearch = (value: string) =>
   value.normalize("NFKC").replace(/[−–—]/g, "-").trim().toLowerCase();

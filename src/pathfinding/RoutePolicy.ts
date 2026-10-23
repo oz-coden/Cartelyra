@@ -14,11 +14,13 @@ export interface Traversal {
   fromLevel?: number;
   toLevel?: number;
 }
-export interface SearchCost { vertical: number; floorDetours: number; boundaries: number; cost: number; }
+export type RouteObjective = "standard" | "fewest-stairs";
+export interface SearchCost { stairs: number; vertical: number; floorDetours: number; boundaries: number; cost: number; }
 
 /** Routing preferences use authored costs; drawing transforms cannot change reference routes. */
 export class RoutePolicy {
   private indices = new Map<string, number>();
+  private alignedLevels = new Map<string, number>();
   private domains = new Map<string, string>();
   readonly schematic: boolean;
   constructor(data: CampusData) {
@@ -27,9 +29,17 @@ export class RoutePolicy {
       this.domains.set(b.id, b.id);
       for (const f of b.floors) this.indices.set(`${b.id}/${f.level}`, f.stackIndex ?? f.level);
     }
-    for (const group of data.viewGroups ?? []) if (group.status === "ready")
+    for (const group of data.viewGroups ?? []) if (group.status === "ready") {
       for (const id of group.buildingIds) this.domains.set(id, `group/${group.id}`);
+      (group.levels ?? []).forEach((level, index) => {
+        for (const ref of level.floors) {
+          const floor = data.buildings.find(b => b.id === ref.buildingId)?.floors.find(f => f.id === ref.floorId);
+          if (floor) this.alignedLevels.set(`${ref.buildingId}/${floor.level}`, index);
+        }
+      });
+    }
   }
+  private alignedLevel(node: NavNode) { return this.alignedLevels.get(`${node.buildingId}/${node.floor}`) ?? this.indices.get(`${node.buildingId}/${node.floor}`); }
   domain(node: NavNode) { return node.buildingId ? this.domains.get(node.buildingId) ?? node.buildingId : undefined; }
   traversal(edge: NavEdge, a: NavNode, b: NavNode): Traversal {
     const length = this.schematic
@@ -46,7 +56,7 @@ export class RoutePolicy {
       (!vertical || aIndex !== bIndex) ? Math.abs(aIndex - bIndex) : undefined);
     return { edge, targetId: b.id, reversed: false, length,
       floorChanges: known ?? 0, unmeasuredVertical: vertical && known === undefined ? 1 : 0,
-      fromLevel: aIndex, toLevel: bIndex,
+      fromLevel: this.alignedLevel(a), toLevel: this.alignedLevel(b),
       boundaryChanges: this.domain(a) !== this.domain(b) ? 1 : 0 };
   }
   permitted(edge: NavEdge, filter: RouteFilterType, allowInferred: boolean) {
@@ -64,8 +74,8 @@ export class RoutePolicy {
   }
   floorDetourCounter(start: NavNode, goal: NavNode) {
     if (!this.schematic || start.buildingId === goal.buildingId || this.domain(start) !== this.domain(goal)) return () => 0;
-    const a = this.indices.get(`${start.buildingId}/${start.floor}`);
-    const b = this.indices.get(`${goal.buildingId}/${goal.floor}`);
+    const a = this.alignedLevel(start);
+    const b = this.alignedLevel(goal);
     if (a === undefined || b === undefined) return () => 0;
     const direction = b < a ? -1 : 1, low = Math.min(a, b), high = Math.max(a, b);
     const progress = (level: number) => direction * Math.max(low, Math.min(high, level));
@@ -73,13 +83,14 @@ export class RoutePolicy {
       if (!link.floorChanges || link.fromLevel === undefined || link.toLevel === undefined) return 0;
       const from = link.reversed ? link.toLevel : link.fromLevel, to = link.reversed ? link.fromLevel : link.toLevel;
       // Penalize known backtracking and overshoots, not necessary progress or unmeasured landings.
-      return Math.max(0, link.floorChanges - (progress(to) - progress(from)));
+      return Math.max(0, Math.abs(to - from) - (progress(to) - progress(from)));
     };
   }
-  comparator(start: NavNode, goal: NavNode) {
+  comparator(start: NavNode, goal: NavNode, objective: RouteObjective = "standard") {
     // Keep local guidance stable; connected wings may use shorter outdoor stair approaches.
     const within = !!this.domain(start) && this.domain(start) === this.domain(goal);
     const sameBuilding = !!start.buildingId && start.buildingId === goal.buildingId;
+    if (objective === "fewest-stairs") return (a: SearchCost, b: SearchCost) => a.stairs - b.stairs || a.cost - b.cost;
     return (a: SearchCost, b: SearchCost) =>
       this.schematic && sameBuilding && a.vertical !== b.vertical ? a.vertical - b.vertical :
       this.schematic && sameBuilding && a.boundaries !== b.boundaries ? a.boundaries - b.boundaries :

@@ -254,19 +254,25 @@ export class SearchPanel {
     ].join(" / ") || "階移動なし";
     const confidence = result.pathNodes.length === 1
         ? result.endpointNotes?.length
-          ? "出発地と目的地の案内地点は同じです"
-          : "出発地と目的地は同じ場所です"
+          ? "案内地点は同じです"
+          : "同じ場所です"
         : result.inferredConnections
-          ? "参考ルート（現地未確認の接続を含みます）"
-          : "現地確認済みの接続";
+          ? "参考ルート"
+          : "確認済みルート";
     document.getElementById("route-confidence")!.textContent =
       [confidence,
         ...(result.pathNodes.some((n) => !n.buildingId)
-          ? ["屋外区間はキャンパス図で確認できます。道順を選ぶと対応する図へ切り替わります。"] : []),
+          ? ["屋外はキャンパス図で確認"] : []),
         ...(result.endpointNotes ?? [])].join(" / ");
     document.getElementById("route-summary-panel")!.classList.remove("hidden");
   }
   public hideSummary() {
     document.getElementById("route-summary-panel")!.classList.add("hidden");
+  }
+  public setStatus(message = "", kind: "warning" | "error" = "error") {
+    const element = document.getElementById("route-status")!;
+    element.textContent = message;
+    element.classList.toggle("hidden", !message);
+    element.dataset.kind = kind;
   }
 }

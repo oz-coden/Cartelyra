@@ -6,14 +6,7 @@
   "stackIndex": 2,
   "elevation": 24,
   "sourceId": "b3-f4-f1",
-  "notes": [
-    "掲示図からの模式的な転記。座標・階高は表示用で、実寸ではない。",
-    "出入口の位置・廊下の段差・階段とEVの停止階および利用条件は現地未確認。",
-    "掲示板の「現在位置」は撮影した掲示板の位置であり、利用者の現在地ではない。",
-    "屋外階段・屋外の通路は館内図の案内対象外。",
-    "8号館側出入口は図面左、新東門側出入口は図面右。室内図の上下左右はキャンパス図の方位とは一致しない。",
-    "8号館側と新東門側は自動ドアのある出入口。1Fの共用廊下を通り抜ける参考経路を屋外経路に接続。開放時間と利用条件は現地照合待ち。"
-  ],
+  "notes": [],
   "outline": [
     [0, 0],
     [100, 0],
@@ -87,8 +80,7 @@
         [0, 20]
       ],
       "restroomType": "female",
-      "entrance": "wc-w-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-w-entrance"
     },
     {
       "id": "wc-m",
@@ -103,8 +95,7 @@
         [12, 20]
       ],
       "restroomType": "male",
-      "entrance": "wc-m-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-m-entrance"
     },
     {
       "id": "wc-a",
@@ -117,8 +108,7 @@
         [21, 20]
       ],
       "restroomType": "multipurpose",
-      "entrance": "wc-a-entrance",
-      "description": "掲示図の設備表示から登録。入口位置・開放状況・利用条件は現地未確認。"
+      "entrance": "wc-a-entrance"
     },
     {
       "id": "ev",
@@ -166,8 +156,7 @@
         [98, 64],
         [94, 64]
       ],
-      "entrance": "aed-approach",
-      "description": "掲示図のAED表示。設置状況・利用可能時間は現地未確認。"
+      "entrance": "aed-approach"
     },
     {
       "id": "entrance-north",
@@ -181,7 +170,7 @@
       ],
       "entrance": "entrance-north",
       "aliases": ["図面左側出入口", "8号館側入口", "自動ドア"],
-      "description": "1Fの図面左側、8号館に面する出入口の代表点。屋外参考経路に接続。自動ドア。1Fの共用廊下を経由して反対側の出入口へ通り抜け可能。開放時間・利用条件は現地照合待ち。"
+      "description": "自動ドア。館内を通り抜け可。"
     },
     {
       "id": "entrance-south",
@@ -195,7 +184,7 @@
       ],
       "entrance": "entrance-south",
       "aliases": ["図面右側出入口", "新東門側入口", "自動ドア"],
-      "description": "1Fの図面右側、新東門に面する出入口の代表点。屋外参考経路に接続。自動ドア。1Fの共用廊下を経由して反対側の出入口へ通り抜け可能。開放時間・利用条件は現地照合待ち。"
+      "description": "自動ドア。館内を通り抜け可。"
     }
   ],
   "navigation": {

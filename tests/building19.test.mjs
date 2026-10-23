@@ -1,3 +1,4 @@
+import {surveyNotes,notesFor} from './fixtures/survey-notes.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -28,7 +29,7 @@ test('Building 19 registers four floors, 48 areas and ten WCs without filling ab
   assert.equal(searchPlaces(places,'保健管理センター')[0].id,'19-health-center');
   assert.equal(searchPlaces(places,'ラックス')[0].id,'19-B20');
   assert.equal(places.find(p=>p.id==='19-107').nodeId,'b19/f1/room-107');
-  assert.match(places.find(p=>p.id==='19-107').description,/左側の通路/);
+  assert.match(notesFor('b19'),/左側の通路/);
   assert.ok(places.filter(p=>p.name.endsWith('研究室')).every(p=>/^19-\d+ 研究室$/.test(p.name)));
 });
 
@@ -73,7 +74,7 @@ test('Building 19 left-side rooms share a corridor and the shop entrance stays o
   assert.equal(node('entrance-shop').position[0],node('room-101').position[0]);
   assert.ok(finder.findPath(entrance.nodeId,'b19/f1/room-101','accessible'));
   assert.equal(finder.findPath(entrance.nodeId,'b19/f1/room-107','accessible'),null);
-  assert.match(f.notes.join(' '),/左側通路の屋外出入口.*現地確認待ち/);
+  assert.match(notesFor('b19'),/左側通路の屋外出入口.*現地確認待ち/);
 });
 
 test('non-adjacent EV stops require an explicit floor count; stairs still cannot skip levels',()=>{
@@ -130,7 +131,7 @@ test('Building 19 concave and public room selection uses the shared shape in the
     assert.equal(document.querySelector('.map-selection-outline').getAttribute('points'),shape.getAttribute('points'));
     assert.equal(document.querySelector('#map-canvas svg').lastElementChild.getAttribute('class'),'map-emphasis');
     assert.equal(document.querySelector(`[data-place="${id}"]`).classList.contains('map-public-area'),room.passThrough===true);
-    assert.equal(document.getElementById('map-legend').textContent.includes('通行区画'),f.rooms.some(r=>r.passThrough===true));
+    assert.equal(document.getElementById('map-legend').textContent.includes('共用区画'),f.rooms.some(r=>r.passThrough===true));
   }
   map.setLocation(entry,building.floors.find(f=>f.id==='f1'));
   assert.equal(document.querySelector('[data-place="19-107"] .map-room-unlinked'),null);

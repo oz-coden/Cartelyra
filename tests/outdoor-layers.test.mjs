@@ -94,7 +94,7 @@ test('context roads are landmarks only and cannot create walkable graph connecti
   assert.equal(document.querySelectorAll('.map-context-road').length,source.overview.contextRoads.length);
   assert.equal(document.querySelectorAll('.map-outdoor-bridge').length,3);
   assert.equal(document.querySelectorAll('.map-outdoor-transition[data-edge-type="ramp"]').length,1);
-  assert.match(document.getElementById('map-legend').textContent,/薄線：周辺道路.*青線：連絡橋/);
+  assert.match(document.getElementById('map-legend').textContent,/細線：道路.*青：橋/);
   assert.ok(document.querySelector('.map-context-roads').compareDocumentPosition(document.querySelector('.map-outdoor-path'))&4);
 });
 
