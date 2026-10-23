@@ -12,16 +12,15 @@
     "個人名・内線番号・研究テーマ・原図の配色や装飾は登録しない。図形の輪郭・長さを原図からトレースしない。",
     "連絡通路と階段・EVは明示した推定接続だけを使う。表示座標を実測距離として評価せず、現地調査後に置き換える。",
     "9号館の通路とWCの位置は棟群内の共通模式座標に合わせた仮配置。資料の歩道状公開空地・外部階段と屋外グラフとの対応は未登録。",
-    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。"
+    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
+    "8号館側の階段は8号館通路の延長に配置し、9号館南側の張り出しとして重複表示しない。設備の階間対応は推定。"
   ],
   "outline": [
     [0, -10],
     [30, -10],
     [30, 0],
     [105, 0],
-    [105, 44],
-    [97, 44],
-    [97, 30],
+    [105, 30],
     [0, 30]
   ],
   "voids": [],
@@ -37,19 +36,6 @@
         [8, -2]
       ],
       "entrance": "stairs-northwest",
-      "description": "設備記号に基づく参考位置。設備の連続性・位置・利用条件は現地確認待ち。"
-    },
-    {
-      "id": "stairs-southeast",
-      "label": "階段（8号館側）",
-      "type": "stairs",
-      "polygon": [
-        [97, 32],
-        [105, 32],
-        [105, 44],
-        [97, 44]
-      ],
-      "entrance": "stairs-southeast",
       "description": "設備記号に基づく参考位置。設備の連続性・位置・利用条件は現地確認待ち。"
     },
     {
@@ -574,12 +560,6 @@
         "type": "corridor"
       },
       {
-        "id": "hall-37",
-        "name": "通路の分岐",
-        "position": [101.0, 32.0],
-        "type": "corridor"
-      },
-      {
         "id": "hall-38",
         "name": "通路の分岐",
         "position": [105.0, 16.0],
@@ -685,12 +665,6 @@
         "id": "stairs-northwest",
         "name": "階段（10号館側）",
         "position": [8, -6],
-        "type": "stairs"
-      },
-      {
-        "id": "stairs-southeast",
-        "name": "階段（8号館側）",
-        "position": [101, 32],
         "type": "stairs"
       },
       {
@@ -896,16 +870,6 @@
         "routingCost": 1.3275,
         "cover": "indoor",
         "from": "hall-34"
-      },
-      {
-        "to": "hall-37",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 2.4,
-        "cover": "indoor",
-        "from": "hall-36"
       },
       {
         "to": "hall-38",
@@ -1256,16 +1220,6 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "stairs-northwest"
-      },
-      {
-        "to": "hall-37",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "stairs-southeast"
       },
       {
         "to": "hall-10",

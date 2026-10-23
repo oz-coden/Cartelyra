@@ -519,6 +519,7 @@ body[data-view="3d"] .three-only {
   pointer-events: none;
 }
 .map-outdoor-bridge { stroke: #398bca; stroke-width: 0.9; stroke-dasharray: none; }
+.map-outdoor-underground { stroke: #9063b5; stroke-width: 0.9; stroke-dasharray: 1.5 0.8; }
 .map-outdoor-transition { stroke: #d88220; stroke-dasharray: 0.6 0.5; }
 .map-route {
   fill: none;

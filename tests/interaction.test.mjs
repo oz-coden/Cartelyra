@@ -48,7 +48,7 @@ async function setup() {
 const click = (window, element) =>
   element.dispatchEvent(new window.Event("click", { bubbles: true }));
 
-test("gates are searchable and selectable on the overview and can be named endpoints without invented routes", async () => {
+test("registered gates are searchable, selectable and routable on the overview", async () => {
   const { document, window, server } = await setup();
   try {
     const { UniviewApp } = await server.ssrLoadModule("/src/main.ts");
@@ -75,16 +75,8 @@ test("gates are searchable and selectable on the overview and can be named endpo
     input.dispatchEvent(new window.Event("input"));
     document.querySelector("#suggestions-dest button").click();
     assert.match(input.value, /西門/);
-    assert.match(
-      document.getElementById("toast").textContent,
-      /屋外経路は未登録/,
-    );
-    assert.ok(
-      document
-        .getElementById("route-summary-panel")
-        .classList.contains("hidden"),
-    );
-    assert.equal(document.querySelectorAll(".map-route").length, 0);
+    assert.ok(!document.getElementById("route-summary-panel").classList.contains("hidden"));
+    assert.ok(document.querySelectorAll(".map-route").length>0);
     assert.equal(document.querySelectorAll("#gate-list button").length, 4);
     document.getElementById("btn-view-floor").click();
     document.querySelector("#gate-list button").click();

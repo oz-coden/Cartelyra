@@ -67,7 +67,7 @@ export function compileCampus(
     for (const link of outdoor.links) {
       const outside = outdoor.nodes.find((n) => n.id === link.from)!;
       nodes.find((n) => n.id === link.to)!.overviewPosition = outside.position;
-      edges.push({ ...link, from: qualify(link.from), type: "outdoor",
+      edges.push({ ...link, from: qualify(link.from), type: link.type ?? "outdoor",
         isIndoor: link.cover === "indoor", routingCost: link.routingCost ?? 1, distance: 1 });
     }
   }

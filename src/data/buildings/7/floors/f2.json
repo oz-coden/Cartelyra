@@ -12,7 +12,8 @@
     "個人名・内線番号・研究テーマ・原図の配色や装飾は登録しない。図形の輪郭・長さを原図からトレースしない。",
     "連絡通路と階段・EVは明示した推定接続だけを使う。表示座標を実測距離として評価せず、現地調査後に置き換える。",
     "7-21の通路側とホールの通行範囲を簡略化する。変電設備・無記名の付属区画は通行経路に取り込まない。",
-    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。"
+    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
+    "2Fの7・8号館直通連絡はなく、7号館側の外階段出入口を使用する。他棟への階段回避経路は未登録。"
   ],
   "outline": [
     [0, 0],
@@ -88,6 +89,33 @@
       ],
       "entrance": "stairs-ten",
       "description": "2Fの棟境界付近にある階段記号の推定接続。段数・高低差・利用条件は現地確認待ち。"
+    },
+    {
+      "id": "stairs-outside",
+      "type": "stairs",
+      "label": "8号館側 外階段",
+      "polygon": [
+        [111, 24],
+        [115, 24],
+        [115, 30],
+        [111, 30]
+      ],
+      "entrance": "stairs-outside",
+      "description": "7号館2Fから屋外へ下りる階段。8号館2Fへ直接渡る通路ではない。屋根・正確な段数・利用条件は現地確認待ち。"
+    },
+    {
+      "id": "entrance-outside",
+      "label": "8号館側 外階段出入口",
+      "type": "entrance",
+      "polygon": [
+        [110, 26],
+        [111, 26],
+        [111, 28],
+        [110, 28]
+      ],
+      "entrance": "stairs-outside",
+      "description": "外階段を下りて3・7・8号館間の屋外通路へ接続。2Fの8号館へ直接渡る連絡通路ではない。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -235,18 +263,6 @@
         "type": "corridor"
       },
       {
-        "id": "hall-17",
-        "name": "通路の分岐",
-        "position": [115.0, 27.0],
-        "type": "corridor"
-      },
-      {
-        "id": "port-eight",
-        "name": "8号館への連絡地点",
-        "position": [115, 27],
-        "type": "corridor"
-      },
-      {
         "id": "room-21",
         "name": "7-21 講義室",
         "position": [71, 6],
@@ -287,6 +303,12 @@
         "name": "10号館側の段差・階段",
         "position": [40, 38],
         "type": "stairs"
+      },
+      {
+        "id": "stairs-outside",
+        "position": [111, 27],
+        "type": "stairs",
+        "name": "8号館側 外階段"
       }
     ],
     "edges": [
@@ -391,16 +413,6 @@
         "from": "hall-6"
       },
       {
-        "to": "hall-17",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.75,
-        "cover": "indoor",
-        "from": "hall-15"
-      },
-      {
         "to": "hall-10",
         "type": "walk",
         "verification": "inferred",
@@ -471,16 +483,6 @@
         "from": "hall-9"
       },
       {
-        "to": "hall-17",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "port-eight"
-      },
-      {
         "to": "hall-11",
         "type": "walk",
         "verification": "inferred",
@@ -549,6 +551,16 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "stairs-ten"
+      },
+      {
+        "to": "stairs-outside",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor",
+        "from": "hall-15"
       }
     ]
   }

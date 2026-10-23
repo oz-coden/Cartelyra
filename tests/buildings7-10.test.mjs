@@ -40,15 +40,18 @@ test('Buildings 7–10 preserve observed floor numbers and room identifiers with
 test('every group place connects to the Building 8 elevator reference point while remaining inferred',()=>{
   for(const p of places){assert.ok(p.nodeId,p.id);
     for(const mode of ['shortest','accessible','indoor','stairs']){
-      const r=finder.findPath('b8/f1/ev-west',p.nodeId,mode);assert.ok(r,`${p.id}: ${mode}`);
+      const r=finder.findPath('b8/f1/ev-west',p.nodeId,mode);
+      if(mode==='accessible'&&p.buildingId==='b7'&&p.floorLevel===2){assert.equal(r,null,p.id);continue;}
+      assert.ok(r,`${p.id}: ${mode}`);
       assert.ok(r.pathNodes.every(n=>ids.includes(n.buildingId)));
       assert.equal(r.floorChanges,p.floorLevel-1,`${p.id}: floor count`);
       if(mode==='accessible')assert.ok(r.steps.every(s=>s.edgeType!=='stairs'));
     }
     if(p.nodeId!=='b8/f1/ev-west')assert.equal(finder.findPath('b8/f1/ev-west',p.nodeId,'shortest',false),null);
   }
-  assert.equal(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate'),null);
-  assert.ok(!s.manifest.outdoor.links.some(l=>ids.includes(l.to.split('/')[0])));
+  assert.ok(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate'));
+  assert.equal(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate','accessible'),null);
+  assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,6);
   assert.ok(!auditConnections(data).some(f=>f.code==='view-group-disconnected'&&f.buildingId==='b7'));
 });
 
@@ -57,11 +60,13 @@ test('same-floor room pairs across all four wings avoid unnecessary stairs or fl
   for(const level of [1,2,3,4,5,6]){
     const rooms=places.filter(p=>p.kind==='room'&&p.floorLevel===level);
     for(let i=0;i<rooms.length;i++)for(let j=i+1;j<rooms.length;j++){
-      const r=finder.findPath(rooms[i].nodeId,rooms[j].nodeId,'accessible');assert.ok(r,`${rooms[i].id} -> ${rooms[j].id}`);
+      const r=finder.findPath(rooms[i].nodeId,rooms[j].nodeId,'accessible');
+      if(level===2&&(rooms[i].buildingId==='b7')!==(rooms[j].buildingId==='b7')){assert.equal(r,null);continue;}
+      assert.ok(r,`${rooms[i].id} -> ${rooms[j].id}`);
       assert.equal(r.floorChanges,0);assert.equal(r.verticalMovements.unmeasured,0);checked++;
     }
   }
-  assert.equal(checked,2366);
+  assert.equal(checked,2322);
 });
 
 test('the provisional 2F supplies adjacent EV and common stair stops without a direct 1F–3F stair shortcut',()=>{
@@ -85,12 +90,12 @@ test('same-level stairs between Buildings 7 and 10 remain explicit, directional 
   for(const level of [2,3,4]){
     const a=`b7/f${level}/stairs-ten`,b=`b10/f${level}/stairs-seven`;
     const blocked=structuredClone(data);
-    blocked.navigation.edges.find(e=>e.from===`b7/f${level}/port-eight`).blocked=true;
+    const bridge=blocked.navigation.edges.find(e=>e.from===`b7/f${level}/port-eight`);if(bridge)bridge.blocked=true;
     const direct=new AStarPathfinder(blocked);
     const r=direct.findPath(a,b);assert.ok(r);assert.equal(r.floorChanges,0);assert.equal(r.verticalMovements.stairs,1);
     assert.equal(r.verticalMovements.unmeasured,1);assert.match(r.steps.at(-1).instruction,/10号館側へ/);
     assert.match(direct.findPath(b,a).steps.at(-1).instruction,/7号館側へ/);
-    const around=finder.findPath(a,b,'accessible');assert.ok(around);assert.equal(around.verticalMovements.stairs,0);
+    const around=finder.findPath(a,b,'accessible');if(level===2){assert.equal(around,null);continue;}assert.ok(around);assert.equal(around.verticalMovements.stairs,0);
     assert.ok(around.pathNodes.some(n=>n.buildingId==='b8'));assert.ok(around.pathNodes.some(n=>n.buildingId==='b9'));
   }
   const bad=structuredClone(s),edge=bad.manifest.connections.find(e=>e.type==='stairs');edge.isAccessible=true;
@@ -153,7 +158,7 @@ test('9–10 share real corridor boundaries and every 7–8 upper bridge has dra
     const edges=data.navigation.edges.filter(e=>e.type==='bridge'&&e.from.startsWith(`b10/f${l}/port-nine`));assert.ok(edges.length);
     for(const e of edges)assert.deepEqual(nodes.get(e.from).position,nodes.get(e.to).position);
   }
-  for(const l of [2,3,4,5,6]){
+  for(const l of [3,4,5,6]){
     const e=data.navigation.edges.find(e=>e.type==='bridge'&&e.from===`b7/f${l}/port-eight`);
     assert.equal(e.cover,'covered');assert.equal(e.passageWidth,6);
   }

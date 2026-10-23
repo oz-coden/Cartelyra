@@ -33,6 +33,7 @@ export interface FloorFeature {
   type: "stairs" | "elevator" | "restroom" | "aed" | "entrance" | "service" | "pit";
   polygon: Point2[];
   aliases?: string[];
+  mapLabel?: string;
   entrance?: string; // Floor-local navigation ID in source files.
   entranceNodeId?: string; // Qualified navigation ID after compilation.
   description?: string;

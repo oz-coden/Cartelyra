@@ -9,9 +9,11 @@
   "notes": [
     "掲示図から室番号と隣接関係を読み取った独自の模式図。寸法・階高・実方位は未校正。形状・室番号は2024年の掲示写真を優先する。",
     "通路側の代表点までの参考案内。扉位置・段差・利用条件と階段・EVの連続性は現地未確認。",
-    "各階の連絡通路は棟群内の明示した接続だけを使用。屋外の出入口との対応は未登録。",
+    "各階の連絡通路は棟群内の明示した接続だけを使用。屋外へは7号館2F・8号館1F/2Fの明示した階段を経由する。",
     "1F掲示図を90度回転し、上階と同じ棟配置で表示。部屋・設備・通路は一括で回転し、鏡映しない。",
-    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。"
+    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
+    "25号館側の階段は主通路の延長に置き、1F・2Fの間の屋外踊り場へ上る参考接続を使用する。架空の1.5Fフロアは作成しない。",
+    "EV脇の10号館側の階段から中庭へ出られる。中庭は他の屋外通路と直接結ばず、登録した1F・2Fの階段だけで接続する。"
   ],
   "outline": [
     [-3, 175],
@@ -30,10 +32,10 @@
     [-3, 1],
     [35, 1],
     [35, 175],
-    [3, 175],
-    [3, 179],
-    [-1, 179],
-    [-1, 175]
+    [5, 175],
+    [5, 183],
+    [-3, 183],
+    [-3, 175]
   ],
   "voids": [],
   "features": [
@@ -79,20 +81,20 @@
     },
     {
       "id": "stairs-west-exit",
-      "label": "階段",
+      "label": "階段（25号館側）",
       "type": "stairs",
       "polygon": [
-        [-1, 179],
-        [-1, 171],
-        [3, 171],
-        [3, 179]
+        [-3, 175],
+        [5, 175],
+        [5, 183],
+        [-3, 183]
       ],
-      "description": "設備記号に基づく代表点。接続・利用条件は現地未確認。",
+      "description": "8号館の主通路の延長にある階段。上った先の1F・2F間の屋外踊り場から25号館側へ出る。正確な高さ・段数・利用条件は現地確認待ち。",
       "entrance": "stairs-west-exit"
     },
     {
       "id": "stairs-ev-west",
-      "label": "階段（EV脇）",
+      "label": "階段（EV脇・中庭側）",
       "type": "stairs",
       "polygon": [
         [-7, 64],
@@ -100,7 +102,7 @@
         [0, 59.8],
         [0, 64]
       ],
-      "description": "設備記号に基づく代表点。接続・利用条件は現地未確認。",
+      "description": "EVの横から10号館側の中庭へ出る階段の代表位置。正確な段数・高低差・利用条件は現地確認待ち。",
       "entrance": "stairs-ev-west"
     },
     {
@@ -115,6 +117,34 @@
       ],
       "description": "設備記号に基づく代表点。接続・利用条件は現地未確認。",
       "entrance": "stairs-ev-east"
+    },
+    {
+      "id": "entrance-south-landing",
+      "label": "25号館側 中間踊り場出入口",
+      "type": "entrance",
+      "polygon": [
+        [-1.5, 173],
+        [2.5, 173],
+        [2.5, 175],
+        [-1.5, 175]
+      ],
+      "entrance": "stairs-west-exit",
+      "description": "階段を上って1F・2F間の同じ屋外踊り場へ出る。道路との直接接続はなく、正門方面の通路と地下通路を別々に登録する。",
+      "mapLabel": "出入口"
+    },
+    {
+      "id": "entrance-courtyard",
+      "label": "中庭側出入口（EV脇）",
+      "type": "entrance",
+      "polygon": [
+        [0, 60],
+        [2, 60],
+        [2, 64],
+        [0, 64]
+      ],
+      "entrance": "stairs-ev-west",
+      "description": "EV脇の階段から7〜10号館に囲まれた中庭へ出る。中庭から他の出入口・道路へ抜ける接続は未確認。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -421,13 +451,13 @@
       },
       {
         "id": "stairs-west-exit",
-        "name": "階段",
-        "position": [1, 171],
+        "name": "階段（25号館側）",
+        "position": [0.5, 175],
         "type": "stairs"
       },
       {
         "id": "stairs-ev-west",
-        "name": "階段（EV脇）",
+        "name": "階段（EV脇・中庭側）",
         "position": [0, 61.9],
         "type": "stairs"
       },
@@ -448,6 +478,12 @@
         "name": "通路の分岐",
         "position": [-3, 144.6],
         "type": "corridor"
+      },
+      {
+        "id": "hall-south-exit",
+        "position": [0.5, 172.5],
+        "type": "corridor",
+        "name": "通路の分岐"
       }
     ],
     "edges": [
@@ -822,16 +858,6 @@
         "from": "ev-west"
       },
       {
-        "to": "hall-3",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "stairs-west-exit"
-      },
-      {
         "to": "hall-18",
         "type": "walk",
         "verification": "inferred",
@@ -870,6 +896,26 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "port-nine"
+      },
+      {
+        "to": "stairs-west-exit",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.4,
+        "cover": "indoor",
+        "from": "hall-south-exit"
+      },
+      {
+        "to": "hall-south-exit",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.525,
+        "cover": "indoor",
+        "from": "hall-5"
       }
     ]
   }

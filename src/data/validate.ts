@@ -526,7 +526,11 @@ export function validateSources(
       if (edge.distance !== undefined)
         check(Number.isFinite(edge.distance) && edge.distance > 0, `Invalid outdoor distance ${edge.from}`);
       if (!a || !b) continue;
-      check(a.layer === b.layer || ["stairs", "ramp", "elevator"].includes(edge.type), `Outdoor layer transfer needs explicit vertical connection ${edge.from}`);
+      // A tunnel mouth can change map layers without changing walking elevation.
+      const tunnelMouth = edge.type === "outdoor" && [a.layer, b.layer].includes("ground") &&
+        [a.layer, b.layer].includes("underground") && finitePoint(a.position) && finitePoint(b.position) &&
+        a.position.every((v, i) => Math.abs(v - b.position[i]) < 1e-7);
+      check(a.layer === b.layer || tunnelMouth || ["stairs", "ramp", "elevator"].includes(edge.type), `Outdoor layer transfer needs explicit vertical connection ${edge.from}`);
       if (a.layer === "ground" && b.layer === "ground" && finitePoint(a.position) && finitePoint(b.position))
         check(segmentIsWalkable(a.position, b.position, area, obstacles), `Outdoor edge crosses building ${edge.from} -> ${edge.to}`);
       for (const [from, to] of [[edge.from, edge.to], [edge.to, edge.from]]) {
@@ -541,13 +545,29 @@ export function validateSources(
       check(!linked.has(link.to), `Duplicate outdoor entrance binding ${link.to}`);
       linked.add(link.to);
       check(["inferred", "diagram", "verified"].includes(link.verification) && typeof link.isAccessible === "boolean", `Invalid outdoor entrance flags ${link.to}`);
+      check(link.type === undefined || ["outdoor", "stairs"].includes(link.type), `Invalid outdoor entrance type ${link.to}`);
+      check(link.type !== "stairs" || !link.isAccessible, `Outdoor entrance stairs marked accessible ${link.to}`);
       if (!inside || !outside) continue;
       check(inside.floor.features.some((f) => f.type === "entrance" && f.entrance === inside.node.id), `Outdoor link must use a building entrance ${link.to}`);
-      check(pointInPolygon(inside.node.position, inside.floor.outline) && !pointInInterior(inside.node.position, inside.floor.outline), `Indoor entrance must be on floor boundary ${link.to}`);
+      const stairBoarding = link.type === "stairs" && inside.node.type === "stairs" &&
+        inside.floor.features.some(f => f.type === "stairs" && f.entrance === inside.node.id);
+      check(pointInPolygon(inside.node.position, inside.floor.outline) &&
+        (stairBoarding || !pointInInterior(inside.node.position, inside.floor.outline)), `Indoor entrance must be on floor boundary ${link.to}`);
       const footprint = overview.buildings.find((b) => b.id === inside.floor.buildingId)?.polygon;
       check(footprint && pointInPolygon(outside.position, footprint) && !pointInInterior(outside.position, footprint), `Outdoor entrance must be on building overview boundary ${link.to}`);
     }
     if (outdoor.nodes.length) {
+      // An enclosed courtyard can connect to the rest of campus through registered interiors.
+      const connect = (a: string, b: string) => {
+        for (const [from, to] of [[a, b], [b, a]]) {
+          const next = adjacent.get(from) ?? new Set<string>(); next.add(to); adjacent.set(from, next);
+        }
+      };
+      for (const floor of floors) for (const edge of floor.navigation.edges)
+        connect(`${floor.buildingId}/${floor.id}/${edge.from}`, `${floor.buildingId}/${floor.id}/${edge.to}`);
+      for (const building of buildings) for (const edge of building.connections) connect(edge.from, edge.to);
+      for (const edge of manifest.connections ?? []) connect(edge.from, edge.to);
+      for (const link of outdoor.links) connect(link.from, link.to);
       const reached = new Set([outdoor.nodes[0].id]), queue = [...reached];
       for (let i = 0; i < queue.length; i++)
         for (const next of adjacent.get(queue[i]) ?? [])

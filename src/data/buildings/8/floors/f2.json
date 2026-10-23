@@ -12,13 +12,22 @@
     "個人名・内線番号・研究テーマ・原図の配色や装飾は登録しない。図形の輪郭・長さを原図からトレースしない。",
     "連絡通路と階段・EVは明示した推定接続だけを使う。表示座標を実測距離として評価せず、現地調査後に置き換える。",
     "8-20は学生ラウンジの通路側までの案内とする。スロープ・歩道状公開空地への外部接続は、キャンパス図上の対応位置が未確認のため追加しない。",
-    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。"
+    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
+    "25号館側の階段は主通路の延長に配置する。中間踊り場からの屋外接続は1F・2Fのみ。",
+    "2Fには7・8号館の直通連絡通路を設けない。マップホール側の屋根付き外階段と、25号館側中間踊り場へ下りる階段を別の出入口として案内する。",
+    "EV脇の10号館側の階段から中庭へ出られる。中庭は他の屋外通路と直接結ばず、登録した1F・2Fの階段だけで接続する。"
   ],
   "outline": [
     [0, 0],
     [36, 0],
     [36, 170],
-    [0, 170],
+    [8, 170],
+    [8, 182],
+    [0, 182],
+    [0, 92],
+    [-8, 92],
+    [-8, 84],
+    [0, 84],
     [0, 82],
     [-14, 82],
     [-14, 70],
@@ -93,6 +102,74 @@
       "entrance": "wc-male",
       "description": "設備記号に基づく参考位置。設備の連続性・位置・利用条件は現地確認待ち。",
       "restroomType": "male"
+    },
+    {
+      "id": "stairs-south",
+      "label": "階段（25号館側）",
+      "type": "stairs",
+      "polygon": [
+        [0, 170],
+        [8, 170],
+        [8, 182],
+        [0, 182]
+      ],
+      "entrance": "stairs-south",
+      "description": "8号館の通路の延長にある階段。1Fと2Fの間の屋外踊り場から25号館側へ出られる。上階への連続性・段数・高低差・利用条件は推定。"
+    },
+    {
+      "id": "entrance-south-landing",
+      "label": "25号館側 中間踊り場出入口",
+      "type": "entrance",
+      "polygon": [
+        [2, 168],
+        [6, 168],
+        [6, 170],
+        [2, 170]
+      ],
+      "entrance": "stairs-south",
+      "description": "階段を下って1F・2F間の屋外踊り場へ出る。正門方面の通路と地下通路に接続し、南側の道路へ直接つながるとは扱わない。",
+      "mapLabel": "出入口"
+    },
+    {
+      "id": "entrance-map-hall",
+      "label": "マップホール側出入口（2号館側）",
+      "type": "entrance",
+      "polygon": [
+        [34, 16],
+        [36, 16],
+        [36, 20],
+        [34, 20]
+      ],
+      "entrance": "entrance-map-hall",
+      "description": "2号館側の屋根付き外階段を経て屋外へ接続。正確な扉位置・段数・利用時間は現地確認待ち。",
+      "mapLabel": "出入口"
+    },
+    {
+      "id": "stairs-courtyard",
+      "label": "階段（EV脇・中庭側）",
+      "type": "stairs",
+      "polygon": [
+        [-8, 84],
+        [0, 84],
+        [0, 92],
+        [-8, 92]
+      ],
+      "entrance": "stairs-courtyard",
+      "description": "EVの横から10号館側の中庭へ出る階段。1Fと同じ中庭へ参考接続する。正確な段数・高低差・利用条件は現地確認待ち。"
+    },
+    {
+      "id": "entrance-courtyard",
+      "label": "中庭側出入口（EV脇）",
+      "type": "entrance",
+      "polygon": [
+        [0, 85],
+        [2, 85],
+        [2, 89],
+        [0, 89]
+      ],
+      "entrance": "stairs-courtyard",
+      "description": "EV脇の階段から7〜10号館に囲まれた中庭へ出る。中庭から他の出入口・道路へ抜ける接続は未確認。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -112,8 +189,9 @@
         [8, 36]
       ],
       "entrance": "room-20",
-      "description": "通路側の代表点までの暫定案内。正確な扉位置・進入関係・利用条件は現地確認待ち。 2023年作成の参考資料に記された用途を一般化して付記。現況・現用途は現地確認待ち。",
-      "mapLabel": "8-20"
+      "description": "通路側の代表点までの暫定案内。正確な扉位置・進入関係・利用条件は現地確認待ち。 2023年作成の参考資料に記された用途を一般化して付記。現況・現用途は現地確認待ち。 マップホールは外階段へ通じる公開の飲食・通行区画として代表経路を明示する。",
+      "mapLabel": "8-20",
+      "passThrough": true
     },
     {
       "id": "8-21",
@@ -175,12 +253,6 @@
   ],
   "navigation": {
     "nodes": [
-      {
-        "id": "hall-0",
-        "name": "通路の分岐",
-        "position": [0.0, 27.0],
-        "type": "corridor"
-      },
       {
         "id": "hall-1",
         "name": "通路の分岐",
@@ -332,12 +404,6 @@
         "type": "corridor"
       },
       {
-        "id": "port-seven",
-        "name": "通路の分岐",
-        "position": [0, 27],
-        "type": "corridor"
-      },
-      {
         "id": "port-nine",
         "name": "通路の分岐",
         "position": [0, 156],
@@ -396,6 +462,30 @@
         "name": "男性用トイレ",
         "position": [30, 48],
         "type": "facility_entrance"
+      },
+      {
+        "id": "stairs-south",
+        "position": [4, 170],
+        "type": "stairs",
+        "name": "階段（25号館側）"
+      },
+      {
+        "id": "entrance-map-hall",
+        "position": [36, 18],
+        "type": "corridor",
+        "name": "マップホール側出入口"
+      },
+      {
+        "id": "stairs-courtyard",
+        "position": [0, 87],
+        "type": "stairs",
+        "name": "階段（EV脇・中庭側）"
+      },
+      {
+        "id": "hall-courtyard",
+        "position": [4, 87],
+        "type": "corridor",
+        "name": "通路の分岐"
       }
     ],
     "edges": [
@@ -460,14 +550,24 @@
         "from": "hall-8"
       },
       {
+        "to": "hall-courtyard",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.35,
+        "cover": "indoor",
+        "from": "hall-9"
+      },
+      {
         "to": "hall-10",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "routingCost": 5.25,
+        "routingCost": 3.9,
         "cover": "indoor",
-        "from": "hall-9"
+        "from": "hall-courtyard"
       },
       {
         "to": "hall-11",
@@ -498,16 +598,6 @@
         "routingCost": 1.5,
         "cover": "indoor",
         "from": "hall-12"
-      },
-      {
-        "to": "hall-5",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.6,
-        "cover": "indoor",
-        "from": "hall-0"
       },
       {
         "to": "hall-12",
@@ -650,16 +740,6 @@
         "from": "hall-22"
       },
       {
-        "to": "hall-0",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "port-seven"
-      },
-      {
         "to": "hall-2",
         "type": "walk",
         "verification": "inferred",
@@ -758,6 +838,36 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "wc-male"
+      },
+      {
+        "to": "stairs-south",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor",
+        "from": "hall-13"
+      },
+      {
+        "to": "entrance-map-hall",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 4.2,
+        "cover": "indoor",
+        "from": "room-20"
+      },
+      {
+        "to": "stairs-courtyard",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor",
+        "from": "hall-courtyard"
       }
     ]
   }

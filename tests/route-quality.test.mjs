@@ -19,7 +19,7 @@ test('all registered room pairs obey filters and minimize schematic floor change
         pairs++;
         assert.equal(!!route,expected!==undefined,`${mode}: ${a.id} -> ${b.id} reachability`);
         if(!route)continue;
-        assert.equal(route.floorChanges,expected,`${mode}: ${a.id} -> ${b.id} unnecessary floor changes`);
+        assert.equal(route.floorChanges+route.verticalMovements.unmeasured,expected,`${mode}: ${a.id} -> ${b.id} unnecessary vertical travel`);
         assert.equal(route.pathNodes[0].id,a.nodeId);assert.equal(route.pathNodes.at(-1).id,b.nodeId);
         if(mode==='accessible')assert.ok(route.steps.every(s=>s.edgeType!=='stairs'));
       }

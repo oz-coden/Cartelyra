@@ -343,7 +343,7 @@ export class FloorMap {
       const label =
         place.kind === "room"
           ? room?.mapLabel ?? place.roomId!
-          : place.kind === "restroom"
+          : floor.features?.find(f => f.id === place.featureId)?.mapLabel ?? (place.kind === "restroom"
             ? place.restroomType
               ? {
                   male: "WC 男",
@@ -352,7 +352,7 @@ export class FloorMap {
                   "all-gender": "WC 共用",
                 }[place.restroomType]
               : "WC"
-            : place.name.split("（")[0];
+            : place.name.split("（")[0]);
       group.append(
         element(
           "text",
@@ -489,7 +489,7 @@ export class FloorMap {
       ? "空中写真を参考にした概略図・北が上"
       : "建物配置の模式図";
     document.getElementById("map-legend")!.textContent =
-      "水色：フロア登録済み　灰：フロア未登録　薄線：周辺道路　破線：地上参考経路　青線：連絡橋　橙線：階段・スロープ　紫：選択中の経路";
+      "水色：フロア登録済み　灰：フロア未登録　薄線：周辺道路　破線：地上参考経路　青線：連絡橋　紫点線：地下通路　橙線：階段・スロープ　紫：選択中の経路";
     const caption = document.getElementById("map-caption")!;
     caption.textContent = this.overview.notes?.join(" ") ??
       "建物を選ぶと館内図を表示。屋外の経路・実寸・方位は未校正です。";
@@ -522,7 +522,7 @@ export class FloorMap {
       if (!a?.buildingId && !b?.buildingId && a?.overviewPosition && b?.overviewPosition && !edge.blocked)
       this.svg.append(element("polyline", {
           points: points([a.overviewPosition, b.overviewPosition]),
-          class: `map-outdoor-path${["stairs", "ramp", "elevator"].includes(edge.type) ? " map-outdoor-transition" : a.outdoorLayer === "bridge" && b.outdoorLayer === "bridge" ? " map-outdoor-bridge" : ""}`,
+          class: `map-outdoor-path${["stairs", "ramp", "elevator"].includes(edge.type) ? " map-outdoor-transition" : a.outdoorLayer === "bridge" && b.outdoorLayer === "bridge" ? " map-outdoor-bridge" : a.outdoorLayer === "underground" && b.outdoorLayer === "underground" ? " map-outdoor-underground" : ""}`,
           "data-from": a.id, "data-to": b.id, "data-edge-type": edge.type,
           "data-from-layer": a.outdoorLayer ?? "ground", "data-to-layer": b.outdoorLayer ?? "ground",
         }));

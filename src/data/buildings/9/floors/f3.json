@@ -9,17 +9,16 @@
   "notes": [
     "掲示図から室番号と隣接関係を読み取った独自の模式図。寸法・階高・実方位は未校正。形状・室番号は2024年の掲示写真を優先する。",
     "通路側の代表点までの参考案内。扉位置・段差・利用条件と階段・EVの連続性は現地未確認。",
-    "各階の連絡通路は棟群内の明示した接続だけを使用。屋外の出入口との対応は未登録。",
-    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。"
+    "各階の連絡通路は棟群内の明示した接続だけを使用。屋外へは7号館2F・8号館1F/2Fの明示した階段を経由する。",
+    "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
+    "8号館側の階段は8号館通路の延長に配置し、9号館南側の張り出しとして重複表示しない。設備の階間対応は推定。"
   ],
   "outline": [
     [0, -10],
-    [26, -10],
-    [26, 0],
+    [30, -10],
+    [30, 0],
     [105, 0],
-    [105, 44],
-    [97, 44],
-    [97, 30],
+    [105, 30],
     [0, 30]
   ],
   "voids": [],
@@ -64,19 +63,6 @@
       "description": "設備記号に基づく代表点。接続・利用条件は現地未確認。",
       "restroomType": "male",
       "entrance": "wc-male"
-    },
-    {
-      "id": "stairs-southeast",
-      "label": "階段（8号館側）",
-      "type": "stairs",
-      "polygon": [
-        [97, 32],
-        [105, 32],
-        [105, 44],
-        [97, 44]
-      ],
-      "description": "設備記号に基づく代表点。接続・利用条件は現地未確認。",
-      "entrance": "stairs-southeast"
     }
   ],
   "rooms": [
@@ -624,12 +610,6 @@
         "type": "corridor"
       },
       {
-        "id": "hall-40",
-        "name": "通路の分岐",
-        "position": [101.0, 32.0],
-        "type": "corridor"
-      },
-      {
         "id": "hall-41",
         "name": "通路の分岐",
         "position": [105.0, 16.0],
@@ -760,12 +740,6 @@
         "name": "9-31 研究室",
         "position": [92.15, 20],
         "type": "room_entrance"
-      },
-      {
-        "id": "stairs-southeast",
-        "name": "階段（8号館側）",
-        "position": [101, 32],
-        "type": "stairs"
       }
     ],
     "edges": [
@@ -978,16 +952,6 @@
         "routingCost": 1.3275,
         "cover": "indoor",
         "from": "hall-37"
-      },
-      {
-        "to": "hall-40",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 2.4,
-        "cover": "indoor",
-        "from": "hall-39"
       },
       {
         "to": "hall-41",
@@ -1378,16 +1342,6 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "room-31"
-      },
-      {
-        "to": "hall-40",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 0.0,
-        "cover": "indoor",
-        "from": "stairs-southeast"
       },
       {
         "to": "port-ten",

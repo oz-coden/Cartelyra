@@ -122,6 +122,46 @@
       "cover": "indoor",
       "from": "b8/f2/ev-west",
       "floorChanges": 1
+    },
+    {
+      "to": "b8/f4/stairs-south",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f3/stairs-south"
+    },
+    {
+      "to": "b8/f5/stairs-south",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f4/stairs-south"
+    },
+    {
+      "to": "b8/f6/stairs-south",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f5/stairs-south"
+    },
+    {
+      "to": "b8/f3/stairs-south",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f2/stairs-south"
     }
   ]
 }

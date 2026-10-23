@@ -100,11 +100,14 @@ export interface CampusSource {
     links: Array<{
       from: string; // Outdoor-local ID on the building's overview boundary.
       to: string; // Qualified indoor entrance node ID.
+      type?: "outdoor" | "stairs"; // Stairs may board at an interior stair reference point, including intermediate landings.
       verification: Verification;
       isAccessible: boolean;
       routingCost?: number;
       cover?: WeatherCover;
       floorChanges?: number;
+      instruction?: string;
+      reverseInstruction?: string;
     }>;
   };
 }

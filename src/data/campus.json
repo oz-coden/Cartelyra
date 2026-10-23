@@ -28,7 +28,10 @@
       "routingCostは実距離を表さない暫定評価値。室内は初期登録時の床面積と建物配置の面積比、屋外は初期登録時の図上の長さを参考に固定し、描画座標の変更では再計算しない。屋根の有無は現地確認後に更新する。",
       "連絡橋は6号館側から西門付近を経て12号館・17号館間へ続き、階段で23号館側の地上通路へ接続する。6号館側は階段と別経路のスロープを登録。地上通路と橋は別層とし、図上の交差だけでは接続しない。12号館・17号館間のスロープは未確認のため登録しない。高さ・段数・勾配・幅員・屋根・通行条件は現地照合待ち。",
       "19号館1Fの購買部側出入口は南側の17号館・12号館間に面する外周代表点から地上通路へ参考接続。正確な扉位置・段差・開放時間・通行条件は現地確認待ち。左側通路の外部出入口と1FのEV乗降は未登録のまま保持する。",
-      "19号館の購買部側出入口付近の地上通路から、17号館・12号館間の連絡橋へ上がる階段を参考接続。23号館側の階段とは別の昇降地点として保持し、階段回避では使用しない。代表位置・段数・高低差・開放時間・利用条件は現地確認待ち。"
+      "19号館の購買部側出入口付近の地上通路から、17号館・12号館間の連絡橋へ上がる階段を参考接続。23号館側の階段とは別の昇降地点として保持し、階段回避では使用しない。代表位置・段数・高低差・開放時間・利用条件は現地確認待ち。",
+      "7号館2Fは8号館との直通連絡を設けず外階段で屋外へ接続。8号館2Fはマップホール側の屋根付き外階段で2号館側へ接続する。8号館南側の同じ中間踊り場へ1Fから上り、2Fから下りる。踊り場は架空の登録階ではなく屋外ノードで表し、昇降量は未測定のまま保持する。",
+      "8号館南側から1・31号館間を通って正門へ参考接続。南側の道路へ直接接続しない。11号館側の地下通路は別層の終端として保持し、11・31号館の館内や道路上との接続は補完しない。",
+      "8号館1F・2FのEV脇から10号館側の中庭へ階段で接続。中庭は建物内の登録経路を介して到達し、外周道路や他棟の扉へ直接つながるとは扱わない。補足図 b7-b10-outdoor-reference と2023年参考PDFを位置の参考とし、寸法・昇降量・利用条件は未確認。"
     ],
     "nodes": [
       {
@@ -553,6 +556,142 @@
         "position": [
           40.5,
           19.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-2f-door",
+        "name": "7号館2F 外階段出入口前",
+        "position": [
+          69.5,
+          25.8125
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-2f-stair-foot",
+        "name": "7号館・8号館間 外階段前",
+        "position": [
+          70.2,
+          24.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-b8-approach",
+        "name": "7号館外階段と3号館側の通路",
+        "position": [
+          71,
+          23.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b8-map-hall-door",
+        "name": "8号館2F マップホール側出入口前",
+        "position": [
+          73.85625,
+          30.14375
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b8-south-landing",
+        "name": "8号館 1F・2F間の屋外踊り場（25号館側）",
+        "position": [
+          67.8125,
+          46.8125
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b8-south-path",
+        "name": "8号館南側 正門方面・地下通路の分岐",
+        "position": [
+          67.5,
+          49.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-south-west-path",
+        "name": "1号館南西側の通路",
+        "position": [
+          74.5,
+          49.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b31-west",
+        "name": "1号館・31号館間 西側の曲がり角",
+        "position": [
+          76.5,
+          49.4
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b1-b31-path",
+        "name": "1号館・31号館間の通路",
+        "position": [
+          86,
+          51.6
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "main-gate-north",
+        "name": "正門北側の通路",
+        "position": [
+          89,
+          52.75
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "main-gate",
+        "name": "正門",
+        "position": [
+          91.75,
+          59.625
+        ],
+        "layer": "ground",
+        "gateId": "main"
+      },
+      {
+        "id": "b8-tunnel-mouth",
+        "name": "8号館南側 地下通路口",
+        "position": [
+          67.5,
+          49.5
+        ],
+        "layer": "underground"
+      },
+      {
+        "id": "b8-tunnel-b11-side",
+        "name": "11号館側の地下通路（先の接続は確認待ち）",
+        "position": [
+          67.5,
+          56
+        ],
+        "layer": "underground"
+      },
+      {
+        "id": "b8-courtyard-door",
+        "name": "8号館 EV脇の中庭側出入口前",
+        "position": [
+          68.94375,
+          35.30625
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-b10-courtyard",
+        "name": "7〜10号館に囲まれた中庭",
+        "position": [
+          65,
+          34.5
         ],
         "layer": "ground"
       }
@@ -1244,6 +1383,166 @@
         "instruction": "19号館側の階段を上り、17号館・12号館間の連絡橋へ進む",
         "reverseInstruction": "17号館・12号館間の連絡橋から19号館側の階段を下り、購買部側出入口付近の地上通路へ進む",
         "from": "b19-bridge-stair-foot"
+      },
+      {
+        "to": "b7-b8-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "unknown",
+        "from": "b3-front",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b7-2f-stair-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "from": "b7-b8-approach",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b7-2f-door",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "from": "b7-2f-stair-foot",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b8-map-hall-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 3,
+        "cover": "covered",
+        "from": "b3-b2-west",
+        "instruction": "2号館側の屋根付き外階段を上ってマップホール側出入口へ進む",
+        "reverseInstruction": "マップホール側の屋根付き外階段を下りて2号館側の屋外通路へ進む",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b8-south-path",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b8-south-landing",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b1-south-west-path",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "unknown",
+        "from": "b8-south-path",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b1-b31-west",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b1-south-west-path",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b1-b31-path",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 8,
+        "cover": "unknown",
+        "from": "b1-b31-west",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "main-gate-north",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "unknown",
+        "from": "b1-b31-path",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "main-gate",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "unknown",
+        "from": "main-gate-north",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b1-lobby-approach",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 5,
+        "cover": "unknown",
+        "from": "main-gate-north",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b8-tunnel-mouth",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "unknown",
+        "from": "b8-south-path",
+        "instruction": "11号館側の地下通路へ進む",
+        "reverseInstruction": "地下通路口から8号館南側の通路へ戻る",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b8-tunnel-b11-side",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 6,
+        "cover": "covered",
+        "from": "b8-tunnel-mouth",
+        "instruction": "道路の下の地下通路を11号館側へ進む（先の接続は未登録）",
+        "reverseInstruction": "地下通路を8号館側へ戻る",
+        "widthClass": "unknown"
+      },
+      {
+        "to": "b7-b10-courtyard",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "unknown",
+        "from": "b8-courtyard-door",
+        "widthClass": "unknown"
       }
     ],
     "links": [
@@ -1334,6 +1633,69 @@
         "routingCost": 1,
         "cover": "unknown",
         "from": "b19-shop-door"
+      },
+      {
+        "from": "b7-2f-door",
+        "to": "b7/f2/stairs-outside",
+        "type": "stairs",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 2,
+        "cover": "unknown",
+        "instruction": "外階段を上って7号館2Fの出入口から建物に入る",
+        "reverseInstruction": "7号館2Fから外階段を下りて屋外へ出る"
+      },
+      {
+        "from": "b8-map-hall-door",
+        "to": "b8/f2/entrance-map-hall",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 1,
+        "cover": "covered"
+      },
+      {
+        "from": "b8-south-landing",
+        "to": "b8/f1/stairs-west-exit",
+        "type": "stairs",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "階段を下りて8号館1Fへ入る",
+        "reverseInstruction": "8号館1Fから階段を上って中間の踊り場から屋外へ出る"
+      },
+      {
+        "from": "b8-south-landing",
+        "to": "b8/f2/stairs-south",
+        "type": "stairs",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "階段を上って8号館2Fへ入る",
+        "reverseInstruction": "8号館2Fから階段を下りて中間の踊り場から屋外へ出る"
+      },
+      {
+        "from": "b8-courtyard-door",
+        "to": "b8/f1/stairs-ev-west",
+        "type": "stairs",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "EV脇の階段から8号館1Fへ入る",
+        "reverseInstruction": "8号館1FのEV脇の階段を経て中庭へ出る"
+      },
+      {
+        "from": "b8-courtyard-door",
+        "to": "b8/f2/stairs-courtyard",
+        "type": "stairs",
+        "verification": "inferred",
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "EV脇の階段から8号館2Fへ入る",
+        "reverseInstruction": "8号館2FのEV脇の階段を経て中庭へ出る"
       }
     ],
     "positionSourceId": "gsi-campus-aerial"
@@ -1354,8 +1716,8 @@
         "7〜10号館を連絡棟として一体表示。2024年の掲示写真を配置・区画・室番号の優先資料とし、2023年作成の参考PDFから2Fと一般的用途を補足する。",
         "1〜4Fは4棟、5・6Fは7〜9号館を表示する。10号館の5・6Fは未登録。",
         "寸法・階高・実方位は未校正。測量前の独自の仮配置であり、原図の輪郭・縮尺・配色は再現しない。",
-        "7・10号館の2〜4F境界は高低差未確認の段差接続。階段回避は8・9号館側の連絡通路を使う。",
-        "8号館は1〜6FのEVと1〜3Fの共用階段を仮接続する。他棟の1F階段との対応と、屋外経路との対応は現地確認待ち。",
+        "7・10号館の2〜4F境界は高低差未確認の段差接続。7・8号館直通は3F以上のみ。2Fの7号館から他棟へは階段が必要で、3F以上の階段回避は8・9号館側の連絡通路を使う。",
+        "8号館は1〜6FのEVと1〜3Fの共用階段を仮接続する。7号館2Fの外階段、8号館のマップホール側・中間踊り場・中庭側から屋外へ参考接続する。各設備の段数・正確な位置・利用条件は現地確認待ち。",
         "用途名は旧資料の履歴情報。個人名・内線番号・研究テーマは収録せず、現在の用途・利用条件は要確認。"
       ],
       "levels": [
@@ -1727,18 +2089,6 @@
       "cover": "covered",
       "floorChanges": 0,
       "from": "b9/f1/port-eight-west",
-      "passageWidth": 6
-    },
-    {
-      "to": "b8/f2/port-seven",
-      "type": "bridge",
-      "verification": "inferred",
-      "isIndoor": false,
-      "isAccessible": true,
-      "routingCost": 2,
-      "cover": "covered",
-      "from": "b7/f2/port-eight",
-      "floorChanges": 0,
       "passageWidth": 6
     },
     {

@@ -124,8 +124,7 @@ test('all cross-building room pairs expose only the declared pending approaches 
   const {auditCampusCoverage,minimumFloorChanges}=await import('../.checks/data/audit.js');
   const {AStarPathfinder}=await import('../.checks/pathfinding/AStar.js');
   const s=await readData(),data=compileCampus(s.manifest,s.buildings,s.floors),rooms=placeIndex(data).filter(p=>p.kind==='room');
-  const network=p=>p.buildingId==='b6'?'b6':p.buildingId==='b17'&&p.floorLevel>1?'b17-upper':
-    ['b7','b8','b9','b10'].includes(p.buildingId)?'b7-b10':'outdoor';
+  const network=p=>p.buildingId==='b6'?'b6':p.buildingId==='b17'&&p.floorLevel>1?'b17-upper':'outdoor';
   const report=auditCampusCoverage(data);
   assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,941296);
   for(const group of report.groups){
