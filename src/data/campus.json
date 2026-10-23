@@ -662,6 +662,33 @@
           27.7
         ],
         "layer": "ground"
+      },
+      {
+        "id": "b7-five-junction",
+        "name": "7号館5号館側の分岐",
+        "position": [
+          60.561956521739134,
+          20.717048
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-five-stair-foot",
+        "name": "7号館5号館側 外階段下",
+        "position": [
+          60.561956521739134,
+          21.270481
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b7-five-2f-door",
+        "name": "7号館2F 5号館側出入口前",
+        "position": [
+          60.561956521739134,
+          21.82391304347826
+        ],
+        "layer": "ground"
       }
     ],
     "edges": [
@@ -1466,17 +1493,6 @@
         "cover": "unknown"
       },
       {
-        "to": "b7-north-east",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "from": "b7-b8-approach",
-        "routingCost": 18.54226,
-        "cover": "unknown"
-      },
-      {
         "to": "west-gate",
         "type": "outdoor",
         "verification": "inferred",
@@ -1508,6 +1524,52 @@
         "from": "b5-path-junction",
         "routingCost": 2.713049,
         "cover": "unknown"
+      },
+      {
+        "to": "b7-five-junction",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-b8-approach",
+        "routingCost": 12.902994,
+        "cover": "unknown"
+      },
+      {
+        "to": "b7-north-east",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-five-junction",
+        "routingCost": 5.639266,
+        "cover": "unknown"
+      },
+      {
+        "to": "b7-five-stair-foot",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "from": "b7-five-junction",
+        "routingCost": 0.5,
+        "cover": "unknown"
+      },
+      {
+        "to": "b7-five-2f-door",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 2,
+        "cover": "unknown",
+        "from": "b7-five-stair-foot",
+        "widthClass": "unknown",
+        "instruction": "外階段を上って7号館2Fへ",
+        "reverseInstruction": "外階段を下りて5号館側の通路へ"
       }
     ],
     "links": [
@@ -1669,6 +1731,17 @@
         "cover": "unknown",
         "instruction": "出入口から8号館2Fの階段側へ入る",
         "reverseInstruction": "中庭側出入口から中庭へ出る"
+      },
+      {
+        "from": "b7-five-2f-door",
+        "to": "b7/f2/entrance-five",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isAccessible": true,
+        "routingCost": 1,
+        "cover": "unknown",
+        "instruction": "5号館側出入口から7号館2Fへ入る",
+        "reverseInstruction": "7号館2Fの5号館側出入口から屋外へ出る"
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

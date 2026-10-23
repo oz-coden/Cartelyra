@@ -56,7 +56,7 @@ test('every group place connects to the Building 8 elevator reference point whil
   }
   assert.ok(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate'));
   assert.equal(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate','accessible'),null);
-  assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,6);
+  assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,7);
   assert.ok(!auditConnections(data).some(f=>f.code==='view-group-disconnected'&&f.buildingId==='b7'));
 });
 

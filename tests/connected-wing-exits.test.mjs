@@ -8,7 +8,8 @@ import {validateSources} from '../.checks/data/validate.js';
 import {AStarPathfinder} from '../.checks/pathfinding/AStar.js';
 import {FloorMap} from '../.checks/ui/FloorMap.js';
 import {LocationState} from '../.checks/ui/LocationState.js';
-import {buildingCatalog} from '../.checks/data/places.js';
+import {buildingCatalog,placeIndex,searchPlaces} from '../.checks/data/places.js';
+import {auditGeometry} from '../.checks/data/audit.js';
 const source=await readData(),compile=s=>compileCampus(s.manifest,s.buildings,s.floors),data=compile(source);
 const finder=new AStarPathfinder(data),out=id=>`campus/outdoor/${id}`;
 const validate=s=>validateSources(s.manifest,s.buildings,s.floors,s.sources,s.overview);
@@ -194,8 +195,48 @@ test('7-21 and 8-20 use the courtyard shortcut in standard mode, with indoor and
     closed.navigation.edges.find(e=>e.from===out('b7-b10-courtyard')&&e.to===out('b8-courtyard-north')).blocked=true;
     const alternative=new AStarPathfinder(closed).findPath(a,b);assert.ok(alternative);
     assert.ok(!alternative.pathNodes.some(n=>n.id===out('b8-courtyard-north')));
-    closed.navigation.edges.find(e=>e.to==='b7/f2/entrance-outside').blocked=true;
+    for(const edge of closed.navigation.edges.filter(e=>e.from.startsWith('campus/outdoor/')&&e.to.startsWith('b7/f2/entrance-'))) edge.blocked=true;
     const inside=new AStarPathfinder(closed).findPath(a,b);assert.ok(inside.pathNodes.every(n=>n.buildingId));
     assert.equal(finder.findPath(a,b,'accessible'),null);
   }
+});
+
+
+test('Building 7 2F has a Building 5-facing door between room 7-21 and the male WC with a split corridor junction',async()=>{
+  const floor=source.floors.find(f=>f.buildingId==='b7'&&f.id==='f2');
+  const feature=floor.features.find(f=>f.id==='entrance-five'),entry=floor.navigation.nodes.find(n=>n.id===feature.entrance);
+  const room=floor.rooms.find(r=>r.id==='7-21'),wc=floor.features.find(f=>f.id==='wc-male');
+  assert.ok(entry.position[0]>Math.max(...wc.polygon.map(p=>p[0]))&&entry.position[0]<Math.min(...room.polygon.map(p=>p[0])));
+  assert.equal(entry.position[1],0);
+  assert.deepEqual(auditGeometry([floor]),[]);
+  assert.equal(searchPlaces(placeIndex(data),'7号館 5号館側出入口')[0].nodeId,'b7/f2/entrance-five');
+  const inside=finder.findPath('b7/f2/room-21','b7/f2/entrance-five','accessible');assert.ok(inside);
+  assert.ok(inside.pathNodes.every(n=>n.buildingId==='b7'&&n.floor===2));
+  assert.equal(inside.verticalMovements.stairs,0);
+  const {document,window}=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));globalThis.document=document;globalThis.window=window;
+  const state=new LocationState(buildingCatalog(data,source.overview),data.viewGroups);state.selectBuilding('b7');state.selectGroupLevel('f2');
+  const map=new FloorMap(document.getElementById('map-canvas'),data,source.overview);map.setLocation(state.building,state.floor,state.scope);
+  assert.ok(document.querySelector('[data-place="b7/f2/feature/entrance-five"]'));
+});
+
+test('the Building 5-facing 2F door has one external stair and leaves the through path independent of its branch',()=>{
+  const link=source.manifest.outdoor.links.find(e=>e.to==='b7/f2/entrance-five');
+  assert.equal(link.type,'outdoor');assert.equal(link.isAccessible,true);
+  const stair=source.manifest.outdoor.edges.find(e=>e.from==='b7-five-stair-foot'&&e.to==='b7-five-2f-door');
+  assert.equal(stair.type,'stairs');assert.equal(stair.isAccessible,false);assert.equal(stair.verification,'inferred');
+  for(const [a,b,words] of [[out('b7-five-stair-foot'),'b7/f2/entrance-five',/上って/],['b7/f2/entrance-five',out('b7-five-stair-foot'),/下りて/]]){
+    const r=finder.findPath(a,b);assert.ok(r);
+    assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
+    assert.equal(r.floorChanges,0);assert.match(r.steps.find(s=>s.edgeType==='stairs').instruction,words);
+    assert.equal(finder.findPath(a,b,'accessible'),null);assert.equal(finder.findPath(a,b,'shortest',false),null);
+  }
+  for(const [a,b] of [[out('west-gate'),'b7/f2/room-21'],['b7/f2/room-21',out('west-gate')]]){
+    const r=finder.findPath(a,b);assert.ok(r.pathNodes.some(n=>n.id==='b7/f2/entrance-five'));assert.equal(r.verticalMovements.stairs,1);
+  }
+  const through=finder.findPath(out('b3-front'),out('west-gate'));
+  assert.ok(!through.pathNodes.some(n=>[out('b7-five-stair-foot'),out('b7-five-2f-door')].includes(n.id)));
+  const closed=structuredClone(data);closed.navigation.edges.find(e=>e.from===out('b7-five-stair-foot')&&e.to===out('b7-five-2f-door')).blocked=true;
+  const pf=new AStarPathfinder(closed),alternative=pf.findPath('b7/f2/room-21',out('west-gate'));assert.ok(alternative);
+  assert.ok(!alternative.pathNodes.some(n=>n.id==='b7/f2/entrance-five'));
+  assert.deepEqual(pf.findPath(out('b3-front'),out('west-gate')).pathNodes,through.pathNodes);
 });

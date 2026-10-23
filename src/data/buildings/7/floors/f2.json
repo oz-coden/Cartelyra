@@ -90,6 +90,20 @@
       "entrance": "entrance-outside",
       "description": "屋外に階段あり。",
       "mapLabel": "出入口"
+    },
+    {
+      "id": "entrance-five",
+      "label": "5号館側出入口",
+      "type": "entrance",
+      "polygon": [
+        [42, 0],
+        [44, 0],
+        [44, 2],
+        [42, 2]
+      ],
+      "entrance": "entrance-five",
+      "description": "屋外に階段あり。",
+      "mapLabel": "出入口"
     }
   ],
   "rooms": [
@@ -281,6 +295,18 @@
         "position": [115, 27],
         "type": "corridor",
         "name": "8号館側出入口"
+      },
+      {
+        "id": "hall-entrance-five",
+        "name": "通路の分岐",
+        "position": [43, 3],
+        "type": "corridor"
+      },
+      {
+        "id": "entrance-five",
+        "name": "5号館側出入口",
+        "position": [43, 0],
+        "type": "facility_entrance"
       }
     ],
     "edges": [
@@ -293,16 +319,6 @@
         "routingCost": 5.1,
         "cover": "indoor",
         "from": "hall-0"
-      },
-      {
-        "to": "hall-10",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "routingCost": 4.65,
-        "cover": "indoor",
-        "from": "hall-5"
       },
       {
         "to": "hall-13",
@@ -533,6 +549,36 @@
         "routingCost": 0.75,
         "cover": "indoor",
         "from": "hall-15"
+      },
+      {
+        "to": "hall-entrance-five",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor",
+        "from": "hall-5"
+      },
+      {
+        "to": "hall-10",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 4.2,
+        "cover": "indoor",
+        "from": "hall-entrance-five"
+      },
+      {
+        "to": "entrance-five",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor",
+        "from": "hall-entrance-five"
       }
     ]
   }

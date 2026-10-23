@@ -22,12 +22,17 @@ function assertStraight(points) {
 }
 
 test('the Building 3 to West Gate axis stays straight and never uses the Building 5 stair approach as a through path',()=>{
-  for (const [a,b] of [['b3-front','west-gate'],['west-gate','avenue-east']]) for (const mode of ['shortest','accessible','indoor','stairs']) for (const [from,to] of [[a,b],[b,a]]) {
+  for (const [a,b] of [['b3-front','west-gate'],['west-gate','avenue-east']]) for (const mode of ['shortest','accessible','stairs']) for (const [from,to] of [[a,b],[b,a]]) {
     const route=finder.findPath(out(from),out(to),mode);assert.ok(route);
     assert.ok(route.pathNodes.every(n=>!n.buildingId&&n.outdoorLayer==='ground'));
     assert.ok(!route.pathNodes.some(n=>[out('b5-stair-foot'),out('b5-2f-door')].includes(n.id)));
     assert.equal(route.verticalMovements.stairs,0);
     assertStraight(route.pathNodes.map(n=>n.overviewPosition));
+  }
+  // Indoor preference may enter a building through one door and leave through another.
+  for (const [a,b] of [['b3-front','west-gate'],['west-gate','b3-front']]) {
+    const route=finder.findPath(out(a),out(b),'indoor');assert.ok(route);
+    assert.ok(!route.pathNodes.some(n=>[out('b5-stair-foot'),out('b5-2f-door')].includes(n.id)));
   }
   for (const [to,cost] of [['west-gate',27.060321],['b5-stair-foot',5.966895],['b7-b8-approach',6]])
     assert.ok(Math.abs(finder.findPath(out('b3-front'),out(to)).routingCost-cost)<1e-6,'rearranging reference geometry preserves existing approach costs');
