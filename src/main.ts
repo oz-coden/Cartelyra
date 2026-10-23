@@ -352,6 +352,8 @@ export class UniviewApp {
           inferred,
         );
     if (this.result) {
+      window.clearTimeout(this.toastTimer);
+      document.getElementById("toast")!.classList.add("hidden");
       this.result.endpointNotes = endpoints
         .filter((p): p is Place => !!p)
         .map(placeRouteNotice)
@@ -376,7 +378,11 @@ export class UniviewApp {
       this.toast(
         unavailable.length
           ? `${unavailable.map((p) => `${p.name}の${p.scope === "campus" ? "屋外経路" : "入口・接続"}は未登録です`).join("。")}。出発地・目的地は保存しました。`
-          : inferred
+          : filter === "accessible" && this.pathfinder.findPath(
+              endpoints[0]?.nodeId ?? a, endpoints[1]?.nodeId ?? b, "shortest", inferred,
+            )
+            ? "階段を避けて接続する経路がありません。標準モードで経路を確認できます。"
+            : inferred
             ? "この条件で接続する経路は未登録です。"
             : "現地確認済みの接続だけでは経路がつながりません。参考ルートを有効にすると推定経路を確認できます。",
         6500,

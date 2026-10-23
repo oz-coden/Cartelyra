@@ -15,14 +15,16 @@ const id=s=>`campus/outdoor/${s}`;
 const route=(a,b,mode='shortest',d=data)=>new AStarPathfinder(d).findPath(id(a),b.startsWith('b23/')?b:id(b),mode);
 const disable=(d,a,b)=>{const e=d.navigation.edges.find(e=>e.from===id(a)&&e.to===id(b));assert.ok(e);e.blocked=true;};
 
-test('Building 23 has two ground approaches with stair-free gate routes and no inferred shortcuts through buildings',()=>{
+test('Building 23 has two ground approaches with stair-free gate alternatives and no inferred shortcuts through buildings',()=>{
   assert.deepEqual(validateSources(source.manifest,source.buildings,source.floors,source.sources,source.overview),[]);
   for(const entrance of ['entrance-left','entrance-right'])for(const gate of ['east-gate','new-east-gate','west-gate'])for(const mode of ['shortest','accessible','indoor','stairs']){
     const a=id(gate),b=`b23/f1/${entrance}`,finder=new AStarPathfinder(data);
     for(const [from,to]of[[a,b],[b,a]]){
       const r=finder.findPath(from,to,mode);assert.ok(r,`${from} -> ${to} ${mode}`);
-      assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
-      assert.ok(r.pathNodes.filter(n=>!n.buildingId).every(n=>n.outdoorLayer==='ground'));
+      if(mode==='accessible'){
+        assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+        assert.ok(r.pathNodes.filter(n=>!n.buildingId).every(n=>n.outdoorLayer==='ground'));
+      }
       assert.equal(finder.findPath(from,to,mode,false),null);
     }
   }

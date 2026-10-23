@@ -59,9 +59,10 @@ export class RoutePolicy {
     return cost;
   }
   comparator(start: NavNode, goal: NavNode) {
+    // Protect indoor guidance from floor detours; campus journeys may benefit from bridge stairs.
     const within = !!this.domain(start) && this.domain(start) === this.domain(goal);
     return (a: SearchCost, b: SearchCost) =>
-      this.schematic && a.vertical !== b.vertical ? a.vertical - b.vertical :
+      this.schematic && within && a.vertical !== b.vertical ? a.vertical - b.vertical :
       this.schematic && within && a.boundaries !== b.boundaries ? a.boundaries - b.boundaries : a.cost - b.cost;
   }
 }

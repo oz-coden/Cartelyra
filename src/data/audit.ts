@@ -1,4 +1,4 @@
-import type { CampusData, NavEdge, Point2, RouteFilterType } from "../types/campus";
+import type { CampusData, NavEdge, Place, Point2, RouteFilterType } from "../types/campus";
 import type { FloorSource } from "./schema";
 import { polygonArea, polygonOverlapArea, segmentIntersections } from "./geometry.js";
 import { placeIndex } from "./places.js";
@@ -145,6 +145,68 @@ export function auditRoutes(data: CampusData, mode: RouteFilterType = "shortest"
     }
   }
   return { findings, checkedPairs, mode };
+}
+
+export type CoverageReason = "missing-endpoint" | "disconnected" | "filtered";
+export interface CoverageCounts {
+  checkedPairs: number;
+  reachablePairs: number;
+  missingEndpointPairs: number;
+  disconnectedPairs: number;
+  filteredPairs: number;
+}
+export interface CampusCoverageGroup extends CoverageCounts {
+  fromBuildingId: string;
+  toBuildingId: string;
+  examples: Array<{ from: string; to: string; reason: CoverageReason }>;
+}
+
+/** Exhaustive directed cross-building room coverage, independent of weighted path selection.
+ * Missing approaches, missing topology and mode restrictions are reported separately.
+ * Reachability is cached per node; shared front-room endpoints retain their room identities.
+ */
+export function auditCampusCoverage(data: CampusData, mode: RouteFilterType = "shortest") {
+  const rooms = placeIndex(data).filter((p): p is Place & { buildingId: string } =>
+    p.kind === "room" && p.buildingId !== undefined);
+  const counts = (): CoverageCounts => ({ checkedPairs: 0, reachablePairs: 0,
+    missingEndpointPairs: 0, disconnectedPairs: 0, filteredPairs: 0 });
+  const makeReachability = (filter: RouteFilterType) => {
+    const adjacent = new Map(data.navigation.nodes.map(n => [n.id, [] as string[]]));
+    for (const edge of data.navigation.edges.filter(e => permitted(e, filter))) {
+      adjacent.get(edge.from)!.push(edge.to);
+      if (edge.bidirectional !== false) adjacent.get(edge.to)!.push(edge.from);
+    }
+    const cache = new Map<string, Set<string>>();
+    return (start: string) => {
+      if (!cache.has(start)) {
+        const seen = new Set<string>(), queue = adjacent.has(start) ? [start] : [];
+        if (queue.length) seen.add(start);
+        for (let i = 0; i < queue.length; i++) for (const next of adjacent.get(queue[i])!)
+          if (!seen.has(next)) { seen.add(next); queue.push(next); }
+        cache.set(start, seen);
+      }
+      return cache.get(start)!;
+    };
+  };
+  const connected = makeReachability("shortest");
+  const allowed = mode === "accessible" ? makeReachability(mode) : connected;
+  const total = counts(), groups = new Map<string, CampusCoverageGroup>();
+  for (const a of rooms) for (const b of rooms) {
+    if (a.buildingId === b.buildingId) continue;
+    const key = `${a.buildingId}/${b.buildingId}`;
+    if (!groups.has(key)) groups.set(key, { ...counts(), fromBuildingId: a.buildingId,
+      toBuildingId: b.buildingId, examples: [] });
+    const group = groups.get(key)!;
+    const reason: CoverageReason | undefined = !a.nodeId || !b.nodeId ? "missing-endpoint"
+      : !connected(a.nodeId).has(b.nodeId) ? "disconnected"
+      : !allowed(a.nodeId).has(b.nodeId) ? "filtered" : undefined;
+    const field: keyof CoverageCounts = reason === "missing-endpoint" ? "missingEndpointPairs"
+      : reason === "disconnected" ? "disconnectedPairs" : reason === "filtered" ? "filteredPairs" : "reachablePairs";
+    total.checkedPairs++; group.checkedPairs++; total[field]++; group[field]++;
+    if (reason && group.examples.filter(e => e.reason === reason).length < 3)
+      group.examples.push({ from: a.id, to: b.id, reason });
+  }
+  return { mode, ...total, unlinkedRooms: rooms.filter(p => !p.nodeId).map(p => p.id), groups: [...groups.values()] };
 }
 
 /** Declared groups and unknown heights remain visible without inventing bridges or floor numbers. */

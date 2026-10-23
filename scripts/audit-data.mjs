@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import { readData } from './read-data.mjs';
 import { validateSources } from '../.checks/data/validate.js';
 import { compileCampus } from '../.checks/data/compile.js';
-import { auditConnections, auditGeometry, auditRoutes } from '../.checks/data/audit.js';
+import { auditConnections, auditGeometry, auditRoutes, auditCampusCoverage } from '../.checks/data/audit.js';
 
 try {
   const args = process.argv.slice(2);
@@ -21,8 +21,10 @@ try {
   const findings = [...auditGeometry(source.floors), ...auditConnections(data), ...routes.findings];
   const report = { buildings: source.buildings.length, floors: source.floors.length,
     rooms: source.floors.reduce((sum, f) => sum + f.rooms.length, 0),
-    checkedPairs: routes.checkedPairs, mode, findings };
+    checkedPairs: routes.checkedPairs, mode, findings, campusCoverage: auditCampusCoverage(data, mode) };
   console.log(`Audited ${report.buildings} buildings, ${report.floors} floors, ${report.rooms} rooms and ${report.checkedPairs} room pairs (${mode}).`);
+  const coverage = report.campusCoverage;
+  console.log(`Cross-building directed room pairs: ${coverage.checkedPairs}; reachable: ${coverage.reachablePairs}; missing endpoint: ${coverage.missingEndpointPairs}; disconnected: ${coverage.disconnectedPairs}; mode-filtered: ${coverage.filteredPairs}.`);
   console.log('Findings are review candidates, not validation failures; intentional room containment is allowed.');
   const counts = new Map();
   for (const finding of findings) counts.set(finding.code, (counts.get(finding.code) ?? 0) + 1);

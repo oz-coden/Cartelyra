@@ -91,3 +91,62 @@ test('route auditing checks both directions when the graph contains one-way conn
   assert.equal(report.checkedPairs,2);
   assert.deepEqual(report.findings.map(f=>[f.code,f.roomIds]),[['route-unreachable',['B','A']]]);
 });
+
+test('cross-building coverage distinguishes missing endpoints, one-way topology and mode exclusions',async()=>{
+  const {auditCampusCoverage}=await import('../.checks/data/audit.js');
+  const ids=['a','b','c','d'];
+  const buildings=ids.map(id=>({id,name:id,origin:[0,0,0],rotation:0,floorIds:['f1'],connections:[]}));
+  const floors=ids.map(id=>{
+    const f=floor([room(id.toUpperCase(),rect(1,1,2,2))]);f.buildingId=id;
+    if(id!=='c'){
+      f.rooms[0].entrance=id;
+      f.navigation.nodes=[{id,name:id,position:[3,2],type:'room_entrance'}];
+    }
+    return f;
+  });
+  const data=compileCampus({campusName:'Test',coordinateUnit:'schematic',buildingIds:ids},buildings,floors);
+  data.navigation.edges.push({from:'a/f1/a',to:'b/f1/b',type:'stairs',bidirectional:false,
+    isAccessible:false,isIndoor:false,verification:'inferred',routingCost:1});
+  const before=structuredClone(data),r=auditCampusCoverage(data);
+  assert.equal(r.checkedPairs,12);assert.equal(r.reachablePairs,1);
+  assert.equal(r.missingEndpointPairs,6);assert.equal(r.disconnectedPairs,5);assert.equal(r.filteredPairs,0);
+  assert.deepEqual(r.unlinkedRooms,['C']);
+  assert.equal(r.groups.find(g=>g.fromBuildingId==='a'&&g.toBuildingId==='b').reachablePairs,1);
+  assert.equal(r.groups.find(g=>g.fromBuildingId==='b'&&g.toBuildingId==='a').disconnectedPairs,1);
+  const filtered=auditCampusCoverage(data,'accessible');
+  assert.equal(filtered.filteredPairs,1);assert.equal(filtered.disconnectedPairs,5);assert.equal(filtered.reachablePairs,0);
+  assert.deepEqual(data,before,'coverage reporting must not create or alter connections');
+  data.navigation.edges[0].blocked=true;
+  assert.equal(auditCampusCoverage(data).disconnectedPairs,6);
+});
+
+test('all cross-building room pairs expose only the declared pending approaches and building components',async()=>{
+  const {auditCampusCoverage,minimumFloorChanges}=await import('../.checks/data/audit.js');
+  const {AStarPathfinder}=await import('../.checks/pathfinding/AStar.js');
+  const s=await readData(),data=compileCampus(s.manifest,s.buildings,s.floors),rooms=placeIndex(data).filter(p=>p.kind==='room');
+  const pending=p=>p.buildingId==='b6'||p.buildingId==='b17'&&p.floorLevel>1;
+  const report=auditCampusCoverage(data);
+  assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,622958);
+  for(const group of report.groups){
+    const from=rooms.filter(p=>p.buildingId===group.fromBuildingId),to=rooms.filter(p=>p.buildingId===group.toBuildingId);
+    let reachable=0,missing=0,disconnected=0;
+    for(const a of from)for(const b of to){
+      if(!a.nodeId||!b.nodeId)missing++;
+      else if(pending(a)||pending(b))disconnected++;
+      else reachable++;
+    }
+    assert.equal(group.reachablePairs,reachable,`${group.fromBuildingId} -> ${group.toBuildingId}`);
+    assert.equal(group.missingEndpointPairs,missing);assert.equal(group.disconnectedPairs,disconnected);
+  }
+  const finder=new AStarPathfinder(data),representatives=['b1/f1/room-104','b3/f1/room-103','b5/f2/room-201',
+    'b6/f1/entry-left','b17/f1/hall-1','b17/f2/hall-1','b19/f1/room-101','b23/f1/room-101','b20/f1/entrance-right'];
+  for(const mode of ['shortest','accessible','indoor','stairs']){
+    const r=auditCampusCoverage(data,mode);
+    assert.equal(r.checkedPairs,report.checkedPairs);assert.equal(r.disconnectedPairs,report.disconnectedPairs);
+    assert.equal(r.reachablePairs+r.missingEndpointPairs+r.disconnectedPairs+r.filteredPairs,r.checkedPairs);
+    for(const a of representatives){
+      const reachable=new Set(minimumFloorChanges(data,a,mode).keys());
+      for(const b of representatives)assert.equal(!!finder.findPath(a,b,mode),reachable.has(b),`${a} -> ${b} ${mode}`);
+    }
+  }
+});

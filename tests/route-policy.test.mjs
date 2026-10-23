@@ -64,7 +64,7 @@ test('all registered gates reach every connected place under each mode exactly w
     for(const place of places){
       const r=finder.findPath(gate.nodeId,place.nodeId,mode);
       assert.equal(!!r,minimum.has(place.nodeId),`${gate.id} -> ${place.id} (${mode})`);
-      if(r){assert.equal(r.floorChanges+r.verticalMovements.unmeasured,minimum.get(place.nodeId));if(mode==='accessible')assert.ok(r.steps.every(s=>s.edgeType!=='stairs'));}
+      if(r){assert.ok(r.floorChanges+r.verticalMovements.unmeasured>=minimum.get(place.nodeId));if(mode==='accessible')assert.ok(r.steps.every(s=>s.edgeType!=='stairs'));}
     }
   }
 });
@@ -80,4 +80,25 @@ test('authoring rejects missing or invalid costs, cover contradictions and inval
   check(c=>c.floors[0].navigation.edges[0].cover='open',/cover conflicts/);
   check(c=>c.manifest.outdoor.edges[0].floorChanges=-1,/explicit floor changes/);
   check(c=>c.buildings[0].connections[0].floorChanges=0,/conflict with floor order/);
+});
+
+test('cross-building reference routes compare cost without automatically excluding stair shortcuts',()=>{
+  const finder=new AStarPathfinder(data);
+  for(const mode of ['shortest','indoor','stairs'])for(const [a,b]of[
+    ['b23/f1/room-101','b19/f1/room-101'],['b19/f1/room-101','b23/f1/room-101'],
+    ['b5/f2/room-201','b23/f1/room-101'],['b23/f1/room-101','b5/f2/room-201']]){
+    const r=finder.findPath(a,b,mode);assert.ok(r,`${a} -> ${b} ${mode}`);
+    assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/bridge-b12-corner'));
+    assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/b19-bridge-stair-foot'));
+    assert.ok(!r.pathNodes.some(n=>n.id==='campus/outdoor/avenue-turn'));
+    assert.equal(finder.findPath(a,b,mode,false),null);
+  }
+  for(const [a,b]of[['b23/f1/room-101','b19/f1/room-101'],['b19/f1/room-101','b23/f1/room-101']]){
+    const r=finder.findPath(a,b,'accessible');assert.ok(r);
+    assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/avenue-turn'));
+    assert.equal(r.verticalMovements.stairs,0);
+    assert.ok(finder.findPath(a,b).routingCost<r.routingCost);
+  }
+  assert.equal(finder.findPath('b5/f2/room-201','b23/f1/room-101','accessible'),null);
+  assert.equal(finder.findPath('b23/f1/room-101','b5/f2/room-201','accessible'),null);
 });

@@ -135,6 +135,24 @@ test("application selects buildings, focuses WC details and routes from a room t
     document.querySelector('[data-place="20-420"]').dispatchEvent(new window.Event("click", { bubbles: true }));
     assert.match(document.getElementById("tooltip-title").textContent, /20-420 研究室/);
 
+    // A restricted route is distinct from an unregistered connection.
+    const chooseRoom = (buildingId, level, roomId, action) => {
+      select.value = buildingId; select.dispatchEvent(new window.Event("change"));
+      [...document.querySelectorAll("#floor-buttons button")].find(b => b.textContent === level).click();
+      document.querySelector(`[data-place="${roomId}"]`).dispatchEvent(new window.Event("click", { bubbles: true }));
+      document.getElementById(`btn-tooltip-set-${action}`).click();
+    };
+    chooseRoom("b5", "2F", "5-201", "start");
+    chooseRoom("b23", "1F", "23-101", "dest");
+    assert.ok(!document.getElementById("step-guide").classList.contains("hidden"));
+    document.querySelector('[data-filter="accessible"]').click();
+    assert.match(document.getElementById("toast").textContent, /階段を避けて接続する経路がありません.*標準モード/);
+    assert.ok(document.getElementById("step-guide").classList.contains("hidden"));
+    document.querySelector('[data-filter="shortest"]').click();
+    assert.ok(document.getElementById("toast").classList.contains("hidden"));
+    assert.ok(!document.getElementById("step-guide").classList.contains("hidden"));
+    assert.match(document.getElementById("step-guide-list").textContent, /連絡橋/);
+
   } finally {
     await server.close();
   }

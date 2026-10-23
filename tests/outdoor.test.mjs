@@ -34,7 +34,8 @@ test("Building 3 has distinct Building 8/New East Gate-facing entrances and reac
       assert.ok(route.steps.every((s) => !/undefined|NaN/.test(s.instruction)));
       for (const n of route.pathNodes.filter((n) => !n.buildingId)) {
         assert.equal(n.floor, undefined);
-        assert.equal(n.outdoorLayer, "ground");
+        assert.ok(["ground", "bridge"].includes(n.outdoorLayer));
+        if (mode === "accessible") assert.equal(n.outdoorLayer, "ground");
       }
       if (mode === "accessible") assert.ok(!route.steps.some((s) => s.edgeType === "stairs"));
       assert.equal(finder.findPath(a, b, mode, false), null);
