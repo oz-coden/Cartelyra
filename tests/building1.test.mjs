@@ -5,7 +5,7 @@ import { compileCampus } from "../.checks/data/compile.js";
 import { placeIndex, searchPlaces, placeRouteNotice } from "../.checks/data/places.js";
 import { validateSources } from "../.checks/data/validate.js";
 import { AStarPathfinder } from "../.checks/pathfinding/AStar.js";
-import { pointInInterior, bounds } from "../.checks/data/geometry.js";
+import { pointInInterior, bounds, segmentIsWalkable } from "../.checks/data/geometry.js";
 
 const source = await readData();
 const campus = compileCampus(source.manifest, source.buildings, source.floors);
@@ -139,4 +139,23 @@ test("Building 1 5F left rooms share a boundary and small rooms occupy 514 corne
   assert.ok(!upper.entrance);
   assert.equal(upper.approachRoomId, "1-516");
   assert.ok(!fifth.navigation.nodes.some((n) => n.id === "room-516-1"));
+});
+
+
+test('1F lobby separates stairs from elevators with a through passage while adjoining room 1-105',()=>{
+  const floor=floors.find(f=>f.id==='f1'),feature=id=>floor.features.find(f=>f.id===id);
+  const stairs=bounds(feature('stairs-core').polygon),room=bounds(floor.rooms.find(r=>r.id==='1-105').polygon);
+  assert.equal(stairs.z-stairs.d/2,room.z+room.d/2);
+  assert.ok(stairs.x-stairs.w/2>=room.x-room.w/2&&stairs.x+stairs.w/2<=room.x+room.w/2);
+  const obstacles=[...floor.rooms.map(r=>r.polygon),...floor.features.filter(f=>['stairs','elevator','restroom','service','pit'].includes(f.type)).map(f=>f.polygon)];
+  assert.ok(segmentIsWalkable([71,55.5],[90,55.5],floor.outline,obstacles));
+  for(const id of ['ev-1','ev-2']){
+    const ev=bounds(feature(id).polygon);assert.ok(ev.z-ev.d/2>stairs.z+stairs.d/2);
+    const entrance=floor.navigation.nodes.find(n=>n.id===id).position;assert.equal(entrance[1],ev.z-ev.d/2);
+    const r=finder.findPath('b1/f1/entry-right',`b1/f1/${id}`,'accessible');assert.ok(r);
+    assert.ok(r.pathNodes.some(n=>n.id.includes('hall-ev')));
+    assert.ok(!r.pathNodes.some(n=>n.type==='stairs'));assert.equal(r.floorChanges,0);
+  }
+  const r=finder.findPath('b1/f1/entry-right','b1/f1/stairs-core');assert.ok(r);
+  assert.ok(r.pathNodes.some(n=>Math.abs(n.position[2]-55.5)<1e-8));
 });

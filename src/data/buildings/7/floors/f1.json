@@ -11,7 +11,8 @@
     "通路側の代表点までの参考案内。扉位置・段差・利用条件と階段・EVの連続性は現地未確認。",
     "2Fは図面未登録。1F〜3Fの階段を補完せず、8号館のEVだけを2階分の暫定接続とする。",
     "各階の連絡通路は棟群内の明示した接続だけを使用。屋外の出入口との対応は未登録。",
-    "1F掲示図を90度回転し、上階と同じ棟配置で表示。部屋・設備・通路は一括で回転し、鏡映しない。"
+    "1F掲示図を90度回転し、上階と同じ棟配置で表示。部屋・設備・通路は一括で回転し、鏡映しない。",
+    "1Fの斜めの無記名区画は通行可能な屋根付き広場として暫定扱い。7-17は広場側、7-16は通常の通路側まで案内する。広場の範囲・利用条件・扉位置は現地確認待ち。"
   ],
   "outline": [
     [16, 61],
@@ -25,18 +26,6 @@
   ],
   "voids": [],
   "features": [
-    {
-      "id": "unlabelled-northwest",
-      "label": "通行対象外",
-      "type": "service",
-      "polygon": [
-        [16, 61],
-        [0, 33.4],
-        [40, 33.4],
-        [40, 61]
-      ],
-      "description": "無記名の斜めの棟区画。用途・壁の範囲・7-16/7-17との出入り関係は確認待ち。"
-    },
     {
       "id": "wc-female",
       "label": "女性用トイレ",
@@ -231,8 +220,8 @@
         [17.4, 26.4],
         [17.4, 33.4]
       ],
-      "description": "手前の部屋の通路側まで暫定案内。室内の進入順序は推定で、現地調査後に見直す。",
-      "approachRoomId": "7-14"
+      "description": "広場側の代表点まで暫定案内。正確な扉位置・進入関係は現地確認待ち。",
+      "entrance": "room-17"
     },
     {
       "id": "7-16",
@@ -248,8 +237,8 @@
         [17.4, 1.0],
         [17.4, 26.4]
       ],
-      "description": "手前の部屋の通路側まで暫定案内。室内の進入順序は推定で、現地調査後に見直す。",
-      "approachRoomId": "7-14"
+      "description": "通路側の代表点まで暫定案内。正確な扉位置・進入関係は現地確認待ち。",
+      "entrance": "room-16"
     }
   ],
   "navigation": {
@@ -552,6 +541,24 @@
         "id": "port-ten-south",
         "name": "通路の分岐",
         "position": [90.5, 41],
+        "type": "corridor"
+      },
+      {
+        "id": "room-16",
+        "name": "7-16",
+        "position": [17.4, 3.5],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-17",
+        "name": "7-17",
+        "position": [13.2, 33.4],
+        "type": "room_entrance"
+      },
+      {
+        "id": "plaza-approach",
+        "name": "広場側の通行位置（暫定）",
+        "position": [13.2, 37.2],
         "type": "corridor"
       }
     ],
@@ -1055,6 +1062,36 @@
         "routingCost": 0.0,
         "cover": "indoor",
         "from": "port-ten-south"
+      },
+      {
+        "to": "hall-27",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor",
+        "from": "room-16"
+      },
+      {
+        "to": "plaza-approach",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 0.57,
+        "cover": "covered",
+        "from": "room-17"
+      },
+      {
+        "to": "hall-4",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "routingCost": 4.02,
+        "cover": "covered",
+        "from": "plaza-approach"
       }
     ]
   }

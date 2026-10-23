@@ -27,7 +27,7 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 6 | 1F–4F; 68 areas: 66 direct corridor approaches and two via named front rooms, four WCs and inferred stairs. Entrances on 1F and 2F; inner-room approaches remain provisional. The 3F right wing may require a reference route via another floor |
-| Buildings 7–10 | Connected floor-plan/3D group with 18 plans and 146 numbered areas, 23 WCs and one inferred EV core. 2F is unregistered; Building 10 has plans for 1F, 3F and 4F only. Six inner areas use provisional front endpoints; room names are not assigned. Outdoor links remain pending |
+| Buildings 7–10 | Connected floor-plan/3D group with 18 plans and 146 numbered areas, 23 WCs and one inferred EV core. 2F is unregistered; Building 10 has plans for 1F, 3F and 4F only. Four inner areas use provisional front endpoints; room names are not assigned. Outdoor links remain pending |
 | Building 17 | 1F–5F; 154 areas (151 direct approaches and three provisional front-room endpoints), 16 WCs, inferred stairs/elevators and three entrance places. Two 1F entrances connect to the Building 19-facing outdoor path; the 3F external connection is pending. The 1F section and 2F–5F section remain separate until their stair/EV correspondence is confirmed |
 | Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; the shop entrance connects outdoors on the south side near the gap between Buildings 17 and 12 |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
@@ -133,7 +133,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 6号館 | 1〜4F・68区画。66区画へ直接、奥の2区画は指定した手前の部屋まで参考案内。WC 4か所・階段・1Fと2Fの出入口。3F右側へは他階を経由する参考経路となる場合あり |
-| 7〜10号館 | 連絡棟として18フロア・146区画を一体表示。WC 23か所、EV 1系統を暫定対応。2Fは未登録、10号館は1F・3F・4Fのみ。奥の6区画は手前まで暫定案内し、室名は付けない。屋外接続は未登録 |
+| 7〜10号館 | 連絡棟として18フロア・146区画を一体表示。WC 23か所、EV 1系統を暫定対応。2Fは未登録、10号館は1F・3F・4Fのみ。奥の4区画は手前まで暫定案内し、室名は付けない。屋外接続は未登録 |
 | 17号館 | 1〜5F・154区画。151区画へ直接、奥の3区画は指定した手前の部屋まで暫定案内。WC 16か所・階段・EV・出入口3か所。1Fの2出入口を19号館側の屋外通路へ参考接続。3Fの外部接続は保留。1Fと2〜5Fは階段・EVの対応確認まで別々に案内 |
 | 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。購買部側出入口を南側の17・12号館間の屋外通路へ参考接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |

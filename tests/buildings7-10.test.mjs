@@ -97,7 +97,7 @@ test('same-level stairs between Buildings 7 and 10 remain explicit, directional 
 });
 
 test('provisional inner rooms retain front endpoints and the numbered circulation area does not expose its service zone',()=>{
-  for(const [id,front]of[['7-16','7-14'],['7-17','7-14'],['7-61A','7-61'],['8-61A','8-61'],['8-66A','8-66'],['8-67A','8-67']]){
+  for(const [id,front]of[['7-61A','7-61'],['8-61A','8-61'],['8-66A','8-66'],['8-67A','8-67']]){
     const p=places.find(p=>p.id===id),q=places.find(p=>p.id===front);
     assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,q.nodeId);assert.match(p.description,/暫定/);
   }
@@ -163,4 +163,19 @@ test('decimal shared-wall endpoints remain walkable after roundoff without admit
   const outline=[[0,1.8],[102,1.8],[102,35],[0,35]];
   assert.equal(segmentIsWalkable([2,4.6],[2,1.8],outline,[]),true);
   assert.equal(segmentIsWalkable([2,4.6],[2,1.7],outline,[]),false);
+});
+
+
+test('7-16 uses the corridor and 7-17 approaches through the provisional plaza without entering 7-14',()=>{
+  const floor=floors.find(f=>f.buildingId==='b7'&&f.id==='f1');
+  assert.ok(!floor.features.some(f=>f.id==='unlabelled-northwest'));
+  assert.ok(floor.navigation.edges.filter(e=>[e.from,e.to].includes('plaza-approach')).every(e=>e.cover==='covered'&&!e.isIndoor));
+  assert.ok(floor.notes.some(n=>n.includes('広場')&&n.includes('現地確認待ち')));
+  for(const id of ['7-16','7-17']){
+    const p=places.find(p=>p.id===id);assert.equal(p.approachRoomId,undefined);
+    assert.notEqual(p.nodeId,places.find(p=>p.id==='7-14').nodeId);
+    const r=finder.findPath('b10/f1/room-11',p.nodeId,'accessible');assert.ok(r);
+    assert.ok(!r.pathNodes.some(n=>n.id==='b7/f1/room-14'));
+    assert.equal(r.pathNodes.some(n=>n.id==='b7/f1/plaza-approach'),id==='7-17');
+  }
 });
