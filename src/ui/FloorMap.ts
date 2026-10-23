@@ -408,7 +408,10 @@ export class FloorMap {
       const a = nodes.get(e.from)!, b = nodes.get(e.to)!;
       if (e.blocked || !a.buildingId || !b.buildingId || a.buildingId === b.buildingId ||
         !nodeInScope(this.campus, this.scope, a) || !nodeInScope(this.campus, this.scope, b)) continue;
-      this.svg.append(element("polyline", { points: points([this.local(a), this.local(b)]), class: "map-connection", "pointer-events": "none" }));
+      const vertical = ["stairs", "ramp", "elevator"].includes(e.type);
+      this.svg.append(element("polyline", { points: points([this.local(a), this.local(b)]),
+        class: `map-connection${vertical ? " map-connection-transition" : ""}`,
+        "data-edge-type": e.type, "pointer-events": "none" }));
     }
   }
   private local(node: NavNode): Point2 {

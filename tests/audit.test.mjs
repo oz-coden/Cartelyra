@@ -124,15 +124,16 @@ test('all cross-building room pairs expose only the declared pending approaches 
   const {auditCampusCoverage,minimumFloorChanges}=await import('../.checks/data/audit.js');
   const {AStarPathfinder}=await import('../.checks/pathfinding/AStar.js');
   const s=await readData(),data=compileCampus(s.manifest,s.buildings,s.floors),rooms=placeIndex(data).filter(p=>p.kind==='room');
-  const pending=p=>p.buildingId==='b6'||p.buildingId==='b17'&&p.floorLevel>1;
+  const network=p=>p.buildingId==='b6'?'b6':p.buildingId==='b17'&&p.floorLevel>1?'b17-upper':
+    ['b7','b8','b9','b10'].includes(p.buildingId)?'b7-b10':'outdoor';
   const report=auditCampusCoverage(data);
-  assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,622958);
+  assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,896018);
   for(const group of report.groups){
     const from=rooms.filter(p=>p.buildingId===group.fromBuildingId),to=rooms.filter(p=>p.buildingId===group.toBuildingId);
     let reachable=0,missing=0,disconnected=0;
     for(const a of from)for(const b of to){
       if(!a.nodeId||!b.nodeId)missing++;
-      else if(pending(a)||pending(b))disconnected++;
+      else if(network(a)!==network(b))disconnected++;
       else reachable++;
     }
     assert.equal(group.reachablePairs,reachable,`${group.fromBuildingId} -> ${group.toBuildingId}`);

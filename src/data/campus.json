@@ -2,7 +2,20 @@
   "schemaVersion": 1,
   "campusName": "神奈川大学 横浜キャンパス",
   "coordinateUnit": "schematic",
-  "buildingIds": ["b3", "b20", "b5", "b1", "b6", "b19", "b17", "b23"],
+  "buildingIds": [
+    "b3",
+    "b20",
+    "b5",
+    "b1",
+    "b6",
+    "b19",
+    "b17",
+    "b23",
+    "b7",
+    "b8",
+    "b9",
+    "b10"
+  ],
   "outdoor": {
     "sourceId": "campus-path-reference",
     "notes": [
@@ -282,7 +295,7 @@
       {
         "id": "b23-entrance-2",
         "name": "23号館 出入口2前（20号館側）",
-        "position": [30.940217391304348, 49],
+        "position": [30.940217391, 49],
         "layer": "ground"
       },
       {
@@ -300,7 +313,7 @@
       {
         "id": "b23-entrance-1",
         "name": "23号館 出入口1前（15号館側）",
-        "position": [36.51973684210526, 49],
+        "position": [36.519736842, 49],
         "layer": "ground"
       },
       {
@@ -360,7 +373,7 @@
       {
         "id": "b19-shop-door",
         "name": "19号館 購買部側出入口前（南側）",
-        "position": [40.5, 17.58173076923077],
+        "position": [40.5, 17.581730769],
         "layer": "ground"
       },
       {
@@ -1161,12 +1174,288 @@
         "b9",
         "b10"
       ],
-      "status": "pending",
+      "status": "ready",
       "verification": "inferred",
       "notes": [
-        "7〜10号館は屋内または屋根付きの連絡通路でつながる棟群。接続する棟の組み合わせ・階・通路形状・屋根の種別は未登録。館内図と階の対応を登録後に一体表示する。"
+        "7〜10号館を連絡棟として一体表示。図面の接続関係を基に、階別の連絡通路を明示登録。",
+        "2Fは未登録。10号館の図面は1F・3F・4Fのみ。存在未確認のフロアは作成しない。",
+        "1Fの図面は上階の図面と向きが異なるため、独自の模式座標で棟の並びを統一。実方位・寸法は未校正。",
+        "7・10号館境界の3F・4Fの階段記号を昇降量未確認の段差接続とする。階段回避は8・9号館側を回る。",
+        "8号館EVの1F〜3Fは2階分の暫定接続。2Fの乗降・室内経路は補完しない。屋外経路は出入口との対応確認待ち。"
       ],
-      "levels": []
+      "levels": [
+        {
+          "id": "f1",
+          "label": "1F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f1"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f1"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f1"
+            },
+            {
+              "buildingId": "b10",
+              "floorId": "f1"
+            }
+          ]
+        },
+        {
+          "id": "f3",
+          "label": "3F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f3"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f3"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f3"
+            },
+            {
+              "buildingId": "b10",
+              "floorId": "f3"
+            }
+          ]
+        },
+        {
+          "id": "f4",
+          "label": "4F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f4"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f4"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f4"
+            },
+            {
+              "buildingId": "b10",
+              "floorId": "f4"
+            }
+          ]
+        },
+        {
+          "id": "f5",
+          "label": "5F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f5"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f5"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f5"
+            }
+          ]
+        },
+        {
+          "id": "f6",
+          "label": "6F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f6"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f6"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f6"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "to": "b8/f1/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b9/f1/port-eight"
+    },
+    {
+      "to": "b8/f3/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b9/f3/port-eight"
+    },
+    {
+      "to": "b8/f4/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b9/f4/port-eight"
+    },
+    {
+      "to": "b8/f5/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b9/f5/port-eight"
+    },
+    {
+      "to": "b8/f6/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b9/f6/port-eight"
+    },
+    {
+      "to": "b8/f3/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b7/f3/port-eight"
+    },
+    {
+      "to": "b8/f4/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b7/f4/port-eight"
+    },
+    {
+      "to": "b8/f5/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b7/f5/port-eight"
+    },
+    {
+      "to": "b8/f6/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b7/f6/port-eight"
+    },
+    {
+      "to": "b10/f1/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b7/f1/port-ten"
+    },
+    {
+      "to": "b9/f1/port-ten",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b10/f1/port-nine"
+    },
+    {
+      "to": "b9/f3/port-ten",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b10/f3/port-nine"
+    },
+    {
+      "to": "b10/f3/stairs-seven",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": false,
+      "routingCost": 2,
+      "cover": "covered",
+      "instruction": "7号館と10号館の3Fをつなぐ階段・段差を通り、10号館側へ進む",
+      "reverseInstruction": "10号館と7号館の3Fをつなぐ階段・段差を通り、7号館側へ進む",
+      "from": "b7/f3/stairs-ten"
+    },
+    {
+      "to": "b9/f4/port-ten",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "floorChanges": 0,
+      "from": "b10/f4/port-nine"
+    },
+    {
+      "to": "b10/f4/stairs-seven",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": false,
+      "routingCost": 2,
+      "cover": "covered",
+      "instruction": "7号館と10号館の4Fをつなぐ階段・段差を通り、10号館側へ進む",
+      "reverseInstruction": "10号館と7号館の4Fをつなぐ階段・段差を通り、7号館側へ進む",
+      "from": "b7/f4/stairs-ten"
     }
   ]
 }

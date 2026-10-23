@@ -1,0 +1,91 @@
+{
+  "id": "b9",
+  "name": "9号館",
+  "code": "9",
+  "color": "#6d7e9c",
+  "origin": [
+    40,
+    0,
+    140
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f3",
+    "f4",
+    "f5",
+    "f6"
+  ],
+  "connections": [
+    {
+      "to": "b9/f4/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f3/stairs-northwest"
+    },
+    {
+      "to": "b9/f4/stairs-southeast",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f3/stairs-southeast"
+    },
+    {
+      "to": "b9/f5/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f4/stairs-northwest"
+    },
+    {
+      "to": "b9/f5/stairs-southeast",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f4/stairs-southeast"
+    },
+    {
+      "to": "b9/f6/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f5/stairs-northwest"
+    },
+    {
+      "to": "b9/f6/stairs-southeast",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f5/stairs-southeast"
+    }
+  ],
+  "navigationComponents": [
+    {
+      "nodeId": "b9/f1/hall-0",
+      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+    },
+    {
+      "nodeId": "b9/f3/hall-0",
+      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+    }
+  ]
+}

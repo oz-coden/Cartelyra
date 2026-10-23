@@ -1,0 +1,95 @@
+{
+  "id": "b8",
+  "name": "8号館",
+  "code": "8",
+  "color": "#38858f",
+  "origin": [
+    145,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f3",
+    "f4",
+    "f5",
+    "f6"
+  ],
+  "connections": [
+    {
+      "to": "b8/f3/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 3.0,
+      "cover": "indoor",
+      "floorChanges": 2,
+      "from": "b8/f1/ev-west"
+    },
+    {
+      "to": "b8/f4/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f3/stairs-center"
+    },
+    {
+      "to": "b8/f4/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "floorChanges": 1,
+      "from": "b8/f3/ev-west"
+    },
+    {
+      "to": "b8/f5/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f4/stairs-center"
+    },
+    {
+      "to": "b8/f5/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "floorChanges": 1,
+      "from": "b8/f4/ev-west"
+    },
+    {
+      "to": "b8/f6/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f5/stairs-center"
+    },
+    {
+      "to": "b8/f6/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "floorChanges": 1,
+      "from": "b8/f5/ev-west"
+    }
+  ]
+}

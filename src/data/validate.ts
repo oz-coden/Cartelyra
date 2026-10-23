@@ -135,9 +135,9 @@ export function validateSources(
       );
       if (previous)
         check(
-          floor.stackIndex === previous.stackIndex + 1 &&
+          floor.stackIndex > previous.stackIndex &&
             floor.elevation > previous.elevation,
-          `${ctx}: floors must have consecutive stackIndex and increasing elevation`,
+          `${ctx}: floors must have increasing stackIndex and elevation`,
         );
       check(
         sourceIds.has(floor.sourceId),
@@ -408,7 +408,7 @@ export function validateSources(
       `Campus connection must join different buildings ${edge.from}`,
     );
     check(
-      ["bridge", "outdoor"].includes(edge.type),
+      ["bridge", "outdoor", "stairs", "ramp", "elevator"].includes(edge.type),
       `Invalid campus edge type ${edge.from}`,
     );
     check(
@@ -425,6 +425,9 @@ export function validateSources(
         Number.isFinite(edge.distance) && edge.distance > 0,
         `Invalid campus distance ${edge.from}`,
       );
+    check(edge.type !== "stairs" || !edge.isAccessible, `Campus stairs marked accessible ${edge.from}`);
+    if (a && b && (edge.type === "stairs" || edge.type === "elevator"))
+      check(a.node.type === edge.type && b.node.type === edge.type, `Campus vertical facility mismatch ${edge.from}`);
     const key =
       edge.bidirectional === false
         ? `${edge.from}>${edge.to}`

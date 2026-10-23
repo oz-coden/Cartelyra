@@ -1,0 +1,91 @@
+{
+  "id": "b7",
+  "name": "7号館",
+  "code": "7",
+  "color": "#6476a8",
+  "origin": [
+    0,
+    0,
+    0
+  ],
+  "rotation": 0,
+  "floorIds": [
+    "f1",
+    "f3",
+    "f4",
+    "f5",
+    "f6"
+  ],
+  "connections": [
+    {
+      "to": "b7/f4/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f3/stairs-west"
+    },
+    {
+      "to": "b7/f4/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f3/stairs-east"
+    },
+    {
+      "to": "b7/f5/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f4/stairs-west"
+    },
+    {
+      "to": "b7/f5/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f4/stairs-east"
+    },
+    {
+      "to": "b7/f6/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f5/stairs-west"
+    },
+    {
+      "to": "b7/f6/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b7/f5/stairs-east"
+    }
+  ],
+  "navigationComponents": [
+    {
+      "nodeId": "b7/f1/entrance-east",
+      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+    },
+    {
+      "nodeId": "b7/f3/hall-0",
+      "description": "2F未登録により館内階段の1F〜3Fを接続しない区画。連絡棟の8号館EVへ回る経路は別途登録。"
+    }
+  ]
+}

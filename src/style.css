@@ -501,6 +501,7 @@ body[data-view="3d"] .three-only {
   stroke-width: 0.7;
   stroke-dasharray: 2 1;
 }
+.map-connection-transition { stroke: #d88220; stroke-dasharray: 0.6 0.5; }
 .map-building-label { fill: var(--text); font-weight: 700; }
 .map-context-roads { opacity: .32; }
 .map-context-road {
