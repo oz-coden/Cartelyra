@@ -13,7 +13,8 @@
     "1F掲示図を90度回転し、上階と同じ棟配置で表示。部屋・設備・通路は一括で回転し、鏡映しない。",
     "一般的な用途名は2023年作成の参考PDF（b7-b10-reference-2023）から補足した履歴情報で、現用途は未確認。個人名・内線番号・研究テーマを含めない。配置・区画・室番号が食い違う場合は2024年の掲示写真を優先し、仮配置は測量後に見直す。",
     "25号館側の階段は主通路の延長に置き、1F・2Fの間の屋外踊り場へ上る参考接続を使用する。架空の1.5Fフロアは作成しない。",
-    "EV脇の10号館側の階段から中庭へ出られる。中庭から8号館沿いを北へ進む通路を経て、7・8号館間の屋外通路へ抜けられる。"
+    "EV脇の10号館側の階段から中庭へ出られる。中庭から8号館沿いを北へ進む通路を経て、7・8号館間の屋外通路へ抜けられる。",
+    "出入口の代表点は階段の先の外周上に置き、館内通路から階段区間を経由して案内する。中庭側の階段はEVの上側に仮配置。階段区間は昇降量未確認として一度だけ数える。"
   ],
   "outline": [
     [-3, 175],
@@ -120,30 +121,30 @@
     },
     {
       "id": "entrance-south-landing",
-      "label": "25号館側 中間踊り場出入口",
+      "label": "25号館側出入口",
       "type": "entrance",
       "polygon": [
-        [-1.5, 173],
-        [2.5, 173],
-        [2.5, 175],
-        [-1.5, 175]
+        [-1.5, 181],
+        [2.5, 181],
+        [2.5, 183],
+        [-1.5, 183]
       ],
-      "entrance": "stairs-west-exit",
-      "description": "階段を上って1F・2F間の同じ屋外踊り場へ出る。道路との直接接続はなく、正門方面の通路と地下通路を別々に登録する。",
+      "entrance": "entrance-south-landing",
+      "description": "通路から階段を通り抜けた先の出入口。段数・高低差・扉の正確な位置・利用条件は現地確認待ち。",
       "mapLabel": "出入口"
     },
     {
       "id": "entrance-courtyard",
-      "label": "中庭側出入口（EV脇）",
+      "label": "中庭側出入口",
       "type": "entrance",
       "polygon": [
-        [0, 60],
-        [2, 60],
-        [2, 64],
-        [0, 64]
+        [-7, 59.9],
+        [-5, 59.9],
+        [-5, 63.9],
+        [-7, 63.9]
       ],
-      "entrance": "stairs-ev-west",
-      "description": "EV脇の階段から7〜10号館に囲まれた中庭へ出る。中庭から8号館沿いを北へ進み、7・8号館間の屋外通路へ抜ける参考経路を登録。通行条件・正確な位置は現地確認待ち。",
+      "entrance": "entrance-courtyard",
+      "description": "通路から階段を通り抜けた先の出入口。段数・高低差・扉の正確な位置・利用条件は現地確認待ち。",
       "mapLabel": "出入口"
     }
   ],
@@ -484,6 +485,18 @@
         "position": [0.5, 172.5],
         "type": "corridor",
         "name": "通路の分岐"
+      },
+      {
+        "id": "entrance-south-landing",
+        "name": "25号館側出入口",
+        "type": "corridor",
+        "position": [0.5, 183]
+      },
+      {
+        "id": "entrance-courtyard",
+        "name": "中庭側出入口",
+        "type": "corridor",
+        "position": [-7, 61.9]
       }
     ],
     "edges": [
@@ -916,6 +929,30 @@
         "routingCost": 0.525,
         "cover": "indoor",
         "from": "hall-5"
+      },
+      {
+        "to": "entrance-south-landing",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "階段を上って中間の踊り場の25号館側出入口へ進む",
+        "reverseInstruction": "25号館側出入口から階段を下りて1Fの通路へ進む",
+        "from": "stairs-west-exit"
+      },
+      {
+        "to": "entrance-courtyard",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "routingCost": 1.5,
+        "cover": "unknown",
+        "instruction": "EVの上側の階段を経て中庭側出入口へ進む",
+        "reverseInstruction": "中庭側出入口からEVの上側の階段を経て館内の通路へ進む",
+        "from": "stairs-ev-west"
       }
     ]
   }

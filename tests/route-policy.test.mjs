@@ -102,3 +102,26 @@ test('cross-building reference routes compare cost without automatically excludi
   assert.equal(finder.findPath('b5/f2/room-201','b23/f1/room-101','accessible'),null);
   assert.equal(finder.findPath('b23/f1/room-101','b5/f2/room-201','accessible'),null);
 });
+
+test('connected-wing routing allows shorter landing stairs but rejects known floor backtracking and overshoots',()=>{
+  const floors=[1,2,3].map(level=>({level,stackIndex:level-1,label:`${level}F`}));
+  const nodes=[['a','a',2],['b','b',2],['low','a',1],['high','b',3],['x',undefined,undefined],['y',undefined,undefined]].map(([id,buildingId,floor])=>({id,name:id,type:'corridor',buildingId,floor,position:[0,0,0]}));
+  const e=(from,to,routingCost,type='walk',extra={})=>({from,to,routingCost,type,isIndoor:type==='walk',isAccessible:type!=='stairs',verification:'verified',...extra});
+  const base={campusName:'Test',coordinateUnit:'schematic',buildings:['a','b'].map(id=>({id,floors})),viewGroups:[{id:'group',status:'ready',buildingIds:['a','b']}],navigation:{nodes,edges:[
+    e('a','b',100),e('a','x',3,'stairs'),e('x','y',10,'outdoor'),e('y','b',3,'stairs'),
+    e('a','low',.1,'stairs'),e('low','b',.1,'stairs',{floorChanges:1}),
+    e('a','high',.1,'stairs',{floorChanges:1}),e('high','b',.1,'stairs'),
+  ]}};
+  for(const [a,b]of [['a','b'],['b','a']]){
+    const r=new AStarPathfinder(base).findPath(a,b);
+    assert.ok(r.pathNodes.some(n=>n.id==='x'));assert.ok(r.pathNodes.some(n=>n.id==='y'));
+    assert.equal(r.floorChanges,0);assert.equal(r.verticalMovements.unmeasured,2);
+    assert.equal(new AStarPathfinder(base).findPath(a,b,'accessible').totalDistance,100);
+  }
+  // With goals on different floors, necessary monotonic progress is not a detour.
+  const higher=structuredClone(base);higher.navigation.nodes.find(n=>n.id==='b').floor=3;
+  higher.navigation.edges=higher.navigation.edges.filter(e=>(e.from!=='a'||!['b','high'].includes(e.to))&&!(e.from==='high'&&e.to==='b'));
+  higher.navigation.edges.push(e('a','high',1,'stairs',{floorChanges:1}),e('high','b',1));
+  assert.deepEqual(new AStarPathfinder(higher).findPath('a','b').pathNodes.map(n=>n.id),['a','high','b']);
+  assert.deepEqual(new AStarPathfinder(higher).findPath('b','a').pathNodes.map(n=>n.id),['b','high','a']);
+});

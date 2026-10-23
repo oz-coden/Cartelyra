@@ -328,6 +328,9 @@ export function validateSources(
           ...floor.rooms.filter((r) => r.passThrough !== true).map((r) => r.polygon),
           ...floor.features
             .filter((f) => ["restroom", "service", "pit", "stairs", "elevator"].includes(f.type))
+            .filter(f => !(edge.type === "stairs" && f.type === "stairs" &&
+              [a.node.id, b.node.id].includes(f.entrance ?? "") &&
+              pointInPolygon(a.node.position, f.polygon) && pointInPolygon(b.node.position, f.polygon)))
             .map((f) => f.polygon),
         ];
         if (

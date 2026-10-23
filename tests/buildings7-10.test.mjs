@@ -41,10 +41,14 @@ test('every group place connects to the Building 8 elevator reference point whil
   for(const p of places){assert.ok(p.nodeId,p.id);
     for(const mode of ['shortest','accessible','indoor','stairs']){
       const r=finder.findPath('b8/f1/ev-west',p.nodeId,mode);
-      if(mode==='accessible'&&p.buildingId==='b7'&&p.floorLevel===2){assert.equal(r,null,p.id);continue;}
+      if(mode==='accessible'&&(p.buildingId==='b7'&&p.floorLevel===2||/b8\/f[12]\/entrance-(south-landing|courtyard)$/.test(p.nodeId))){assert.equal(r,null,p.id);continue;}
       assert.ok(r,`${p.id}: ${mode}`);
-      assert.ok(r.pathNodes.every(n=>ids.includes(n.buildingId)));
-      assert.equal(r.floorChanges,p.floorLevel-1,`${p.id}: floor count`);
+      assert.ok(r.pathNodes.every(n=>!n.buildingId||ids.includes(n.buildingId)));
+      if(r.pathNodes.every(n=>n.buildingId))assert.equal(r.floorChanges,p.floorLevel-1,`${p.id}: floor count`);
+      else {
+        assert.ok(r.verticalMovements.unmeasured>0,`${p.id}: outdoor landings retain unknown heights`);
+        assert.ok(r.pathNodes.filter(n=>n.floor!==undefined).every(n=>n.floor>=1&&n.floor<=p.floorLevel),`${p.id}: no floor overshoot`);
+      }
       if(mode==='accessible')assert.ok(r.steps.every(s=>s.edgeType!=='stairs'));
     }
     if(p.nodeId!=='b8/f1/ev-west')assert.equal(finder.findPath('b8/f1/ev-west',p.nodeId,'shortest',false),null);

@@ -1716,47 +1716,47 @@
       },
       {
         "from": "b8-south-landing",
-        "to": "b8/f1/stairs-west-exit",
-        "type": "stairs",
+        "to": "b8/f1/entrance-south-landing",
+        "type": "outdoor",
         "verification": "inferred",
-        "isAccessible": false,
+        "isAccessible": true,
         "routingCost": 1.5,
         "cover": "unknown",
-        "instruction": "階段を下りて8号館1Fへ入る",
-        "reverseInstruction": "8号館1Fから階段を上って中間の踊り場から屋外へ出る"
+        "instruction": "出入口から8号館1Fの階段側へ入る",
+        "reverseInstruction": "中間の踊り場から25号館側の屋外通路へ出る"
       },
       {
         "from": "b8-south-landing",
-        "to": "b8/f2/stairs-south",
-        "type": "stairs",
+        "to": "b8/f2/entrance-south-landing",
+        "type": "outdoor",
         "verification": "inferred",
-        "isAccessible": false,
+        "isAccessible": true,
         "routingCost": 1.5,
         "cover": "unknown",
-        "instruction": "階段を上って8号館2Fへ入る",
-        "reverseInstruction": "8号館2Fから階段を下りて中間の踊り場から屋外へ出る"
+        "instruction": "出入口から8号館2Fの階段側へ入る",
+        "reverseInstruction": "中間の踊り場から25号館側の屋外通路へ出る"
       },
       {
         "from": "b8-courtyard-door",
-        "to": "b8/f1/stairs-ev-west",
-        "type": "stairs",
+        "to": "b8/f1/entrance-courtyard",
+        "type": "outdoor",
         "verification": "inferred",
-        "isAccessible": false,
+        "isAccessible": true,
         "routingCost": 1.5,
         "cover": "unknown",
-        "instruction": "EV脇の階段から8号館1Fへ入る",
-        "reverseInstruction": "8号館1FのEV脇の階段を経て中庭へ出る"
+        "instruction": "出入口から8号館1Fの階段側へ入る",
+        "reverseInstruction": "中庭側出入口から中庭へ出る"
       },
       {
         "from": "b8-courtyard-door",
-        "to": "b8/f2/stairs-courtyard",
-        "type": "stairs",
+        "to": "b8/f2/entrance-courtyard",
+        "type": "outdoor",
         "verification": "inferred",
-        "isAccessible": false,
+        "isAccessible": true,
         "routingCost": 1.5,
         "cover": "unknown",
-        "instruction": "EV脇の階段から8号館2Fへ入る",
-        "reverseInstruction": "8号館2FのEV脇の階段を経て中庭へ出る"
+        "instruction": "出入口から8号館2Fの階段側へ入る",
+        "reverseInstruction": "中庭側出入口から中庭へ出る"
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

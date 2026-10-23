@@ -30,8 +30,9 @@ export class AStarPathfinder {
     const start = this.nodes.get(startId), goal = this.nodes.get(goalId);
     if (!start || !goal) return null;
     const compare = this.policy.comparator(start, goal);
+    const floorDetours = this.policy.floorDetourCounter(start, goal);
     const open = new Set([startId]);
-    const costs = new Map<string, SearchCost>([[startId, { vertical: 0, boundaries: 0, cost: 0 }]]);
+    const costs = new Map<string, SearchCost>([[startId, { vertical: 0, floorDetours: 0, boundaries: 0, cost: 0 }]]);
     const previous = new Map<string, { from: string; link: Traversal }>();
     while (open.size) {
       const current = [...open].reduce((a, b) => compare(costs.get(b)!, costs.get(a)!) < 0 ? b : a);
@@ -47,6 +48,7 @@ export class AStarPathfinder {
         if (!this.policy.permitted(link.edge, filter, allowInferred)) continue;
         const cost = costs.get(current)!;
         const next = { vertical: cost.vertical + link.floorChanges + link.unmeasuredVertical,
+          floorDetours: cost.floorDetours + floorDetours(link),
           boundaries: cost.boundaries + link.boundaryChanges, cost: cost.cost + this.policy.cost(link, filter) };
         if (!costs.has(link.targetId) || compare(next, costs.get(link.targetId)!) < 0) {
           costs.set(link.targetId, next); previous.set(link.targetId, { from: current, link }); open.add(link.targetId);

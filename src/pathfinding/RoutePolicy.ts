@@ -11,8 +11,10 @@ export interface Traversal {
   floorChanges: number;
   unmeasuredVertical: number;
   boundaryChanges: number;
+  fromLevel?: number;
+  toLevel?: number;
 }
-export interface SearchCost { vertical: number; boundaries: number; cost: number; }
+export interface SearchCost { vertical: number; floorDetours: number; boundaries: number; cost: number; }
 
 /** Routing preferences use authored costs; drawing transforms cannot change reference routes. */
 export class RoutePolicy {
@@ -38,11 +40,13 @@ export class RoutePolicy {
       throw new Error(`Invalid explicit floor changes: ${edge.from}`);
     const aIndex = this.indices.get(`${a.buildingId}/${a.floor}`);
     const bIndex = this.indices.get(`${b.buildingId}/${b.floor}`);
-    const known = edge.floorChanges ?? (a.buildingId && a.buildingId === b.buildingId && aIndex !== undefined && bIndex !== undefined
-      ? Math.abs(aIndex - bIndex) : undefined);
     const vertical = edge.type === "stairs" || edge.type === "ramp" || edge.type === "elevator";
+    // A stair drawn within one display floor can reach an unnumbered landing.
+    const known = edge.floorChanges ?? (a.buildingId && a.buildingId === b.buildingId && aIndex !== undefined && bIndex !== undefined &&
+      (!vertical || aIndex !== bIndex) ? Math.abs(aIndex - bIndex) : undefined);
     return { edge, targetId: b.id, reversed: false, length,
       floorChanges: known ?? 0, unmeasuredVertical: vertical && known === undefined ? 1 : 0,
+      fromLevel: aIndex, toLevel: bIndex,
       boundaryChanges: this.domain(a) !== this.domain(b) ? 1 : 0 };
   }
   permitted(edge: NavEdge, filter: RouteFilterType, allowInferred: boolean) {
@@ -58,11 +62,27 @@ export class RoutePolicy {
     if (filter === "stairs" && link.edge.type === "elevator") cost += 35;
     return cost;
   }
+  floorDetourCounter(start: NavNode, goal: NavNode) {
+    if (!this.schematic || start.buildingId === goal.buildingId || this.domain(start) !== this.domain(goal)) return () => 0;
+    const a = this.indices.get(`${start.buildingId}/${start.floor}`);
+    const b = this.indices.get(`${goal.buildingId}/${goal.floor}`);
+    if (a === undefined || b === undefined) return () => 0;
+    const direction = b < a ? -1 : 1, low = Math.min(a, b), high = Math.max(a, b);
+    const progress = (level: number) => direction * Math.max(low, Math.min(high, level));
+    return (link: Traversal) => {
+      if (!link.floorChanges || link.fromLevel === undefined || link.toLevel === undefined) return 0;
+      const from = link.reversed ? link.toLevel : link.fromLevel, to = link.reversed ? link.fromLevel : link.toLevel;
+      // Penalize known backtracking and overshoots, not necessary progress or unmeasured landings.
+      return Math.max(0, link.floorChanges - (progress(to) - progress(from)));
+    };
+  }
   comparator(start: NavNode, goal: NavNode) {
-    // Protect indoor guidance from floor detours; campus journeys may benefit from bridge stairs.
+    // Keep local guidance stable; connected wings may use shorter outdoor stair approaches.
     const within = !!this.domain(start) && this.domain(start) === this.domain(goal);
+    const sameBuilding = !!start.buildingId && start.buildingId === goal.buildingId;
     return (a: SearchCost, b: SearchCost) =>
-      this.schematic && within && a.vertical !== b.vertical ? a.vertical - b.vertical :
-      this.schematic && within && a.boundaries !== b.boundaries ? a.boundaries - b.boundaries : a.cost - b.cost;
+      this.schematic && sameBuilding && a.vertical !== b.vertical ? a.vertical - b.vertical :
+      this.schematic && sameBuilding && a.boundaries !== b.boundaries ? a.boundaries - b.boundaries :
+      this.schematic && within && !sameBuilding && a.floorDetours !== b.floorDetours ? a.floorDetours - b.floorDetours : a.cost - b.cost;
   }
 }
