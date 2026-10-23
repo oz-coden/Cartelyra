@@ -106,3 +106,24 @@ test('Building 1 parallel entrance approaches have separate junctions and remain
   assert.deepEqual(pf.findPath(a,b,'accessible').pathNodes,finder.findPath(a,b,'accessible').pathNodes);
   assert.ok(pf.findPath(out('b1-b2-approach-right'),'b1/f1/entry-top-right','accessible'));
 });
+
+test('the Building 1 west path joins the southern path to the Building 2 southwest junction without entering a building',async()=>{
+  const south=out('b1-south-west-path'),north=out('b2-west-turn');
+  for(const mode of ['shortest','accessible','stairs'])for(const [a,b]of[[south,north],[north,south]]){
+    const r=finder.findPath(a,b,mode);assert.ok(r);
+    assert.deepEqual(r.pathNodes.map(n=>n.id),[a,b]);
+    assert.equal(r.floorChanges+r.verticalMovements.unmeasured,0);
+    assert.equal(r.verticalMovements.stairs,0);
+    assert.equal(finder.findPath(a,b,mode,false),null);
+    const onward=finder.findPath(out('b8-south-landing'),out('b3-b2-west'),mode);assert.ok(onward);
+    assert.ok(onward.pathNodes.some(n=>n.id===south)&&onward.pathNodes.some(n=>n.id===north));
+    assert.ok(onward.pathNodes.every(n=>!n.buildingId&&n.outdoorLayer==='ground'));
+  }
+  const closed=structuredClone(data);closed.navigation.edges.find(e=>e.from===north&&e.to===south).blocked=true;
+  const detour=new AStarPathfinder(closed).findPath(south,north,'accessible');assert.ok(detour);
+  assert.ok(detour.pathNodes.some(n=>n.id===out('b1-b2-east')));
+  assert.ok(detour.routingCost>finder.findPath(south,north,'accessible').routingCost);
+  const {document,window}=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));globalThis.document=document;globalThis.window=window;
+  const map=new FloorMap(document.getElementById('map-canvas'),data,source.overview);map.showOverview(true);
+  assert.ok(document.querySelector(`[data-from="${north}"][data-to="${south}"][data-edge-type="outdoor"]`));
+});

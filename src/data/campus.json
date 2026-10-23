@@ -1774,6 +1774,17 @@
         "widthClass": "unknown",
         "instruction": "外階段で7号館1Fへ",
         "reverseInstruction": "外階段で中庭へ"
+      },
+      {
+        "from": "b2-west-turn",
+        "to": "b1-south-west-path",
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "routingCost": 10.934464,
+        "cover": "unknown"
       }
     ],
     "links": [
