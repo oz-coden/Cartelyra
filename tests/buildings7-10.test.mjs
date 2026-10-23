@@ -16,14 +16,14 @@ const floors=s.floors.filter(f=>ids.includes(f.buildingId)),places=placeIndex(da
 const finder=new AStarPathfinder(data),group=data.viewGroups.find(g=>g.id==='b7-b10');
 const validate=s=>validateSources(s.manifest,s.buildings,s.floors,s.sources,s.overview);
 
-test('Buildings 7–10 preserve observed floor numbers and room identifiers without assigning room names',()=>{
-  assert.deepEqual(validate(s),[]);assert.equal(group.status,'ready');assert.equal(floors.length,18);
-  assert.deepEqual(group.levels.map(l=>l.label),['1F','3F','4F','5F','6F']);
+test('Buildings 7–10 preserve observed floor numbers and room identifiers with photo-priority identifiers and historical general-use labels',()=>{
+  assert.deepEqual(validate(s),[]);assert.equal(group.status,'ready');assert.equal(floors.length,22);
+  assert.deepEqual(group.levels.map(l=>l.label),['1F','2F','3F','4F','5F','6F']);
   assert.equal(group.levels.find(l=>l.id==='f5').floors.length,3);
-  assert.deepEqual(data.buildings.find(b=>b.id==='b10').floors.map(f=>f.level),[1,3,4]);
-  assert.deepEqual(ids.map(id=>places.filter(p=>p.buildingId===id&&p.kind==='room').length),[23,46,57,20]);
-  for(const f of floors){assert.equal(f.stackIndex,f.level-1);assert.ok(f.rooms.every(r=>r.category==='unknown'));
-    assert.ok(f.rooms.every(r=>r.name===(r.mapLabel??r.id)));assert.equal(f.voids.length,0);}
+  assert.deepEqual(data.buildings.find(b=>b.id==='b10').floors.map(f=>f.level),[1,2,3,4]);
+  assert.deepEqual(ids.map(id=>places.filter(p=>p.buildingId===id&&p.kind==='room').length),[25,50,71,24]);
+  for(const f of floors){assert.equal(f.stackIndex,f.level-1);assert.ok(f.rooms.every(r=>r.name.startsWith(r.id)));
+    assert.equal(f.voids.length,['b8','b10'].includes(f.buildingId)&&f.level===3?1:0);}
   for(const id of ['7-62A','7-61A','8-42-A','8-51C','8-66A','8-68A','9-16B','9-314A','9-310','9-60','10-114'])
     assert.ok(places.find(p=>p.id===id),id);
   for(const id of ['9-48','9-55','9-57','8-55'])assert.ok(!places.some(p=>p.id===id),id);
@@ -54,24 +54,26 @@ test('every group place connects to the Building 8 elevator reference point whil
 
 test('same-floor room pairs across all four wings avoid unnecessary stairs or floor transfers',()=>{
   let checked=0;
-  for(const level of [1,3,4,5,6]){
+  for(const level of [1,2,3,4,5,6]){
     const rooms=places.filter(p=>p.kind==='room'&&p.floorLevel===level);
     for(let i=0;i<rooms.length;i++)for(let j=i+1;j<rooms.length;j++){
       const r=finder.findPath(rooms[i].nodeId,rooms[j].nodeId,'accessible');assert.ok(r,`${rooms[i].id} -> ${rooms[j].id}`);
       assert.equal(r.floorChanges,0);assert.equal(r.verticalMovements.unmeasured,0);checked++;
     }
   }
-  assert.ok(checked>2000);
+  assert.equal(checked,2366);
 });
 
-test('missing 2F stays unregistered and elevator travel counts two floors without inventing a stair shortcut',()=>{
+test('the provisional 2F supplies adjacent EV and common stair stops without a direct 1F–3F stair shortcut',()=>{
   const r=finder.findPath('b8/f1/ev-west','b8/f3/ev-west','accessible');assert.ok(r);assert.equal(r.floorChanges,2);
   assert.equal(minimumFloorChanges(data,'b8/f1/ev-west').get('b8/f3/ev-west'),2);
-  assert.ok(!data.navigation.nodes.some(n=>ids.includes(n.buildingId)&&n.floor===2));
-  for(const b of s.buildings.filter(b=>ids.includes(b.id)))for(const e of b.connections.filter(e=>e.type==='stairs'))
+  assert.ok(data.navigation.nodes.some(n=>n.buildingId==='b8'&&n.floor===2&&n.type==='elevator'));
+  assert.ok(r.pathNodes.some(n=>n.id==='b8/f2/ev-west'));
+  assert.ok(s.buildings.find(b=>b.id==='b8').connections.some(e=>e.from==='b8/f1/stairs-center'&&e.to==='b8/f2/stairs-center'));
+  for(const b of s.buildings.filter(b=>['b7','b9','b10'].includes(b.id)))for(const e of b.connections.filter(e=>e.type==='stairs'))
     assert.ok(!e.from.includes('/f1/')&&!e.to.includes('/f1/'));
   const bad=structuredClone(s),ev=bad.buildings.find(b=>b.id==='b8').connections.find(e=>e.from==='b8/f1/ev-west');
-  ev.floorChanges=1;assert.ok(validate(bad).some(e=>e.includes('conflict with floor order')));
+  ev.floorChanges=2;assert.ok(validate(bad).some(e=>e.includes('conflict with floor order')));
   const stair=structuredClone(s);stair.buildings.find(b=>b.id==='b7').connections.push({
     from:'b7/f1/stairs-center',to:'b7/f3/stairs-west',type:'stairs',verification:'inferred',isIndoor:true,isAccessible:false,routingCost:1,cover:'indoor'});
   assert.ok(validate(stair).some(e=>e.includes('Vertical edge skips a floor')));
@@ -80,7 +82,7 @@ test('missing 2F stays unregistered and elevator travel counts two floors withou
 });
 
 test('same-level stairs between Buildings 7 and 10 remain explicit, directional and excluded by stair avoidance',()=>{
-  for(const level of [3,4]){
+  for(const level of [2,3,4]){
     const a=`b7/f${level}/stairs-ten`,b=`b10/f${level}/stairs-seven`;
     const blocked=structuredClone(data);
     blocked.navigation.edges.find(e=>e.from===`b7/f${level}/port-eight`).blocked=true;
@@ -102,7 +104,8 @@ test('provisional inner rooms retain front endpoints and the numbered circulatio
     assert.equal(p.approachRoomId,front);assert.equal(p.nodeId,q.nodeId);assert.match(p.description,/暫定/);
   }
   const f=floors.find(f=>f.buildingId==='b10'&&f.id==='f3');assert.equal(f.rooms.find(r=>r.id==='10-33').passThrough,true);
-  assert.ok(f.features.some(f=>f.id==='unlabelled-center'&&f.type==='service'));
+  assert.equal(f.voids.length,1);
+  assert.ok(!f.features.some(f=>f.id==='unlabelled-center'));
   const bad=structuredClone(s),bf=bad.floors.find(f=>f.buildingId==='b10'&&f.id==='f3');
   bf.navigation.nodes.push({id:'bad-top',name:'Bad',type:'corridor',position:[30,20]},
     {id:'bad-bottom',name:'Bad',type:'corridor',position:[30,80]});
@@ -110,7 +113,7 @@ test('provisional inner rooms retain front endpoints and the numbered circulatio
   assert.ok(validate(bad).some(e=>e.includes('Edge crosses room, void or service area')));
 });
 
-test('group SVG exposes five available levels, cross-wing routes and room-shaped foreground selection',async()=>{
+test('group SVG exposes six available levels, cross-wing routes and room-shaped foreground selection',async()=>{
   const{document,window}=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));globalThis.document=document;globalThis.window=window;
   const state=new LocationState(buildingCatalog(data,s.overview),data.viewGroups);state.selectBuilding('b7');
   const map=new FloorMap(document.getElementById('map-canvas'),data,s.overview);
@@ -146,11 +149,11 @@ test('1F preserves the photo order and all observed stair/WC locations under one
 
 test('9–10 share real corridor boundaries and every 7–8 upper bridge has drawing width',()=>{
   const nodes=new Map(data.navigation.nodes.map(n=>[n.id,n]));
-  for(const l of [1,3,4]){
+  for(const l of [1,2,3,4]){
     const edges=data.navigation.edges.filter(e=>e.type==='bridge'&&e.from.startsWith(`b10/f${l}/port-nine`));assert.ok(edges.length);
     for(const e of edges)assert.deepEqual(nodes.get(e.from).position,nodes.get(e.to).position);
   }
-  for(const l of [3,4,5,6]){
+  for(const l of [2,3,4,5,6]){
     const e=data.navigation.edges.find(e=>e.type==='bridge'&&e.from===`b7/f${l}/port-eight`);
     assert.equal(e.cover,'covered');assert.equal(e.passageWidth,6);
   }
@@ -178,4 +181,20 @@ test('7-16 uses the corridor and 7-17 approaches through the provisional plaza w
     assert.ok(!r.pathNodes.some(n=>n.id==='b7/f1/room-14'));
     assert.equal(r.pathNodes.some(n=>n.id==='b7/f1/plaza-approach'),id==='7-17');
   }
+});
+
+
+test('2023 use labels remain historical and generalized while 2024 room boundaries take priority',()=>{
+  assert.equal(floors.reduce((n,f)=>n+f.rooms.filter(r=>r.name!==r.id).length,0),156);
+  for(const [id,name]of [['7-21','講義室'],['7-22','パソコン演習室'],['8-20','マップホール'],['10-201','学生食堂'],['10-13','卓球場'],['9-214','図書室']]){
+    const p=places.find(p=>p.id===id);assert.ok(p.name.includes(name),id);assert.match(p.description,/2023.*現地確認待ち/);
+  }
+  for(const id of ['8-55','8-31','8-46-1','9-61','7-62-1','10-41A'])assert.ok(!places.some(p=>p.id===id),id);
+  for(const id of ['8-54','8-32','8-51A','8-51C','9-60','9-313A','9-313B','7-61A'])assert.ok(places.some(p=>p.id===id),id);
+  const text=JSON.stringify(floors.flatMap(f=>f.rooms));assert.ok(!/細谷浩史|松隈洋|安室知|丸山泰明|曽我部昌史|4020|4030/.test(text));
+  assert.match(places.find(p=>p.id==='10-33').name,/食堂.*飲食スペース/);
+  assert.equal(searchPlaces(places,'10号館 3F 食堂')[0].id,'10-33');
+  assert.match(places.find(p=>p.id==='10-201').description,/2Fに食堂があることは現地情報/);
+  assert.equal(searchPlaces(places,'8号館 マップホール')[0].id,'8-20');
+  assert.ok(floors.filter(f=>f.level===2).every(f=>f.sourceId==='b7-b10-reference-2023'));
 });

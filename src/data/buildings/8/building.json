@@ -11,23 +11,13 @@
   "rotation": 0,
   "floorIds": [
     "f1",
+    "f2",
     "f3",
     "f4",
     "f5",
     "f6"
   ],
   "connections": [
-    {
-      "to": "b8/f3/ev-west",
-      "type": "elevator",
-      "verification": "inferred",
-      "isIndoor": true,
-      "isAccessible": true,
-      "routingCost": 3.0,
-      "cover": "indoor",
-      "floorChanges": 2,
-      "from": "b8/f1/ev-west"
-    },
     {
       "to": "b8/f4/stairs-center",
       "type": "stairs",
@@ -90,6 +80,48 @@
       "cover": "indoor",
       "floorChanges": 1,
       "from": "b8/f5/ev-west"
+    },
+    {
+      "to": "b8/f2/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f1/stairs-center"
+    },
+    {
+      "to": "b8/f3/stairs-center",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f2/stairs-center"
+    },
+    {
+      "to": "b8/f2/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f1/ev-west",
+      "floorChanges": 1
+    },
+    {
+      "to": "b8/f3/ev-west",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b8/f2/ev-west",
+      "floorChanges": 1
     }
   ]
 }

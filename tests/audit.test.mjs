@@ -127,7 +127,7 @@ test('all cross-building room pairs expose only the declared pending approaches 
   const network=p=>p.buildingId==='b6'?'b6':p.buildingId==='b17'&&p.floorLevel>1?'b17-upper':
     ['b7','b8','b9','b10'].includes(p.buildingId)?'b7-b10':'outdoor';
   const report=auditCampusCoverage(data);
-  assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,894064);
+  assert.deepEqual(report.unlinkedRooms,['3-B202']);assert.equal(report.checkedPairs,941296);
   for(const group of report.groups){
     const from=rooms.filter(p=>p.buildingId===group.fromBuildingId),to=rooms.filter(p=>p.buildingId===group.toBuildingId);
     let reachable=0,missing=0,disconnected=0;

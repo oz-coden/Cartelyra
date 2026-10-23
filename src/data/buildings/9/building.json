@@ -11,6 +11,7 @@
   "rotation": 0,
   "floorIds": [
     "f1",
+    "f2",
     "f3",
     "f4",
     "f5",
@@ -76,20 +77,40 @@
       "routingCost": 1.5,
       "cover": "indoor",
       "from": "b9/f5/stairs-southeast"
+    },
+    {
+      "to": "b9/f3/stairs-northwest",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f2/stairs-northwest"
+    },
+    {
+      "to": "b9/f3/stairs-southeast",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 1.5,
+      "cover": "indoor",
+      "from": "b9/f2/stairs-southeast"
     }
   ],
   "navigationComponents": [
     {
       "nodeId": "b9/f1/hall-0",
-      "description": "未登録2Fによる上下階の分離、または隣棟の共用通路で接続する区画。"
+      "description": "1F階段の連続性が未確認の区画、または隣棟の共用通路を経由して接続する区画。"
     },
     {
       "nodeId": "b9/f1/hall-10",
-      "description": "未登録2Fによる上下階の分離、または隣棟の共用通路で接続する区画。"
+      "description": "1F階段の連続性が未確認の区画、または隣棟の共用通路を経由して接続する区画。"
     },
     {
-      "nodeId": "b9/f3/hall-0",
-      "description": "未登録2Fによる上下階の分離、または隣棟の共用通路で接続する区画。"
+      "nodeId": "b9/f2/hall-0",
+      "description": "1F階段の連続性が未確認の区画、または隣棟の共用通路を経由して接続する区画。"
     }
   ]
 }

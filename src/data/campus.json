@@ -1351,11 +1351,12 @@
       "status": "ready",
       "verification": "inferred",
       "notes": [
-        "7〜10号館を連絡棟として一体表示。図面の接続関係を基に、階別の連絡通路を明示登録。",
-        "2Fは未登録。10号館の図面は1F・3F・4Fのみ。存在未確認のフロアは作成しない。",
-        "1Fの図面は上階の図面と向きが異なるため、部屋・設備・通路を一括で90度回転して棟の並びを統一（鏡映なし）。実方位・寸法は未校正。",
-        "7・10号館境界の3F・4Fの階段記号を昇降量未確認の段差接続とする。階段回避は8・9号館側を回る。",
-        "8号館EVの1F〜3Fは2階分の暫定接続。2Fの乗降・室内経路は補完しない。屋外経路は出入口との対応確認待ち。"
+        "7〜10号館を連絡棟として一体表示。2024年の掲示写真を配置・区画・室番号の優先資料とし、2023年作成の参考PDFから2Fと一般的用途を補足する。",
+        "1〜4Fは4棟、5・6Fは7〜9号館を表示する。10号館の5・6Fは未登録。",
+        "寸法・階高・実方位は未校正。測量前の独自の仮配置であり、原図の輪郭・縮尺・配色は再現しない。",
+        "7・10号館の2〜4F境界は高低差未確認の段差接続。階段回避は8・9号館側の連絡通路を使う。",
+        "8号館は1〜6FのEVと1〜3Fの共用階段を仮接続する。他棟の1F階段との対応と、屋外経路との対応は現地確認待ち。",
+        "用途名は旧資料の履歴情報。個人名・内線番号・研究テーマは収録せず、現在の用途・利用条件は要確認。"
       ],
       "levels": [
         {
@@ -1377,6 +1378,28 @@
             {
               "buildingId": "b10",
               "floorId": "f1"
+            }
+          ]
+        },
+        {
+          "id": "f2",
+          "label": "2F",
+          "floors": [
+            {
+              "buildingId": "b7",
+              "floorId": "f2"
+            },
+            {
+              "buildingId": "b8",
+              "floorId": "f2"
+            },
+            {
+              "buildingId": "b9",
+              "floorId": "f2"
+            },
+            {
+              "buildingId": "b10",
+              "floorId": "f2"
             }
           ]
         },
@@ -1705,6 +1728,55 @@
       "floorChanges": 0,
       "from": "b9/f1/port-eight-west",
       "passageWidth": 6
+    },
+    {
+      "to": "b8/f2/port-seven",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "from": "b7/f2/port-eight",
+      "floorChanges": 0,
+      "passageWidth": 6
+    },
+    {
+      "to": "b8/f2/port-nine",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "from": "b9/f2/port-eight",
+      "floorChanges": 0,
+      "passageWidth": 6
+    },
+    {
+      "to": "b9/f2/port-ten",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "covered",
+      "from": "b10/f2/port-nine",
+      "floorChanges": 0,
+      "passageWidth": 6
+    },
+    {
+      "to": "b10/f2/stairs-seven",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": false,
+      "routingCost": 2,
+      "cover": "covered",
+      "from": "b7/f2/stairs-ten",
+      "passageWidth": 6,
+      "instruction": "7号館と10号館の2Fをつなぐ階段・段差を通り、10号館側へ進む",
+      "reverseInstruction": "10号館と7号館の2Fをつなぐ階段・段差を通り、7号館側へ進む"
     }
   ]
 }

@@ -27,12 +27,12 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Building 3 rooms | 35 rooms; 34 have inferred entrance and corridor connections |
 | Building 5 | 1F–4F; 39 numbered areas, four WCs, two stair cores and a 2F entrance reached by external stairs. Reference routes cover 33 rooms directly and six inner rooms via a named front room; the approaches to 5-308–5-312 are provisional and require field checks |
 | Building 6 | 1F–4F; 68 areas: 66 direct corridor approaches and two via named front rooms, four WCs and inferred stairs. Entrances on 1F and 2F; inner-room approaches remain provisional. The 3F right wing may require a reference route via another floor |
-| Buildings 7–10 | Connected floor-plan/3D group with 18 plans and 146 numbered areas, 23 WCs and one inferred EV core. 2F is unregistered; Building 10 has plans for 1F, 3F and 4F only. Four inner areas use provisional front endpoints; room names are not assigned. Outdoor links remain pending |
+| Buildings 7–10 | Connected floor-plan/3D group with 22 plans and 170 numbered areas, 30 WCs and one inferred EV core. The provisional 2F uses a 2023 reference PDF; 2024 posted photos take priority for existing room divisions and identifiers. 155 general-use labels use the older reference, supplemented by field information on the 2F cafeteria and the 10-33 dining space. Four inner areas use provisional front endpoints. Outdoor links remain pending |
 | Building 17 | 1F–5F; 154 areas (151 direct approaches and three provisional front-room endpoints), 16 WCs, inferred stairs/elevators and three entrance places. Two 1F entrances connect to the Building 19-facing outdoor path; the 3F external connection is pending. The 1F section and 2F–5F section remain separate until their stair/EV correspondence is confirmed |
 | Building 19 | B1–3F; 48 areas with reference routes, ten WCs, two inferred stair cores and a shop-side 1F entrance. The left-side corridor serves 19-104/107 separately from the shop side. Elevators connect B1, 2F and 3F without a public 1F boarding link; the shop entrance connects outdoors on the south side near the gap between Buildings 17 and 12 |
 | Building 20 | 1F–4F; 108 numbered room areas, nine WCs, stairs, elevators and three 1F building entrances. Reference routes reach 95 rooms at their corridor side and 13 inner rooms at an explicitly named front room |
 | Building 23 | B2–8F; ten floors and 286 areas: 255 direct corridor approaches and 31 provisional front-room endpoints. 28 WCs, three EV cores, inferred stairs and two 1F entrance places facing Buildings 15 and 20, both connected to outdoor reference routes |
-| WCs and facilities | 134 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, 23 in Buildings 7–10, 16 in Building 17, ten in Building 19, nine in Building 20, 28 in Building 23), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
+| WCs and facilities | 141 WCs (23 in Building 1, 17 in Building 3, four each in Buildings 5 and 6, 30 in Buildings 7–10, 16 in Building 17, ten in Building 19, nine in Building 20, 28 in Building 23), one AED, elevators and stairs can be searched and selected. No routes are shown to places without registered connections |
 | 3-B202 | Can be selected and set as an endpoint. No route is shown because its entrance is not registered |
 | Basement equipment areas and pits | Display only; excluded from route search |
 | Actual distances and walking times | Not measured |
@@ -52,7 +52,7 @@ Building 23’s two entrances connect through the ground path between Buildings 
 
 A speech bubble appears at the selected place on the map, with “ここから出発” (start here) and “ここへ行く” (go here) actions. It follows map panning/zooming, 3D rotation and floor expansion without changing the page layout or scroll position. Selecting a place within the current building or connected display group retains the 3D camera; selecting a place outside that display scope fits the new scope into view while preserving the floor display mode and spacing. Green/red 3D pins mark the actual route endpoints, while purple diamonds mark transitions to another floor or the outdoor route. Near map edges it stays within the map area; it is hidden while the selected position is offscreen or on a hidden floor. See [requirements and interaction rules](docs/requirements.md) for interaction details and scope.
 
-Connected buildings can share a floor-plan/3D view while retaining their own building IDs and floor labels. Explicit display levels map corresponding floors, including different floor numbers; “連絡棟をまとめて表示” switches between grouped and individual views. Group membership creates no routes. Buildings 7–10 share registered 1F and 3F–6F display levels, with Building 10 included only on 1F, 3F and 4F. Missing 2F plans do not create a floor or a stair shortcut. The inferred Building 8 elevator link from 1F to 3F counts two floors. See [Buildings 7–10 transcription checks](docs/buildings-7-10-review.md) for uncertain numbers, front-room approaches and connections.
+Connected buildings can share a floor-plan/3D view while retaining their own building IDs and floor labels. Explicit display levels map corresponding floors, including different floor numbers; “連絡棟をまとめて表示” switches between grouped and individual views. Group membership creates no routes. Buildings 7–10 share 1F–6F display levels, with Building 10 included on 1F–4F. The provisional 2F uses a 2023 reference PDF; 2024 posted photos take priority for existing divisions and identifiers. General-use labels from the older PDF are historical, and personal names, extension numbers and research topics are omitted. Building 8 has adjacent EV stops and common stair links; other wings retain pending 1F stair correspondences. See [Buildings 7–10 transcription checks](docs/buildings-7-10-review.md) for uncertain numbers, front-room approaches and connections.
 
 The 3D view loads on demand, so the floor plan remains available without WebGL.
 
@@ -137,12 +137,12 @@ Rights in reference materials, third-party content and dependencies belong to th
 | 3号館の主要室 | 35室。うち34室に入口と通路の推定接続を登録 |
 | 5号館 | 1〜4F・39室区画、WC 4か所・両端の階段・外階段から入る2F出入口。33室へ直接、奥の6室は指定した手前の部屋まで参考案内。5-308〜5-312の進入元は暫定推定 |
 | 6号館 | 1〜4F・68区画。66区画へ直接、奥の2区画は指定した手前の部屋まで参考案内。WC 4か所・階段・1Fと2Fの出入口。3F右側へは他階を経由する参考経路となる場合あり |
-| 7〜10号館 | 連絡棟として18フロア・146区画を一体表示。WC 23か所、EV 1系統を暫定対応。2Fは未登録、10号館は1F・3F・4Fのみ。奥の4区画は手前まで暫定案内し、室名は付けない。屋外接続は未登録 |
+| 7〜10号館 | 連絡棟として22フロア・170区画を一体表示。WC 30か所、EV 1系統を暫定対応。2Fは2023年参考PDFによる仮登録で、既存階の区画・室番号は2024年掲示写真を優先。155区画に旧資料の一般的用途を付記。2F食堂の存在と10-33の飲食スペースは現地情報で補足。奥の4区画は手前まで暫定案内。屋外接続は未登録 |
 | 17号館 | 1〜5F・154区画。151区画へ直接、奥の3区画は指定した手前の部屋まで暫定案内。WC 16か所・階段・EV・出入口3か所。1Fの2出入口を19号館側の屋外通路へ参考接続。3Fの外部接続は保留。1Fと2〜5Fは階段・EVの対応確認まで別々に案内 |
 | 19号館 | B1〜3F・48区画へ参考案内。WC 10か所・階段2系統・購買部側1F出入口。104・107は左側通路へ接続。EVは1Fで乗降せずB1・2F・3F間を案内。購買部側出入口を南側の17・12号館間の屋外通路へ参考接続 |
 | 20号館 | 1〜4F・108室区画、WC 9か所・階段・EV・1F出入口3か所。95室は通路側まで、奥の13室は指定した手前の部屋まで参考案内 |
 | 23号館 | B2〜8Fの10フロア・286区画。255区画へ直接、31区画は手前の部屋まで暫定案内。WC 28か所・EV3系統・階段・1F出入口2か所（15号館側・20号館側）を屋外参考経路へ接続 |
-| WC・設備 | WC 134か所（1号館23・3号館17・5号館4・6号館4・7〜10号館23・17号館16・19号館10・20号館9・23号館28）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
+| WC・設備 | WC 141か所（1号館23・3号館17・5号館4・6号館4・7〜10号館30・17号館16・19号館10・20号館9・23号館28）、AED 1か所、EV・階段を検索・選択可能。接続未登録の場所への経路提示なし |
 | 3-B202 | 選択・端点指定は可能。入口未登録のため経路提示なし |
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
@@ -162,7 +162,7 @@ Rights in reference materials, third-party content and dependencies belong to th
 
 選択した場所には地図上の吹き出しを表示し、「ここから出発」「ここへ行く」で指定できます。吹き出しは地図の移動・拡大縮小や3Dの回転・階の展開に追従し、表示のためにページのレイアウトやスクロール位置を変更しません。同じ棟または表示中の連絡棟群の場所を選択した場合は3Dカメラを維持し、その範囲外の場所を選択した場合は階の表示モードと間隔を保って、新しい表示範囲を収めます。3Dの緑・赤のピンは実際の出発地・目的地を示し、紫のひし形は別の階や屋外への中継地点を示します。地図の端では表示範囲内に収め、選択位置が画面外や非表示の階にある間は吹き出しを隠します。操作仕様と拡張範囲は[要件と操作仕様](docs/requirements.md)を参照してください。
 
-連絡棟は棟IDと階名を保持したまま、平面図・3Dをまとめて表示できます。対応する階を明示するため、異なる階番号同士の接続にも対応します。「連絡棟をまとめて表示」で一体表示と単棟表示を切り替えます。所属だけを根拠に経路は作りません。7〜10号館は1F・3〜6Fの対応するフロアを一体表示し、10号館は1F・3F・4Fだけを含めます。未登録の2Fや階段の近道は補完しません。8号館EVの1F〜3Fは2階分の暫定接続です。番号・進入元・接続の確認項目は[7〜10号館の図面登録と確認項目](docs/buildings-7-10-review.md)に記録しています。
+連絡棟は棟IDと階名を保持したまま、平面図・3Dをまとめて表示できます。対応する階を明示するため、異なる階番号同士の接続にも対応します。「連絡棟をまとめて表示」で一体表示と単棟表示を切り替えます。所属だけを根拠に経路は作りません。7〜10号館は1〜6Fの対応するフロアを一体表示し、10号館は1〜4Fを含めます。2Fは2023年の参考PDFによる仮登録です。既存階の区画・室番号は2024年の掲示写真を優先し、旧資料の一般的用途を履歴情報として補足します。個人名・内線番号・研究テーマは含めません。8号館のEVと共用階段は隣接する登録階を仮接続し、他棟の1F階段との対応は確認待ちです。番号・進入元・接続の確認項目は[7〜10号館の図面登録と確認項目](docs/buildings-7-10-review.md)に記録しています。
 
 3Dは必要時に読み込むため、WebGLが利用できない環境でも平面図を利用できます。
 
