@@ -9,7 +9,7 @@
 3. [Editing map data](#editing-map-data)
 4. [Deployment](#deployment)
 5. [References](#references)
-6. [License](#license)
+6. [Terms of use](#terms-of-use)
 
 ## Overview
 
@@ -100,9 +100,13 @@ Kanagawa University’s official [Yokohama Campus information page](https://www.
 
 The campus overview was created and simplified with reference to [GSI Tiles: seamless aerial photos](https://maps.gsi.go.jp/development/ichiran.html), retrieved on 21 October 2026 UTC. The capture date has not been identified; current entrances and access conditions require field checks.
 
-## License
+## Terms of use
 
-The application code is released under the [MIT License](LICENSE). Referenced maps and aerial imagery remain subject to their respective providers’ terms.
+The public Uniview website is free to use for viewing maps, searching for places and finding routes.
+
+The project does not grant a general license to freely copy, modify or redistribute its source code or map data beyond the permissions expressly provided in the [Uniview Terms of Use](LICENSE.md). Refer to those terms for uses beyond ordinary website use.
+
+Rights in reference materials, third-party content and dependencies belong to their respective rights holders, and their applicable terms remain unchanged. Previously granted permissions, including MIT permissions for covered portions, remain in effect. Prior MIT notices and distributed dependency licenses are retained in the [license notices](public/licenses.txt).
 
 ---
 
@@ -115,7 +119,7 @@ The application code is released under the [MIT License](LICENSE). Referenced ma
 3. [編集方法](#編集方法)
 4. [公開方法](#公開方法)
 5. [参考資料](#参考資料)
-6. [ライセンス](#ライセンス)
+6. [利用条件](#利用条件)
 
 ## 概要
 
@@ -206,6 +210,10 @@ GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages �
 
 キャンパス図は[国土地理院の地理院タイル「全国最新写真（シームレス）」](https://maps.gsi.go.jp/development/ichiran.html)（2026年10月21日 UTC取得）を参考に、簡略化・加工して作成しています。撮影年月は未特定で、現在の入口・通行条件は現地照合が必要です。
 
-## ライセンス
+## 利用条件
 
-アプリケーションのコードは [MIT License](LICENSE) で公開しています。参照した地図・空中写真の利用条件は、それぞれの提供元の規約に従います。
+Univiewの公開サイトは、地図の閲覧、場所の検索や経路検索に無料で利用できます。
+
+ソースコードおよび地図データについて、[Uniview 利用条件](LICENSE.md)で明示する範囲を超えて、自由な複製・改変・再配布を認める包括的な許諾は行っていません。通常のサイト利用を超える利用については、利用条件を確認してください。
+
+参照資料・第三者のコンテンツ・依存ライブラリの権利は、それぞれの権利者に帰属し、各提供元の利用条件が適用されます。本プロジェクトの利用条件によって、これらは変更されません。過去にMIT License等で許諾された部分については、従前の許諾が引き続き適用されます。従前のMIT表示と配布する依存ライブラリのライセンス全文は、[ライセンス表示](public/licenses.txt)に収録しています。
