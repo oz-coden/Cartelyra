@@ -95,7 +95,7 @@ export function auditGeometry(floors: FloorSource[]): AuditFinding[] {
 }
 
 function permitted(edge: NavEdge, mode: RouteFilterType) {
-  return !edge.blocked && (mode !== "accessible" || edge.isAccessible && edge.type !== "stairs");
+  return !edge.blocked && edge.access !== "staff" && (mode !== "accessible" || edge.isAccessible && edge.type !== "stairs");
 }
 
 /** Independent integer-cost reference: known floor changes plus unmeasured vertical links. */
@@ -118,6 +118,20 @@ export function minimumFloorChanges(data: CampusData, start: string, mode: Route
   for (let i = 0; i < queue.length; i++) for (const [next, cost] of adjacent.get(queue[i]) ?? []) {
     const distance = costs.get(queue[i])! + cost;
     if (distance < (costs.get(next) ?? Infinity)) { costs.set(next, distance); queue.push(next); }
+  }
+  // For same-building goals, match the preference for staying within its indoor domain.
+  // A connected wing group is one domain; external destinations retain the global reference.
+  const startNode = nodes.get(start);
+  if (data.coordinateUnit === "schematic" && startNode?.buildingId) {
+    const group = data.viewGroups?.find(g => g.status === "ready" && g.buildingIds.includes(startNode.buildingId!));
+    const domain = new Set(group?.buildingIds ?? [startNode.buildingId]);
+    const inside = new Map([[start, 0]]), pending = [start];
+    for (let i = 0; i < pending.length; i++) for (const [next, cost] of adjacent.get(pending[i]) ?? []) {
+      if (!domain.has(nodes.get(next)?.buildingId ?? "")) continue;
+      const distance = inside.get(pending[i])! + cost;
+      if (distance < (inside.get(next) ?? Infinity)) { inside.set(next, distance); pending.push(next); }
+    }
+    for (const [id, cost] of inside) if (nodes.get(id)?.buildingId === startNode.buildingId) costs.set(id, cost);
   }
   return costs;
 }

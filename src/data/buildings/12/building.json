@@ -14,5 +14,46 @@
     "f2",
     "f3"
   ],
-  "connections": []
+  "connections": [
+    {
+      "from": "b12/f1/stairs-left",
+      "to": "b12/f2/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b12/f1/stairs-right",
+      "to": "b12/f2/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b12/f2/stairs-left",
+      "to": "b12/f3/stairs-left",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b12/f2/stairs-right",
+      "to": "b12/f3/stairs-right",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    }
+  ]
 }

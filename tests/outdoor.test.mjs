@@ -137,6 +137,9 @@ test("Outdoor authoring rejects shortcuts through buildings, false layer transfe
   check((o) => o.nodes[0].position = [o.nodes[0].position[0] - 1, o.nodes[0].position[1]], /must be on building overview boundary/);
   const closed = structuredClone(source);
   closed.manifest.outdoor.edges.find((e) => e.to === "west-gate").blocked = true;
+  // Isolate the original crossing: the new library ground path is a valid second bypass.
+  for (const e of closed.manifest.outdoor.edges)
+    if ((e.from === "b15-south-junction" && e.to === "b15-southwest") || (e.from === "west-gate" && e.to === "b12-ground-north")) e.blocked = true;
   assert.deepEqual(validate(closed), []);
   const alternative = new AStarPathfinder(compile(closed)).findPath("b3/f1/room-103", "b20/f1/room-113");
   assert.ok(alternative.steps.some(s => s.edgeType === "stairs"));

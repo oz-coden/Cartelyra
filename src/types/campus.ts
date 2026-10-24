@@ -160,6 +160,9 @@ export interface NavNode {
 export type NavEdgeType = "walk" | "stairs" | "ramp" | "elevator" | "bridge" | "outdoor";
 
 export interface NavEdge {
+  accessFor?: string; // Building served by an access spur.
+  throughPenalty?: number; // Extra reference cost when neither endpoint belongs to accessFor.
+  access?: "public" | "staff"; // Staff-only links are retained but excluded from public guidance.
   passageWidth?: number; // Schematic drawing width of a cross-building corridor; never a measured clearance.
   from: string;
   to: string;

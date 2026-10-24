@@ -15,5 +15,139 @@
     "f3",
     "f4"
   ],
-  "connections": []
+  "connections": [
+    {
+      "from": "b15/f1/stairs-north",
+      "to": "b15/f2/stairs-north",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor",
+      "access": "staff"
+    },
+    {
+      "from": "b15/f1/stairs-east",
+      "to": "b15/f2/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f1/stairs-west",
+      "to": "b15/f2/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f1/ev",
+      "to": "b15/f2/ev",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f2/stairs-north",
+      "to": "b15/f3/stairs-north",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor",
+      "access": "staff"
+    },
+    {
+      "from": "b15/f2/stairs-east",
+      "to": "b15/f3/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f2/stairs-west",
+      "to": "b15/f3/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f2/ev",
+      "to": "b15/f3/ev",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f3/stairs-north",
+      "to": "b15/f4/stairs-north",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor",
+      "access": "staff"
+    },
+    {
+      "from": "b15/f3/stairs-east",
+      "to": "b15/f4/stairs-east",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f3/stairs-west",
+      "to": "b15/f4/stairs-west",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f3/ev",
+      "to": "b15/f4/ev",
+      "type": "elevator",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": true,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    },
+    {
+      "from": "b15/f1/stairs-southeast",
+      "to": "b15/f2/stairs-southeast",
+      "type": "stairs",
+      "verification": "inferred",
+      "isIndoor": true,
+      "isAccessible": false,
+      "routingCost": 0.6,
+      "cover": "indoor"
+    }
+  ]
 }

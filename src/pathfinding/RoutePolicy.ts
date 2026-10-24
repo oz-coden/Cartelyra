@@ -60,11 +60,13 @@ export class RoutePolicy {
       boundaryChanges: this.domain(a) !== this.domain(b) ? 1 : 0 };
   }
   permitted(edge: NavEdge, filter: RouteFilterType, allowInferred: boolean) {
-    return !edge.blocked && (allowInferred || edge.verification === "verified") &&
+    return !edge.blocked && edge.access !== "staff" && (allowInferred || edge.verification === "verified") &&
       (filter !== "accessible" || edge.isAccessible && edge.type !== "stairs");
   }
-  cost(link: Traversal, filter: RouteFilterType) {
+  cost(link: Traversal, filter: RouteFilterType, start?: NavNode, goal?: NavNode) {
     let cost = link.length;
+    if (link.edge.accessFor && start?.buildingId !== link.edge.accessFor && goal?.buildingId !== link.edge.accessFor)
+      cost += link.edge.throughPenalty ?? 0;
     if (filter === "indoor") {
       const cover = edgeCover(link.edge);
       cost *= cover === "indoor" ? 1 : cover === "covered" ? 1.4 : 4.5;
@@ -92,8 +94,8 @@ export class RoutePolicy {
     const sameBuilding = !!start.buildingId && start.buildingId === goal.buildingId;
     if (objective === "fewest-stairs") return (a: SearchCost, b: SearchCost) => a.stairs - b.stairs || a.cost - b.cost;
     return (a: SearchCost, b: SearchCost) =>
-      this.schematic && sameBuilding && a.vertical !== b.vertical ? a.vertical - b.vertical :
       this.schematic && sameBuilding && a.boundaries !== b.boundaries ? a.boundaries - b.boundaries :
+      this.schematic && sameBuilding && a.vertical !== b.vertical ? a.vertical - b.vertical :
       this.schematic && within && !sameBuilding && a.floorDetours !== b.floorDetours ? a.floorDetours - b.floorDetours : a.cost - b.cost;
   }
 }

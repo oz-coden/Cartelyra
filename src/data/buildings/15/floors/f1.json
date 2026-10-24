@@ -35,7 +35,8 @@
         [56, 28],
         [56, 10],
         [20, 10]
-      ]
+      ],
+      "entrance": "room-office"
     },
     {
       "id": "15-f1-media",
@@ -49,7 +50,8 @@
         [20, 10],
         [20, 28],
         [4, 28]
-      ]
+      ],
+      "entrance": "room-media"
     },
     {
       "id": "15-f1-terrace",
@@ -63,7 +65,9 @@
         [54, 10],
         [54, 36],
         [20, 36]
-      ]
+      ],
+      "passThrough": true,
+      "entrance": "room-terrace"
     },
     {
       "id": "15-f1-counter",
@@ -77,7 +81,9 @@
         [74, 44],
         [74, 48],
         [50, 48]
-      ]
+      ],
+      "passThrough": true,
+      "entrance": "room-counter"
     },
     {
       "id": "15-f1-learning-hive",
@@ -100,7 +106,9 @@
         [92, 86],
         [92, 96],
         [20, 96]
-      ]
+      ],
+      "passThrough": true,
+      "entrance": "room-learning-hive"
     },
     {
       "id": "15-f1-multipurpose",
@@ -114,7 +122,8 @@
         [20, 74],
         [20, 82],
         [4, 82]
-      ]
+      ],
+      "entrance": "room-multipurpose"
     },
     {
       "id": "15-f1-lounge",
@@ -128,7 +137,8 @@
         [76, 100],
         [76, 114],
         [54, 114]
-      ]
+      ],
+      "entrance": "room-lounge"
     },
     {
       "id": "15-f1-group-a",
@@ -142,7 +152,8 @@
         [14, 100],
         [14, 114],
         [4, 114]
-      ]
+      ],
+      "entrance": "room-group-a"
     },
     {
       "id": "15-f1-group-b",
@@ -156,7 +167,8 @@
         [24, 100],
         [24, 114],
         [14, 114]
-      ]
+      ],
+      "entrance": "room-group-b"
     },
     {
       "id": "15-f1-group-c",
@@ -170,7 +182,8 @@
         [34, 100],
         [34, 114],
         [24, 114]
-      ]
+      ],
+      "entrance": "room-group-c"
     },
     {
       "id": "15-f1-group-d",
@@ -184,7 +197,8 @@
         [44, 100],
         [44, 114],
         [34, 114]
-      ]
+      ],
+      "entrance": "room-group-d"
     },
     {
       "id": "15-f1-group-e",
@@ -198,20 +212,24 @@
         [54, 100],
         [54, 114],
         [44, 114]
-      ]
+      ],
+      "entrance": "room-group-e"
     }
   ],
   "features": [
     {
       "id": "stairs-north",
-      "label": "階段",
+      "label": "階段（管理用）",
       "type": "stairs",
       "polygon": [
         [54, 28],
         [66, 28],
         [66, 36],
         [54, 36]
-      ]
+      ],
+      "entrance": "stairs-north",
+      "mapLabel": "階段",
+      "description": "管理用。"
     },
     {
       "id": "stairs-east",
@@ -222,7 +240,8 @@
         [104, 28],
         [104, 42],
         [88, 42]
-      ]
+      ],
+      "entrance": "stairs-east"
     },
     {
       "id": "stairs-west",
@@ -233,7 +252,8 @@
         [20, 86],
         [20, 96],
         [4, 96]
-      ]
+      ],
+      "entrance": "stairs-west"
     },
     {
       "id": "stairs-southeast",
@@ -244,7 +264,8 @@
         [112, 88],
         [112, 96],
         [96, 96]
-      ]
+      ],
+      "entrance": "stairs-southeast"
     },
     {
       "id": "ev",
@@ -255,7 +276,8 @@
         [76, 32],
         [76, 42],
         [66, 42]
-      ]
+      ],
+      "entrance": "ev"
     },
     {
       "id": "wc-male",
@@ -267,7 +289,9 @@
         [120, 35],
         [104, 35]
       ],
-      "restroomType": "male"
+      "restroomType": "male",
+      "entrance": "wc-male",
+      "description": "階段経由。"
     },
     {
       "id": "wc-female",
@@ -279,7 +303,9 @@
         [120, 42],
         [104, 42]
       ],
-      "restroomType": "female"
+      "restroomType": "female",
+      "entrance": "wc-female",
+      "description": "階段経由。"
     },
     {
       "id": "entrance",
@@ -291,11 +317,2473 @@
         [88, 114],
         [84, 114]
       ],
-      "mapLabel": "出入口"
+      "mapLabel": "出入口",
+      "entrance": "entrance"
     }
   ],
   "navigation": {
-    "nodes": [],
-    "edges": []
+    "nodes": [
+      {
+        "id": "room-office",
+        "name": "1階事務室",
+        "position": [56, 18],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-media",
+        "name": "メディアルーム",
+        "position": [20, 20],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-terrace",
+        "name": "テラス",
+        "position": [36, 28],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-counter",
+        "name": "カウンター",
+        "position": [62, 46],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-learning-hive",
+        "name": "ラーニングHive",
+        "position": [50, 64],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-multipurpose",
+        "name": "多目的ルーム",
+        "position": [20, 78],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-lounge",
+        "name": "ラウンジ",
+        "position": [65, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-group-a",
+        "name": "グループワークルームA",
+        "position": [9, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-group-b",
+        "name": "グループワークルームB",
+        "position": [19, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-group-c",
+        "name": "グループワークルームC",
+        "position": [29, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-group-d",
+        "name": "グループワークルームD",
+        "position": [39, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "room-group-e",
+        "name": "グループワークルームE",
+        "position": [49, 100],
+        "type": "room_entrance"
+      },
+      {
+        "id": "stairs-north",
+        "name": "階段（管理用）",
+        "position": [60, 36],
+        "type": "stairs"
+      },
+      {
+        "id": "stairs-east",
+        "name": "階段",
+        "position": [88, 40],
+        "type": "stairs"
+      },
+      {
+        "id": "stairs-west",
+        "name": "階段",
+        "position": [20, 92],
+        "type": "stairs"
+      },
+      {
+        "id": "stairs-southeast",
+        "name": "階段",
+        "position": [96, 92],
+        "type": "stairs"
+      },
+      {
+        "id": "ev",
+        "name": "EV",
+        "position": [76, 37],
+        "type": "elevator"
+      },
+      {
+        "id": "entrance",
+        "name": "1Fエントランス",
+        "position": [86, 114],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-male",
+        "name": "男性用トイレ",
+        "position": [104, 31.5],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "wc-female",
+        "name": "女性用トイレ",
+        "position": [104, 38.5],
+        "type": "facility_entrance"
+      },
+      {
+        "id": "hall-0",
+        "name": "通路の分岐",
+        "position": [56, 18],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-1",
+        "name": "通路の分岐",
+        "position": [20, 20],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-2",
+        "name": "通路の分岐",
+        "position": [36, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-3",
+        "name": "通路の分岐",
+        "position": [62, 46],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-4",
+        "name": "通路の分岐",
+        "position": [50, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-5",
+        "name": "通路の分岐",
+        "position": [20, 78],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-6",
+        "name": "通路の分岐",
+        "position": [65, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-7",
+        "name": "通路の分岐",
+        "position": [9, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-8",
+        "name": "通路の分岐",
+        "position": [19, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-9",
+        "name": "通路の分岐",
+        "position": [29, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-10",
+        "name": "通路の分岐",
+        "position": [39, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-11",
+        "name": "通路の分岐",
+        "position": [49, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-12",
+        "name": "通路の分岐",
+        "position": [60, 36],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-13",
+        "name": "通路の分岐",
+        "position": [88, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-14",
+        "name": "通路の分岐",
+        "position": [20, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-15",
+        "name": "通路の分岐",
+        "position": [96, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-16",
+        "name": "通路の分岐",
+        "position": [76, 37],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-17",
+        "name": "通路の分岐",
+        "position": [86, 114],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-18",
+        "name": "通路の分岐",
+        "position": [82, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-19",
+        "name": "通路の分岐",
+        "position": [56, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-20",
+        "name": "通路の分岐",
+        "position": [66, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-21",
+        "name": "通路の分岐",
+        "position": [66, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-22",
+        "name": "通路の分岐",
+        "position": [76, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-23",
+        "name": "通路の分岐",
+        "position": [76, 33],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-24",
+        "name": "通路の分岐",
+        "position": [81, 33],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-25",
+        "name": "通路の分岐",
+        "position": [81, 34],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-26",
+        "name": "通路の分岐",
+        "position": [82, 34],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-27",
+        "name": "通路の分岐",
+        "position": [82, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-28",
+        "name": "通路の分岐",
+        "position": [28, 20],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-29",
+        "name": "通路の分岐",
+        "position": [28, 27],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-30",
+        "name": "通路の分岐",
+        "position": [29, 27],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-31",
+        "name": "通路の分岐",
+        "position": [29, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-32",
+        "name": "通路の分岐",
+        "position": [34, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-33",
+        "name": "通路の分岐",
+        "position": [34, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-34",
+        "name": "通路の分岐",
+        "position": [36, 31],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-35",
+        "name": "通路の分岐",
+        "position": [36, 32],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-36",
+        "name": "通路の分岐",
+        "position": [37, 32],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-37",
+        "name": "通路の分岐",
+        "position": [38, 32],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-38",
+        "name": "通路の分岐",
+        "position": [38, 33],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-39",
+        "name": "通路の分岐",
+        "position": [43, 33],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-40",
+        "name": "通路の分岐",
+        "position": [43, 35],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-41",
+        "name": "通路の分岐",
+        "position": [44, 35],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-42",
+        "name": "通路の分岐",
+        "position": [44, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-43",
+        "name": "通路の分岐",
+        "position": [50, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-44",
+        "name": "通路の分岐",
+        "position": [50, 39],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-45",
+        "name": "通路の分岐",
+        "position": [54, 39],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-46",
+        "name": "通路の分岐",
+        "position": [54, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-47",
+        "name": "通路の分岐",
+        "position": [59, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-48",
+        "name": "通路の分岐",
+        "position": [59, 42],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-49",
+        "name": "通路の分岐",
+        "position": [60, 42],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-50",
+        "name": "通路の分岐",
+        "position": [60, 46],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-51",
+        "name": "通路の分岐",
+        "position": [65, 46],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-52",
+        "name": "通路の分岐",
+        "position": [65, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-53",
+        "name": "通路の分岐",
+        "position": [66, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-54",
+        "name": "通路の分岐",
+        "position": [37, 28],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-55",
+        "name": "通路の分岐",
+        "position": [54, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-56",
+        "name": "通路の分岐",
+        "position": [54, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-57",
+        "name": "通路の分岐",
+        "position": [56, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-58",
+        "name": "通路の分岐",
+        "position": [56, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-59",
+        "name": "通路の分岐",
+        "position": [64, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-60",
+        "name": "通路の分岐",
+        "position": [20, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-61",
+        "name": "通路の分岐",
+        "position": [23, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-62",
+        "name": "通路の分岐",
+        "position": [23, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-63",
+        "name": "通路の分岐",
+        "position": [24, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-64",
+        "name": "通路の分岐",
+        "position": [24, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-65",
+        "name": "通路の分岐",
+        "position": [36, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-66",
+        "name": "通路の分岐",
+        "position": [49, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-67",
+        "name": "通路の分岐",
+        "position": [65, 93],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-68",
+        "name": "通路の分岐",
+        "position": [66, 93],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-69",
+        "name": "通路の分岐",
+        "position": [66, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-70",
+        "name": "通路の分岐",
+        "position": [75, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-71",
+        "name": "通路の分岐",
+        "position": [75, 87],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-72",
+        "name": "通路の分岐",
+        "position": [76, 87],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-73",
+        "name": "通路の分岐",
+        "position": [76, 82],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-74",
+        "name": "通路の分岐",
+        "position": [82, 82],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-75",
+        "name": "通路の分岐",
+        "position": [13, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-76",
+        "name": "通路の分岐",
+        "position": [13, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-77",
+        "name": "通路の分岐",
+        "position": [20, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-78",
+        "name": "通路の分岐",
+        "position": [20, 93],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-79",
+        "name": "通路の分岐",
+        "position": [28, 93],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-80",
+        "name": "通路の分岐",
+        "position": [28, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-81",
+        "name": "通路の分岐",
+        "position": [35, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-82",
+        "name": "通路の分岐",
+        "position": [35, 86],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-83",
+        "name": "通路の分岐",
+        "position": [36, 86],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-84",
+        "name": "通路の分岐",
+        "position": [37, 86],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-85",
+        "name": "通路の分岐",
+        "position": [37, 83],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-86",
+        "name": "通路の分岐",
+        "position": [43, 83],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-87",
+        "name": "通路の分岐",
+        "position": [43, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-88",
+        "name": "通路の分岐",
+        "position": [49, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-89",
+        "name": "通路の分岐",
+        "position": [20, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-90",
+        "name": "通路の分岐",
+        "position": [20, 97],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-91",
+        "name": "通路の分岐",
+        "position": [24, 97],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-92",
+        "name": "通路の分岐",
+        "position": [24, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-93",
+        "name": "通路の分岐",
+        "position": [28, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-94",
+        "name": "通路の分岐",
+        "position": [33, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-95",
+        "name": "通路の分岐",
+        "position": [33, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-96",
+        "name": "通路の分岐",
+        "position": [36, 96],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-97",
+        "name": "通路の分岐",
+        "position": [39, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-98",
+        "name": "通路の分岐",
+        "position": [43, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-99",
+        "name": "通路の分岐",
+        "position": [43, 87],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-100",
+        "name": "通路の分岐",
+        "position": [44, 87],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-101",
+        "name": "通路の分岐",
+        "position": [44, 83],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-102",
+        "name": "通路の分岐",
+        "position": [48, 83],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-103",
+        "name": "通路の分岐",
+        "position": [48, 82],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-104",
+        "name": "通路の分岐",
+        "position": [49, 82],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-105",
+        "name": "通路の分岐",
+        "position": [49, 65],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-106",
+        "name": "通路の分岐",
+        "position": [50, 65],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-107",
+        "name": "通路の分岐",
+        "position": [49, 97],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-108",
+        "name": "通路の分岐",
+        "position": [53, 97],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-109",
+        "name": "通路の分岐",
+        "position": [53, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-110",
+        "name": "通路の分岐",
+        "position": [54, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-111",
+        "name": "通路の分岐",
+        "position": [54, 86],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-112",
+        "name": "通路の分岐",
+        "position": [55, 86],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-113",
+        "name": "通路の分岐",
+        "position": [55, 78],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-114",
+        "name": "通路の分岐",
+        "position": [56, 78],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-115",
+        "name": "通路の分岐",
+        "position": [56, 74],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-116",
+        "name": "通路の分岐",
+        "position": [59, 74],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-117",
+        "name": "通路の分岐",
+        "position": [59, 65],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-118",
+        "name": "通路の分岐",
+        "position": [62, 65],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-119",
+        "name": "通路の分岐",
+        "position": [62, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-120",
+        "name": "通路の分岐",
+        "position": [64, 61],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-121",
+        "name": "通路の分岐",
+        "position": [64, 36],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-122",
+        "name": "通路の分岐",
+        "position": [64, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-123",
+        "name": "通路の分岐",
+        "position": [66, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-124",
+        "name": "通路の分岐",
+        "position": [87, 40],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-125",
+        "name": "通路の分岐",
+        "position": [87, 60],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-126",
+        "name": "通路の分岐",
+        "position": [20, 88],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-127",
+        "name": "通路の分岐",
+        "position": [29, 88],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-128",
+        "name": "通路の分岐",
+        "position": [29, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-129",
+        "name": "通路の分岐",
+        "position": [36, 64],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-130",
+        "name": "通路の分岐",
+        "position": [82, 92],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-131",
+        "name": "通路の分岐",
+        "position": [76, 38],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-132",
+        "name": "通路の分岐",
+        "position": [86, 100],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-133",
+        "name": "通路の分岐",
+        "position": [82, 100],
+        "type": "corridor"
+      }
+    ],
+    "edges": [
+      {
+        "from": "stairs-east",
+        "to": "wc-male",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": false,
+        "routingCost": 1,
+        "cover": "indoor",
+        "instruction": "階段を通ってトイレへ",
+        "reverseInstruction": "階段を通って通路へ"
+      },
+      {
+        "from": "stairs-east",
+        "to": "wc-female",
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": false,
+        "routingCost": 1,
+        "cover": "indoor",
+        "instruction": "階段を通ってトイレへ",
+        "reverseInstruction": "階段を通って通路へ"
+      },
+      {
+        "from": "hall-0",
+        "to": "hall-19",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-1",
+        "to": "hall-28",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-2",
+        "to": "hall-54",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-3",
+        "to": "hall-50",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-3",
+        "to": "hall-51",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-4",
+        "to": "hall-55",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-4",
+        "to": "hall-106",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-5",
+        "to": "hall-60",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.1,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-6",
+        "to": "hall-67",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-7",
+        "to": "hall-75",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-8",
+        "to": "hall-89",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-9",
+        "to": "hall-94",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-10",
+        "to": "hall-97",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-11",
+        "to": "hall-107",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-12",
+        "to": "hall-121",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-13",
+        "to": "hall-124",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-14",
+        "to": "hall-126",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-15",
+        "to": "hall-130",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.1,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-16",
+        "to": "hall-131",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-17",
+        "to": "hall-132",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.1,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-18",
+        "to": "hall-27",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-18",
+        "to": "hall-53",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.4,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-18",
+        "to": "hall-74",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-18",
+        "to": "hall-125",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-19",
+        "to": "hall-20",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-20",
+        "to": "hall-21",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-21",
+        "to": "hall-22",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-22",
+        "to": "hall-23",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-23",
+        "to": "hall-24",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-24",
+        "to": "hall-25",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-25",
+        "to": "hall-26",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-26",
+        "to": "hall-27",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-27",
+        "to": "hall-131",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-28",
+        "to": "hall-29",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-29",
+        "to": "hall-30",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-30",
+        "to": "hall-31",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-31",
+        "to": "hall-32",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-32",
+        "to": "hall-33",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-33",
+        "to": "hall-34",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-34",
+        "to": "hall-35",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-35",
+        "to": "hall-36",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-36",
+        "to": "hall-37",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-36",
+        "to": "hall-54",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-37",
+        "to": "hall-38",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-38",
+        "to": "hall-39",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-39",
+        "to": "hall-40",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-40",
+        "to": "hall-41",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-41",
+        "to": "hall-42",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-42",
+        "to": "hall-43",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-43",
+        "to": "hall-44",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-44",
+        "to": "hall-45",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-45",
+        "to": "hall-46",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-46",
+        "to": "hall-47",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-47",
+        "to": "hall-48",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-48",
+        "to": "hall-49",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-49",
+        "to": "hall-50",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-51",
+        "to": "hall-52",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.1,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-52",
+        "to": "hall-53",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-52",
+        "to": "hall-59",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-53",
+        "to": "hall-123",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-55",
+        "to": "hall-56",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-56",
+        "to": "hall-57",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-57",
+        "to": "hall-58",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-58",
+        "to": "hall-59",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-58",
+        "to": "hall-66",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-59",
+        "to": "hall-120",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-60",
+        "to": "hall-61",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-61",
+        "to": "hall-62",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-62",
+        "to": "hall-63",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-63",
+        "to": "hall-64",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-64",
+        "to": "hall-65",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.8,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-65",
+        "to": "hall-66",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.95,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-65",
+        "to": "hall-129",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-66",
+        "to": "hall-88",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-67",
+        "to": "hall-68",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-68",
+        "to": "hall-69",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-69",
+        "to": "hall-70",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.35,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-70",
+        "to": "hall-71",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-71",
+        "to": "hall-72",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-72",
+        "to": "hall-73",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-73",
+        "to": "hall-74",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-74",
+        "to": "hall-130",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-75",
+        "to": "hall-76",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-76",
+        "to": "hall-77",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-77",
+        "to": "hall-78",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-78",
+        "to": "hall-79",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-79",
+        "to": "hall-80",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-79",
+        "to": "hall-93",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-80",
+        "to": "hall-81",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-81",
+        "to": "hall-82",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-82",
+        "to": "hall-83",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-83",
+        "to": "hall-84",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-83",
+        "to": "hall-96",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.5,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-84",
+        "to": "hall-85",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-85",
+        "to": "hall-86",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-86",
+        "to": "hall-87",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-87",
+        "to": "hall-88",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-89",
+        "to": "hall-90",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-90",
+        "to": "hall-91",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-91",
+        "to": "hall-92",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-92",
+        "to": "hall-93",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-94",
+        "to": "hall-95",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-95",
+        "to": "hall-96",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-97",
+        "to": "hall-98",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-98",
+        "to": "hall-99",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-99",
+        "to": "hall-100",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-100",
+        "to": "hall-101",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-101",
+        "to": "hall-102",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-102",
+        "to": "hall-103",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-103",
+        "to": "hall-104",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-104",
+        "to": "hall-105",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 2.55,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-105",
+        "to": "hall-106",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-107",
+        "to": "hall-108",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-108",
+        "to": "hall-109",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.75,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-109",
+        "to": "hall-110",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-110",
+        "to": "hall-111",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.9,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-111",
+        "to": "hall-112",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-112",
+        "to": "hall-113",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-113",
+        "to": "hall-114",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.15,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-114",
+        "to": "hall-115",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-115",
+        "to": "hall-116",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-116",
+        "to": "hall-117",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.35,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-117",
+        "to": "hall-118",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-118",
+        "to": "hall-119",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-119",
+        "to": "hall-120",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-121",
+        "to": "hall-122",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-122",
+        "to": "hall-123",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-124",
+        "to": "hall-125",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-126",
+        "to": "hall-127",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.35,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-127",
+        "to": "hall-128",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 3.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-128",
+        "to": "hall-129",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-130",
+        "to": "hall-133",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 1.2,
+        "cover": "indoor"
+      },
+      {
+        "from": "hall-132",
+        "to": "hall-133",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0.6,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-office",
+        "to": "hall-0",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-media",
+        "to": "hall-1",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-terrace",
+        "to": "hall-2",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-counter",
+        "to": "hall-3",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-learning-hive",
+        "to": "hall-4",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-multipurpose",
+        "to": "hall-5",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-lounge",
+        "to": "hall-6",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-group-a",
+        "to": "hall-7",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-group-b",
+        "to": "hall-8",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-group-c",
+        "to": "hall-9",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-group-d",
+        "to": "hall-10",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "room-group-e",
+        "to": "hall-11",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "stairs-north",
+        "to": "hall-12",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor",
+        "access": "staff"
+      },
+      {
+        "from": "stairs-east",
+        "to": "hall-13",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "stairs-west",
+        "to": "hall-14",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "stairs-southeast",
+        "to": "hall-15",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "ev",
+        "to": "hall-16",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      },
+      {
+        "from": "entrance",
+        "to": "hall-17",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "routingCost": 0,
+        "cover": "indoor"
+      }
+    ]
   }
 }

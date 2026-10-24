@@ -17,11 +17,11 @@ const floors=s.floors.filter(f=>f.buildingId==='b15'),places=placeIndex(data).fi
 const validate=x=>validateSources(x.manifest,x.buildings,x.floors,x.sources,x.overview);
 async function dom(){const d=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));globalThis.document=d.document;globalThis.window=d.window;return d;}
 
-test('Building 15 has named display-only rooms, public-facing facilities and floor-specific central openings',()=>{
+test('Building 15 has named rooms, public-facing facilities and floor-specific central openings',()=>{
   assert.deepEqual(validate(s),[]);assert.deepEqual(auditGeometry(floors),[]);
   assert.deepEqual(building.floors.map(f=>[f.label,f.rooms.length]),[['1F',12],['2F',7],['3F',5],['4F',8]]);
   assert.deepEqual(floors.map(f=>f.features.filter(x=>x.type==='restroom').length),[2,5,0,2]);
-  assert.deepEqual(floors.map(f=>f.features.filter(x=>x.type==='elevator').length),[1,2,1,1]);
+  assert.deepEqual(floors.map(f=>f.features.filter(x=>x.type==='elevator').length),[1,1,1,1]);
   for(const [level,male,female]of[[1,'wc-male','wc-female'],[2,'wc-east-male','wc-east-female']]){
     const f=floors.find(f=>f.level===level),a=f.features.find(x=>x.id===male),b=f.features.find(x=>x.id===female);
     assert.equal(a.restroomType,'male');assert.equal(b.restroomType,'female');
@@ -35,24 +35,23 @@ test('Building 15 has named display-only rooms, public-facing facilities and flo
   assert.equal(searchPlaces(places,'総合カウンター')[0].id,'15-f2-main-counter');
   assert.equal(searchPlaces(places,'サイレントルーム')[0].id,'15-f4-silent');
   assert.equal(places.filter(p=>p.name.startsWith('グループワークルーム')).length,5);
-  assert.ok(places.every(p=>!p.nodeId&&!p.approachRoomId));
-  const previous=structuredClone(s.manifest);previous.buildingIds=previous.buildingIds.filter(id=>id!=='b15');
-  assert.deepEqual(data.navigation,compileCampus(previous,s.buildings.filter(b=>b.id!=='b15'),s.floors.filter(f=>f.buildingId!=='b15')).navigation);
+  assert.ok(places.every(p=>p.nodeId&&!p.approachRoomId));
   assert.deepEqual(floors.map(f=>f.voids.length),[0,0,0,1]);
   assert.ok(pointInPolygon([60,68],floors[1].outline));
   assert.ok(!pointInPolygon([60,68],floors[2].outline));
   assert.ok(pointInPolygon([60,68],floors[3].voids[0]));
-  assert.ok(!s.manifest.outdoor.links.some(e=>e.to.startsWith('b15/')));
+  assert.equal(s.manifest.outdoor.links.filter(e=>e.to.startsWith('b15/')).length,2);
 });
 
 test('area presentation does not grant passage permissions or relax room crossing validation',()=>{
-  assert.ok(building.floors.flatMap(f=>f.rooms).filter(r=>r.spaceType==='area').every(r=>r.box.h===.25&&!r.passThrough));
+  assert.ok(building.floors.flatMap(f=>f.rooms).filter(r=>r.spaceType==='area').every(r=>r.box.h===.25));
   assert.ok(building.floors.flatMap(f=>f.rooms).filter(r=>r.spaceType==='room').every(r=>r.box.h===4));
   const invalid=structuredClone(s);invalid.floors.find(f=>f.buildingId==='b15').rooms[0].spaceType='open';
   assert.ok(validate(invalid).some(e=>e.includes('invalid space type')));
   const crossing=structuredClone(s),f=crossing.floors.find(f=>f.buildingId==='b15'&&f.id==='f2');
-  f.navigation.nodes=[{id:'a',name:'A',position:[26,70],type:'corridor'},{id:'b',name:'B',position:[70,70],type:'corridor'}];
-  f.navigation.edges=[{from:'a',to:'b',type:'walk',verification:'inferred',isIndoor:true,isAccessible:true,routingCost:1,cover:'indoor'}];
+  delete f.rooms.find(r=>r.id==='15-f2-atrium').passThrough;
+  f.navigation.nodes.push({id:'a',name:'A',position:[26,70],type:'corridor'},{id:'b',name:'B',position:[70,70],type:'corridor'});
+  f.navigation.edges.push({from:'a',to:'b',type:'walk',verification:'inferred',isIndoor:true,isAccessible:true,routingCost:1,cover:'indoor'});
   assert.ok(validate(crossing).some(e=>e.includes('Edge crosses room, void or service area')));
 });
 

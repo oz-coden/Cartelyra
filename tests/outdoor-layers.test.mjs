@@ -63,13 +63,13 @@ test('6-side ramp transfers layers explicitly and remains counted as unmeasured 
 });
 
 test('the 12/17-side stairs prevent treating the whole bridge route as stair-free',()=>{
-  const d=structuredClone(data);disable(d,'avenue-turn','b23-north-west');
+  const d=structuredClone(data);disable(d,'avenue-turn','b23-north-west');disable(d,'b15-south-junction','b15-southwest');
   const r=route('bridge-b6-foot','b23/f1/entrance-left','shortest',d);assert.ok(r);
   assert.ok(r.pathNodes.some(n=>n.outdoorLayer==='bridge'));
   assert.ok(r.steps.some(s=>s.edgeType==='stairs'&&s.instruction.includes('12号館・17号館間')));
   assert.equal(route('bridge-b6-foot','b23/f1/entrance-left','accessible',d),null);
   const ordinary=route('bridge-b6-foot','b23/f1/entrance-left','accessible');assert.ok(ordinary);
-  assert.ok(ordinary.pathNodes.some(n=>n.id===id('avenue-turn')));
+  assert.ok(ordinary.steps.every(s=>s.edgeType!=='stairs'));
   assert.equal(ordinary.verticalMovements.unmeasured,0);
 });
 
@@ -92,7 +92,7 @@ test('context roads are landmarks only and cannot create walkable graph connecti
   globalThis.document=document;globalThis.window=window;
   const map=new FloorMap(document.getElementById('map-canvas'),data,source.overview);map.showOverview(true);
   assert.equal(document.querySelectorAll('.map-context-road').length,source.overview.contextRoads.length);
-  assert.equal(document.querySelectorAll('.map-outdoor-bridge').length,3);
+  assert.equal(document.querySelectorAll('.map-outdoor-bridge').length,source.manifest.outdoor.edges.filter(e=>e.type==='bridge').length);
   assert.equal(document.querySelectorAll('.map-outdoor-transition[data-edge-type="ramp"]').length,1);
   assert.match(document.getElementById('map-legend').textContent,/細線：道路.*青：橋/);
   assert.ok(document.querySelector('.map-context-roads').compareDocumentPosition(document.querySelector('.map-outdoor-path'))&4);

@@ -49,7 +49,7 @@ export class AStarPathfinder {
         const cost = costs.get(current)!;
         const next = { stairs: cost.stairs + Number(link.edge.type === "stairs"), vertical: cost.vertical + link.floorChanges + link.unmeasuredVertical,
           floorDetours: cost.floorDetours + floorDetours(link),
-          boundaries: cost.boundaries + link.boundaryChanges, cost: cost.cost + this.policy.cost(link, filter) };
+          boundaries: cost.boundaries + link.boundaryChanges, cost: cost.cost + this.policy.cost(link, filter, start, goal) };
         if (!costs.has(link.targetId) || compare(next, costs.get(link.targetId)!) < 0) {
           costs.set(link.targetId, next); previous.set(link.targetId, { from: current, link }); open.add(link.targetId);
         }

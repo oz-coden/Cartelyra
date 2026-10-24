@@ -15,7 +15,7 @@ import {surveyNotes} from './fixtures/survey-notes.mjs';
 const s=await readData(),data=compileCampus(s.manifest,s.buildings,s.floors),finder=new AStarPathfinder(data);
 
 function minimumStairs(graph,start,allowInferred=true){
-  const edges=graph.navigation.edges.filter(e=>!e.blocked&&(allowInferred||e.verification==='verified'));
+  const edges=graph.navigation.edges.filter(e=>!e.blocked&&e.access!=='staff'&&(allowInferred||e.verification==='verified'));
   const distance=new Map([[start,0]]),queue=[start],adj=new Map();
   for(const e of edges){for(const [a,b]of [[e.from,e.to],...(e.bidirectional===false?[]:[[e.to,e.from]])]){
     if(!adj.has(a))adj.set(a,[]);adj.get(a).push([b,Number(e.type==='stairs')]);

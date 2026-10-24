@@ -32,7 +32,10 @@ export function validateSources(
     if (!condition) errors.push(message);
   };
   const metadata = (edge: { routingCost?: number; cover?: string; floorChanges?: number; isIndoor?: boolean;
-    blocked?: boolean; bidirectional?: boolean; passageWidth?: number }, context: string) => {
+    blocked?: boolean; bidirectional?: boolean; passageWidth?: number; access?: string; accessFor?: string; throughPenalty?: number }, context: string) => {
+    check(edge.access === undefined || ["public", "staff"].includes(edge.access), `Invalid access restriction ${context}`);
+    if (edge.accessFor !== undefined) check(manifest.buildingIds.includes(edge.accessFor), `Invalid access spur building ${context}`);
+    if (edge.throughPenalty !== undefined) check(edge.accessFor && Number.isFinite(edge.throughPenalty) && edge.throughPenalty >= 0, `Invalid through penalty ${context}`);
     if (manifest.coordinateUnit === "schematic")
       check(Number.isFinite(edge.routingCost) && edge.routingCost! >= 0, `Missing/invalid reference routing cost ${context}`);
     else if (edge.routingCost !== undefined)

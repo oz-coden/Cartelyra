@@ -88,8 +88,13 @@ test('cross-building reference routes compare cost without automatically excludi
     ['b23/f1/room-101','b19/f1/room-101'],['b19/f1/room-101','b23/f1/room-101'],
     ['b5/f2/room-201','b23/f1/room-101'],['b23/f1/room-101','b5/f2/room-201']]){
     const r=finder.findPath(a,b,mode);assert.ok(r,`${a} -> ${b} ${mode}`);
-    assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/bridge-b12-corner'));
-    assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/b19-bridge-stair-foot'));
+    if (a.startsWith('b19/') || b.startsWith('b19/')) {
+      assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/bridge-b12-corner'));
+      assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/b19-bridge-stair-foot'));
+    } else {
+      assert.ok(r.pathNodes.some(n=>n.id==='campus/outdoor/b15-south-junction'));
+      if (mode !== 'indoor') assert.equal(r.verticalMovements.stairs,1,'only the Building 5 entrance stair is needed on the new ground route');
+    }
     assert.ok(!r.pathNodes.some(n=>n.id==='campus/outdoor/avenue-turn'));
     assert.equal(finder.findPath(a,b,mode,false),null);
   }

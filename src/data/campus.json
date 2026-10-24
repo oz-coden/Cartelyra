@@ -781,6 +781,123 @@
           28.23248686514886
         ],
         "layer": "ground"
+      },
+      {
+        "id": "b12-ground-north",
+        "name": "12号館東側 北の曲がり角",
+        "position": [
+          52,
+          22.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b12-ground-junction",
+        "name": "12号館東側 階段前の分岐",
+        "position": [
+          52,
+          26.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-east-junction",
+        "name": "15号館東側 出入口前の分岐",
+        "position": [
+          52,
+          40.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-southeast",
+        "name": "15号館南東側の分岐",
+        "position": [
+          52.5,
+          46.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-south-junction",
+        "name": "15号館南側 出入口前の分岐",
+        "position": [
+          46.25,
+          46.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-southwest",
+        "name": "15号館南西側の分岐",
+        "position": [
+          40.5,
+          46.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-east-door",
+        "name": "15号館 1Fエントランス前",
+        "position": [
+          50.625,
+          40.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b15-south-door",
+        "name": "15号館 2Fエントランス前",
+        "position": [
+          46.25,
+          43.24038461538461
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b12-entry-landing",
+        "name": "12号館前の踊り場（仮）",
+        "position": [
+          50.31506849315068,
+          26.5
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "bridge-b12-east-junction",
+        "name": "12号館側の連絡橋の分岐",
+        "position": [
+          51.25,
+          20.09433962264151
+        ],
+        "layer": "bridge"
+      },
+      {
+        "id": "bridge-b12-entry-stairs",
+        "name": "12号館前へ下りる階段前",
+        "position": [
+          51.25,
+          26.5
+        ],
+        "layer": "bridge"
+      },
+      {
+        "id": "b12-west-junction",
+        "name": "12号館・17号館間 出入口前の分岐",
+        "position": [
+          41.5,
+          22
+        ],
+        "layer": "ground"
+      },
+      {
+        "id": "b12-west-door",
+        "name": "12号館 階段2側出入口前（仮）",
+        "position": [
+          42.58796296296296,
+          22
+        ],
+        "layer": "ground"
       }
     ],
     "edges": [
@@ -1139,17 +1256,6 @@
         "from": "b23-north-east"
       },
       {
-        "to": "b23-east-turn",
-        "type": "outdoor",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 6.046693,
-        "cover": "unknown",
-        "from": "b23-east-approach"
-      },
-      {
         "to": "b23-entrance-1",
         "type": "outdoor",
         "verification": "inferred",
@@ -1251,19 +1357,6 @@
         "routingCost": 1.030776,
         "cover": "unknown",
         "from": "bridge-b6-landing",
-        "instruction": "連絡橋を進む",
-        "reverseInstruction": "連絡橋を進む"
-      },
-      {
-        "to": "bridge-b12-corner",
-        "type": "bridge",
-        "verification": "inferred",
-        "isIndoor": false,
-        "isAccessible": true,
-        "widthClass": "unknown",
-        "routingCost": 13.259431,
-        "cover": "unknown",
-        "from": "bridge-west-gate",
         "instruction": "連絡橋を進む",
         "reverseInstruction": "連絡橋を進む"
       },
@@ -1787,6 +1880,212 @@
         "widthClass": "unknown",
         "routingCost": 10.934464,
         "cover": "unknown"
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "west-gate",
+        "to": "b12-ground-north",
+        "routingCost": 3.051639
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b12-ground-north",
+        "to": "b12-ground-junction",
+        "routingCost": 4.0
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b12-ground-junction",
+        "to": "b15-east-junction",
+        "routingCost": 14.0
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-east-junction",
+        "to": "b15-southeast",
+        "routingCost": 6.020797
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-southeast",
+        "to": "b15-south-junction",
+        "routingCost": 6.25
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-south-junction",
+        "to": "b15-southwest",
+        "routingCost": 5.75
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-southeast",
+        "to": "b8-south-path",
+        "routingCost": 15.297059
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b23-east-approach",
+        "to": "b15-southwest",
+        "routingCost": 3.5
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-southwest",
+        "to": "b23-east-turn",
+        "routingCost": 2.5
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-east-junction",
+        "to": "b15-east-door",
+        "routingCost": 1.375
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-south-junction",
+        "to": "b15-south-door",
+        "routingCost": 3.259615
+      },
+      {
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b12-ground-junction",
+        "to": "b12-entry-landing",
+        "routingCost": 4,
+        "instruction": "階段で12号館前へ",
+        "reverseInstruction": "階段で12号館東側の地上通路へ",
+        "accessFor": "b12",
+        "throughPenalty": 21
+      },
+      {
+        "type": "bridge",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "bridge-west-gate",
+        "to": "bridge-b12-east-junction",
+        "routingCost": 2.501779
+      },
+      {
+        "type": "bridge",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "bridge-b12-east-junction",
+        "to": "bridge-b12-corner",
+        "routingCost": 10.757652
+      },
+      {
+        "type": "bridge",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "bridge-b12-east-junction",
+        "to": "bridge-b12-entry-stairs",
+        "routingCost": 6.40566
+      },
+      {
+        "type": "stairs",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": false,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "bridge-b12-entry-stairs",
+        "to": "b12-entry-landing",
+        "routingCost": 4,
+        "instruction": "階段を下りて12号館前へ",
+        "reverseInstruction": "階段を上って連絡橋へ",
+        "accessFor": "b12",
+        "throughPenalty": 21
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "from": "b19-shop-approach",
+        "to": "b12-west-junction",
+        "routingCost": 3.2
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "from": "b12-west-junction",
+        "to": "b12-west-door",
+        "routingCost": 1.1
       }
     ],
     "links": [
@@ -1992,6 +2291,56 @@
         "cover": "unknown",
         "instruction": "中庭側出入口から7号館1Fへ入る",
         "reverseInstruction": "7号館1Fの中庭側出入口から屋外へ出る"
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-east-door",
+        "to": "b15/f1/entrance",
+        "routingCost": 1,
+        "instruction": "出入口から館内へ入る",
+        "reverseInstruction": "出入口から屋外へ出る"
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b15-south-door",
+        "to": "b15/f2/entrance",
+        "routingCost": 1,
+        "instruction": "出入口から館内へ入る",
+        "reverseInstruction": "出入口から屋外へ出る"
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "widthClass": "unknown",
+        "cover": "unknown",
+        "from": "b12-entry-landing",
+        "to": "b12/f1/entrance-provisional",
+        "routingCost": 1,
+        "instruction": "出入口から館内へ入る",
+        "reverseInstruction": "出入口から屋外へ出る"
+      },
+      {
+        "type": "outdoor",
+        "verification": "inferred",
+        "isIndoor": false,
+        "isAccessible": true,
+        "cover": "unknown",
+        "widthClass": "unknown",
+        "from": "b12-west-door",
+        "to": "b12/f1/entrance-west",
+        "routingCost": 1
       }
     ],
     "positionSourceId": "gsi-campus-aerial"

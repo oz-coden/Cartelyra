@@ -167,7 +167,7 @@ test("application selects buildings, focuses WC details and routes from a room t
     assert.ok(document.getElementById("route-status").classList.contains("hidden"));
     assert.ok(document.getElementById("toast").classList.contains("hidden"));
     assert.ok(!document.getElementById("step-guide").classList.contains("hidden"));
-    assert.match(document.getElementById("step-guide-list").textContent, /連絡橋/);
+    assert.match(document.getElementById("step-guide-list").textContent, /15号館南東側/);
 
   } finally {
     await server.close();
