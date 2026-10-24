@@ -43,7 +43,7 @@ export function compileCampus(
           ...room,
           buildingId: source.id,
           floorLevel: floor.level,
-          box: { ...bounds(room.polygon), h: room.passThrough === true ? 0.25 : 4 },
+          box: { ...bounds(room.polygon), h: room.spaceType === "area" || room.passThrough === true ? 0.25 : 4 },
           entranceNodeId: room.entrance ? qualify(room.entrance) : undefined,
           verification: "diagram",
         })),

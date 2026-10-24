@@ -14,6 +14,7 @@
   --muted: #53657c;
   --blue: #1d5ccd;
   --room: #244a8f;
+  --area: #d4e9f2;
   --wc: #c6eadc;
   --wc-text: #124b3b;
   --slab: #fff;
@@ -34,6 +35,7 @@ body.theme-dark {
   --muted: #b0bfd3;
   --blue: #8bbcff;
   --room: #2a4e83;
+  --area: #31566b;
   --wc: #205d4c;
   --wc-text: #e4fff3;
   --slab: #27374e;
@@ -423,6 +425,12 @@ body[data-view="3d"] .three-only {
   fill: var(--room);
   stroke: var(--surface);
   stroke-width: 0.4;
+}
+.map-open-area polygon {
+  fill: var(--area);
+}
+.map-room.map-open-area text {
+  fill: var(--text);
 }
 .map-public-area polygon {
   fill: #346d80;

@@ -183,6 +183,8 @@ export function validateSources(
         `${ctx}: duplicate navigation node IDs`,
       );
       for (const room of floor.rooms) {
+        check(room.spaceType === undefined || ["room", "area"].includes(room.spaceType),
+          `${room.id}: invalid space type`);
         check(room.passThrough === undefined || typeof room.passThrough === "boolean",
           `${room.id}: passThrough must be a boolean`);
         if (room.passThrough === true)

@@ -1,0 +1,153 @@
+{
+  "buildingId": "b15",
+  "id": "f3",
+  "level": 3,
+  "label": "3F",
+  "stackIndex": 2,
+  "elevation": 8,
+  "sourceId": "b15-f1-f3",
+  "notes": [],
+  "outline": [
+    [4, 0],
+    [120, 0],
+    [120, 114],
+    [72, 114],
+    [72, 56],
+    [48, 56],
+    [48, 114],
+    [4, 114]
+  ],
+  "voids": [],
+  "rooms": [
+    {
+      "id": "15-f3-stacks-north",
+      "name": "書架エリア（上側）",
+      "mapLabel": "書架エリア（上側）",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [4, 0],
+        [54, 0],
+        [54, 24],
+        [4, 24]
+      ]
+    },
+    {
+      "id": "15-f3-reading-north",
+      "name": "閲覧室（上側）",
+      "mapLabel": "閲覧室（上側）",
+      "aliases": [
+        "閲覧室"
+      ],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [4, 24],
+        [120, 24],
+        [120, 54],
+        [72, 54],
+        [72, 48],
+        [48, 48],
+        [48, 54],
+        [4, 54]
+      ]
+    },
+    {
+      "id": "15-f3-book-wall",
+      "name": "ブックウォール",
+      "mapLabel": "ブックウォール",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [48, 48],
+        [72, 48],
+        [72, 54],
+        [48, 54]
+      ]
+    },
+    {
+      "id": "15-f3-reading-west",
+      "name": "閲覧室（左側）",
+      "mapLabel": "閲覧室（左側）",
+      "aliases": [
+        "閲覧室"
+      ],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [4, 54],
+        [48, 54],
+        [48, 114],
+        [20, 114],
+        [20, 100],
+        [4, 100]
+      ]
+    },
+    {
+      "id": "15-f3-stacks-east",
+      "name": "書架エリア（右側）",
+      "mapLabel": "書架エリア（右側）",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [72, 54],
+        [120, 54],
+        [120, 114],
+        [72, 114]
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "stairs-north",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [54, 0],
+        [70, 0],
+        [70, 12],
+        [54, 12]
+      ]
+    },
+    {
+      "id": "stairs-east",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [88, 8],
+        [104, 8],
+        [104, 24],
+        [88, 24]
+      ]
+    },
+    {
+      "id": "stairs-west",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [4, 100],
+        [20, 100],
+        [20, 112],
+        [4, 112]
+      ]
+    },
+    {
+      "id": "ev",
+      "label": "EV",
+      "type": "elevator",
+      "polygon": [
+        [70, 6],
+        [80, 6],
+        [80, 24],
+        [70, 24]
+      ]
+    }
+  ],
+  "navigation": {
+    "nodes": [],
+    "edges": []
+  }
+}

@@ -157,7 +157,7 @@ export class BuildingRenderer {
         )
       : new THREE.BoxGeometry(w, h, d);
 
-    const baseColor = room.color || bldg.color;
+    const baseColor = room.color || (room.spaceType === "area" ? "#8ebacc" : bldg.color);
     const roomMat = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(baseColor),
       roughness: 0.25,

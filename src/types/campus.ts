@@ -89,6 +89,7 @@ export interface Room {
   name: string;
   aliases: string[];
   category: RoomCategory;
+  spaceType?: "room" | "area"; // Visual enclosure; does not grant route access.
   capacity?: number;
   box: RoomBox;
   entranceNodeId?: string;

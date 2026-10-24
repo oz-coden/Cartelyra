@@ -27,6 +27,7 @@ export interface FloorSource {
     name: string;
     aliases: string[];
     category: RoomCategory;
+    spaceType?: "room" | "area"; // Visual enclosure is independent of navigation.
     polygon: Point2[];
     entrance?: string;
     approachRoomId?: string;

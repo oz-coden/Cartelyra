@@ -265,6 +265,8 @@ export class FloorMap {
     const shown = displayFloors(this.campus, this.scope);
     document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟" : "館内図";
     document.getElementById("map-legend")!.textContent = "青：部屋　" +
+      (shown.some(({ floor }) => floor.rooms.some(r => r.spaceType === "area"))
+        ? "淡色：利用エリア　" : "") +
       (shown.some(({ floor }) => floor.rooms.some(r => r.passThrough === true))
         ? "青緑：共用区画　" : "") +
       "緑：WC　水色：EV　黄：階段　紫：経路";
@@ -339,6 +341,7 @@ export class FloorMap {
       const room = place.kind === "room"
         ? floor.rooms.find((r) => r.id === place.roomId)
         : undefined;
+      if (room?.spaceType === "area") group.classList.add("map-open-area");
       if (room?.passThrough === true) group.classList.add("map-public-area");
       const label =
         place.kind === "room"

@@ -1,0 +1,265 @@
+{
+  "buildingId": "b15",
+  "id": "f2",
+  "level": 2,
+  "label": "2F",
+  "stackIndex": 1,
+  "elevation": 4,
+  "sourceId": "b15-f2-f4",
+  "notes": [],
+  "outline": [
+    [4, 0],
+    [120, 0],
+    [120, 76],
+    [88, 76],
+    [88, 114],
+    [4, 114]
+  ],
+  "voids": [],
+  "rooms": [
+    {
+      "id": "15-f2-office",
+      "name": "2階事務室",
+      "mapLabel": "2階事務室",
+      "aliases": [],
+      "category": "office",
+      "spaceType": "room",
+      "polygon": [
+        [20, 0],
+        [54, 0],
+        [54, 18],
+        [20, 18]
+      ]
+    },
+    {
+      "id": "15-f2-main-counter",
+      "name": "総合カウンター",
+      "mapLabel": "総合カウンター",
+      "aliases": [
+        "メインカウンター"
+      ],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [26, 22],
+        [68, 22],
+        [68, 26],
+        [26, 26]
+      ]
+    },
+    {
+      "id": "15-f2-book-wall",
+      "name": "ブックウォール",
+      "mapLabel": "ブックウォール",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [32, 36],
+        [64, 36],
+        [64, 40],
+        [32, 40]
+      ]
+    },
+    {
+      "id": "15-f2-atrium",
+      "name": "アトリウム",
+      "mapLabel": "アトリウム",
+      "aliases": [],
+      "category": "lounge",
+      "spaceType": "area",
+      "polygon": [
+        [28, 56],
+        [68, 56],
+        [68, 86],
+        [28, 86]
+      ]
+    },
+    {
+      "id": "15-f2-reading",
+      "name": "閲覧室",
+      "mapLabel": "閲覧室",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [4, 86],
+        [88, 86],
+        [88, 114],
+        [4, 114]
+      ]
+    },
+    {
+      "id": "15-f2-stacks",
+      "name": "書架エリア",
+      "mapLabel": "書架エリア",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [88, 20],
+        [120, 20],
+        [120, 56],
+        [88, 56]
+      ]
+    },
+    {
+      "id": "15-f2-gallery",
+      "name": "ギャラリー",
+      "mapLabel": "ギャラリー",
+      "aliases": [],
+      "category": "facility",
+      "spaceType": "area",
+      "polygon": [
+        [88, 56],
+        [104, 56],
+        [104, 76],
+        [88, 76]
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "stairs-north",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [54, 0],
+        [66, 0],
+        [66, 10],
+        [54, 10]
+      ]
+    },
+    {
+      "id": "stairs-east",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [88, 0],
+        [104, 0],
+        [104, 16],
+        [88, 16]
+      ]
+    },
+    {
+      "id": "stairs-west",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [4, 78],
+        [20, 78],
+        [20, 86],
+        [4, 86]
+      ]
+    },
+    {
+      "id": "stairs-southeast",
+      "label": "階段",
+      "type": "stairs",
+      "polygon": [
+        [104, 56],
+        [120, 56],
+        [120, 76],
+        [104, 76]
+      ]
+    },
+    {
+      "id": "ev-west",
+      "label": "EV1",
+      "type": "elevator",
+      "polygon": [
+        [54, 10],
+        [62, 10],
+        [62, 18],
+        [54, 18]
+      ]
+    },
+    {
+      "id": "ev-east",
+      "label": "EV2",
+      "type": "elevator",
+      "polygon": [
+        [68, 6],
+        [76, 6],
+        [76, 18],
+        [68, 18]
+      ]
+    },
+    {
+      "id": "wc-east-male",
+      "label": "男性用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [104, 0],
+        [120, 0],
+        [120, 8],
+        [104, 8]
+      ],
+      "restroomType": "male"
+    },
+    {
+      "id": "wc-east-female",
+      "label": "女性用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [104, 8],
+        [120, 8],
+        [120, 16],
+        [104, 16]
+      ],
+      "restroomType": "female"
+    },
+    {
+      "id": "wc-west-shared-1",
+      "label": "共用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [4, 68],
+        [8, 68],
+        [8, 76],
+        [4, 76]
+      ],
+      "restroomType": "all-gender"
+    },
+    {
+      "id": "wc-west-shared-2",
+      "label": "共用トイレ",
+      "type": "restroom",
+      "polygon": [
+        [8, 64],
+        [12, 64],
+        [12, 76],
+        [8, 76]
+      ],
+      "restroomType": "all-gender"
+    },
+    {
+      "id": "wc-west-universal",
+      "label": "多目的トイレ",
+      "type": "restroom",
+      "polygon": [
+        [12, 64],
+        [20, 64],
+        [20, 76],
+        [12, 76]
+      ],
+      "restroomType": "multipurpose"
+    },
+    {
+      "id": "entrance",
+      "label": "2Fエントランス",
+      "type": "entrance",
+      "polygon": [
+        [4, 50],
+        [6, 50],
+        [6, 56],
+        [4, 56]
+      ],
+      "mapLabel": "出入口"
+    }
+  ],
+  "navigation": {
+    "nodes": [],
+    "edges": []
+  }
+}
