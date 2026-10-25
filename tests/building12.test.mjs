@@ -6,6 +6,7 @@ import {readData} from '../scripts/read-data.mjs';
 import {compileCampus} from '../.checks/data/compile.js';
 import {validateSources} from '../.checks/data/validate.js';
 import {auditGeometry} from '../.checks/data/audit.js';
+import {pointInPolygon,pointInInterior,segmentIsWalkable} from '../.checks/data/geometry.js';
 import {buildingCatalog,placeIndex,searchPlaces} from '../.checks/data/places.js';
 import {LocationState} from '../.checks/ui/LocationState.js';
 import {FloorMap} from '../.checks/ui/FloorMap.js';
@@ -46,5 +47,34 @@ test('all Building 12 rooms and facilities render, remain selectable and share a
     assert.equal(document.querySelectorAll('.map-void').length,f.voids.length);
     assert.deepEqual(f.features.find(x=>x.id==='stairs-left').polygon,[[24,6],[36,6],[36,20],[24,20]]);
     assert.deepEqual(f.features.find(x=>x.id==='stairs-right').polygon,[[96,f.level===1?0:4],[108,f.level===1?0:4],[108,14],[96,14]]);
+  }
+});
+
+test('the lower 12-16 entrance stays on the floor boundary and connects indoor guidance to both existing outdoor approaches',()=>{
+  const first=floors.find(f=>f.level===1),room=first.rooms.find(r=>r.id==='12-16');
+  const feature=first.features.find(f=>f.id==='entrance-provisional');
+  const endpoint=first.navigation.nodes.find(n=>n.id===feature.entrance);
+  assert.deepEqual(endpoint.position,[96,78]);
+  assert.ok(pointInPolygon(endpoint.position,feature.polygon));
+  assert.ok(pointInPolygon(endpoint.position,first.outline)&&!pointInInterior(endpoint.position,first.outline));
+  assert.ok(feature.polygon.every(p=>pointInPolygon(p,room.polygon)));
+  const finder=new AStarPathfinder(data),door='b12/f1/entrance-provisional';
+  const local=node=>[node.position[0]-building.origin[0],node.position[2]-building.origin[2]];
+  const inside=finder.findPath('b12/f1/room-16',door);assert.ok(inside);
+  assert.deepEqual(local(inside.pathNodes.at(-1)),endpoint.position);
+  for(let i=1;i<inside.pathNodes.length;i++)
+    assert.ok(segmentIsWalkable(local(inside.pathNodes[i-1]),local(inside.pathNodes[i]),room.polygon,[]),'the approach remains inside 12-16');
+  const landing=s.manifest.outdoor.nodes.find(n=>n.id==='b12-entry-landing');
+  assert.deepEqual(data.navigation.nodes.find(n=>n.id===door).overviewPosition,landing.position);
+  assert.equal(s.manifest.outdoor.links.filter(e=>e.from===landing.id&&e.to===door).length,1);
+  for(const approach of ['b12-ground-junction','bridge-b12-entry-stairs']) {
+    const outside=`campus/outdoor/${approach}`;
+    for(const [a,b]of [[outside,'b12/f1/room-16'],['b12/f1/room-16',outside]]) {
+      const route=finder.findPath(a,b);assert.ok(route);
+      assert.ok(route.pathNodes.some(n=>n.id===door));
+      assert.ok(route.pathNodes.some(n=>n.id==='campus/outdoor/b12-entry-landing'));
+      assert.equal(route.verticalMovements.stairs,1);
+      assert.equal(finder.findPath(a,b,'accessible'),null);
+    }
   }
 });

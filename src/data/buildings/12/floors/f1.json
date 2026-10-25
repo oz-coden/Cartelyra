@@ -205,10 +205,10 @@
       "type": "entrance",
       "mapLabel": "出入口",
       "polygon": [
-        [106, 58],
-        [108, 58],
-        [108, 62],
-        [106, 62]
+        [94, 76],
+        [98, 76],
+        [98, 78],
+        [94, 78]
       ],
       "entrance": "entrance-provisional",
       "description": "12-16側。"
@@ -293,7 +293,7 @@
       {
         "id": "entrance-provisional",
         "name": "出入口（仮）",
-        "position": [108, 60],
+        "position": [96, 78],
         "type": "facility_entrance"
       },
       {
@@ -371,7 +371,7 @@
       {
         "id": "hall-10",
         "name": "通路の分岐",
-        "position": [108, 60],
+        "position": [96, 78],
         "type": "corridor"
       },
       {
@@ -509,25 +509,25 @@
       {
         "id": "hall-33",
         "name": "通路の分岐",
-        "position": [103, 60],
+        "position": [96, 73],
         "type": "corridor"
       },
       {
         "id": "hall-34",
         "name": "通路の分岐",
-        "position": [103, 41],
+        "position": [96, 54],
         "type": "corridor"
       },
       {
         "id": "hall-35",
         "name": "通路の分岐",
-        "position": [102, 41],
+        "position": [96, 53],
         "type": "corridor"
       },
       {
         "id": "hall-36",
         "name": "通路の分岐",
-        "position": [102, 40],
+        "position": [96, 52],
         "type": "corridor"
       }
     ],
