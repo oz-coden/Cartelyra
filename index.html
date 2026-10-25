@@ -66,7 +66,7 @@
             aria-label="キャンパスの門"
           ></div>
         </section>
-        <section class="panel-section">
+        <section id="route-editor" class="panel-section">
           <h2>ルート案内</h2>
           <div class="route-inputs">
             <div class="input-wrapper">
@@ -236,6 +236,18 @@
         </section>
       </aside>
       <main class="map-workspace" aria-label="キャンパスマップ">
+        <section id="mobile-route-bar" class="mobile-route-bar" aria-label="ルート設定">
+          <div class="control-header">
+            <h2>ルート案内</h2>
+            <button id="btn-edit-route" class="primary" aria-haspopup="dialog" aria-controls="mobile-route-dialog" aria-expanded="false">目的地を検索</button>
+          </div>
+          <div class="mobile-route-endpoints">
+            <p><span>出発地</span><span id="mobile-route-start">出発地を選択</span></p>
+            <p><span>目的地</span><span id="mobile-route-dest">目的地を選択</span></p>
+          </div>
+          <p id="mobile-route-conditions" class="muted"></p>
+          <p id="mobile-route-status" class="route-status hidden" role="status" aria-live="polite"></p>
+        </section>
         <div id="pick-banner" class="pick-banner hidden" role="status">
           <span id="pick-banner-text"></span
           ><button id="btn-cancel-pick">キャンセル</button>
@@ -315,6 +327,16 @@
         </section>
       </main>
     </div>
+    <dialog id="mobile-route-dialog" class="mobile-route-dialog" aria-labelledby="mobile-route-title">
+      <div class="mobile-route-dialog-header">
+        <h2 id="mobile-route-title">ルート案内</h2>
+        <button id="btn-close-route-editor" aria-label="ルート編集を閉じる">×</button>
+      </div>
+      <div id="mobile-route-dialog-body" class="mobile-route-dialog-body"></div>
+      <div class="mobile-route-dialog-footer">
+        <button id="btn-route-show-map" class="primary">地図を見る</button>
+      </div>
+    </dialog>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
     <noscript>このマップの表示と経路検索にはJavaScriptが必要です。</noscript>
     <script type="module" src="./src/main.ts"></script>

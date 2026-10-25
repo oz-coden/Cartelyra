@@ -13,6 +13,7 @@ import type { CampusData, Place, RouteFilterType, RouteResult } from "./types/ca
 import { AStarPathfinder } from "./pathfinding/AStar";
 import { ThemeManager } from "./ui/ThemeManager";
 import { SearchPanel } from "./ui/SearchPanel";
+import { MobileRoutePanel } from "./ui/MobileRoutePanel";
 import { FloorControl } from "./ui/FloorControl";
 import { LocationState } from "./ui/LocationState";
 import { StepGuide } from "./ui/StepGuide";
@@ -41,6 +42,7 @@ export class CartelyraApp {
   private display3D = new ThreeDisplayState();
   private location: LocationState;
   private search: SearchPanel;
+  private mobileRoutePanel: MobileRoutePanel;
   private floors = new FloorControl(this.display3D);
   private guide = new StepGuide();
   private pathfinder: AStarPathfinder;
@@ -56,6 +58,7 @@ export class CartelyraApp {
     this.places = placeIndex(data, overview);
     this.location = new LocationState(buildingCatalog(data, overview), data.viewGroups);
     this.search = new SearchPanel(this.places, this.selection);
+    this.mobileRoutePanel = new MobileRoutePanel(this.search);
     this.pathfinder = new AStarPathfinder(data);
     this.map = new FloorMap(document.getElementById("map-canvas")!, data, overview);
     this.popover = new SelectionPopover(document.getElementById("room-tooltip")!, document.getElementById("map-stage")!,
@@ -120,6 +123,7 @@ export class CartelyraApp {
           ? "出発地を選択中：地図の部屋・設備・門を選んでください"
           : "目的地を選択中：地図の部屋・設備・門を選んでください";
       if (target !== "none") {
+        this.mobileRoutePanel.close(false);
         this.hideDetails();
         document.getElementById("pick-banner")!.scrollIntoView?.({
           block: "start",

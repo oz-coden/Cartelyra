@@ -15,6 +15,9 @@ export class SearchPanel {
   private filter: RouteFilterType = "shortest";
   private buildingId?: string;
   private floorLevel?: number;
+  private statusMessage = "";
+  private statusKind: "warning" | "error" = "error";
+  public onStateChange: (() => void) | null = null;
   public onRouteSearch:
     | ((
         start: string,
@@ -245,6 +248,19 @@ export class SearchPanel {
       this.hideSummary();
       this.onRouteClear?.();
     }
+    this.onStateChange?.();
+  }
+  public getState() {
+    return {
+      start: this.selected.start?.name ?? this.input("start").value,
+      dest: this.selected.dest?.name ?? this.input("dest").value,
+      startConfirmed: !!this.selected.start,
+      destConfirmed: !!this.selected.dest,
+      filter: this.filter,
+      inferred: (document.getElementById("allow-inferred") as HTMLInputElement).checked,
+      status: this.statusMessage,
+      statusKind: this.statusKind,
+    };
   }
   public updateSummary(result: RouteResult) {
     document.getElementById("summary-distance")!.textContent =
@@ -279,9 +295,12 @@ export class SearchPanel {
     document.getElementById("route-summary-panel")!.classList.add("hidden");
   }
   public setStatus(message = "", kind: "warning" | "error" = "error") {
+    this.statusMessage = message;
+    this.statusKind = kind;
     const element = document.getElementById("route-status")!;
     element.textContent = message;
     element.classList.toggle("hidden", !message);
     element.dataset.kind = kind;
+    this.onStateChange?.();
   }
 }

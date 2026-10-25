@@ -948,3 +948,104 @@ body[data-view="campus"] .facilities {
     content: "▾";
   }
 }
+
+.mobile-route-bar {
+  display: none;
+}
+.mobile-route-dialog:not([open]) {
+  display: none;
+}
+html.route-editor-open,
+html.route-editor-open body {
+  overflow: hidden;
+}
+@media (max-width: 899px) {
+  .mobile-route-bar {
+    display: block;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    min-width: 0;
+  }
+  .mobile-route-bar .control-header {
+    margin-bottom: 8px;
+  }
+  .mobile-route-endpoints {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  .mobile-route-endpoints p {
+    display: grid;
+    grid-template-columns: 3em minmax(0, 1fr);
+    gap: 8px;
+  }
+  .mobile-route-endpoints p > span:first-child {
+    color: var(--muted);
+  }
+  .mobile-route-endpoints p > span:last-child {
+    overflow-wrap: anywhere;
+  }
+  .mobile-route-dialog {
+    position: fixed;
+    inset: auto 0 var(--route-viewport-bottom, 0px);
+    margin: 0 auto;
+    width: min(100%, 640px);
+    max-width: 100%;
+    max-height: min(88dvh, var(--route-viewport-height, 100dvh));
+    padding: 0;
+    border: 1px solid var(--line);
+    border-bottom: 0;
+    border-radius: 20px 20px 0 0;
+    background: var(--surface);
+    color: var(--text);
+    overflow: hidden;
+    box-shadow: 0 -8px 40px #0003;
+  }
+  .mobile-route-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-route-dialog::backdrop {
+    background: #101b2b80;
+  }
+  .mobile-route-dialog-header,
+  .mobile-route-dialog-footer {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    background: var(--surface);
+  }
+  .mobile-route-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobile-route-dialog-footer {
+    border-top: 1px solid var(--line);
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .mobile-route-dialog-footer button {
+    width: 100%;
+  }
+  .mobile-route-dialog-body {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-route-dialog-body .panel-section {
+    padding: 0 16px 16px;
+    border: 0;
+  }
+  .mobile-route-dialog-body .panel-section > h2 {
+    display: none;
+  }
+  .mobile-route-dialog .suggestions-list {
+    position: static;
+    margin-top: 6px;
+    max-height: min(240px, 35dvh);
+    box-shadow: none;
+  }
+}
