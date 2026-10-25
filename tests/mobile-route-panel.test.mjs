@@ -33,7 +33,7 @@ test('the mobile editor opens with native modal behavior, retains drafts and con
   assert.equal(get('sidebar-panel').contains(input),false);
   get('btn-edit-route').click();
   assert.ok(dialog.hasAttribute('open'));
-  assert.equal(focused(),input);
+  assert.equal(focused(),get('mobile-route-title'));
   assert.ok(document.documentElement.classList.contains('route-editor-open'));
   input.value='3-20';input.dispatchEvent(new window.Event('input'));
   assert.match(get('mobile-route-dest').textContent,/3-20.*未確定/);
@@ -44,7 +44,7 @@ test('the mobile editor opens with native modal behavior, retains drafts and con
   assert.equal(document.documentElement.classList.contains('route-editor-open'),false);
   search.setDest('dest','3-201（3号館 2F）');
   get('btn-edit-route').click();
-  assert.equal(focused(),get('input-start'));
+  assert.equal(focused(),get('mobile-route-title'));
   assert.equal(get('input-dest'),input,'moving the editor must not recreate inputs');
   assert.match(get('mobile-route-dest').textContent,/3-201/);
   assert.doesNotMatch(get('mobile-route-dest').textContent,/未確定/);

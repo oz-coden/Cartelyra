@@ -25,7 +25,9 @@ export class MobileRoutePanel {
         "button, input, select, textarea, a[href], [tabindex]",
       )].filter(element => element.tabIndex >= 0 && !element.matches(":disabled") && element.getClientRects().length);
       const first = controls[0], last = controls.at(-1);
-      if (first && last && document.activeElement === (event.shiftKey ? first : last)) {
+      const atBoundary = document.activeElement === (event.shiftKey ? first : last) ||
+        (event.shiftKey && document.activeElement?.id === "mobile-route-title");
+      if (first && last && atBoundary) {
         event.preventDefault();
         (event.shiftKey ? last : first).focus({ preventScroll: true });
       }
@@ -50,7 +52,7 @@ export class MobileRoutePanel {
     const editing = !!active && this.editor.contains(active);
     if (this.media?.matches) {
       document.getElementById("mobile-route-dialog-body")!.append(this.editor);
-      if (editing) this.open(active!);
+      if (editing) this.open();
     } else {
       this.close(false);
       this.marker.after(this.editor);
@@ -58,7 +60,7 @@ export class MobileRoutePanel {
     }
   }
 
-  private open(focus?: HTMLElement) {
+  private open() {
     if (!this.media?.matches || this.dialog.hasAttribute("open")) return;
     this.search.cancelPick();
     this.updateViewport();
@@ -66,9 +68,7 @@ export class MobileRoutePanel {
     if (this.dialog.showModal) this.dialog.showModal();
     else this.dialog.setAttribute("open", "");
     this.button.setAttribute("aria-expanded", "true");
-    const state = this.search.getState();
-    const target = !state.destConfirmed ? "dest" : !state.startConfirmed ? "start" : "dest";
-    (focus ?? document.getElementById(`input-${target}`)!).focus({ preventScroll: true });
+    document.getElementById("mobile-route-title")!.focus({ preventScroll: true });
   }
 
   public close(returnToMap = true) {
