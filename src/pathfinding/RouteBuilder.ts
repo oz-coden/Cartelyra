@@ -59,6 +59,8 @@ export class RouteBuilder {
     const straightOutside = (i: number) => {
       const [a, b, c] = [steps[i - 1], steps[i], steps[i + 1]];
       if (!c || [a, b, c].some(s => s.buildingId) || b.edgeType !== "outdoor" || c.edgeType !== "outdoor" || b.cover !== c.cover) return false;
+      // Authored landmarks and directional instructions must remain individual guide cards.
+      if ([links[i - 1], links[i]].some(link => link.edge.instruction || link.edge.reverseInstruction)) return false;
       if (this.outdoorLayers.get(a.nodeId) !== this.outdoorLayers.get(b.nodeId) || this.outdoorLayers.get(b.nodeId) !== this.outdoorLayers.get(c.nodeId)) return false;
       const ab = [b.position[0] - a.position[0], b.position[2] - a.position[2]], bc = [c.position[0] - b.position[0], c.position[2] - b.position[2]];
       const length = Math.hypot(...ab) * Math.hypot(...bc);

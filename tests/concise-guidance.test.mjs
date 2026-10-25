@@ -67,6 +67,44 @@ test('concise directions preserve geometry, transitions and endpoints without ex
   }
 });
 
+test('outdoor compaction retains authored courtyard directions in both travel directions',()=>{
+  for(const [a,b,instruction] of [
+    ['b7/f2/room-21','b8/f2/room-20','7・8号館間の通路から中庭側へ'],
+    ['b8/f2/room-20','b7/f2/room-21','中庭から8号館沿いの通路を北へ'],
+  ]) {
+    const route=finder.findPath(a,b);
+    assert.ok(route.steps.some(step=>step.instruction===instruction),instruction);
+    for(let i=1;i<route.pathNodes.length;i++) {
+      const from=route.pathNodes[i-1].id,to=route.pathNodes[i].id;
+      const edge=data.navigation.edges.find(e=>e.from===from&&e.to===to||e.to===from&&e.from===to);
+      const authored=edge.from===from?edge.instruction:edge.reverseInstruction;
+      if(authored)assert.ok(route.steps.some(step=>step.instruction===authored),authored);
+    }
+  }
+});
+
+test('straight outdoor runs compact only across edges without authored instructions',()=>{
+  const graph={campusName:'Outdoor',coordinateUnit:'meters',buildings:[],navigation:{
+    nodes:['a','b','c','d','e'].map((id,i)=>({id,name:id,type:'outdoor',outdoorLayer:'ground',position:[i*10,0,0]})),
+    edges:[['a','b'],['b','c'],['c','d'],['d','e']].map(([from,to])=>({from,to,type:'outdoor',distance:10,isIndoor:false,isAccessible:true,verification:'verified'})),
+  }};
+  for(const direction of [['a','e'],['e','a']]) {
+    const route=new AStarPathfinder(graph).findPath(...direction);
+    assert.equal(route.steps.length,2);
+    assert.equal(route.steps.at(-1).distance,40);
+  }
+  graph.navigation.edges[1].instruction='Keep to the north path';
+  graph.navigation.edges[1].reverseInstruction='Return along the north path';
+  for(const [a,b,instruction] of [['a','e','Keep to the north path'],['e','a','Return along the north path']]) {
+    const route=new AStarPathfinder(graph).findPath(a,b);
+    const authored=route.steps.find(step=>step.instruction===instruction);
+    assert.ok(authored);
+    assert.equal(authored.distance,10,'the instruction retains its own segment distance');
+    assert.equal(route.steps.reduce((total,step)=>total+step.distance,0),40);
+    assert.equal(route.pathNodes.length,5);
+  }
+});
+
 test('product descriptions stay short and survey assumptions remain in documentation',async()=>{
   for(const f of s.floors){assert.equal(f.notes.length,0);for(const x of [...f.rooms,...f.features]){
     assert.ok((x.description?.length??0)<=30,x.id);
