@@ -326,6 +326,36 @@ test("explicit building and floor queries do not match longer numbers or basemen
   assert.ok(searchPlaces(places, "1号館").every(p=>p.buildingId==='b1'));
 });
 
+test("exact room numbers, names and aliases outrank nearby partial matches", () => {
+  for (const query of ["3-101", "３−１０１", " 3-101 ", "3号館 3-101"])
+    assert.equal(searchPlaces(places, query, "b23", 1)[0].id, "3-101");
+  assert.equal(searchPlaces(places, "7-21", "b17", 2)[0].id, "7-21");
+  assert.equal(searchPlaces(places, "3-B202", "b23", -2)[0].id, "3-B202",
+    "an exact unlinked room still precedes routable partial matches");
+  const exact = { ...places[0], id: "exact", name: "受付", aliases: ["案内所"], roomId: undefined, buildingId: "b3" };
+  const nearby = { ...exact, id: "nearby", name: "受付前の案内所", aliases: [], buildingId: "b23" };
+  for (const query of ["受付", "案内所"])
+    assert.equal(searchPlaces([nearby, exact], query, "b23", 1)[0].id, "exact");
+  assert.ok(searchPlaces(places, "WC", "b3", 2).slice(0, 3)
+    .every(p => p.buildingId === "b3" && p.floorLevel === 2));
+});
+
+test("Enter selects the exact room number while a different building is displayed", () => {
+  const { document, window } = dom(), panel = new SearchPanel(places);
+  panel.setContext("b23", 1);
+  let focused, destination;
+  panel.onPlaceFocus = place => { focused = place; };
+  panel.onRouteSearch = (_start, dest) => { destination = dest; };
+  panel.setStart("b23/f1/room-101", "23-101");
+  const input = document.getElementById("input-dest");
+  input.value = "3-101";
+  input.dispatchEvent(new window.Event("input"));
+  key(window, input, "Enter");
+  assert.equal(focused.id, "3-101");
+  assert.equal(destination, "b3/f1/room-101");
+  assert.match(input.value, /^3-101 .*3号館 1F/);
+});
+
 test("unlinked rooms can be named as endpoints without inventing navigation nodes", () => {
   const { document, window } = dom(),
     panel = new SearchPanel(places);

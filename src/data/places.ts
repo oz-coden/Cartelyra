@@ -156,6 +156,10 @@ export function searchPlaces(
 ): Place[] {
   const terms = normalizeSearch(query).split(/\s+/).filter(Boolean);
   if (!terms.length) return [];
+  const exactQuery = terms.join(" ");
+  const exactMatch = (place: Place) =>
+    [place.name, ...place.aliases].some(value => normalizeSearch(value) === exactQuery) ||
+    !!place.roomId && terms.includes(normalizeSearch(place.roomId));
   return places
     .filter((place) => {
       const text = normalizeSearch(
@@ -180,6 +184,7 @@ export function searchPlaces(
         (p.floorLevel === floorLevel ? 0 : 2) +
         (p.nodeId ? 0 : 1);
       return (
+        Number(exactMatch(b)) - Number(exactMatch(a)) ||
         rank(a) - rank(b) ||
         a.name.localeCompare(b.name, "ja", { numeric: true })
       );
