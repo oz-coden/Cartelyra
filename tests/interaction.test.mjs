@@ -52,8 +52,8 @@ const click = (window, element) =>
 test("map picking scrolls to the banner and sets endpoints without opening an action bubble", async () => {
   const { document, window, server } = await setup();
   try {
-    const { UniviewApp } = await server.ssrLoadModule("/src/main.ts");
-    new UniviewApp();
+    const { CartelyraApp } = await server.ssrLoadModule("/src/main.ts");
+    new CartelyraApp();
     document.getElementById("allow-inferred").checked = true;
     const banner = document.getElementById("pick-banner"), scrolls = [];
     banner.scrollIntoView = options => scrolls.push(options);
@@ -94,8 +94,8 @@ test("map picking scrolls to the banner and sets endpoints without opening an ac
 test("registered gates are searchable, selectable and routable on the overview", async () => {
   const { document, window, server } = await setup();
   try {
-    const { UniviewApp } = await server.ssrLoadModule("/src/main.ts");
-    new UniviewApp();
+    const { CartelyraApp } = await server.ssrLoadModule("/src/main.ts");
+    new CartelyraApp();
     document.getElementById("btn-view-campus").click();
     assert.equal(document.querySelectorAll(".map-campus-gate").length, 4);
     document.getElementById("btn-pick-start").click();
@@ -133,7 +133,7 @@ test("registered gates are searchable, selectable and routable on the overview",
 test("3D picking, anchored action bubble, endpoint routing, highlighting and gap controls work together without moving the camera", async () => {
   const { document, window, server } = await setup();
   try {
-    const [{ UniviewApp }, { ThreeView }] = await Promise.all([
+    const [{ CartelyraApp }, { ThreeView }] = await Promise.all([
       server.ssrLoadModule("/src/main.ts"),
       server.ssrLoadModule("/src/scene/ThreeView.ts"),
     ]);
@@ -161,7 +161,7 @@ test("3D picking, anchored action bubble, endpoint routing, highlighting and gap
       },
     };
     let view;
-    const app = new UniviewApp(async (data, container) => {
+    const app = new CartelyraApp(async (data, container) => {
       container.append(canvas);
       view = new ThreeView(data, container, host);
       return view;
@@ -347,7 +347,7 @@ test("3D picking, anchored action bubble, endpoint routing, highlighting and gap
 async function setupThree() {
   const env = await setup();
   try {
-    const [{ UniviewApp }, { ThreeView }, { campusData }, { AStarPathfinder }] = await Promise.all([
+    const [{ CartelyraApp }, { ThreeView }, { campusData }, { AStarPathfinder }] = await Promise.all([
       env.server.ssrLoadModule("/src/main.ts"),
       env.server.ssrLoadModule("/src/scene/ThreeView.ts"),
       env.server.ssrLoadModule("/src/data/load.ts"),
@@ -370,7 +370,7 @@ async function setupThree() {
       },
     };
     let view;
-    new UniviewApp(async (data, container) => {
+    new CartelyraApp(async (data, container) => {
       container.append(canvas);
       return view = new ThreeView(data, container, host);
     });

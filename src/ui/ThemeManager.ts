@@ -1,3 +1,6 @@
+const THEME_STORAGE_KEY = "cartelyra_theme";
+const LEGACY_THEME_STORAGE_KEY = "uniview_theme";
+
 export class ThemeManager {
   private isDark: boolean = false;
   private onChangeCallbacks: Array<(isDark: boolean) => void> = [];
@@ -5,11 +8,16 @@ export class ThemeManager {
   constructor() {
     let saved: string | null = null;
     try {
-      saved = localStorage.getItem("uniview_theme");
+      saved = localStorage.getItem(THEME_STORAGE_KEY);
+      if (saved !== "dark" && saved !== "light") {
+        saved = localStorage.getItem(LEGACY_THEME_STORAGE_KEY);
+        if (saved === "dark" || saved === "light")
+          localStorage.setItem(THEME_STORAGE_KEY, saved);
+      }
     } catch {
       /* Storage can be unavailable in private or embedded contexts. */
     }
-    if (saved) {
+    if (saved === "dark" || saved === "light") {
       this.isDark = saved === "dark";
     } else {
       // Check system preference
@@ -33,7 +41,7 @@ export class ThemeManager {
   public toggleTheme() {
     this.isDark = !this.isDark;
     try {
-      localStorage.setItem("uniview_theme", this.isDark ? "dark" : "light");
+      localStorage.setItem(THEME_STORAGE_KEY, this.isDark ? "dark" : "light");
     } catch {
       /* Theme still works for this visit. */
     }

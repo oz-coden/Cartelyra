@@ -1,4 +1,4 @@
-# Uniview
+# Cartelyra
 
 日本語の説明は[目次](#目次)から読めます。
 
@@ -13,7 +13,7 @@
 
 ## Overview
 
-**Uniview** is a static web application that displays building layouts, floor plans and reference routes for Kanagawa University’s Yokohama Campus. Rendering, search and route calculation run in the browser.
+**Cartelyra** is a static web application that displays building layouts, floor plans and reference routes for Kanagawa University’s Yokohama Campus. Rendering, search and route calculation run in the browser.
 
 It is an **unofficial prototype** using aerial-photo observations for the campus overview and posted diagrams for indoor plans. Actual dimensions, entrances, stair/elevator connections and access restrictions have not yet been field verified.
 
@@ -79,8 +79,8 @@ Future work includes comparing the map with the campus, verifying entrances/stai
 Use Node.js 20.19 or newer and npm to run the following commands. `npm run build` validates map data, checks types and generates static files in `dist/`.
 
 ```bash
-git clone https://github.com/oz-coden/Uniview.git
-cd Uniview
+git clone https://github.com/oz-coden/Cartelyra.git
+cd Cartelyra
 npm ci
 npm run dev           # Start the development server
 npm run validate:data # Validate map data
@@ -106,15 +106,15 @@ The campus overview was created and simplified with reference to [GSI Tiles: sea
 
 ## Terms of use
 
-The public Uniview website is free to use for viewing maps, searching for places and finding routes.
+The public Cartelyra website is free to use for viewing maps, searching for places and finding routes.
 
-The project does not grant a general license to freely copy, modify or redistribute its source code or map data beyond the permissions expressly provided in the [Uniview Terms of Use](LICENSE.md). Refer to those terms for uses beyond ordinary website use.
+The project does not grant a general license to freely copy, modify or redistribute its source code or map data beyond the permissions expressly provided in the [Cartelyra Terms of Use](LICENSE.md). Refer to those terms for uses beyond ordinary website use.
 
 Rights in reference materials, third-party content and dependencies belong to their respective rights holders, and their applicable terms remain unchanged. Previously granted permissions, including MIT permissions for covered portions, remain in effect. Prior MIT notices and distributed dependency licenses are retained in the [license notices](public/licenses.txt).
 
 ---
 
-# Uniview
+# Cartelyra
 
 ## 目次
 
@@ -127,7 +127,7 @@ Rights in reference materials, third-party content and dependencies belong to th
 
 ## 概要
 
-**Uniview** は、神奈川大学 横浜キャンパスの建物配置・フロア図と、参考経路を表示する静的なWebアプリです。表示・検索・経路計算はブラウザー内で行います。
+**Cartelyra** は、神奈川大学 横浜キャンパスの建物配置・フロア図と、参考経路を表示する静的なWebアプリです。表示・検索・経路計算はブラウザー内で行います。
 
 屋外配置は空中写真の観察、館内図は掲示案内図をもとにした**非公式の試作版**です。現時点では、実寸・出入口・階段／EVの接続・利用制限などの現地確認は完了していません。
 
@@ -193,8 +193,8 @@ Rights in reference materials, third-party content and dependencies belong to th
 Node.js 20.19以上とnpmで、次のコマンドを実行します。`npm run build` はデータ検証・型検査・静的ファイル生成を行い、`dist/` が出力されます。
 
 ```bash
-git clone https://github.com/oz-coden/Uniview.git
-cd Uniview
+git clone https://github.com/oz-coden/Cartelyra.git
+cd Cartelyra
 npm ci
 npm run dev           # 開発サーバーを起動
 npm run validate:data # 地図データを検証
@@ -220,8 +220,8 @@ GitHub Pagesで公開する場合は、リポジトリの **Settings → Pages �
 
 ## 利用条件
 
-Univiewの公開サイトは、地図の閲覧、場所の検索や経路検索に無料で利用できます。
+Cartelyraの公開サイトは、地図の閲覧、場所の検索や経路検索に無料で利用できます。
 
-ソースコードおよび地図データについて、[Uniview 利用条件](LICENSE.md)で明示する範囲を超えて、自由な複製・改変・再配布を認める包括的な許諾は行っていません。通常のサイト利用を超える利用については、利用条件を確認してください。
+ソースコードおよび地図データについて、[Cartelyra 利用条件](LICENSE.md)で明示する範囲を超えて、自由な複製・改変・再配布を認める包括的な許諾は行っていません。通常のサイト利用を超える利用については、利用条件を確認してください。
 
 参照資料・第三者のコンテンツ・依存ライブラリの権利は、それぞれの権利者に帰属し、各提供元の利用条件が適用されます。本プロジェクトの利用条件によって、これらは変更されません。過去にMIT License等で許諾された部分については、従前の許諾が引き続き適用されます。従前のMIT表示と配布する依存ライブラリのライセンス全文は、[ライセンス表示](public/licenses.txt)に収録しています。

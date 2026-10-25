@@ -31,7 +31,7 @@ const createThreeView: ThreeFactory = async (data, container) => {
   const { ThreeView } = await import("./scene/ThreeView");
   return new ThreeView(data, container);
 };
-export class UniviewApp {
+export class CartelyraApp {
   private three?: ThreeView;
   private loading3D?: Promise<ThreeView>;
   private viewRequest = 0;
@@ -468,4 +468,4 @@ export class UniviewApp {
     );
   }
 }
-window.addEventListener("DOMContentLoaded", () => new UniviewApp());
+window.addEventListener("DOMContentLoaded", () => new CartelyraApp());

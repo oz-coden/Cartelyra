@@ -1,18 +1,18 @@
-Uniview: prior MIT permissions and third-party license notices
-Uniview: 既存部分のMIT許諾・第三者ライセンス表示
+Cartelyra: prior MIT permissions and third-party license notices
+Cartelyra: 既存部分のMIT許諾・第三者ライセンス表示
 
-The current Uniview terms are in LICENSE.md in the source repository:
-https://github.com/oz-coden/Uniview/blob/main/LICENSE.md
+The current Cartelyra terms are in LICENSE.md in the source repository:
+https://github.com/oz-coden/Cartelyra/blob/main/LICENSE.md
 
 The MIT notice below is retained for portions previously licensed under MIT.
 It does not grant MIT permissions for new material covered only by the current
-Uniview terms. Existing MIT permissions are not revoked or restricted.
+Cartelyra terms. Existing MIT permissions are not revoked or restricted.
 
-以下のUniviewのMIT表示は、従前のMIT許諾が適用される部分のために保持します。
+以下のCartelyraのMIT表示は、従前のMIT許諾が適用される部分のために保持します。
 新しい利用条件のみが適用される新規部分をMITで許諾するものではありません。
 既存部分へのMIT許諾を撤回したり制限したりするものではありません。
 
-=== Uniview: prior MIT notice / 従前のMIT表示 ===
+=== Cartelyra: prior MIT notice / 従前のMIT表示 ===
 
 The MIT License (MIT)
 

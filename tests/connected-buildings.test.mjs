@@ -87,11 +87,11 @@ test('the application keeps grouped floors, endpoints, camera and exploded conne
   const data=compile(s);
   const server=await createServer({server:{middlewareMode:true,hmr:false,ws:false},optimizeDeps:{noDiscovery:true,include:[]},appType:'custom'});
   try{
-    const [{UniviewApp},{ThreeView}]=await Promise.all([server.ssrLoadModule('/src/main.ts'),server.ssrLoadModule('/src/scene/ThreeView.ts')]);
+    const [{CartelyraApp},{ThreeView}]=await Promise.all([server.ssrLoadModule('/src/main.ts'),server.ssrLoadModule('/src/scene/ThreeView.ts')]);
     const canvas=document.createElement('canvas');canvas.getBoundingClientRect=()=>({left:0,top:0,width:1000,height:700});
     const host={scene:new THREE.Scene(),camera:new THREE.PerspectiveCamera(45,1000/700,.1,1500),renderer:{domElement:canvas},controls:{maxDistance:450},moves:0,
       setActive(){},setDarkTheme(){},resize(){},flyTo(target,position){this.moves++;this.camera.position.copy(position);this.camera.lookAt(target);this.camera.updateMatrixWorld(true);}};
-    let view;new UniviewApp(async(data,container)=>{container.append(canvas);view=new ThreeView(data,container,host);return view;},data,s.overview);
+    let view;new CartelyraApp(async(data,container)=>{container.append(canvas);view=new ThreeView(data,container,host);return view;},data,s.overview);
     assert.equal(document.body.dataset.view,'campus');
     document.getElementById('btn-view-floor').click();
     assert.equal(document.querySelectorAll('.map-floor').length,3);

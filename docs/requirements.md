@@ -1,4 +1,4 @@
-# Uniview 要件と操作仕様
+# Cartelyra 要件と操作仕様
 
 ## 目的
 

@@ -115,7 +115,7 @@ test('product descriptions stay short and survey assumptions remain in documenta
   const state=new LocationState(buildingCatalog(data,s.overview),data.viewGroups);state.selectBuilding('b7');state.selectGroupLevel('f2');
   const map=new FloorMap(document.getElementById('map-canvas'),data,s.overview);map.setLocation(state.building,state.floor,state.scope);
   assert.ok(document.getElementById('map-caption').textContent.length<40);
-  assert.equal(document.querySelector('.data-notice a').getAttribute('href'),'https://github.com/oz-coden/Uniview/blob/main/docs/survey-notes.md');
+  assert.equal(document.querySelector('.data-notice a').getAttribute('href'),'https://github.com/oz-coden/Cartelyra/blob/main/docs/survey-notes.md');
 });
 
 test('measured corridor distances remain separate from stairs when instructions are condensed',()=>{

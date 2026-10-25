@@ -1,4 +1,4 @@
-# Uniview 利用条件
+# Cartelyra 利用条件
 
 制定日：2026年10月23日（日本標準時）
 
@@ -6,13 +6,13 @@ Copyright (c) 2026 oz-coden
 
 ## 1. 適用範囲
 
-本条件は、本条件を同梱するUniviewのソースコード、ビルド成果物、地図データおよび関連資料について、本プロジェクトの権利者が権利を有する範囲に適用されます。
+本条件は、本条件を同梱するCartelyraのソースコード、ビルド成果物、地図データおよび関連資料について、本プロジェクトの権利者が権利を有する範囲に適用されます。
 
 本条件で明示的に許諾する場合を除き、これらの著作物に関する権利は留保されます。法令、既存の許諾および第三者の権利との関係は、第5項および第6項に従います。
 
 ## 2. 公開サイトの利用
 
-Univiewの公開サイトにおける地図の閲覧、場所の検索および経路検索は、無料で利用できます。
+Cartelyraの公開サイトにおける地図の閲覧、場所の検索および経路検索は、無料で利用できます。
 
 これらの通常の利用に必要な、ブラウザによるプログラム・データの読み込み、実行およびキャッシュを認めます。
 
@@ -50,21 +50,21 @@ Univiewの公開サイトにおける地図の閲覧、場所の検索および�
 
 ## 7. 無保証・責任の制限
 
-Univiewのプログラム、地図データ、経路検索結果および関連資料は、現状のまま提供します。正確性、完全性、最新性、特定の目的への適合性、第三者の権利の非侵害、経路の通行可能性および安全性を保証しません。
+Cartelyraのプログラム、地図データ、経路検索結果および関連資料は、現状のまま提供します。正確性、完全性、最新性、特定の目的への適合性、第三者の権利の非侵害、経路の通行可能性および安全性を保証しません。
 
 地図や経路の表示は、実際の通行可否、施設の利用権限、バリアフリー対応、または避難経路としての適切性を保証するものではありません。現地の掲示、通行規制および施設管理者の案内に従ってください。
 
-本プロジェクトの権利者および提供者は、法令で認められる範囲で、Univiewの利用または利用不能により生じた損害について責任を負いません。本項は、法令上免除・制限できない責任を免除・制限するものではありません。
+本プロジェクトの権利者および提供者は、法令で認められる範囲で、Cartelyraの利用または利用不能により生じた損害について責任を負いません。本項は、法令上免除・制限できない責任を免除・制限するものではありません。
 
 ## 8. 適用開始版
 
 本条件は、2026年10月23日に本ファイルを初めて導入したコミット以降の、本条件を同梱する版に適用されます。
 
-導入直前の版は、コミット [`3c6d7979918f6bedc87e7a070668291a01202e06`](https://github.com/oz-coden/Uniview/tree/3c6d7979918f6bedc87e7a070668291a01202e06) です。当該版およびそれ以前の版に適用される許諾は、それぞれの版の表示に従います。第5項に定める既存の許諾は、本条件の導入後も維持されます。
+導入直前の版は、コミット [`3c6d7979918f6bedc87e7a070668291a01202e06`](https://github.com/oz-coden/Cartelyra/tree/3c6d7979918f6bedc87e7a070668291a01202e06) です。当該版およびそれ以前の版に適用される許諾は、それぞれの版の表示に従います。第5項に定める既存の許諾は、本条件の導入後も維持されます。
 
 ---
 
-# Uniview Terms of Use
+# Cartelyra Terms of Use
 
 Established: 23 October 2026 (Japan Standard Time).
 
@@ -72,13 +72,13 @@ The Japanese text above is authoritative. The following English translation is p
 
 ## 1. Scope
 
-These terms apply to the source code, build outputs, map data and related materials in versions of Uniview containing these terms, to the extent that the project’s rights holders hold rights in those materials.
+These terms apply to the source code, build outputs, map data and related materials in versions of Cartelyra containing these terms, to the extent that the project’s rights holders hold rights in those materials.
 
 Except as expressly permitted by these terms, rights in these works are reserved. Statutory permissions, existing grants and third-party rights remain subject to Sections 5 and 6.
 
 ## 2. Use of the public website
 
-Viewing maps, searching for places and finding routes on the public Uniview website are free of charge.
+Viewing maps, searching for places and finding routes on the public Cartelyra website are free of charge.
 
 Loading, executing and caching programs and data in a browser as necessary for these ordinary uses are permitted.
 
@@ -116,14 +116,14 @@ Prior MIT notices and the full license texts of distributed dependencies are inc
 
 ## 7. No warranty and limitation of liability
 
-Uniview’s programs, map data, route results and related materials are provided as is, without warranties of accuracy, completeness, currency, fitness for a particular purpose, non-infringement, route accessibility or safety.
+Cartelyra’s programs, map data, route results and related materials are provided as is, without warranties of accuracy, completeness, currency, fitness for a particular purpose, non-infringement, route accessibility or safety.
 
 Map and route displays do not guarantee actual access, permission to use a facility, barrier-free access or suitability as an evacuation route. Follow on-site notices, access restrictions and facility management instructions.
 
-To the extent permitted by law, the project’s rights holders and providers are not liable for damages arising from use of, or inability to use, Uniview. This section does not exclude or limit liability that cannot legally be excluded or limited.
+To the extent permitted by law, the project’s rights holders and providers are not liable for damages arising from use of, or inability to use, Cartelyra. This section does not exclude or limit liability that cannot legally be excluded or limited.
 
 ## 8. First applicable version
 
 These terms apply to versions containing them beginning with the commit that first introduced this file on 23 October 2026.
 
-The immediately preceding version is commit [`3c6d7979918f6bedc87e7a070668291a01202e06`](https://github.com/oz-coden/Uniview/tree/3c6d7979918f6bedc87e7a070668291a01202e06). Permissions applicable to that version and earlier versions follow their respective notices. Existing grants described in Section 5 remain in effect after introduction of these terms.
+The immediately preceding version is commit [`3c6d7979918f6bedc87e7a070668291a01202e06`](https://github.com/oz-coden/Cartelyra/tree/3c6d7979918f6bedc87e7a070668291a01202e06). Permissions applicable to that version and earlier versions follow their respective notices. Existing grants described in Section 5 remain in effect after introduction of these terms.
