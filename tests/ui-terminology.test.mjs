@@ -25,6 +25,8 @@ test('EV labels are consistent across map features, navigation nodes and numbere
 test('view controls and elevator guide footers use the published UI terminology',async()=>{
   const {document,window}=parseHTML(await readFile(new URL('../index.html',import.meta.url),'utf8'));
   globalThis.document=document;globalThis.window=window;
+  assert.equal(document.getElementById('btn-view-campus').textContent,'キャンパス図');
+  assert.equal(document.getElementById('btn-reset-camera').textContent,'全体を表示');
   assert.equal(document.getElementById('btn-view-floor').textContent,'平面図');
   assert.equal(document.getElementById('btn-view-3d').textContent,'立体図');
   assert.equal(document.getElementById('canvas-container').getAttribute('aria-label'),'建物の立体図');

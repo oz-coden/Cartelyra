@@ -92,6 +92,8 @@ test('the application keeps grouped floors, endpoints, camera and exploded conne
     const host={scene:new THREE.Scene(),camera:new THREE.PerspectiveCamera(45,1000/700,.1,1500),renderer:{domElement:canvas},controls:{maxDistance:450},moves:0,
       setActive(){},setDarkTheme(){},resize(){},flyTo(target,position){this.moves++;this.camera.position.copy(position);this.camera.lookAt(target);this.camera.updateMatrixWorld(true);}};
     let view;new UniviewApp(async(data,container)=>{container.append(canvas);view=new ThreeView(data,container,host);return view;},data,s.overview);
+    assert.equal(document.body.dataset.view,'campus');
+    document.getElementById('btn-view-floor').click();
     assert.equal(document.querySelectorAll('.map-floor').length,3);
     assert.ok(!document.getElementById('group-display-option').classList.contains('hidden'));
     const select=id=>document.querySelector(`[data-place="${id}"]`).dispatchEvent(new window.Event('click',{bubbles:true}));

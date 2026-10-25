@@ -187,6 +187,15 @@ export class SearchPanel {
     input.setAttribute("aria-expanded", "true");
   }
   private setPick(target: Target | "none") {
+    if (target !== "none") {
+      for (const key of ["start", "dest"] as const) {
+        const input = this.input(key);
+        input.blur?.();
+        input.setAttribute("aria-expanded", "false");
+        input.removeAttribute("aria-activedescendant");
+        this.suggestions(key).classList.add("hidden");
+      }
+    }
     this.selection.pickTarget = target;
     for (const key of ["start", "dest"] as const) {
       const b = document.getElementById(`btn-pick-${key}`)!;

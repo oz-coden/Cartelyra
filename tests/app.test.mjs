@@ -39,8 +39,11 @@ test("application selects buildings, focuses WC details and routes from a room t
     const select = document.getElementById("building-select");
     // linkedom does not initialize the checkbox's checked property from HTML.
     document.getElementById("allow-inferred").checked = true;
-    assert.equal(select.options.length, 30);
-    assert.equal(select.value, "b1");
+    assert.equal(select.options.length, 31);
+    assert.equal(select.value, "");
+    assert.equal(document.body.dataset.view, "campus");
+    assert.equal(document.querySelectorAll(".map-campus-building").length, 30);
+    assert.equal(document.querySelectorAll(".map-room").length, 0);
     select.value = "b3";
     select.dispatchEvent(new window.Event("change"));
     document
@@ -105,7 +108,7 @@ test("application selects buildings, focuses WC details and routes from a room t
     outdoorStep.click();
     assert.equal(document.body.dataset.view, "campus");
     assert.ok(document.querySelectorAll(".map-route").length > 0);
-    assert.match(select.value, /b20/);
+    assert.equal(select.value, "");
     const indoorStep = [...document.querySelectorAll("#step-guide-list button")]
       .find((b) => b.textContent.includes("へ入る"));
     indoorStep.click();

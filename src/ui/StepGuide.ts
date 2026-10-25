@@ -7,6 +7,11 @@ export class StepGuide {
   ) as HTMLElement;
   private stepList = document.getElementById("step-guide-list") as HTMLElement;
   private btnClose = document.getElementById("btn-close-guide") as HTMLElement;
+  private btnReopen = document.getElementById("btn-reopen-guide") as HTMLButtonElement;
+  private btnPrev = document.getElementById("btn-guide-prev") as HTMLButtonElement;
+  private btnNext = document.getElementById("btn-guide-next") as HTMLButtonElement;
+  private steps: RouteStep[] = [];
+  private currentIndex = 0;
 
   public onStepClick: ((step: RouteStep) => void) | null = null;
 
@@ -17,30 +22,39 @@ export class StepGuide {
   private setupEvents() {
     this.btnClose.addEventListener("click", () => {
       this.hide();
+      this.btnReopen.focus({ preventScroll: true });
+    });
+    this.btnReopen.addEventListener("click", () => {
+      this.show();
+      document.getElementById("btn-guide-focus")!.focus({ preventScroll: true });
+    });
+    this.btnPrev.addEventListener("click", () => this.selectStep(this.currentIndex - 1));
+    this.btnNext.addEventListener("click", () => this.selectStep(this.currentIndex + 1));
+    document.getElementById("btn-guide-focus")!.addEventListener("click", () => {
+      if (this.steps.length) {
+        this.onStepClick?.(this.steps[this.currentIndex]);
+        document.getElementById("map-stage")!.scrollIntoView?.({ block: "nearest" });
+      }
     });
   }
 
   public showSteps(steps: RouteStep[]) {
     if (!steps || steps.length === 0) {
-      this.hide();
+      this.clear();
       return;
     }
 
-    this.stepCountBadge.textContent = `${steps.length} 区間`;
-    this.stepList.innerHTML = "";
+    this.steps = steps;
+    this.currentIndex = 0;
+    document.getElementById("guide-all-steps")!.removeAttribute("open");
+    this.stepList.replaceChildren();
 
     steps.forEach((step, index) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className = "step-card";
-      if (index === 0) card.classList.add("active");
 
       const icon = this.getStepIcon(
-        step.edgeType,
-        index === 0,
-        index === steps.length - 1,
-      );
-      const typeLabel = this.getTypeLabel(
         step.edgeType,
         index === 0,
         index === steps.length - 1,
@@ -51,7 +65,7 @@ export class StepGuide {
         ["step-card-text", step.instruction],
         [
           "step-card-footer",
-          `${typeLabel}${step.cover === "covered" ? " / 屋根付き" : ""}${step.distance > 0 ? ` / ${step.distance}m` : ""}`,
+          this.stepFooter(step, index),
         ],
       ]) {
         const part = document.createElement("span");
@@ -61,23 +75,63 @@ export class StepGuide {
       }
 
       card.addEventListener("click", () => {
-        const allCards = this.stepList.querySelectorAll(".step-card");
-        allCards.forEach((c) => c.classList.remove("active"));
-        card.classList.add("active");
-
-        if (this.onStepClick) {
-          this.onStepClick(step);
-        }
+        this.selectStep(index);
       });
 
       this.stepList.appendChild(card);
     });
 
-    this.container.classList.remove("hidden");
+    this.updateCurrent();
+    this.show();
   }
 
   public hide() {
     this.container.classList.add("hidden");
+    this.btnReopen.classList.toggle("hidden", !this.steps.length);
+    this.btnReopen.setAttribute("aria-expanded", "false");
+  }
+
+  public clear() {
+    this.steps = [];
+    this.currentIndex = 0;
+    this.stepList.replaceChildren();
+    this.stepCountBadge.textContent = "";
+    document.getElementById("guide-current-text")!.textContent = "";
+    document.getElementById("guide-current-footer")!.textContent = "";
+    this.hide();
+  }
+
+  private show() {
+    if (!this.steps.length) return;
+    this.container.classList.remove("hidden");
+    this.btnReopen.classList.add("hidden");
+    this.btnReopen.setAttribute("aria-expanded", "true");
+  }
+
+  private selectStep(index: number) {
+    if (index < 0 || index >= this.steps.length) return;
+    this.currentIndex = index;
+    this.updateCurrent();
+    this.onStepClick?.(this.steps[index]);
+  }
+
+  private updateCurrent() {
+    const step = this.steps[this.currentIndex];
+    this.stepCountBadge.textContent = `${this.currentIndex + 1} / ${this.steps.length} 区間`;
+    document.getElementById("guide-current-text")!.textContent = step.instruction;
+    document.getElementById("guide-current-footer")!.textContent = this.stepFooter(step, this.currentIndex);
+    this.btnPrev.disabled = this.currentIndex === 0;
+    this.btnNext.disabled = this.currentIndex === this.steps.length - 1;
+    this.stepList.querySelectorAll(".step-card").forEach((card, index) => {
+      card.classList.toggle("active", index === this.currentIndex);
+      if (index === this.currentIndex) card.setAttribute("aria-current", "step");
+      else card.removeAttribute("aria-current");
+    });
+  }
+
+  private stepFooter(step: RouteStep, index: number) {
+    const label = this.getTypeLabel(step.edgeType, index === 0, index === this.steps.length - 1);
+    return `${label}${step.cover === "covered" ? " / 屋根付き" : ""}${step.distance > 0 ? ` / ${step.distance}m` : ""}`;
   }
 
   private getStepIcon(

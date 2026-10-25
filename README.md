@@ -39,12 +39,12 @@ It is an **unofficial prototype** using aerial-photo observations for the campus
 | Basement equipment areas and pits | Display only; excluded from route search |
 | Actual distances and walking times | Not measured |
 
-1. Select a building using the building selector or campus map, then use the floor buttons to change floors. Buildings without floor data display their registration status.
-2. Switch views using “キャンパス” (campus), “平面図” (floor plan) and “立体図” (3D view) at the top. Drag the floor plan to pan; use a two-finger pinch, the mouse wheel or +/− buttons to zoom. A pinch keeps the map point beneath the fingers’ midpoint in place and also supports two-finger panning.
+1. The campus map opens first. Select a building using the building selector or campus map, then use the floor buttons to change floors. Buildings without floor data display their registration status.
+2. Switch views using “キャンパス図” (campus map), “平面図” (floor plan) and “立体図” (3D view) at the top. Drag the floor plan to pan; use a two-finger pinch, the mouse wheel or +/− buttons to zoom. A pinch keeps the map point beneath the fingers’ midpoint in place and also supports two-finger panning.
 3. Enter a room name or a term such as “WC”, “トイレ” (toilet), “EV” or “正門” (main gate) in the start/destination field, then select a suggestion. Space-separated queries such as “3号館 2F 女性” (Building 3, 2F, female) are supported. Suggestions prioritize the current building and floor.
-4. Alternatively, select a place on the map or in “このフロアの場所” (places on this floor), then choose “ここから出発” (start here) or “ここへ行く” (go here). Places without registered entrances or outdoor routes can be saved as endpoints, but no routes to them are shown.
-5. Select a route-step card to switch to its building and floor, or to the campus map for outdoor steps. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
-6. Disable “未確認の接続を含む参考ルート” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
+4. “地図で出発地を選ぶ” / “地図で目的地を選ぶ” (pick start/destination on the map) scrolls to the map; selecting a place sets that endpoint directly without an action bubble. Alternatively, select a place on the map or in “このフロアの場所” (places on this floor), then choose “ここから出発” (start here) or “ここへ行く” (go here). Places without registered entrances or outdoor routes can be saved as endpoints, but no routes to them are shown.
+5. Use “前へ” / “次へ” (previous / next) or expand “道順一覧” (all steps) to choose a route section and switch to its building and floor, or the campus map for outdoor steps. “地図で確認” (show on map) brings the map into view. Closing the guide retains the selected section; use “道順を再表示” (reopen directions) to return to it. In 3D, use “全階を表示” (show all floors) and “階の間隔” (floor spacing). Moving the spacing slider enables all-floor view.
+6. Disable “参考ルートを含む” (reference routes including unverified connections) to search only field-verified connections. Since connections have not yet been field verified, routes between different places will not be found in this mode.
 
 On schematic maps, endpoints in the same building first minimize exits and re-entries, then vertical travel, then the selected reference cost. Between different wings of a connected display group, known floor backtracking and overshoots are avoided before comparing reference costs; outdoor approaches with unmeasured stairs can therefore compete with longer interior routes. Other journeys between buildings or to outdoor places compare the selected reference cost directly, so a shorter reference route can use bridge stairs even when a stair-free detour exists. Reference costs are independent of drawing scale, position and rotation; they are not measured distances. “標準” (standard) does not guarantee the shortest actual route. Indoor preference distinguishes indoor, roofed and exposed/unknown connections. “階段を避ける” (avoid stairs) excludes stair connections and does not guarantee wheelchair accessibility. The summary identifies stairs, ramps and elevators even when the number of floor changes is unknown. If no stair-free route exists, a persistent notice accompanies an alternative that minimizes registered stair segments, then reference cost. Stair avoidance remains selected. Disconnected or unregistered endpoints receive a persistent explanation without an invented route.
 
@@ -153,12 +153,12 @@ Rights in reference materials, third-party content and dependencies belong to th
 | 地下設備区画・ピット | 表示のみ。経路検索の対象外 |
 | 実距離・徒歩時間 | 未測定 |
 
-1. 建物選択またはキャンパス図で棟を選び、階ボタンで表示階を切り替えます。フロア未登録の棟には登録状況を表示します。
-2. 上部の「キャンパス」「平面図」「立体図」で表示を切り替えます。平面図は1本指またはマウスのドラッグで移動し、2本指のピンチ・ホイール・＋／−で拡大縮小できます。ピンチ中は指の中央にある地点を基準に拡大縮小し、2本指での移動にも対応します。
+1. 初期表示はキャンパス図です。建物選択またはキャンパス図で棟を選び、階ボタンで表示階を切り替えます。フロア未登録の棟には登録状況を表示します。
+2. 上部の「キャンパス図」「平面図」「立体図」で表示を切り替えます。平面図は1本指またはマウスのドラッグで移動し、2本指のピンチ・ホイール・＋／−で拡大縮小できます。ピンチ中は指の中央にある地点を基準に拡大縮小し、2本指での移動にも対応します。
 3. 出発地・目的地に部屋名や「WC」「トイレ」「EV」「正門」などを入力し、候補を選びます。「3号館 2F 女性」のような空白区切りの検索も可能です。候補は表示中の棟・階を優先します。
-4. 地図や「このフロアの場所」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口や屋外経路が未登録の場所も端点に指定できますが、その場所への経路は表示しません。
-5. 道順カードを選ぶと、その棟・階へ切り替わります。屋外の道順ではキャンパス図へ切り替わります。立体図では「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
-6. 「未確認の接続を含む参考ルート」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
+4. 入力欄横の「地図で出発地を選ぶ」「地図で目的地を選ぶ」ボタンを押すと地図へ移動し、場所の選択だけで端点を指定できます。このモードでは吹き出しを表示しません。通常は地図や「このフロアの場所」の場所を選び、「ここから出発」「ここへ行く」で指定することもできます。入口や屋外経路が未登録の場所も端点に指定できますが、その場所への経路は表示しません。
+5. 道順は選択中の区間を大きく表示します。「前へ」「次へ」または「道順一覧」で区間を選ぶと、その棟・階へ切り替わります。屋外の道順ではキャンパス図へ切り替わります。「地図で確認」で地図へ移動できます。閉じても選択中の区間を保持し、「道順を再表示」で戻れます。立体図では「全階を表示」と「階の間隔」を利用できます。スライダーを動かすと全階表示に切り替わります。
+6. 「参考ルートを含む」を外すと、現地確認済みの接続だけで検索します。現状は接続未確認のため、別地点への経路は見つかりません。
 
 模式図では、同じ棟の中は不要な出入りの少なさ、昇降の少なさ、選択条件の参考評価値の順に比較します。連絡棟群の別棟間では、既知の階移動の逆行・行き過ぎを避けたうえで参考評価値を比較し、昇降量未確認の階段を含む屋外経路も長い館内迂回と比較できます。それ以外の棟間・屋外への移動では参考評価値を直接比較し、階段のない迂回路があっても、参考評価値が小さい連絡橋の階段経由を選べます。参考評価値は描画の縮尺・位置・回転とは独立し、実距離を表しません。「標準」は実際の最短距離を保証しません。屋内優先では、屋内・屋根付き・屋外または未確認の接続を区別します。同階の接続がない場合は他階経由も可能です。概要には、昇降量が未確認でも階段・スロープ・EVの利用を表示します。「階段を避ける」は階段接続を除外する機能で、車椅子等での通行可否を保証するものではありません。階段なしでつながらない場合は注意を表示し、登録された階段区間が最少の代替経路を提示します。同数なら参考評価値で比較します。階段回避の選択は維持し、注意は検索条件を変えるまで残します。接続自体がない場合も理由を表示します。
 

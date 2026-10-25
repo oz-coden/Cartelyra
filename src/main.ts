@@ -46,7 +46,7 @@ export class UniviewApp {
   private pathfinder: AStarPathfinder;
   private map: FloorMap;
   private popover: SelectionPopover;
-  private view: View = "floor";
+  private view: View = "campus";
   private category = "all";
   private result: RouteResult | null = null;
   private toastTimer?: number;
@@ -81,8 +81,9 @@ export class UniviewApp {
     }
     select.addEventListener("change", () => {
       const previousScope = this.location.scope.key;
-      this.location.selectBuilding(select.value);
+      if (!this.location.selectBuilding(select.value)) return;
       this.applyLocation();
+      if (this.view === "campus") void this.setView("floor");
       if (this.view === "3d" && previousScope !== this.location.scope.key) this.three?.reset();
     });
     this.theme.onThemeChange((dark) => this.three?.setTheme(dark));
@@ -107,7 +108,7 @@ export class UniviewApp {
       this.search.setStatus();
       this.map.setRoute(null);
       this.three?.renderRoute(null);
-      this.guide.hide();
+      this.guide.clear();
     };
     this.search.onPlaceFocus = (place) => this.focusPlace(place, true);
     this.search.onPickModeToggle = (target) => {
@@ -119,9 +120,11 @@ export class UniviewApp {
           ? "出発地を選択中：地図の部屋・設備・門を選んでください"
           : "目的地を選択中：地図の部屋・設備・門を選んでください";
       if (target !== "none") {
-        this.toast(
-          `地図の場所を選んで${target === "start" ? "出発地" : "目的地"}に設定してください`,
-        );
+        this.hideDetails();
+        document.getElementById("pick-banner")!.scrollIntoView?.({
+          block: "start",
+          behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
       }
     };
     for (const view of ["campus", "floor", "3d"] as View[])
@@ -190,11 +193,11 @@ export class UniviewApp {
       filters.append(button);
     }
     this.applyLocation();
-    void this.setView("floor");
+    void this.setView("campus");
   }
   private applyLocation() {
     (document.getElementById("building-select") as HTMLSelectElement).value =
-      this.location.buildingId ?? "";
+      this.view === "campus" ? "" : this.location.buildingId ?? "";
     const building = this.location.building,
       floor = this.location.floor;
     document.getElementById("building-status")!.textContent = building?.data
@@ -209,7 +212,8 @@ export class UniviewApp {
     if (this.location.group) this.floors.renderGroup(this.location.group, this.location.groupLevel?.id);
     else this.floors.render(building?.data?.floors ?? [], this.location.floorLevel);
     this.map.setLocation(building, floor, this.location.scope);
-    this.search.setContext(building?.id, floor?.level);
+    this.search.setContext(this.view === "campus" ? undefined : building?.id,
+      this.view === "campus" ? undefined : floor?.level);
     this.hideDetails();
     this.renderFacilities();
     this.sync3D();
@@ -312,6 +316,10 @@ export class UniviewApp {
     }
     this.view = view;
     document.body.dataset.view = view;
+    (document.getElementById("building-select") as HTMLSelectElement).value =
+      view === "campus" ? "" : this.location.buildingId ?? "";
+    this.search.setContext(view === "campus" ? undefined : this.location.buildingId ?? undefined,
+      view === "campus" ? undefined : this.location.floorLevel ?? undefined);
     document
       .getElementById("map-panel")!
       .classList.toggle("hidden", view === "3d");
@@ -387,7 +395,7 @@ export class UniviewApp {
     this.three?.renderRoute(this.result);
     if (!this.result) {
       this.search.hideSummary();
-      this.guide.hide();
+      this.guide.clear();
       this.search.setStatus(
         unavailable.length
           ? `${unavailable.map((p) => `${p.name}の接続は未登録です`).join("。")}。`
@@ -420,9 +428,14 @@ export class UniviewApp {
     if (details) this.showDetails(place);
   }
   private selectPlace(place: Place) {
-    this.focusPlace(place, true);
     const target = this.selection.pickTarget;
-    if (target !== "none") this.setPoint(target, place);
+    this.focusPlace(place, target === "none");
+    if (target !== "none") {
+      this.popover.hide();
+      this.selection.selected = place;
+      this.highlightSelected();
+      this.setPoint(target, place);
+    }
   }
   private setPoint(target: "start" | "dest", place: Place) {
     this.search.setPlace(target, place);

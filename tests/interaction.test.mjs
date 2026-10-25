@@ -49,6 +49,48 @@ async function setup() {
 const click = (window, element) =>
   element.dispatchEvent(new window.Event("click", { bubbles: true }));
 
+test("map picking scrolls to the banner and sets endpoints without opening an action bubble", async () => {
+  const { document, window, server } = await setup();
+  try {
+    const { UniviewApp } = await server.ssrLoadModule("/src/main.ts");
+    new UniviewApp();
+    document.getElementById("allow-inferred").checked = true;
+    const banner = document.getElementById("pick-banner"), scrolls = [];
+    banner.scrollIntoView = options => scrolls.push(options);
+    window.matchMedia = () => ({ matches: true });
+    assert.equal(document.body.dataset.view, "campus");
+    document.getElementById("btn-pick-start").click();
+    assert.deepEqual(scrolls, [{ block: "start", behavior: "auto" }]);
+    click(window, document.querySelector('[data-place="campus/gate/main"]'));
+    assert.match(document.getElementById("input-start").value, /正門/);
+    assert.ok(document.getElementById("room-tooltip").classList.contains("hidden"));
+    assert.ok(banner.classList.contains("hidden"));
+    const select = document.getElementById("building-select");
+    select.value = "b3";
+    select.dispatchEvent(new window.Event("change"));
+    assert.equal(document.body.dataset.view, "floor");
+    click(window, document.querySelector('[data-place="3-103"]'));
+    assert.ok(!document.getElementById("room-tooltip").classList.contains("hidden"));
+    document.getElementById("btn-pick-dest").click();
+    assert.ok(document.getElementById("room-tooltip").classList.contains("hidden"));
+    const room = document.querySelector('[data-place="3-101"]');
+    click(window, room);
+    assert.match(document.getElementById("input-dest").value, /3-101/);
+    assert.ok(room.classList.contains("selected"));
+    assert.ok(document.getElementById("room-tooltip").classList.contains("hidden"));
+    assert.ok(!document.getElementById("step-guide").classList.contains("hidden"));
+    document.getElementById("btn-close-guide").click();
+    assert.ok(!document.getElementById("btn-reopen-guide").classList.contains("hidden"));
+    document.getElementById("btn-clear-dest").click();
+    assert.ok(document.getElementById("btn-reopen-guide").classList.contains("hidden"));
+    assert.equal(scrolls.length, 2);
+    click(window, room);
+    assert.ok(!document.getElementById("room-tooltip").classList.contains("hidden"));
+  } finally {
+    await server.close();
+  }
+});
+
 test("registered gates are searchable, selectable and routable on the overview", async () => {
   const { document, window, server } = await setup();
   try {
@@ -203,12 +245,14 @@ test("3D picking, anchored action bubble, endpoint routing, highlighting and gap
       "map-workspace",
     );
     assert.ok(
-      !document.getElementById("room-tooltip").classList.contains("hidden"),
+      document.getElementById("room-tooltip").classList.contains("hidden"),
     );
     assert.ok(
       !document.getElementById("step-guide").classList.contains("hidden"),
     );
-    // The same action card remains usable after direct 3D picking and route calculation.
+    // Ordinary selection still opens the action bubble after endpoint picking.
+    pick("b3/f1/feature/wc-w");
+    assert.ok(!document.getElementById("room-tooltip").classList.contains("hidden"));
     document.getElementById("btn-tooltip-set-start").click();
     assert.match(document.getElementById("input-start").value, /女性用トイレ/);
     const gap = document.getElementById("explode-slider");
