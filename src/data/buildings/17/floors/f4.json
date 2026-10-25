@@ -79,7 +79,7 @@
     },
     {
       "id": "ev-east",
-      "label": "エレベーター1（右上）",
+      "label": "EV1（右上）",
       "type": "elevator",
       "polygon": [
         [120, 18],
@@ -115,7 +115,7 @@
     },
     {
       "id": "ev-southwest",
-      "label": "エレベーター2（左下）",
+      "label": "EV2（左下）",
       "type": "elevator",
       "polygon": [
         [14, 144],
@@ -765,12 +765,12 @@
       {"id": "hall-10", "name": "4F 通路", "position": [38, 20], "type": "corridor"},
       {"id": "stairs-east", "name": "階段3（右上）", "position": [120, 32], "type": "stairs"},
       {"id": "hall-11", "name": "4F 通路", "position": [111, 32], "type": "corridor"},
-      {"id": "ev-east", "name": "エレベーター1（右上）", "position": [120, 22], "type": "elevator"},
+      {"id": "ev-east", "name": "EV1（右上）", "position": [120, 22], "type": "elevator"},
       {"id": "hall-12", "name": "4F 通路", "position": [111, 22], "type": "corridor"},
       {"id": "stairs-inner-lower", "name": "階段4（中央下）", "position": [38, 114], "type": "stairs"},
       {"id": "hall-13", "name": "4F 通路", "position": [38, 120], "type": "corridor"},
       {"id": "stairs-southwest", "name": "階段5（左下）", "position": [10, 144], "type": "stairs"},
-      {"id": "ev-southwest", "name": "エレベーター2（左下）", "position": [17, 144], "type": "elevator"},
+      {"id": "ev-southwest", "name": "EV2（左下）", "position": [17, 144], "type": "elevator"},
       {"id": "hall-14", "name": "4F 通路", "position": [17, 142], "type": "corridor"},
       {"id": "wc-east-male", "name": "男性用トイレ", "position": [116, 43], "type": "facility_entrance"},
       {"id": "hall-15", "name": "4F 通路", "position": [111, 43], "type": "corridor"},

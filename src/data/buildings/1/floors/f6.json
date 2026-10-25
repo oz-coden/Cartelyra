@@ -52,7 +52,7 @@
     },
     {
       "id": "ev-1",
-      "label": "エレベーター1",
+      "label": "EV1",
       "type": "elevator",
       "polygon": [
         [76, 58],
@@ -64,7 +64,7 @@
     },
     {
       "id": "ev-2",
-      "label": "エレベーター2",
+      "label": "EV2",
       "type": "elevator",
       "polygon": [
         [82, 58],
@@ -603,13 +603,13 @@
       },
       {
         "id": "ev-1",
-        "name": "エレベーター1",
+        "name": "EV1",
         "position": [79, 66],
         "type": "elevator"
       },
       {
         "id": "ev-2",
-        "name": "エレベーター2",
+        "name": "EV2",
         "position": [85, 66],
         "type": "elevator"
       },

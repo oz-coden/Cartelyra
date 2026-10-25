@@ -58,7 +58,7 @@
     },
     {
       "id": "ev-west",
-      "label": "エレベーター（連絡棟側）",
+      "label": "EV（連絡棟側）",
       "type": "elevator",
       "polygon": [
         [-12, 79],
@@ -427,7 +427,7 @@
       },
       {
         "id": "ev-west",
-        "name": "エレベーター（連絡棟側）",
+        "name": "EV（連絡棟側）",
         "position": [-3, 73.3],
         "type": "elevator"
       },

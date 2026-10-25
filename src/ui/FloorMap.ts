@@ -47,6 +47,8 @@ export class FloorMap {
   private selected: string | null = null;
   private overviewMode = false;
   private viewBox = [-8, -8, 141, 112];
+  private cancelPanZoom = () => {};
+  private isGestureClick = (_event: MouseEvent) => false;
   private overlay = element("g", {
     class: "route-overlay",
     "pointer-events": "none",
@@ -128,6 +130,7 @@ export class FloorMap {
       point.y >= rect.top && point.y <= rect.bottom ? point : null;
   }
   public resetView() {
+    this.cancelPanZoom();
     const polygons = this.overviewMode
       ? overviewPoints(this.overview)
       : displayFloors(this.campus, this.scope).flatMap(({ building, floor }) =>
@@ -139,6 +142,7 @@ export class FloorMap {
     this.applyViewBox();
   }
   public zoom(factor: number) {
+    this.cancelPanZoom();
     const [x, z, w, h] = this.viewBox,
       newW = Math.min(2000, Math.max(8, w * factor)),
       ratio = newW / w;
@@ -155,49 +159,81 @@ export class FloorMap {
     this.onViewChange?.();
   }
   private setupPanZoom() {
-    let start: { x: number; y: number; box: number[] } | null = null,
-      dragged = false;
+    const pointers = new Map<number, Point2>();
+    let start: { box: number[]; points: Array<[number, Point2]> } | null = null;
+    let dragged = false;
+    this.isGestureClick = event => dragged && event.detail !== 0;
+    const restart = () => {
+      start = pointers.size ? { box: [...this.viewBox], points: [...pointers].slice(0, 2) } : null;
+    };
+    const capture = () => {
+      for (const id of pointers.keys()) this.svg.setPointerCapture(id);
+    };
+    this.cancelPanZoom = () => {
+      if (pointers.size) dragged = true;
+      const ids = [...pointers.keys()];
+      pointers.clear(); start = null;
+      for (const id of ids)
+        if (this.svg.hasPointerCapture?.(id)) this.svg.releasePointerCapture(id);
+    };
     this.svg.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
-      start = { x: e.clientX, y: e.clientY, box: [...this.viewBox] };
-      dragged = false;
+      if (!pointers.size) dragged = false;
+      pointers.set(e.pointerId, [e.clientX, e.clientY]);
+      if (pointers.size > 1) { dragged = true; capture(); }
+      restart();
     });
     this.svg.addEventListener("pointermove", (e) => {
-      if (!start) return;
-      const dx = e.clientX - start.x,
-        dy = e.clientY - start.y;
-      if (Math.hypot(dx, dy) < 6 && !dragged) return;
-      dragged = true;
-      this.svg.setPointerCapture(e.pointerId);
-      const rect = this.svg.getBoundingClientRect(),
-        scale = Math.min(rect.width / start.box[2], rect.height / start.box[3]);
+      if (!start || !pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, [e.clientX, e.clientY]);
+      const rect = this.svg.getBoundingClientRect();
+      const [x, y, w, h] = start.box;
+      const scale = Math.min(rect.width / w, rect.height / h);
       if (scale <= 0) return;
-      this.viewBox = [
-        start.box[0] - dx / scale,
-        start.box[1] - dy / scale,
-        start.box[2],
-        start.box[3],
-      ];
+      const original = start.points.map(([, point]) => point);
+      const current = start.points.map(([id]) => pointers.get(id)!);
+      if (current.length === 2) {
+        const distance = (points: Point2[]) => Math.hypot(points[1][0] - points[0][0], points[1][1] - points[0][1]);
+        const initialDistance = distance(original), nextDistance = distance(current);
+        if (initialDistance < 1) { restart(); return; }
+        if (nextDistance < 1) return;
+        const midpoint = (points: Point2[]): Point2 => [(points[0][0] + points[1][0]) / 2, (points[0][1] + points[1][1]) / 2];
+        const initialCenter = midpoint(original), center = midpoint(current);
+        const anchor = [
+          x + (initialCenter[0] - rect.left - (rect.width - w * scale) / 2) / scale,
+          y + (initialCenter[1] - rect.top - (rect.height - h * scale) / 2) / scale,
+        ];
+        const width = Math.min(2000, Math.max(8, w * initialDistance / nextDistance)), height = h * width / w;
+        const nextScale = Math.min(rect.width / width, rect.height / height);
+        this.viewBox = [
+          anchor[0] - (center[0] - rect.left - (rect.width - width * nextScale) / 2) / nextScale,
+          anchor[1] - (center[1] - rect.top - (rect.height - height * nextScale) / 2) / nextScale,
+          width, height,
+        ];
+      } else {
+        const dx = current[0][0] - original[0][0], dy = current[0][1] - original[0][1];
+        if (Math.hypot(dx, dy) < 6 && !dragged) return;
+        dragged = true; capture();
+        this.viewBox = [x - dx / scale, y - dy / scale, w, h];
+      }
       this.applyViewBox();
     });
-    this.svg.addEventListener("pointerup", () => {
-      start = null;
+    const finish = (e: PointerEvent) => {
+      if (!pointers.has(e.pointerId)) return;
+      if (e.type !== "pointerup") dragged = true;
+      pointers.delete(e.pointerId);
+      restart();
+    };
+    this.svg.addEventListener("pointerup", finish);
+    this.svg.addEventListener("pointercancel", finish);
+    this.svg.addEventListener("lostpointercapture", e => {
+      if (e.target === this.svg && !this.svg.hasPointerCapture(e.pointerId)) finish(e);
     });
-    this.svg.addEventListener("pointercancel", () => {
-      start = null;
-      dragged = false;
-    });
-    this.svg.addEventListener(
-      "click",
-      (e) => {
-        if (dragged) {
-          e.stopImmediatePropagation();
-          dragged = false;
-        }
-      },
-      true,
-    );
+    window.addEventListener("pointerup", finish);
+    window.addEventListener("pointercancel", finish);
+    window.addEventListener("blur", () => this.cancelPanZoom());
     this.svg.addEventListener("click", (e) => {
+      if (this.isGestureClick(e)) return;
       if (
         e.target === this.svg ||
         (e.target as Element).classList.contains("map-slab")
@@ -241,7 +277,9 @@ export class FloorMap {
     group.setAttribute("role", "button");
     group.setAttribute("tabindex", "0");
     group.setAttribute("aria-label", label);
-    group.addEventListener("click", select);
+    group.addEventListener("click", event => {
+      if (!this.isGestureClick(event)) select();
+    });
     group.addEventListener("focus", () => { this.focused = group.dataset.place ?? null; this.renderEmphasis(); });
     group.addEventListener("blur", () => { this.focused = null; this.renderEmphasis(); });
     group.addEventListener("keydown", (e) => {
@@ -263,13 +301,13 @@ export class FloorMap {
     const name = this.scope.label;
     const level = this.scope.group?.levels.find(l => l.id === this.scope.levelId)?.label ?? this.floor?.label;
     const shown = displayFloors(this.campus, this.scope);
-    document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟" : "館内図";
+    document.getElementById("map-subtitle")!.textContent = this.scope.group ? "連絡棟" : "平面図";
     document.getElementById("map-legend")!.textContent = "青：部屋　" +
       (shown.some(({ floor }) => floor.rooms.some(r => r.spaceType === "area"))
         ? "淡色：利用エリア　" : "") +
       (shown.some(({ floor }) => floor.rooms.some(r => r.passThrough === true))
         ? "青緑：共用区画　" : "") +
-      "緑：WC　水色：EV　黄：階段　紫：経路";
+      "緑：WC　水色：EV　黄：階段　紫：参考ルート";
     document.getElementById("map-heading")!.textContent = `${name}${level ? ` / ${level}` : ""}`;
     this.svg.setAttribute("aria-label", `${name} ${level ?? "フロア未登録"} 平面図（模式図）`);
     document.getElementById("map-caption")!.textContent = shown.length
@@ -492,9 +530,9 @@ export class FloorMap {
       ? "北が上"
       : "建物配置";
     document.getElementById("map-legend")!.textContent =
-      "水色：館内図あり　灰：未登録　細線：道路　破線：通路　青：橋　紫点線：地下　橙：階段・スロープ　紫：経路";
+      "水色：平面図あり　灰：未登録　細線：道路　破線：通路　青：橋　紫点線：地下　橙：階段・スロープ　紫：参考ルート";
     const caption = document.getElementById("map-caption")!;
-    caption.textContent = "建物を選ぶと館内図へ。";
+    caption.textContent = "建物を選ぶと平面図へ。";
     if (this.overview.reference) {
       const attribution = document.createElement("a");
       attribution.textContent = `出典：${this.overview.reference.attribution.label}`;
@@ -582,7 +620,7 @@ export class FloorMap {
           gate.name,
         ),
       );
-      this.interactive(group, `${gate.name}（${gate.nodeId ? "屋外参考経路あり" : "屋外経路未登録"}）`, () =>
+      this.interactive(group, `${gate.name}（${gate.nodeId ? "屋外参考ルートあり" : "屋外経路未登録"}）`, () =>
         this.onPlaceSelect?.(gate),
       );
       this.svg.append(group);

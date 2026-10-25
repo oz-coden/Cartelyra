@@ -151,7 +151,7 @@
     },
     {
       "id": "ev-left",
-      "label": "エレベーター",
+      "label": "EV",
       "type": "elevator",
       "polygon": [
         [8, 50],
@@ -666,7 +666,7 @@
       },
       {
         "id": "ev-left",
-        "name": "エレベーター",
+        "name": "EV",
         "position": [14, 52],
         "type": "elevator"
       },

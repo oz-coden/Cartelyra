@@ -85,7 +85,7 @@ export function placeIndex(
                     ? ["共用"]
                     : []),
           );
-        if (feature.type === "elevator") aliases.push("EV", "エレベーター");
+        if (feature.type === "elevator") aliases.push("EV", "エレベーター", "エレベータ");
         if (feature.type === "aed") aliases.push("AED", "自動体外式除細動器");
         if (feature.type === "entrance") aliases.push("入口", "出入口", "entrance");
         places.push({
@@ -147,7 +147,7 @@ export const placeRouteNotice = (place: Place) =>
     ? `${place.approachRoomId}の入口まで。`
     : "";
 export const normalizeSearch = (value: string) =>
-  value.normalize("NFKC").replace(/[−–—]/g, "-").trim().toLowerCase();
+  value.normalize("NFKC").replace(/[−–—]/g, "-").replace(/エレベーター?/g, "EV").trim().toLowerCase();
 export function searchPlaces(
   places: Place[],
   query: string,

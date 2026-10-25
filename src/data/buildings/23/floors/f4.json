@@ -119,7 +119,7 @@
     },
     {
       "id": "ev-1",
-      "label": "エレベーター1",
+      "label": "EV1",
       "type": "elevator",
       "polygon": [
         [44, 78],
@@ -142,7 +142,7 @@
     },
     {
       "id": "ev-2",
-      "label": "エレベーター2",
+      "label": "EV2",
       "type": "elevator",
       "polygon": [
         [44, 90],
@@ -154,7 +154,7 @@
     },
     {
       "id": "ev-3",
-      "label": "エレベーター3",
+      "label": "EV3",
       "type": "elevator",
       "polygon": [
         [52, 90],
@@ -723,9 +723,9 @@
       {"id": "wc-male", "name": "男性用トイレ", "position": [44, 38], "type": "facility_entrance"},
       {"id": "wc-female", "name": "女性用トイレ", "position": [60, 38], "type": "facility_entrance"},
       {"id": "wc-multi", "name": "多目的トイレ", "position": [60, 65], "type": "facility_entrance"},
-      {"id": "ev-1", "name": "エレベーター1", "position": [44, 82], "type": "elevator"},
-      {"id": "ev-2", "name": "エレベーター2", "position": [48, 98], "type": "elevator"},
-      {"id": "ev-3", "name": "エレベーター3", "position": [56, 98], "type": "elevator"},
+      {"id": "ev-1", "name": "EV1", "position": [44, 82], "type": "elevator"},
+      {"id": "ev-2", "name": "EV2", "position": [48, 98], "type": "elevator"},
+      {"id": "ev-3", "name": "EV3", "position": [56, 98], "type": "elevator"},
       {"id": "room-403", "name": "23-403 経営工学科実験準備室", "position": [54.0, 14], "type": "room_entrance"},
       {"id": "room-404", "name": "23-404", "position": [81.0, 14], "type": "room_entrance"},
       {"id": "room-402", "name": "23-402 経営工学科実験実習室2", "position": [38, 41.0], "type": "room_entrance"},

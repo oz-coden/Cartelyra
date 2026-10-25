@@ -106,7 +106,7 @@
     },
     {
       "id": "ev-1",
-      "label": "エレベーター1",
+      "label": "EV1",
       "type": "elevator",
       "polygon": [
         [44, 78],
@@ -129,7 +129,7 @@
     },
     {
       "id": "ev-2",
-      "label": "エレベーター2",
+      "label": "EV2",
       "type": "elevator",
       "polygon": [
         [44, 90],
@@ -141,7 +141,7 @@
     },
     {
       "id": "ev-3",
-      "label": "エレベーター3",
+      "label": "EV3",
       "type": "elevator",
       "polygon": [
         [52, 90],
@@ -459,9 +459,9 @@
       {"id": "stairs-bottom", "name": "階段3（図面下側）", "position": [58, 255], "type": "stairs"},
       {"id": "wc-male", "name": "男性用トイレ", "position": [44, 38], "type": "facility_entrance"},
       {"id": "wc-female", "name": "女性用トイレ", "position": [60, 38], "type": "facility_entrance"},
-      {"id": "ev-1", "name": "エレベーター1", "position": [44, 82], "type": "elevator"},
-      {"id": "ev-2", "name": "エレベーター2", "position": [48, 98], "type": "elevator"},
-      {"id": "ev-3", "name": "エレベーター3", "position": [56, 98], "type": "elevator"},
+      {"id": "ev-1", "name": "EV1", "position": [44, 82], "type": "elevator"},
+      {"id": "ev-2", "name": "EV2", "position": [48, 98], "type": "elevator"},
+      {"id": "ev-3", "name": "EV3", "position": [56, 98], "type": "elevator"},
       {"id": "room-B103", "name": "23-B103 機械工作センター精密測定室", "position": [50.0, 14], "type": "room_entrance"},
       {"id": "room-B104", "name": "23-B104 機械工作センターロッカー室", "position": [60.0, 14], "type": "room_entrance"},
       {"id": "room-B105", "name": "23-B105", "position": [81.0, 14], "type": "room_entrance"},

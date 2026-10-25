@@ -18,7 +18,7 @@
       <nav class="view-switch" aria-label="表示切り替え">
         <button id="btn-view-campus" aria-pressed="false">キャンパス</button
         ><button id="btn-view-floor" aria-pressed="true">平面図</button
-        ><button id="btn-view-3d" aria-pressed="false">3D</button>
+        ><button id="btn-view-3d" aria-pressed="false">立体図</button>
       </nav>
       <div class="top-actions">
         <button id="btn-reset-camera">視点リセット</button
@@ -113,7 +113,7 @@
               <div class="input-row">
                 <input
                   id="input-dest"
-                  placeholder="例：トイレ、3-201"
+                  placeholder="例：WC、3-201"
                   autocomplete="off"
                   role="combobox"
                   aria-autocomplete="list"
@@ -246,9 +246,9 @@
                 <h2 id="map-heading"></h2>
                 <p id="map-subtitle" class="muted">掲示図に基づく模式図</p>
               </div>
-              <div>
+              <div class="map-zoom-controls">
                 <button id="map-zoom-out" aria-label="地図を縮小">−</button
-                ><button id="map-zoom-in" aria-label="地図を拡大">＋</button>
+                ><button id="map-zoom-in" aria-label="地図を拡大">+</button>
               </div>
             </div>
             <div id="map-canvas" class="map-canvas"></div>
@@ -260,7 +260,7 @@
           <div
             id="canvas-container"
             class="canvas-container hidden"
-            aria-label="建物の3D表示"
+            aria-label="建物の立体図"
           ></div>
           <section
             id="room-tooltip"

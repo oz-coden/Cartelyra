@@ -158,8 +158,8 @@ test("Overview renders outdoor route segments while indoor plans keep their own 
   assert.match(document.querySelector("#map-canvas svg").getAttribute("aria-label"), /北が上/);
   assert.equal(document.querySelectorAll(".map-north-arrow").length, 1);
   assert.equal(document.querySelector("#map-caption a").getAttribute("href"), "https://maps.gsi.go.jp/development/ichiran.html");
-  assert.match(document.querySelector('[data-place="campus/gate/west"]').getAttribute("aria-label"), /参考経路あり/);
-  assert.match(document.querySelector('[data-place="campus/gate/main"]').getAttribute("aria-label"), /参考経路あり/);
+  assert.match(document.querySelector('[data-place="campus/gate/west"]').getAttribute("aria-label"), /参考ルートあり/);
+  assert.match(document.querySelector('[data-place="campus/gate/main"]').getAttribute("aria-label"), /参考ルートあり/);
   const catalog = buildingCatalog(campus, source.overview);
   for (const id of ["b3", "b20"]) {
     const building = catalog.find((b) => b.id === id);

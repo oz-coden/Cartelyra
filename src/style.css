@@ -391,6 +391,25 @@ body[data-view="3d"] .three-only {
 .map-header p {
   margin-top: 4px;
 }
+.map-header > div:first-child {
+  min-width: 0;
+}
+.map-zoom-controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+.map-zoom-controls button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+}
 .map-canvas {
   width: 100%;
   height: clamp(340px, 61vh, 720px);

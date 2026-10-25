@@ -116,7 +116,7 @@ export class StepGuide {
       case "ramp":
         return "スロープ";
       case "elevator":
-        return "エレベーター";
+        return "EV";
       case "bridge":
         return "連絡通路";
       case "outdoor":

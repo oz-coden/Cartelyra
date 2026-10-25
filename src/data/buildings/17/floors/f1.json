@@ -91,7 +91,7 @@
     },
     {
       "id": "ev-lower",
-      "label": "エレベーター",
+      "label": "EV",
       "type": "elevator",
       "polygon": [
         [70, 126],
@@ -308,7 +308,7 @@
       {"id": "hall-12", "name": "1F 通路", "position": [80, 110], "type": "corridor"},
       {"id": "stairs-upper", "name": "階段（図面上側）", "position": [78, 40], "type": "stairs"},
       {"id": "stairs-lower", "name": "階段（図面下側）", "position": [68, 124], "type": "stairs"},
-      {"id": "ev-lower", "name": "エレベーター", "position": [73, 126], "type": "elevator"},
+      {"id": "ev-lower", "name": "EV", "position": [73, 126], "type": "elevator"},
       {"id": "wc-upper-female", "name": "女性用トイレ", "position": [76, 68.0], "type": "facility_entrance"},
       {"id": "hall-13", "name": "1F 通路", "position": [80, 68.0], "type": "corridor"},
       {"id": "wc-upper-male", "name": "男性用トイレ", "position": [76, 76.0], "type": "facility_entrance"},

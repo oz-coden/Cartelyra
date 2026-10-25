@@ -205,7 +205,7 @@ export class UniviewApp {
     document.getElementById("group-display-option")!.classList.toggle("hidden", !group || group.status !== "ready");
     (document.getElementById("show-connected") as HTMLInputElement).checked = this.location.grouped;
     document.getElementById("group-status")!.textContent = group
-      ? group.status === "pending" ? `${group.name}：連絡棟の館内図・接続階は準備中` : `${group.name} / ${this.location.group ? "連絡棟を表示" : "単棟表示"}` : "";
+      ? group.status === "pending" ? `${group.name}：連絡棟の平面図・接続階は準備中` : `${group.name} / ${this.location.group ? "連絡棟を表示" : "単棟表示"}` : "";
     if (this.location.group) this.floors.renderGroup(this.location.group, this.location.groupLevel?.id);
     else this.floors.render(building?.data?.floors ?? [], this.location.floorLevel);
     this.map.setLocation(building, floor, this.location.scope);
@@ -238,7 +238,7 @@ export class UniviewApp {
       const state = document.createElement("small");
       state.textContent = place.approachRoomId
         ? "手前の部屋まで案内"
-        : place.nodeId ? "参考経路あり" : "経路未登録";
+        : place.nodeId ? "参考ルートあり" : "経路未登録";
       button.append(state);
       button.addEventListener("click", () => this.selectPlace(place));
       list.append(button);
@@ -292,13 +292,13 @@ export class UniviewApp {
     const previous = this.view;
     if (view === "3d") {
       if (!this.location.floor) {
-        this.toast("この建物の3Dフロアは未登録です。");
+        this.toast("この建物の立体図は未登録です。");
         return;
       }
       try {
         await this.initialize3D();
       } catch {
-        this.toast("3D表示を開始できませんでした。平面図を利用できます。");
+        this.toast("立体図を表示できませんでした。平面図を利用できます。");
         return;
       }
     }
