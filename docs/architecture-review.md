@@ -1,6 +1,6 @@
 # Architecture and review notes
 
-Uniview is a static Vite/TypeScript application. Campus JSON is compiled at build time and loaded in the browser; search and route computation require no backend or database. The default SVG view works without WebGL. Three.js is imported only for the 3D view.
+Uniview is a static Vite/TypeScript application. Campus JSON is compiled at build time and loaded in the browser; search and route computation require no backend or database. The default SVG view works without WebGL. Three.js is imported only for the 3D view. The 3D renderer creates geometry and labels only for the selected building or connected display group. Floor changes reuse that scope; leaving it releases its geometries, materials and label textures. Label images use 256×64 pixels, with 128×64 floor badges, to limit image storage as map coverage grows.
 
 ## Shared data and state
 

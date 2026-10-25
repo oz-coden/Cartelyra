@@ -26,6 +26,7 @@ export class BuildingRenderer {
   public roomMeshRecords: Map<string, RoomMeshRecord> = new Map(); // key: room.id
   public placeMeshes: THREE.Mesh[] = [];
   public skyBridgeGroup: THREE.Group | null = null;
+  private buildingGroups = new Map<string, THREE.Group>();
   private isDarkTheme: boolean = false;
   private selectedPlaceId: string | null = null;
   private placeMaterials = new Map<
@@ -33,19 +34,52 @@ export class BuildingRenderer {
     { mesh: THREE.Mesh; baseOpacity: number }
   >();
 
-  constructor(private campusData: CampusData) {
+  constructor(private campusData: CampusData, buildingIds = campusData.buildings.map(b => b.id)) {
     this.rootGroup = new THREE.Group();
-    this.buildCampus();
+    this.setBuildings(buildingIds);
+    this.buildOutdoorStructures();
   }
 
-  private buildCampus() {
-    // 1. Buildings & Floors
-    for (const bldg of this.campusData.buildings) {
-      this.buildBuilding(bldg);
+  /** Retain only the displayed building or connected group, releasing discarded resources. */
+  public setBuildings(buildingIds: string[]) {
+    const required = new Set(buildingIds);
+    let changed = false;
+    for (const [id, group] of this.buildingGroups) {
+      if (required.has(id)) continue;
+      this.releaseBuilding(id, group);
+      changed = true;
     }
+    for (const id of required) {
+      if (this.buildingGroups.has(id)) continue;
+      const building = this.campusData.buildings.find(b => b.id === id);
+      if (building) { this.buildBuilding(building); changed = true; }
+    }
+    if (changed) this.highlightPlace(this.selectedPlaceId);
+  }
 
-    // 2. Outdoor Structures (Sky bridge, plaza, gate)
-    this.buildOutdoorStructures();
+  private releaseBuilding(id: string, group: THREE.Group) {
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    const textures = new Set<THREE.Texture>();
+    const meshes = new Set<THREE.Object3D>();
+    group.traverse(object => {
+      meshes.add(object);
+      if (object.userData.placeId) this.placeMaterials.delete(object.userData.placeId);
+      if (object instanceof THREE.Mesh || object instanceof THREE.Line) geometries.add(object.geometry);
+      if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite)
+        for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+          materials.add(material);
+          for (const value of Object.values(material)) if (value instanceof THREE.Texture) textures.add(value);
+        }
+    });
+    this.rootGroup.remove(group);
+    this.buildingGroups.delete(id);
+    for (const [key, floor] of this.floorGroups) if (floor.userData.buildingId === id) this.floorGroups.delete(key);
+    for (const [key, room] of this.roomMeshRecords) if (room.building.id === id) this.roomMeshRecords.delete(key);
+    this.placeMeshes = this.placeMeshes.filter(mesh => !meshes.has(mesh));
+    geometries.forEach(geometry => geometry.dispose());
+    materials.forEach(material => material.dispose());
+    textures.forEach(texture => texture.dispose());
   }
 
   private buildBuilding(bldg: Building) {
@@ -97,6 +131,7 @@ export class BuildingRenderer {
     }
 
     this.rootGroup.add(bldgGroup);
+    this.buildingGroups.set(bldg.id, bldgGroup);
   }
 
   private createFloorSlab(floor: Floor, bldg: Building): THREE.Group {
@@ -347,8 +382,8 @@ export class BuildingRenderer {
     accentColor: string,
   ): THREE.Sprite {
     const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 128;
+    canvas.width = 256;
+    canvas.height = 64;
     const ctx = canvas.getContext("2d")!;
 
     // Background pill
@@ -356,20 +391,20 @@ export class BuildingRenderer {
       ? "rgba(15, 23, 42, 0.85)"
       : "rgba(255, 255, 255, 0.9)";
     ctx.beginPath();
-    ctx.roundRect(16, 24, 480, 80, 20);
+    ctx.roundRect(8, 12, 240, 40, 10);
     ctx.fill();
 
     // Border line
     ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 2;
     ctx.stroke();
 
     // Text
     ctx.fillStyle = this.isDarkTheme ? "#f8fafc" : "#0f172a";
-    ctx.font = 'bold 36px "Noto Sans JP", sans-serif';
+    ctx.font = 'bold 18px "Noto Sans JP", sans-serif';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, 256, 64);
+    ctx.fillText(text, 128, 32, 224);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
@@ -387,26 +422,26 @@ export class BuildingRenderer {
 
   private createFloorBadgeSprite(text: string): THREE.Sprite {
     const canvas = document.createElement("canvas");
-    canvas.width = 256;
-    canvas.height = 128;
+    canvas.width = 128;
+    canvas.height = 64;
     const ctx = canvas.getContext("2d")!;
 
     ctx.fillStyle = this.isDarkTheme
       ? "rgba(30, 41, 59, 0.9)"
       : "rgba(241, 245, 249, 0.9)";
     ctx.beginPath();
-    ctx.roundRect(10, 20, 236, 88, 16);
+    ctx.roundRect(5, 10, 118, 44, 8);
     ctx.fill();
 
     ctx.strokeStyle = this.isDarkTheme ? "#38bdf8" : "#3b82f6";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
     ctx.fillStyle = this.isDarkTheme ? "#38bdf8" : "#1d4ed8";
-    ctx.font = 'bold 42px "Outfit", sans-serif';
+    ctx.font = 'bold 21px "Outfit", sans-serif';
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, 128, 64);
+    ctx.fillText(text, 64, 32, 108);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;

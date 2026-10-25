@@ -32,7 +32,7 @@ export class ThreeView {
   ) {
     this.scene = scene ?? new SceneManager(container);
     this.scene.onFrame = () => this.onViewChange?.();
-    this.buildings = new BuildingRenderer(data);
+    this.buildings = new BuildingRenderer(data, []);
     this.scene.scene.add(this.buildings.rootGroup);
     this.connections.userData.type = "building-connections";
     this.scene.scene.add(this.connections);
@@ -63,6 +63,7 @@ export class ThreeView {
     this.floor = floor;
     this.all = all;
     this.scope = scope;
+    this.buildings.setBuildings(scope?.buildingIds ?? (buildingId ? [buildingId] : []));
     this.explode.setLocation(buildingId, floor, all, scope);
     if (changed) {
       this.renderRoute(this.result);
