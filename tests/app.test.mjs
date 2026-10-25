@@ -181,6 +181,7 @@ test("3D geometry selects WC meshes, hides other floors/buildings and supports l
   globalThis.document = document;
   globalThis.window = window;
   window.HTMLCanvasElement.prototype.getContext = () => ({
+    clearRect() {},
     beginPath() {},
     roundRect() {},
     fill() {},

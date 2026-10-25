@@ -71,7 +71,7 @@ test('library areas, enclosed rooms and facilities are selectable on every floor
 });
 
 test('3D areas stay low while the 2F atrium has a floor and the 3F notch and 4F void have none',async()=>{
-  const {window}=await dom();window.HTMLCanvasElement.prototype.getContext=()=>({beginPath(){},roundRect(){},fill(){},stroke(){},fillText(){}});
+  const {window}=await dom();window.HTMLCanvasElement.prototype.getContext=()=>({clearRect(){},beginPath(){},roundRect(){},fill(){},stroke(){},fillText(){}});
   const server=await createServer({server:{middlewareMode:true,hmr:false,ws:false},optimizeDeps:{noDiscovery:true,include:[]},appType:'custom'});
   try{
     const {BuildingRenderer}=await server.ssrLoadModule('/src/scene/BuildingRenderer.ts');

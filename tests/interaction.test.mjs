@@ -28,6 +28,7 @@ async function setup() {
     },
   });
   window.HTMLCanvasElement.prototype.getContext = () => ({
+    clearRect() {},
     beginPath() {},
     roundRect() {},
     fill() {},

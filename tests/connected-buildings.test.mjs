@@ -21,7 +21,7 @@ async function dom(){
   Object.defineProperty(window.HTMLSelectElement.prototype,'value',{configurable:true,
     get(){return [...this.options].find(o=>o.hasAttribute('selected'))?.value??this.options[0]?.value??'';},
     set(value){for(const o of this.options)o.toggleAttribute('selected',o.value===value);}});
-  window.HTMLCanvasElement.prototype.getContext=()=>({beginPath(){},roundRect(){},fill(){},stroke(){},fillText(){},fillRect(){},createLinearGradient(){return{addColorStop(){}};}});
+  window.HTMLCanvasElement.prototype.getContext=()=>({clearRect(){},beginPath(){},roundRect(){},fill(){},stroke(){},fillText(){},fillRect(){},createLinearGradient(){return{addColorStop(){}};}});
   document.getElementById('allow-inferred').checked=true;
   return{document,window};
 }

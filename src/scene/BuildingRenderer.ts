@@ -27,6 +27,8 @@ export class BuildingRenderer {
   public placeMeshes: THREE.Mesh[] = [];
   public skyBridgeGroup: THREE.Group | null = null;
   private buildingGroups = new Map<string, THREE.Group>();
+  private floorMaterials = new Map<THREE.MeshStandardMaterial, THREE.LineBasicMaterial>();
+  private labelUpdates = new Map<THREE.Sprite, () => void>();
   private isDarkTheme: boolean = false;
   private selectedPlaceId: string | null = null;
   private placeMaterials = new Map<
@@ -64,6 +66,7 @@ export class BuildingRenderer {
     const meshes = new Set<THREE.Object3D>();
     group.traverse(object => {
       meshes.add(object);
+      if (object instanceof THREE.Sprite) this.labelUpdates.delete(object);
       if (object.userData.placeId) this.placeMaterials.delete(object.userData.placeId);
       if (object instanceof THREE.Mesh || object instanceof THREE.Line) geometries.add(object.geometry);
       if (object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Sprite)
@@ -78,7 +81,10 @@ export class BuildingRenderer {
     for (const [key, room] of this.roomMeshRecords) if (room.building.id === id) this.roomMeshRecords.delete(key);
     this.placeMeshes = this.placeMeshes.filter(mesh => !meshes.has(mesh));
     geometries.forEach(geometry => geometry.dispose());
-    materials.forEach(material => material.dispose());
+    materials.forEach(material => {
+      if (material instanceof THREE.MeshStandardMaterial) this.floorMaterials.delete(material);
+      material.dispose();
+    });
     textures.forEach(texture => texture.dispose());
   }
 
@@ -167,6 +173,7 @@ export class BuildingRenderer {
       linewidth: 1,
     });
     const edgeLine = new THREE.LineSegments(edgeGeo, edgeMat);
+    this.floorMaterials.set(slabMat, edgeMat);
     edgeLine.position.copy(slabMesh.position);
     slabGroup.add(edgeLine);
 
@@ -386,25 +393,24 @@ export class BuildingRenderer {
     canvas.height = 64;
     const ctx = canvas.getContext("2d")!;
 
-    // Background pill
-    ctx.fillStyle = this.isDarkTheme
-      ? "rgba(15, 23, 42, 0.85)"
-      : "rgba(255, 255, 255, 0.9)";
-    ctx.beginPath();
-    ctx.roundRect(8, 12, 240, 40, 10);
-    ctx.fill();
-
-    // Border line
-    ctx.strokeStyle = accentColor;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Text
-    ctx.fillStyle = this.isDarkTheme ? "#f8fafc" : "#0f172a";
-    ctx.font = 'bold 18px "Noto Sans JP", sans-serif';
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, 128, 32, 224);
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = this.isDarkTheme
+        ? "rgba(15, 23, 42, 0.85)"
+        : "rgba(255, 255, 255, 0.9)";
+      ctx.beginPath();
+      ctx.roundRect(8, 12, 240, 40, 10);
+      ctx.fill();
+      ctx.strokeStyle = accentColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = this.isDarkTheme ? "#f8fafc" : "#0f172a";
+      ctx.font = 'bold 18px "Noto Sans JP", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, 128, 32, 224);
+    };
+    draw();
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
@@ -416,6 +422,7 @@ export class BuildingRenderer {
     });
 
     const sprite = new THREE.Sprite(spriteMat);
+    this.labelUpdates.set(sprite, () => { draw(); texture.needsUpdate = true; });
     sprite.scale.set(6, 1.5, 1);
     return sprite;
   }
@@ -426,22 +433,24 @@ export class BuildingRenderer {
     canvas.height = 64;
     const ctx = canvas.getContext("2d")!;
 
-    ctx.fillStyle = this.isDarkTheme
-      ? "rgba(30, 41, 59, 0.9)"
-      : "rgba(241, 245, 249, 0.9)";
-    ctx.beginPath();
-    ctx.roundRect(5, 10, 118, 44, 8);
-    ctx.fill();
-
-    ctx.strokeStyle = this.isDarkTheme ? "#38bdf8" : "#3b82f6";
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.fillStyle = this.isDarkTheme ? "#38bdf8" : "#1d4ed8";
-    ctx.font = 'bold 21px "Outfit", sans-serif';
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, 64, 32, 108);
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = this.isDarkTheme
+        ? "rgba(30, 41, 59, 0.9)"
+        : "rgba(241, 245, 249, 0.9)";
+      ctx.beginPath();
+      ctx.roundRect(5, 10, 118, 44, 8);
+      ctx.fill();
+      ctx.strokeStyle = this.isDarkTheme ? "#38bdf8" : "#3b82f6";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = this.isDarkTheme ? "#38bdf8" : "#1d4ed8";
+      ctx.font = 'bold 21px "Outfit", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, 64, 32, 108);
+    };
+    draw();
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
@@ -453,6 +462,7 @@ export class BuildingRenderer {
     });
 
     const sprite = new THREE.Sprite(spriteMat);
+    this.labelUpdates.set(sprite, () => { draw(); texture.needsUpdate = true; });
     sprite.scale.set(3.5, 1.75, 1);
     return sprite;
   }
@@ -472,7 +482,15 @@ export class BuildingRenderer {
   }
 
   public setDarkTheme(isDark: boolean) {
+    if (this.isDarkTheme === isDark) return;
     this.isDarkTheme = isDark;
+
+    for (const [slab, edge] of this.floorMaterials) {
+      slab.color.setHex(isDark ? 0x1e293b : 0xe2e8f0);
+      slab.opacity = isDark ? 0.7 : 0.85;
+      edge.color.setHex(isDark ? 0x475569 : 0xcbd5e1);
+    }
+    this.labelUpdates.forEach(update => update());
 
     // Refresh materials
     for (const record of this.roomMeshRecords.values()) {
