@@ -113,6 +113,12 @@ test('the application keeps grouped floors, endpoints, camera and exploded conne
     const original=connections.children[0];let disposed=false;original.geometry.addEventListener('dispose',()=>{disposed=true;});
     const search=(query)=>{const input=document.getElementById('input-dest');input.value=query;input.dispatchEvent(new window.Event('input'));document.querySelector('#suggestions-dest button').click();};
     const before=host.moves;search('a-0');assert.equal(host.moves,before,'search inside the group retains the camera');
+    const buildingSelect=document.getElementById('building-select'),camera=host.camera.position.clone();
+    for(const id of ['b','a']){
+      buildingSelect.value=id;buildingSelect.dispatchEvent(new window.Event('change'));
+      assert.equal(host.moves,before,'the building selector also retains the camera within one group');
+      assert.ok(host.camera.position.equals(camera));
+    }
     const gap=document.getElementById('explode-slider');gap.value='80';gap.dispatchEvent(new window.Event('input'));
     for(const id of ['a','b','c']){
       const upper=floorGroups().find(g=>g.userData.buildingId===id&&g.userData.stackIndex===1);

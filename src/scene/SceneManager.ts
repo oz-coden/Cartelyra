@@ -39,6 +39,7 @@ export interface SceneHost {
   setActive(active: boolean): void;
   setDarkTheme(dark: boolean): void;
   resize(): void;
+  setSceneBounds?(bounds: THREE.Box3): void;
   flyTo(
     target: THREE.Vector3,
     position?: THREE.Vector3,
@@ -59,13 +60,18 @@ export class SceneManager {
   private hemiLight: THREE.HemisphereLight;
   private isDark: boolean = false;
   private cameraTweens: TWEEN.Tween<THREE.Vector3>[] = [];
+  private cameraAnimations = new TWEEN.Group();
+  private ground!: THREE.Mesh;
+  private referenceCenter = new THREE.Vector3(0, -0.05, 0);
+  private gridSize = 300;
+  private gridDivisions = 60;
   private active = true;
   private animationId: number | null = null;
 
   private defaultCameraPos = new THREE.Vector3(120, 155, 160);
   private defaultTarget = new THREE.Vector3(0, 24, 0);
 
-  constructor(private container: HTMLElement) {
+  constructor(private container: HTMLElement, renderer?: THREE.WebGLRenderer) {
     // 1. Scene
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2(LIGHT_THEME.fog, 0.002);
@@ -80,7 +86,7 @@ export class SceneManager {
     this.camera.position.copy(this.defaultCameraPos);
 
     // 3. Renderer
-    this.renderer = new THREE.WebGLRenderer({
+    this.renderer = renderer ?? new THREE.WebGLRenderer({
       antialias: true,
       powerPreference: "high-performance",
       alpha: false,
@@ -104,6 +110,7 @@ export class SceneManager {
     this.controls.minDistance = 5;
     this.controls.maxDistance = 450;
     this.controls.target.copy(this.defaultTarget);
+    this.controls.addEventListener("start", () => this.stopCameraMotion());
 
     // 5. Lights
     this.ambientLight = new THREE.AmbientLight(LIGHT_THEME.ambientLight, 1.2);
@@ -126,6 +133,7 @@ export class SceneManager {
     this.dirLight.shadow.camera.bottom = -shadowD;
     this.dirLight.shadow.bias = -0.0005;
     this.scene.add(this.dirLight);
+    this.scene.add(this.dirLight.target);
 
     // 6. Ground & Grid
     this.setupGround();
@@ -139,25 +147,57 @@ export class SceneManager {
   }
 
   private setupGround() {
-    // Infinite grid helper
-    if (this.gridHelper) this.scene.remove(this.gridHelper);
-    this.gridHelper = new THREE.GridHelper(
-      300,
-      60,
-      LIGHT_THEME.gridLine,
-      LIGHT_THEME.gridSub,
-    );
-    this.gridHelper.position.y = -0.05;
-    this.scene.add(this.gridHelper);
+    this.rebuildGrid();
 
     // Subtle ground plane to catch shadows
-    const groundGeo = new THREE.PlaneGeometry(600, 600);
+    const groundGeo = new THREE.PlaneGeometry(1, 1);
     const groundMat = new THREE.ShadowMaterial({ opacity: 0.15 });
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -0.06;
-    ground.receiveShadow = true;
-    this.scene.add(ground);
+    this.ground = new THREE.Mesh(groundGeo, groundMat);
+    this.ground.userData.type = "reference-ground";
+    this.ground.rotation.x = -Math.PI / 2;
+    this.ground.position.copy(this.referenceCenter).add(new THREE.Vector3(0, -0.01, 0));
+    this.ground.scale.set(this.gridSize * 2, this.gridSize * 2, 1);
+    this.ground.receiveShadow = true;
+    this.scene.add(this.ground);
+  }
+
+  private rebuildGrid() {
+    if (this.gridHelper) {
+      this.scene.remove(this.gridHelper);
+      this.gridHelper.geometry.dispose();
+      const materials = Array.isArray(this.gridHelper.material) ? this.gridHelper.material : [this.gridHelper.material];
+      materials.forEach(material => material.dispose());
+    }
+    const theme = this.isDark ? DARK_THEME : LIGHT_THEME;
+    this.gridHelper = new THREE.GridHelper(this.gridSize, this.gridDivisions, theme.gridLine, theme.gridSub);
+    this.gridHelper.position.copy(this.referenceCenter);
+    this.scene.add(this.gridHelper);
+  }
+
+  /** Grid, shadow receiver and lighting share the bounds of the visible building scope. */
+  public setSceneBounds(bounds: THREE.Box3) {
+    if (bounds.isEmpty()) return;
+    const center = bounds.getCenter(new THREE.Vector3()), size = bounds.getSize(new THREE.Vector3());
+    this.referenceCenter.set(center.x, bounds.min.y - 0.05, center.z);
+    const extent = Math.max(size.x, size.z) * 1.4 + 20;
+    const step = 5 * 10 ** Math.max(0, Math.ceil(Math.log10(extent / 500)));
+    const divisions = Math.ceil(extent / step), gridSize = divisions * step;
+    if (gridSize !== this.gridSize || divisions !== this.gridDivisions) {
+      this.gridSize = gridSize;
+      this.gridDivisions = divisions;
+      this.rebuildGrid();
+    } else this.gridHelper?.position.copy(this.referenceCenter);
+    this.ground.position.copy(this.referenceCenter).add(new THREE.Vector3(0, -0.01, 0));
+    this.ground.scale.set(gridSize * 2, gridSize * 2, 1);
+    const lightExtent = Math.max(size.x, size.y, size.z, 60);
+    this.dirLight.target.position.copy(center);
+    this.dirLight.position.copy(center).add(new THREE.Vector3(0.4, 0.7, 0.3).multiplyScalar(lightExtent));
+    const camera = this.dirLight.shadow.camera;
+    camera.left = camera.bottom = -lightExtent * 0.8;
+    camera.right = camera.top = lightExtent * 0.8;
+    camera.near = 0.5;
+    camera.far = lightExtent * 4;
+    camera.updateProjectionMatrix();
   }
 
   public setDarkTheme(isDark: boolean) {
@@ -177,22 +217,7 @@ export class SceneManager {
 
     this.hemiLight.intensity = isDark ? 0.3 : 0.6;
 
-    if (this.gridHelper) {
-      this.scene.remove(this.gridHelper);
-      this.gridHelper.geometry.dispose();
-      const materials = Array.isArray(this.gridHelper.material)
-        ? this.gridHelper.material
-        : [this.gridHelper.material];
-      materials.forEach((material) => material.dispose());
-      this.gridHelper = new THREE.GridHelper(
-        300,
-        60,
-        theme.gridLine,
-        theme.gridSub,
-      );
-      this.gridHelper.position.y = -0.05;
-      this.scene.add(this.gridHelper);
-    }
+    this.rebuildGrid();
   }
 
   public getIsDark(): boolean {
@@ -204,8 +229,12 @@ export class SceneManager {
     desiredCameraPos?: THREE.Vector3,
     duration: number = 1000,
   ) {
-    this.cameraTweens.forEach((tween) => tween.stop());
-    this.cameraTweens = [];
+    this.stopCameraMotion();
+    // Drain pending orbit/pan damping before taking control of the camera.
+    const damping = this.controls.enableDamping;
+    this.controls.enableDamping = false;
+    this.controls.update();
+    this.controls.enableDamping = damping;
     const currentTarget = this.controls.target.clone();
     const currentPos = this.camera.position.clone();
 
@@ -213,8 +242,15 @@ export class SceneManager {
       desiredCameraPos ||
       currentPos.clone().add(targetLookAt.clone().sub(currentTarget));
 
+    if (duration <= 0) {
+      this.controls.target.copy(targetLookAt);
+      this.camera.position.copy(endPos);
+      this.controls.update();
+      return;
+    }
+
     this.cameraTweens.push(
-      new TWEEN.Tween(currentTarget)
+      new TWEEN.Tween(currentTarget, this.cameraAnimations)
         .to(targetLookAt, duration)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(() => {
@@ -224,7 +260,7 @@ export class SceneManager {
     );
 
     this.cameraTweens.push(
-      new TWEEN.Tween(currentPos)
+      new TWEEN.Tween(currentPos, this.cameraAnimations)
         .to(endPos, duration)
         .easing(TWEEN.Easing.Cubic.Out)
         .onUpdate(() => {
@@ -234,6 +270,11 @@ export class SceneManager {
     );
   }
 
+  private stopCameraMotion() {
+    this.cameraTweens.forEach(tween => tween.stop());
+    this.cameraTweens = [];
+  }
+
   public resetCamera(duration: number = 900) {
     this.flyTo(this.defaultTarget, this.defaultCameraPos, duration);
   }
@@ -241,6 +282,7 @@ export class SceneManager {
   public setActive(active: boolean) {
     if (this.active === active) return;
     this.active = active;
+    if (!active) this.stopCameraMotion();
     if (active) this.onWindowResize();
     if (active) this.animationId = requestAnimationFrame(this.animate);
     else if (this.animationId !== null) cancelAnimationFrame(this.animationId);
@@ -264,7 +306,7 @@ export class SceneManager {
   private animate(time: number) {
     if (!this.active) return;
     this.animationId = requestAnimationFrame(this.animate);
-    TWEEN.update(time);
+    this.cameraAnimations.update(time);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
     this.onFrame?.();

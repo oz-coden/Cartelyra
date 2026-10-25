@@ -20,6 +20,7 @@ export class ThreeView {
   private active = true;
   private dark = false;
   private scope?: DisplayScope;
+  private needsImmediateFit = false;
   private connections = new THREE.Group();
   public explode: ExplodeController;
   public picker: RaycastPicker;
@@ -40,6 +41,7 @@ export class ThreeView {
     this.explode.onUpdateCallback = () => {
       this.routes.forEach((r) => r.updatePositions());
       this.renderConnections();
+      this.scene.setSceneBounds?.(this.visibleBounds());
       this.onViewChange?.();
     };
     this.picker = new RaycastPicker(
@@ -55,6 +57,8 @@ export class ThreeView {
     all: boolean,
     scope?: DisplayScope,
   ) {
+    const scopeKey = scope?.key ?? buildingId;
+    if (scopeKey !== (this.scope?.key ?? this.buildingId)) this.needsImmediateFit = true;
     const changed =
       this.buildingId !== buildingId ||
       this.floor !== floor ||
@@ -173,17 +177,16 @@ export class ThreeView {
       this.scene.flyTo(
         point,
         point.clone().add(new THREE.Vector3(36, 42, 42)),
-        500,
+        this.needsImmediateFit ? 0 : 500,
       );
+      this.needsImmediateFit = false;
     }
   }
   public reset() {
     this.scene.resize();
-    const box = new THREE.Box3();
-    for (const group of this.buildings.floorGroups.values())
-      if (group.visible && group.parent?.visible)
-        box.union(new THREE.Box3().setFromObject(group));
+    const box = this.visibleBounds();
     if (box.isEmpty()) return;
+    this.scene.setSceneBounds?.(box);
     const center = box.getCenter(new THREE.Vector3()),
       size = box.getSize(new THREE.Vector3());
     const angle = (this.scene.camera.fov * Math.PI) / 360,
@@ -201,7 +204,15 @@ export class ThreeView {
     this.scene.flyTo(
       center,
       center.clone().add(new THREE.Vector3(fit * 0.55, fit * 0.7, fit * 0.65)),
-      500,
+      this.needsImmediateFit ? 0 : 500,
     );
+    this.needsImmediateFit = false;
+  }
+  private visibleBounds() {
+    const box = new THREE.Box3();
+    for (const group of this.buildings.floorGroups.values())
+      if (group.visible && group.parent?.visible)
+        box.union(new THREE.Box3().setFromObject(group));
+    return box;
   }
 }

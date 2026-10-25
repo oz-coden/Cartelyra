@@ -80,9 +80,10 @@ export class UniviewApp {
       select.append(option);
     }
     select.addEventListener("change", () => {
+      const previousScope = this.location.scope.key;
       this.location.selectBuilding(select.value);
       this.applyLocation();
-      if (this.view === "3d") this.three?.reset();
+      if (this.view === "3d" && previousScope !== this.location.scope.key) this.three?.reset();
     });
     this.theme.onThemeChange((dark) => this.three?.setTheme(dark));
     this.floors.onFloorChange = (level) => {

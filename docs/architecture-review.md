@@ -2,6 +2,8 @@
 
 Uniview is a static Vite/TypeScript application. Campus JSON is compiled at build time and loaded in the browser; search and route computation require no backend or database. The default SVG view works without WebGL. Three.js is imported only for the 3D view. The 3D renderer creates geometry and labels only for the selected building or connected display group. Floor changes reuse that scope; leaving it releases its geometries, materials and label textures. Label images use 256×64 pixels, with 128×64 floor badges, to limit image storage as map coverage grows. Theme changes update floor materials and redraw existing label textures while preserving geometry and selection; newly loaded buildings use the current theme immediately.
 
+The 3D reference grid, shadow receiver and directional light follow the visible scope's bounds, including floors shown individually or expanded. Theme changes preserve the grid's placement and extent. Switching to another building scope fits the camera immediately instead of animating across unrelated authoring origins; switching buildings within one connected group retains the view. Explicit camera resets and guide-step focus can animate, but orbit/pan interaction or leaving 3D cancels an unfinished camera move.
+
 ## Shared data and state
 
 - `data/compile.ts` qualifies navigation IDs and transforms building-local geometry into world coordinates. Optional campus connections join explicitly authored building entrances.
