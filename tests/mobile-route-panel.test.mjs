@@ -110,6 +110,25 @@ test('map picking closes the modal before map navigation without losing entered 
   assert.equal(target,'none','reopening the editor cancels pending map picking');
 });
 
+test('returning from the editor exposes directions when present and otherwise retains the route summary',async()=>{
+  const {window,get,panel}=await setup();
+  let summaryScrolls=0,mapScroll;
+  get('mobile-route-bar').scrollIntoView=()=>summaryScrolls++;
+  window.scrollY=100;
+  window.scrollTo=options=>mapScroll=options;
+  get('map-stage').getBoundingClientRect=()=>({top:400});
+  get('guide-current-text').getBoundingClientRect=()=>({top:1200,bottom:1260});
+  get('btn-edit-route').click();get('btn-route-show-map').click();
+  assert.equal(summaryScrolls,1);
+  get('step-guide').classList.remove('hidden');
+  get('btn-edit-route').click();get('btn-route-show-map').click();
+  assert.equal(summaryScrolls,1);
+  assert.ok(mapScroll.top>100,'the map and beginning of directions should enter the viewport');
+  mapScroll=undefined;
+  get('btn-edit-route').click();panel.close(false);
+  assert.equal(mapScroll,undefined,'map picking and desktop transitions retain their own scroll handling');
+});
+
 test('the panel follows the keyboard viewport, closes only on backdrop clicks and ignores a stale close event after reopening',async()=>{
   const {document,window,viewportCallbacks,get,dialog}=await setup();
   get('btn-edit-route').click();

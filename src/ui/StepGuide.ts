@@ -1,4 +1,5 @@
 import type { RouteStep, NavEdgeType } from "../types/campus";
+import { scrollToMap } from "./mapScroll.js";
 
 export class StepGuide {
   private container = document.getElementById("step-guide") as HTMLElement;
@@ -33,7 +34,7 @@ export class StepGuide {
     document.getElementById("btn-guide-focus")!.addEventListener("click", () => {
       if (this.steps.length) {
         this.onStepClick?.(this.steps[this.currentIndex]);
-        document.getElementById("map-stage")!.scrollIntoView?.({ block: "nearest" });
+        scrollToMap();
       }
     });
   }

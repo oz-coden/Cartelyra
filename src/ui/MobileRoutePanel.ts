@@ -1,4 +1,5 @@
 import type { SearchPanel } from "./SearchPanel";
+import { scrollToMap } from "./mapScroll.js";
 
 /** Reuses the sidebar's editor in a modal on small screens, preserving one set of inputs. */
 export class MobileRoutePanel {
@@ -80,7 +81,10 @@ export class MobileRoutePanel {
     this.finishClose();
     if (returnToMap) {
       this.button.focus({ preventScroll: true });
-      this.bar.scrollIntoView?.({ block: "start" });
+      const hasDirections = !document.getElementById("step-guide")!.classList.contains("hidden") ||
+        !document.getElementById("btn-reopen-guide")!.classList.contains("hidden");
+      if (hasDirections) scrollToMap();
+      else this.bar.scrollIntoView?.({ block: "start" });
     }
   }
 
