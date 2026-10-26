@@ -2765,6 +2765,19 @@
       "passageWidth": 6,
       "instruction": "階段で10号館側へ（2F）",
       "reverseInstruction": "階段で7号館側へ（2F）"
+    },
+    {
+      "to": "b8/f4/port-one",
+      "type": "bridge",
+      "verification": "inferred",
+      "isIndoor": false,
+      "isAccessible": true,
+      "routingCost": 2,
+      "cover": "unknown",
+      "floorChanges": 0,
+      "from": "b1/f3/port-eight",
+      "instruction": "連絡通路で8号館4Fへ（8-46下側）",
+      "reverseInstruction": "連絡通路で1号館3Fへ"
     }
   ]
 }

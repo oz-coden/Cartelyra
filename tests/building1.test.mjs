@@ -72,7 +72,7 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   const first = floors.find((f) => f.level === 1);
   assert.ok(!first.rooms.some((r) => r.id === "1-106"));
   assert.ok(!first.rooms.some((r) => pointInInterior([55, 0], r.polygon)));
-  const entries = places.filter((p) => p.kind === "entrance");
+  const entries = places.filter((p) => p.kind === "entrance" && p.floorLevel === 1);
   assert.equal(entries.length, 3);
   assert.ok(entries.every((p) => p.floorLevel === 1));
   assert.equal(searchPlaces(places, "1号館 106").filter((p) => p.kind === "entrance").length, 2);
@@ -101,6 +101,53 @@ test("Building 1 keeps the numbered entrance hall walkable and does not turn eme
   }
   assert.notEqual(entries.find(p=>p.featureId==="entry-top-left").nodeId, entries.find(p=>p.featureId==="entry-top-right").nodeId);
   assert.ok(source.buildings.find((b) => b.id === "b1").connections.every((e) => e.verification === "inferred"));
+});
+
+test('Building 1 side stairs use the lower landing and a separate left corridor on every floor',()=>{
+  for(const floor of floors){
+    const stairs=floor.features.find(f=>f.id==='stairs-side');
+    const box=bounds(stairs.polygon),node=floor.navigation.nodes.find(n=>n.id==='stairs-side');
+    assert.ok(box.z-box.d/2>=82,`${floor.id}: stairs must be below the main lower corridor`);
+    if(floor.level!==-1)assert.equal(box.z+box.d/2,100,`${floor.id}: stairs align with the lower room row`);
+    assert.ok(node.position[0]<0);
+    assert.equal(node.position[0],box.x+box.w/2);
+    assert.equal(node.position[1],box.z);
+    const landing=floor.navigation.nodes.find(n=>n.id==='hall-side-landing');
+    const turn=floor.navigation.nodes.find(n=>n.id==='hall-side-turn');
+    const obstacles=[...floor.rooms.map(r=>r.polygon),...floor.features.filter(f=>['stairs','elevator','restroom','service','pit'].includes(f.type)).map(f=>f.polygon)];
+    assert.ok(segmentIsWalkable(turn.position,landing.position,floor.outline,obstacles));
+    assert.ok(segmentIsWalkable(landing.position,node.position,floor.outline,obstacles));
+    const route=finder.findPath(`b1/${floor.id}/stairs-core`,`b1/${floor.id}/stairs-side`);
+    assert.ok(route.pathNodes.some(n=>n.id===`b1/${floor.id}/hall-side-turn`));
+    assert.ok(route.pathNodes.some(n=>n.id===`b1/${floor.id}/hall-side-landing`));
+    assert.equal(route.floorChanges,0);
+    assert.ok(route.pathNodes.every(n=>n.buildingId==='b1'&&n.floor===floor.level));
+  }
+});
+
+test('the Building 1 3F bridge joins the corridor below 8-46 on Building 8 4F without a stair detour',()=>{
+  const first=floors.find(f=>f.id==='f3'),eighth=source.floors.find(f=>f.buildingId==='b8'&&f.id==='f4');
+  const port=eighth.navigation.nodes.find(n=>n.id==='port-one');
+  const room=eighth.rooms.find(r=>r.id==='8-46'),roomBottom=Math.max(...room.polygon.map(p=>p[1]));
+  assert.ok(port.position[1]>roomBottom);
+  const sideStairs=bounds(first.features.find(f=>f.id==='stairs-side').polygon);
+  assert.ok(first.navigation.nodes.find(n=>n.id==='port-eight').position[1]>sideStairs.z+sideStairs.d/2);
+  const connection=source.manifest.connections.find(e=>e.from==='b1/f3/port-eight'&&e.to==='b8/f4/port-one');
+  assert.equal(connection.type,'bridge');assert.equal(connection.floorChanges,0);
+  for(const mode of ['shortest','accessible','indoor','stairs']){
+    for(const [from,to,instruction] of [
+      ['b1/f3/room-307','b8/f4/room-46','連絡通路で8号館4Fへ（8-46下側）'],
+      ['b8/f4/room-46','b1/f3/room-307','連絡通路で1号館3Fへ'],
+    ]){
+      const route=finder.findPath(from,to,mode);
+      assert.ok(route,`${from} -> ${to}: ${mode}`);
+      assert.equal(route.floorChanges,0);
+      assert.ok(route.steps.some(s=>s.instruction===instruction));
+      assert.ok(route.steps.every(s=>!['stairs','elevator','outdoor'].includes(s.edgeType)));
+      assert.ok(route.pathNodes.every(n=>n.buildingId==='b1'&&n.floor===3||n.buildingId==='b8'&&n.floor===4));
+      assert.ok(!route.pathNodes.some(n=>n.id==='b8/f4/stairs-south'||n.id==='b1/f3/stairs-side'));
+    }
+  }
 });
 
 

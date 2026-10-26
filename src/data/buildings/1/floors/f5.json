@@ -8,14 +8,15 @@
   "sourceId": "b1-f5-b1-f1",
   "notes": [],
   "outline": [
-    [-12, 70],
+    [-18, 88],
+    [-6, 88],
+    [-6, 70],
     [0, 70],
     [0, 0],
     [106, 0],
     [106, 100],
     [0, 100],
-    [0, 82],
-    [-12, 82]
+    [-18, 100]
   ],
   "voids": [
     [
@@ -43,10 +44,10 @@
       "label": "階段2（図面左下）",
       "type": "stairs",
       "polygon": [
-        [-12, 70],
-        [0, 70],
-        [0, 82],
-        [-12, 82]
+        [-18, 88],
+        [-6, 88],
+        [-6, 100],
+        [-18, 100]
       ],
       "entrance": "stairs-side"
     },
@@ -516,7 +517,7 @@
       {
         "id": "stairs-side",
         "name": "階段2（図面左下）",
-        "position": [0, 76],
+        "position": [-6, 94.0],
         "type": "stairs"
       },
       {
@@ -752,6 +753,18 @@
         "name": "5F 通路",
         "position": [95, 22],
         "type": "corridor"
+      },
+      {
+        "id": "hall-side-turn",
+        "name": "左下階段への通路の曲がり角",
+        "position": [-3, 76],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-side-landing",
+        "name": "左下階段前の通路",
+        "position": [-3, 94.0],
+        "type": "corridor"
       }
     ],
     "edges": [
@@ -763,16 +776,6 @@
         "isAccessible": true,
         "from": "stairs-core",
         "routingCost": 0.423257,
-        "cover": "indoor"
-      },
-      {
-        "to": "hall-5",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "stairs-side",
-        "routingCost": 0.0,
         "cover": "indoor"
       },
       {
@@ -1323,6 +1326,36 @@
         "isAccessible": true,
         "from": "hall-516-3",
         "routingCost": 0.423257,
+        "cover": "indoor"
+      },
+      {
+        "to": "hall-side-turn",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-5",
+        "routingCost": 0.253955,
+        "cover": "indoor"
+      },
+      {
+        "to": "hall-side-landing",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-side-turn",
+        "routingCost": 1.523727,
+        "cover": "indoor"
+      },
+      {
+        "to": "stairs-side",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-side-landing",
+        "routingCost": 0.253955,
         "cover": "indoor"
       }
     ]

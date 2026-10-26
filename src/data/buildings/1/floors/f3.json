@@ -8,14 +8,20 @@
   "sourceId": "b1-f2-f3-f6-f7",
   "notes": [],
   "outline": [
-    [-12, 70],
+    [-18, 88],
+    [-6, 88],
+    [-6, 70],
     [0, 70],
     [0, 0],
     [106, 0],
     [106, 100],
     [0, 100],
-    [0, 82],
-    [-12, 82]
+    [0, 110],
+    [-18, 110],
+    [-18, 104],
+    [-6, 104],
+    [-6, 100],
+    [-18, 100]
   ],
   "voids": [],
   "features": [
@@ -36,10 +42,10 @@
       "label": "階段2（図面左下）",
       "type": "stairs",
       "polygon": [
-        [-12, 70],
-        [0, 70],
-        [0, 82],
-        [-12, 82]
+        [-18, 88],
+        [-6, 88],
+        [-6, 100],
+        [-18, 100]
       ],
       "entrance": "stairs-side"
     },
@@ -92,6 +98,23 @@
       ],
       "restroomType": "female",
       "entrance": "wc-w"
+    },
+    {
+      "id": "port-eight",
+      "label": "8号館への連絡通路",
+      "type": "entrance",
+      "polygon": [
+        [-18, 104],
+        [-14, 104],
+        [-14, 110],
+        [-18, 110]
+      ],
+      "entrance": "port-eight",
+      "aliases": [
+        "8号館連絡通路"
+      ],
+      "description": "8号館4Fの8-46下側へつながる連絡通路。",
+      "mapLabel": "8号館へ"
     }
   ],
   "rooms": [
@@ -367,7 +390,7 @@
       {
         "id": "stairs-side",
         "name": "階段2（図面左下）",
-        "position": [0, 76],
+        "position": [-6, 94.0],
         "type": "stairs"
       },
       {
@@ -513,6 +536,30 @@
         "name": "女性用トイレ",
         "position": [12.0, 16],
         "type": "facility_entrance"
+      },
+      {
+        "id": "hall-side-turn",
+        "name": "左下階段への通路の曲がり角",
+        "position": [-3, 76],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-side-landing",
+        "name": "左下階段前の通路",
+        "position": [-3, 94.0],
+        "type": "corridor"
+      },
+      {
+        "id": "hall-eight-turn",
+        "name": "8号館連絡通路への曲がり角",
+        "position": [-3, 107],
+        "type": "corridor"
+      },
+      {
+        "id": "port-eight",
+        "name": "8号館4Fへの連絡地点",
+        "position": [-18, 107],
+        "type": "entrance"
       }
     ],
     "edges": [
@@ -524,16 +571,6 @@
         "isAccessible": true,
         "from": "stairs-core",
         "routingCost": 0.423257,
-        "cover": "indoor"
-      },
-      {
-        "to": "hall-5",
-        "type": "walk",
-        "verification": "inferred",
-        "isIndoor": true,
-        "isAccessible": true,
-        "from": "stairs-side",
-        "routingCost": 0.0,
         "cover": "indoor"
       },
       {
@@ -934,6 +971,56 @@
         "isAccessible": true,
         "from": "hall-11",
         "routingCost": 0.846515,
+        "cover": "indoor"
+      },
+      {
+        "to": "hall-side-turn",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-5",
+        "routingCost": 0.253955,
+        "cover": "indoor"
+      },
+      {
+        "to": "hall-side-landing",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-side-turn",
+        "routingCost": 1.523727,
+        "cover": "indoor"
+      },
+      {
+        "to": "stairs-side",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-side-landing",
+        "routingCost": 0.253955,
+        "cover": "indoor"
+      },
+      {
+        "to": "hall-eight-turn",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-side-landing",
+        "routingCost": 1.100469,
+        "cover": "indoor"
+      },
+      {
+        "to": "port-eight",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-eight-turn",
+        "routingCost": 1.269772,
         "cover": "indoor"
       }
     ]

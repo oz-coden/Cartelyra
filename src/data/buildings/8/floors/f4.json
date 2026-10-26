@@ -10,8 +10,8 @@
   "outline": [
     [0, 0],
     [36, 0],
-    [36, 170],
-    [8, 170],
+    [36, 176],
+    [8, 176],
     [8, 182],
     [0, 182],
     [0, 82],
@@ -76,12 +76,29 @@
       "label": "階段（25号館側）",
       "type": "stairs",
       "polygon": [
-        [0, 170],
-        [8, 170],
+        [0, 176],
+        [8, 176],
         [8, 182],
         [0, 182]
       ],
       "entrance": "stairs-south"
+    },
+    {
+      "id": "port-one",
+      "label": "1号館への連絡通路",
+      "type": "entrance",
+      "polygon": [
+        [34, 170],
+        [36, 170],
+        [36, 176],
+        [34, 176]
+      ],
+      "entrance": "port-one",
+      "aliases": [
+        "1号館連絡通路"
+      ],
+      "description": "8-46の下側から1号館3Fへつながる連絡通路。",
+      "mapLabel": "1号館へ"
     }
   ],
   "rooms": [
@@ -464,9 +481,21 @@
       },
       {
         "id": "stairs-south",
-        "position": [4, 170],
+        "position": [4, 176],
         "type": "stairs",
         "name": "階段（25号館側）"
+      },
+      {
+        "id": "hall-one-landing",
+        "name": "1号館連絡通路と階段の分岐",
+        "position": [4, 173],
+        "type": "corridor"
+      },
+      {
+        "id": "port-one",
+        "name": "1号館3Fへの連絡地点",
+        "position": [36, 173],
+        "type": "entrance"
       }
     ],
     "edges": [
@@ -881,14 +910,34 @@
         "from": "port-nine"
       },
       {
+        "to": "hall-one-landing",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-15",
+        "routingCost": 1.05,
+        "cover": "indoor"
+      },
+      {
         "to": "stairs-south",
         "type": "walk",
         "verification": "inferred",
         "isIndoor": true,
         "isAccessible": true,
-        "routingCost": 0.6,
-        "cover": "indoor",
-        "from": "hall-15"
+        "from": "hall-one-landing",
+        "routingCost": 0.45,
+        "cover": "indoor"
+      },
+      {
+        "to": "port-one",
+        "type": "walk",
+        "verification": "inferred",
+        "isIndoor": true,
+        "isAccessible": true,
+        "from": "hall-one-landing",
+        "routingCost": 4.8,
+        "cover": "indoor"
       }
     ]
   }

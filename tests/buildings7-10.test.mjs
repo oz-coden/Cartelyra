@@ -42,10 +42,16 @@ test('every group place connects to the Building 8 elevator reference point whil
   for(const p of places){assert.ok(p.nodeId,p.id);
     for(const mode of ['shortest','accessible','indoor','stairs']){
       const r=finder.findPath('b8/f1/ev-west',p.nodeId,mode);
-      if(mode==='accessible'&&(p.buildingId==='b7'&&p.floorLevel===2||/b8\/f[12]\/entrance-(south-landing|courtyard)$/.test(p.nodeId))){assert.equal(r,null,p.id);continue;}
+      if(mode==='accessible'&&p.buildingId==='b7'&&p.floorLevel===2){assert.equal(r,null,p.id);continue;}
       assert.ok(r,`${p.id}: ${mode}`);
-      assert.ok(r.pathNodes.every(n=>!n.buildingId||ids.includes(n.buildingId)));
-      if(r.pathNodes.every(n=>n.buildingId))assert.equal(r.floorChanges,p.floorLevel-1,`${p.id}: floor count`);
+      assert.ok(r.pathNodes.every(n=>!n.buildingId||ids.includes(n.buildingId)||n.buildingId==='b1'));
+      if(r.pathNodes.some(n=>n.buildingId==='b1')){
+        assert.equal(mode,'accessible');
+        assert.match(p.nodeId,/b8\/f[12]\/entrance-(south-landing|courtyard)$/);
+        assert.ok(r.steps.some(s=>s.edgeType==='bridge'&&s.instruction.includes('1号館3F')));
+        assert.ok(r.steps.some(s=>s.edgeType==='elevator'&&s.buildingId==='b1'));
+      }
+      else if(r.pathNodes.every(n=>n.buildingId))assert.equal(r.floorChanges,p.floorLevel-1,`${p.id}: floor count`);
       else {
         assert.ok(r.verticalMovements.unmeasured>0,`${p.id}: outdoor landings retain unknown heights`);
         assert.ok(r.pathNodes.filter(n=>n.floor!==undefined).every(n=>n.floor>=1&&n.floor<=p.floorLevel),`${p.id}: no floor overshoot`);
@@ -55,7 +61,10 @@ test('every group place connects to the Building 8 elevator reference point whil
     if(p.nodeId!=='b8/f1/ev-west')assert.equal(finder.findPath('b8/f1/ev-west',p.nodeId,'shortest',false),null);
   }
   assert.ok(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate'));
-  assert.equal(finder.findPath('b7/f1/room-14','campus/outdoor/west-gate','accessible'),null);
+  const detour=finder.findPath('b7/f1/room-14','campus/outdoor/west-gate','accessible');
+  assert.ok(detour.pathNodes.some(n=>n.id==='b1/f3/port-eight'));
+  assert.ok(detour.steps.some(s=>s.edgeType==='elevator'&&s.buildingId==='b1'));
+  assert.ok(detour.steps.every(s=>s.edgeType!=='stairs'));
   assert.equal(s.manifest.outdoor.links.filter(l=>ids.includes(l.to.split('/')[0])).length,10);
   assert.ok(!auditConnections(data).some(f=>f.code==='view-group-disconnected'&&f.buildingId==='b7'));
 });

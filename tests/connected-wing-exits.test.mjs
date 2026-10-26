@@ -12,6 +12,10 @@ import {buildingCatalog,placeIndex,searchPlaces} from '../.checks/data/places.js
 import {auditGeometry} from '../.checks/data/audit.js';
 const source=await readData(),compile=s=>compileCampus(s.manifest,s.buildings,s.floors),data=compile(source);
 const finder=new AStarPathfinder(data),out=id=>`campus/outdoor/${id}`;
+// Isolate the four wings' own exit constraints from the separate Building 1 EV detour.
+const directData=structuredClone(data);
+directData.navigation.edges=directData.navigation.edges.filter(e=>!(e.type==='bridge'&&[e.from,e.to].includes('b1/f3/port-eight')));
+const directFinder=new AStarPathfinder(directData);
 const validate=s=>validateSources(s.manifest,s.buildings,s.floors,s.sources,s.overview);
 
 test('the missing 2F 7/8 connection is an outdoor stair rather than an implicit roofed bridge',async()=>{
@@ -41,29 +45,42 @@ test('both lower floors use the same unnumbered intermediate landing with opposi
     assert.deepEqual(r.pathNodes.map(n=>n.id),[inside,inside.replace(/[^/]+$/,'entrance-south-landing'),landing]);
     assert.equal(r.floorChanges,0);assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
     assert.match(r.steps.find(s=>s.edgeType==='stairs').instruction,goingOut);assert.match(back.steps.find(s=>s.edgeType==='stairs').instruction,goingIn);
-    assert.equal(finder.findPath(inside,landing,'accessible'),null);
+    assert.equal(directFinder.findPath(inside,landing,'accessible'),null);
     const closed=structuredClone(data);closed.navigation.edges.find(e=>e.to===inside.replace(/[^/]+$/,'entrance-south-landing')&&e.from===landing).blocked=true;
     assert.ok(new AStarPathfinder(closed).findPath(inside,landing),'the other floor remains an explicit alternative');
   }
   for(let level=2;level<=6;level++){
     const b8=source.floors.find(f=>f.buildingId==='b8'&&f.level===level),b9=source.floors.find(f=>f.buildingId==='b9'&&f.level===level);
-    const n=b8.navigation.nodes.find(n=>n.id==='stairs-south');assert.deepEqual(n.position,[4,170]);
+    const n=b8.navigation.nodes.find(n=>n.id==='stairs-south');
+    assert.deepEqual(n.position,[4,Math.min(...b8.features.find(f=>f.id==='stairs-south').polygon.map(p=>p[1]))]);
     assert.ok(b8.navigation.edges.some(e=>e.to===n.id&&b8.navigation.nodes.find(x=>x.id===e.from).position[0]===4));
     assert.ok(!b9.features.some(f=>f.id==='stairs-southeast'));
   }
 });
 
-test('Map Hall reaches Building 2 by a covered external stair, and all group outdoor approaches require stairs',()=>{
+test('Map Hall reaches Building 2 by a covered external stair, and direct group outdoor approaches require stairs',()=>{
   const hall='b8/f2/room-20',street=out('b3-b2-west');
   for(const [a,b]of [[hall,street],[street,hall]]){
     const r=finder.findPath(a,b);assert.ok(r);
     assert.ok(r.steps.some(s=>s.edgeType==='stairs'&&s.cover==='covered'&&s.instruction.includes('屋根付き外階段')));
-    assert.equal(finder.findPath(a,b,'accessible'),null);
+    assert.equal(directFinder.findPath(a,b,'accessible'),null);
     assert.equal(finder.findPath(a,b,'shortest',false),null);
   }
   for(const room of ['b7/f2/room-21','b8/f1/room-11','b9/f3/room-31','b10/f2/room-201']){
     assert.ok(finder.findPath(out('main-gate'),room));
-    assert.equal(finder.findPath(out('main-gate'),room,'accessible'),null);
+    assert.equal(directFinder.findPath(out('main-gate'),room,'accessible'),null);
+  }
+});
+
+test('the full network can avoid direct exit stairs by using the Building 1 bridge and elevators',()=>{
+  for(const room of ['b8/f2/room-20','b7/f1/room-14','b9/f3/room-31','b10/f2/room-201']){
+    for(const [a,b]of [[room,out('main-gate')],[out('main-gate'),room]]){
+      const route=finder.findPath(a,b,'accessible');assert.ok(route);
+      assert.ok(route.pathNodes.some(n=>n.id==='b1/f3/port-eight'));
+      assert.ok(route.steps.some(s=>s.edgeType==='elevator'&&s.buildingId==='b1'));
+      assert.ok(route.steps.every(s=>s.edgeType!=='stairs'));
+      assert.equal(directFinder.findPath(a,b,'accessible'),null);
+    }
   }
 });
 
@@ -93,7 +110,7 @@ test('EV-side stairs retain their constraints when the courtyard gains an explic
   for(const start of ['b8/f1/stairs-ev-west','b8/f2/stairs-courtyard']){
     const r=finder.findPath(start,court);assert.ok(r);assert.equal(r.verticalMovements.stairs,1);
     assert.ok(r.steps.some(s=>s.instruction.includes('中庭へ出る')));
-    assert.equal(finder.findPath(start,court,'accessible'),null);
+    assert.equal(directFinder.findPath(start,court,'accessible'),null);
   }
   const closed=structuredClone(data);
   for(const e of closed.navigation.edges)if(e.from===out('b8-courtyard-door')&&e.to.startsWith('b8/'))e.blocked=true;
@@ -126,7 +143,7 @@ test('the courtyard north path reaches the 7/8 outdoor approach in both directio
     const r=finder.findPath(start,out('b7-2f-stair-foot'));assert.ok(r);
     assert.ok(r.pathNodes.some(n=>n.id===out('b7-b10-courtyard')));
     assert.equal(r.verticalMovements.stairs,1);
-    assert.equal(finder.findPath(start,out('b7-2f-stair-foot'),'accessible'),null);
+    assert.equal(directFinder.findPath(start,out('b7-2f-stair-foot'),'accessible'),null);
   }
 });
 
@@ -164,7 +181,7 @@ test('Building 8 lower-floor doors sit beyond explicit stair segments without a 
       const r=finder.findPath(prefix+a,prefix+b);assert.ok(r);
       assert.ok(r.pathNodes.some(n=>n.id===prefix+stair));
       assert.equal(r.verticalMovements.stairs,1);assert.equal(r.verticalMovements.unmeasured,1);assert.equal(r.floorChanges,0);
-      assert.equal(finder.findPath(prefix+a,prefix+b,'accessible'),null);
+      assert.equal(directFinder.findPath(prefix+a,prefix+b,'accessible'),null);
     }
     const e=f.navigation.edges.find(e=>e.from===stair&&e.to===door);assert.equal(e.type,'stairs');
     const bad=structuredClone(source),bf=bad.floors.find(x=>x.buildingId==='b8'&&x.level===level);
@@ -258,7 +275,7 @@ test('Building 10 2F courtyard doors use the east corridor and one outdoor stair
     for(const [a,b] of [[foot,inside],[inside,foot]]){
       const r=finder.findPath(a,b);assert.ok(r);
       assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
-      assert.equal(r.floorChanges,0);assert.equal(finder.findPath(a,b,'accessible'),null);
+      assert.equal(r.floorChanges,0);assert.equal(directFinder.findPath(a,b,'accessible'),null);
     }
     const closed=structuredClone(data);closed.navigation.edges.find(e=>e.from===foot&&e.to===out(`b10-courtyard-${side}-door`)).blocked=true;
     const r=new AStarPathfinder(closed).findPath(foot,inside);assert.ok(r);
@@ -280,7 +297,7 @@ test('Building 7 lower-right stairs are outside, enter 1F only and cannot bypass
   for(const [a,b] of [[foot,inside],[inside,foot]]){
     const r=finder.findPath(a,b);assert.ok(r);
     assert.deepEqual(r.verticalMovements,{stairs:1,ramps:0,elevators:0,unmeasured:1});
-    assert.equal(r.floorChanges,0);assert.equal(finder.findPath(a,b,'accessible'),null);
+    assert.equal(r.floorChanges,0);assert.equal(directFinder.findPath(a,b,'accessible'),null);
   }
   const closed=structuredClone(data);closed.navigation.edges.find(e=>e.from===foot&&e.to===out('b7-courtyard-door')).blocked=true;
   const r=new AStarPathfinder(closed).findPath(foot,inside);assert.ok(r);
