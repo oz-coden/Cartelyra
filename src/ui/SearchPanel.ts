@@ -168,7 +168,7 @@ export class SearchPanel {
       row.setAttribute("role", "option");
       row.setAttribute("aria-selected", "false");
       row.tabIndex = -1;
-      row.className = "suggestion-item";
+      row.className = "suggestion-item ui-button";
       row.id = `suggestion-${target}-${i}`;
       const name = document.createElement("span"),
         sub = document.createElement("span");

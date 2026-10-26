@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "sync:ui": "node scripts/shared-ui.mjs --update",
+    "prebuild": "node scripts/shared-ui.mjs --check",
     "dev": "vite",
     "build": "npm run validate:data && tsc && vite build",
     "preview": "vite preview",

@@ -96,6 +96,8 @@ npm run preview       # Preview the build locally
 
 The GitHub Pages workflow runs regression tests before building and publishing; a failed test stops deployment.
 
+Shared colors, typography and controls use a pinned copy of [oz-coden.com-ui-web](https://github.com/oz-coden/oz-coden.com-ui-web). Builds verify the bundled CSS and license without fetching upstream files. See [shared UI integration](docs/shared-ui.md) for updates; map colors and application layouts remain specific to Cartelyra.
+
 Deploy the contents of `dist/` to a static host. Node.js is needed for development/builds; a production application server is not required.
 
 For GitHub Pages, set the repository’s **Settings → Pages → Build and deployment → Source → GitHub Actions**.
@@ -211,6 +213,8 @@ npm run preview      # ビルド結果をローカルで確認
 部屋の包含・重なり、通路の交差点、同階の分離、不自然な階移動は `audit:data` で報告します。`campusCoverage` は登録済み建物間の全室ペアを方向別に点検し、案内地点なし・接続なし・条件による除外を分けて集計します。[経路の接続状況](docs/route-coverage-review.md)も参照してください。意図した入れ子構造も扱えるように、確認候補だけでは検証・ビルドを失敗させません。`npm run audit:data -- --json audit-report.json` で詳細を保存できます。
 
 GitHub Pagesの公開ワークフローは、ビルド・公開前に回帰テストを実行します。テストが失敗した場合は公開を停止します。
+
+配色・フォント・操作部品には [oz-coden.com-ui-web](https://github.com/oz-coden/oz-coden.com-ui-web) のコミットを固定したコピーを使用します。ビルド時は同梱CSSとライセンスを検証し、上流からの取得は行いません。更新方法は[共通UIの取り込み](docs/shared-ui.md)を参照してください。地図の意味を表す色とアプリ固有の配置はCartelyra側で管理します。
 
 `dist/` の内容を静的ホスティングに配置します。Node.jsは開発・ビルド時に必要で、公開用のアプリケーションサーバーは不要です。
 

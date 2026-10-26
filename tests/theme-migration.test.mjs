@@ -20,9 +20,13 @@ test('legacy theme preferences migrate once and subsequent visits use the Cartel
     const {theme,saved,document}=setup({uniview_theme:'dark'});
     assert.equal(theme.getIsDark(),true);
     assert.ok(document.body.classList.contains('theme-dark'));
+    assert.equal(document.documentElement.dataset.theme,'dark');
+    assert.equal(document.getElementById('btn-theme-toggle').getAttribute('aria-label'),'ライトテーマに切り替え');
     assert.equal(saved.get('cartelyra_theme'),'dark');
     theme.toggleTheme();
     assert.equal(saved.get('cartelyra_theme'),'light');
+    assert.equal(document.documentElement.dataset.theme,'light');
+    assert.equal(document.getElementById('btn-theme-toggle').getAttribute('aria-label'),'ダークテーマに切り替え');
     assert.equal(saved.get('uniview_theme'),'dark');
     const reloaded=setup(Object.fromEntries(saved),true);
     assert.equal(reloaded.theme.getIsDark(),false);

@@ -53,7 +53,7 @@ export class StepGuide {
     steps.forEach((step, index) => {
       const card = document.createElement("button");
       card.type = "button";
-      card.className = "step-card";
+      card.className = "step-card ui-button";
 
       const icon = this.getStepIcon(
         step.edgeType,

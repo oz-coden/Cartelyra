@@ -8,21 +8,22 @@
       content="神奈川大学 横浜キャンパスの非公式マップ。建物配置、フロア、部屋やトイレなどの設備を確認できます。"
     />
     <title>Cartelyra | 横浜キャンパスマップ</title>
+    <link rel="stylesheet" href="/vendor/ui/ui.css" />
   </head>
   <body class="theme-light" data-view="campus">
-    <header class="top-bar">
+    <header class="top-bar ui-header">
       <div class="brand">
         <h1>Cartelyra</h1>
         <span>横浜キャンパス / 非公式・試作版</span>
       </div>
       <nav class="view-switch" aria-label="表示切り替え">
-        <button id="btn-view-campus" aria-pressed="true">キャンパス図</button
-        ><button id="btn-view-floor" aria-pressed="false">平面図</button
-        ><button id="btn-view-3d" aria-pressed="false">立体図</button>
+        <button id="btn-view-campus" aria-pressed="true" class="ui-button">キャンパス図</button
+        ><button id="btn-view-floor" aria-pressed="false" class="ui-button">平面図</button
+        ><button id="btn-view-3d" aria-pressed="false" class="ui-button">立体図</button>
       </nav>
       <div class="top-actions">
-        <button id="btn-reset-camera">全体を表示</button
-        ><button id="btn-theme-toggle" aria-label="テーマ切り替え">◐</button>
+        <button id="btn-reset-camera" class="ui-button">全体を表示</button
+        ><button id="btn-theme-toggle" class="ui-theme-button" aria-label="テーマ切り替え">◐</button>
       </div>
     </header>
     <div class="workspace">
@@ -82,12 +83,13 @@
                   aria-expanded="false"
                 /><button
                   id="btn-clear-start"
-                  class="hidden"
+                  class="hidden ui-button"
                   aria-label="出発地クリア"
                 >
                   ×</button
                 ><button
                   id="btn-pick-start"
+                  class="ui-button"
                   aria-label="地図で出発地を選ぶ"
                   aria-pressed="false"
                 >
@@ -103,7 +105,7 @@
             </div>
             <button
               id="btn-swap-points"
-              class="swap-button"
+              class="swap-button ui-button"
               aria-label="出発地と目的地を入れ替え"
             >
               ⇅ 入れ替え
@@ -121,12 +123,13 @@
                   aria-expanded="false"
                 /><button
                   id="btn-clear-dest"
-                  class="hidden"
+                  class="hidden ui-button"
                   aria-label="目的地クリア"
                 >
                   ×</button
                 ><button
                   id="btn-pick-dest"
+                  class="ui-button"
                   aria-label="地図で目的地を選ぶ"
                   aria-pressed="false"
                 >
@@ -145,25 +148,25 @@
             <legend>移動条件</legend>
             <div class="filter-buttons">
               <button
-                class="filter-btn active"
+                class="filter-btn active ui-button"
                 data-filter="shortest"
                 aria-pressed="true"
               >
                 標準</button
               ><button
-                class="filter-btn"
+                class="filter-btn ui-button"
                 data-filter="accessible"
                 aria-pressed="false"
               >
                 階段を避ける</button
               ><button
-                class="filter-btn"
+                class="filter-btn ui-button"
                 data-filter="indoor"
                 aria-pressed="false"
               >
                 屋内優先</button
               ><button
-                class="filter-btn"
+                class="filter-btn ui-button"
                 data-filter="stairs"
                 aria-pressed="false"
               >
@@ -232,6 +235,7 @@
           <p>
             <a href="https://github.com/oz-coden/Cartelyra/blob/main/LICENSE.md" target="_blank" rel="noopener noreferrer">利用条件</a>
             · <a href="./licenses.txt" target="_blank" rel="noopener noreferrer">既存許諾・第三者ライセンス</a>
+            · <a href="./vendor/ui/LICENSE" target="_blank" rel="noopener noreferrer">共通UIライセンス</a>
           </p>
         </section>
       </aside>
@@ -239,7 +243,7 @@
         <section id="mobile-route-bar" class="mobile-route-bar" aria-label="ルート設定">
           <div class="control-header">
             <h2>ルート案内</h2>
-            <button id="btn-edit-route" class="primary" aria-haspopup="dialog" aria-controls="mobile-route-dialog" aria-expanded="false">目的地を検索</button>
+            <button id="btn-edit-route" class="primary ui-button ui-button-primary" aria-haspopup="dialog" aria-controls="mobile-route-dialog" aria-expanded="false">目的地を検索</button>
           </div>
           <div class="mobile-route-endpoints">
             <p><span>出発地</span><span id="mobile-route-start">出発地を選択</span></p>
@@ -250,7 +254,7 @@
         </section>
         <div id="pick-banner" class="pick-banner hidden" role="status">
           <span id="pick-banner-text"></span
-          ><button id="btn-cancel-pick">キャンセル</button>
+          ><button id="btn-cancel-pick" class="ui-button">キャンセル</button>
         </div>
         <div id="map-stage" class="map-stage">
           <section id="map-panel" class="map-panel">
@@ -260,8 +264,8 @@
                 <p id="map-subtitle" class="muted">掲示図に基づく模式図</p>
               </div>
               <div class="map-zoom-controls">
-                <button id="map-zoom-out" aria-label="地図を縮小">−</button
-                ><button id="map-zoom-in" aria-label="地図を拡大">+</button>
+                <button id="map-zoom-out" aria-label="地図を縮小" class="ui-button">−</button
+                ><button id="map-zoom-in" aria-label="地図を拡大" class="ui-button">+</button>
               </div>
             </div>
             <div id="map-canvas" class="map-canvas"></div>
@@ -285,21 +289,21 @@
             <div class="place-details-content">
               <div class="control-header">
                 <h2 id="tooltip-title"></h2>
-                <button id="btn-close-selection" aria-label="場所の選択を解除">
+                <button id="btn-close-selection" aria-label="場所の選択を解除" class="ui-button">
                   ×
                 </button>
               </div>
               <p id="tooltip-desc"></p>
               <div class="tooltip-actions">
-                <button id="btn-tooltip-set-start">ここから出発</button
-                ><button id="btn-tooltip-set-dest" class="primary">
+                <button id="btn-tooltip-set-start" class="ui-button">ここから出発</button
+                ><button id="btn-tooltip-set-dest" class="primary ui-button ui-button-primary">
                   ここへ行く
                 </button>
               </div>
             </div>
           </section>
         </div>
-        <button id="btn-reopen-guide" class="hidden" aria-controls="step-guide" aria-expanded="false">道順を再表示</button>
+        <button id="btn-reopen-guide" class="hidden ui-button" aria-controls="step-guide" aria-expanded="false">道順を再表示</button>
         <section
           id="step-guide"
           class="step-guide hidden"
@@ -307,7 +311,7 @@
         >
           <div class="step-guide-header">
             <h2>道順 <span id="guide-step-count"></span></h2>
-            <button id="btn-close-guide" aria-label="道順案内を閉じる">
+            <button id="btn-close-guide" aria-label="道順案内を閉じる" class="ui-button">
               ×
             </button>
           </div>
@@ -316,9 +320,9 @@
             <p id="guide-current-footer" class="muted"></p>
           </div>
           <div class="guide-navigation">
-            <button id="btn-guide-prev">前へ</button>
-            <button id="btn-guide-focus">地図で確認</button>
-            <button id="btn-guide-next">次へ</button>
+            <button id="btn-guide-prev" class="ui-button">前へ</button>
+            <button id="btn-guide-focus" class="ui-button">地図で確認</button>
+            <button id="btn-guide-next" class="ui-button">次へ</button>
           </div>
           <details id="guide-all-steps" class="guide-all-steps">
             <summary>道順一覧</summary>
@@ -330,11 +334,11 @@
     <dialog id="mobile-route-dialog" class="mobile-route-dialog" aria-labelledby="mobile-route-title">
       <div class="mobile-route-dialog-header">
         <h2 id="mobile-route-title" tabindex="-1" autofocus>ルート案内</h2>
-        <button id="btn-close-route-editor" aria-label="ルート編集を閉じる">×</button>
+        <button id="btn-close-route-editor" aria-label="ルート編集を閉じる" class="ui-button">×</button>
       </div>
       <div id="mobile-route-dialog-body" class="mobile-route-dialog-body"></div>
       <div class="mobile-route-dialog-footer">
-        <button id="btn-route-show-map" class="primary">地図を見る</button>
+        <button id="btn-route-show-map" class="primary ui-button ui-button-primary">地図を見る</button>
       </div>
     </dialog>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>

@@ -55,7 +55,7 @@ export class FloorControl {
       if (!button) {
         button = document.createElement("button");
         button.type = "button";
-        button.className = "floor-btn";
+        button.className = "floor-btn ui-button";
         button.dataset.floor = String(floor.level);
         button.addEventListener("click", () =>
           this.onFloorChange?.(floor.level),
@@ -79,7 +79,7 @@ export class FloorControl {
       let button = [...container.querySelectorAll<HTMLButtonElement>("button")].find(b => b.dataset.groupLevel === level.id);
       if (!button) {
         button = document.createElement("button");
-        button.type = "button"; button.className = "floor-btn"; button.dataset.groupLevel = level.id;
+        button.type = "button"; button.className = "floor-btn ui-button"; button.dataset.groupLevel = level.id;
         button.addEventListener("click", () => this.onGroupLevelChange?.(level.id));
       }
       button.textContent = level.label; button.classList.toggle("active", level.id === levelId);

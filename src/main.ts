@@ -173,6 +173,7 @@ export class CartelyraApp {
     });
     for (const gate of this.places.filter((p) => p.kind === "gate")) {
       const button = document.createElement("button");
+      button.className = "ui-button";
       button.textContent = gate.name;
       button.addEventListener("click", () => this.selectPlace(gate));
       document.getElementById("gate-list")!.append(button);
@@ -188,6 +189,7 @@ export class CartelyraApp {
       ["entrance", "出入口"],
     ]) {
       const button = document.createElement("button");
+      button.className = "ui-button";
       button.textContent = label;
       button.dataset.category = id;
       button.addEventListener("click", () => {
@@ -242,6 +244,7 @@ export class CartelyraApp {
     );
     for (const place of places) {
       const button = document.createElement("button");
+      button.className = "ui-button";
       button.textContent = this.location.group ? `${place.buildingName} ${place.name}` : place.name;
       const state = document.createElement("small");
       state.textContent = place.approachRoomId

@@ -49,6 +49,12 @@ export class ThemeManager {
   }
 
   private applyTheme() {
+    document.documentElement.dataset.theme = this.isDark ? "dark" : "light";
+    const button = document.getElementById("btn-theme-toggle");
+    if (button) {
+      button.textContent = this.isDark ? "☀" : "☾";
+      button.setAttribute("aria-label", this.isDark ? "ライトテーマに切り替え" : "ダークテーマに切り替え");
+    }
     if (this.isDark) {
       document.body.classList.remove("theme-light");
       document.body.classList.add("theme-dark");
